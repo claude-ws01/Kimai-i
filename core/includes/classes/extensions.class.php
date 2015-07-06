@@ -3,8 +3,6 @@
 class Extensions
 {
 
-    private $ext_configs = array();
-
     private $php_include_files = array();
     private $css_extension_files = array();
     private $js_extension_files = array();
@@ -106,9 +104,9 @@ class Extensions
         $iniFile = array();
         foreach ($this->extensions as $key => $row)
         {
-            $iniFile[$key] = $row['iniFile'];
+            $iniFile[$key] = $row['initFile'];
         }
-        array_multisort($iniFile, SORT_DESC, $this->extensions);
+        array_multisort($iniFile, SORT_ASC, $this->extensions);
 
         closedir($handle);
     }
