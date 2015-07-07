@@ -8,7 +8,7 @@ $activities = $this->filterListEntries($this->activities);
     if (!is_array($activities) || count($activities) == 0) {
         ?>
         <tr>
-            <td nowrap colspan='3'>
+            <td style="white-space: nowrap" colspan='3'>
                 <?php echo $this->error(); ?>
             </td>
         </tr>
@@ -20,7 +20,7 @@ $activities = $this->filterListEntries($this->activities);
             <tr id="row_activity" data-id="<?php echo $activity['activityID'] ?>"
                 class="<?php echo $this->cycle(array('odd', 'even'))->next() ?>">
 
-                <td nowrap class="option">
+                <td style="white-space: nowrap" class="option">
                     <?php if ($this->show_activity_edit_button): ?>
                         <a href="#"
                            onclick="editSubject('activity',<?php echo $activity['activityID'] ?>); $(this).blur(); return false;">
@@ -59,7 +59,7 @@ $activities = $this->filterListEntries($this->activities);
                     <?php if ($activity['visible'] != 1): ?></span><?php endif; ?>
                 </td>
 
-                <td nowrap class="annotation"></td>
+                <td style="white-space: nowrap" class="annotation"></td>
             </tr>
         <?php
         }

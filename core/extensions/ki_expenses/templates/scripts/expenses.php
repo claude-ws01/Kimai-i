@@ -26,7 +26,7 @@ if ($this->expenses) {
                 <tr id="expEntry<?php echo $row['expenseID'] ?>"
                     class="<?php echo $this->cycle(array("odd", "even"))->next() ?>">
 
-                    <td nowrap class="option
+                    <td style="white-space: nowrap" class="option
                         <?php if ($cur_day_buffer != $day_buffer && $this->kga['show_daySeperatorLines']) {
                         echo "break_day";
                         }

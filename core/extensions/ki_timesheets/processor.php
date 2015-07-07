@@ -25,6 +25,7 @@
 $isCoreProcessor = 0;
 $dir_templates   = "templates/";
 require("../../includes/kspi.php");
+global $view, $database, $kga;
 
 function timesheetAccessAllowed($entry, $action, &$errors)
 {

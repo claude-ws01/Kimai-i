@@ -4,7 +4,7 @@
     if (!is_array($this->users) || count($this->users) == 0) {
         ?>
         <tr>
-            <td nowrap colspan='3'>
+            <td style="white-space: nowrap" colspan='3'>
                 <?php echo $this->error(); ?>
             </td>
         </tr>
@@ -16,7 +16,7 @@
             <tr id="row_user" data-id="<?php echo $user['userID'] ?>"
                 class="<?php echo $this->cycle(array('odd', 'even'))->next() ?>">
                 <!--  option cell -->
-                <td nowrap class="option">
+                <td style="white-space: nowrap" class="option">
                     <a href="#"
                        onclick="lists_update_filter('user',<?php echo $user['userID'] ?>); $(this).blur(); return false;"><img
                             src='../skins/<?php echo $this->escape($this->kga['conf']['skin']) ?>/grfx/filter.png'
@@ -31,7 +31,7 @@
                 </td>
 
                 <!-- annotation cell -->
-                <td nowrap class="annotation"></td>
+                <td style="white-space: nowrap" class="annotation"></td>
             </tr>
         <?php
         }

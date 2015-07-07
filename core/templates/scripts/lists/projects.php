@@ -8,7 +8,7 @@ $projects = $this->filterListEntries($this->projects);
     if (!is_array($projects) || count($projects) == 0) {
         ?>
         <tr>
-            <td nowrap colspan='3'>
+            <td style="white-space: nowrap" colspan='3'>
                 <?php echo $this->error(); ?>
             </td>
         </tr>
@@ -19,7 +19,7 @@ $projects = $this->filterListEntries($this->projects);
             ?>
             <tr id="row_project" data-id="<?php echo $project['projectID'] ?>"
                 class="project customer<?php echo $project['customerID'] ?> <?php echo $this->cycle(array('odd', 'even'))->next() ?>">
-                <td nowrap class="option">
+                <td style="white-space: nowrap" class="option">
 
                     <?php if ($this->show_project_edit_button): ?>
                         <a href="#"
@@ -83,7 +83,7 @@ $projects = $this->filterListEntries($this->projects);
                 <?php endif; ?>
                 <?php if ($project['visible'] != 1): ?></span><?php endif; ?>
                 </td>
-                <td nowrap class="annotation"></td>
+                <td style="white-space: nowrap" class="annotation"></td>
             </tr>
         <?php
         }

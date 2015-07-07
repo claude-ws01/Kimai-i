@@ -8,7 +8,7 @@ $customers = $this->filterListEntries($this->customers);
     if (!is_array($customers) || count($customers) == 0) {
         ?>
         <tr>
-            <td nowrap colspan='3'>
+            <td style="white-space: nowrap" colspan='3'>
                 <?php echo $this->error(); ?>
             </td>
         </tr>
@@ -22,7 +22,7 @@ $customers = $this->filterListEntries($this->customers);
                 class="customer customer<?php echo $customer['customerID'] ?> <?php echo $this->cycle(array('odd', 'even'))->next() ?>">
 
                 <!-- option cell -->
-                <td nowrap class="option">
+                <td style="white-space: nowrap" class="option">
                     <?php if ($this->show_customer_edit_button): ?>
                         <a href="#"
                            onclick="editSubject('customer',<?php echo $customer['customerID'] ?>); $(this).blur(); return false;">
@@ -51,7 +51,7 @@ $customers = $this->filterListEntries($this->customers);
                 </td>
 
                 <!-- annotation cell -->
-                <td nowrap class="annotation"></td>
+                <td style="white-space: nowrap" class="annotation"></td>
             </tr>
         <?php
         }

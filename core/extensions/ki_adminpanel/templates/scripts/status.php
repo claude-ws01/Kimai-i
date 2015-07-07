@@ -17,7 +17,7 @@
     {
         ?>
         <tr>
-            <td nowrap colspan='3'>
+            <td style="white-space: nowrap" colspan='3'>
                 <?php echo $this->error(); ?>
             </td>
         </tr>

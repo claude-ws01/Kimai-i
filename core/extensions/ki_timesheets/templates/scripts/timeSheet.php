@@ -70,7 +70,7 @@ if ($this->timeSheetEntries) {
             <tr id="timeSheetEntry<?php echo $row['timeEntryID'] ?>" class="<?php echo $this->cycle(array("odd", "even"))->next() ?> active">
         <?php endif; ?>
 
-        <td nowrap class="option <?php echo $tdClass; ?>">
+        <td style="white-space: nowrap" class="option <?php echo $tdClass; ?>">
 
             <?php if (isset($this->kga['user'])): // only users can see options ?>
 
