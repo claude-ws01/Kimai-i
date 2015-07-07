@@ -10,7 +10,7 @@ It includes
  - New skin (almost like the original but less flashy)
  - Few bug corrections
  - Revised & cleaned language files (only EN and FR)
- - corrected all "strict standards" PHP 5.5 I have encountered.
+ - corrected all "strict standards" PHP 5.5 warnings I have encountered.
 
 I did not pull requested into the original version because I did too many reformatting of the PHP & Js files and it would be a bit too much. (by reformatting understand, layout to PSR standards, sorting of
 functions (methods) in some of the biggest PHP files. But the Naming is still original)
