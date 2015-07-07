@@ -49,7 +49,7 @@ $activities = $this->filterListEntries($this->activities);
                     </a>
                 </td>
 
-                <td width="100%" class="activities"
+                <td style="width:100%;" class="activities"
                     onclick="buzzer_preselect_activity(<?php echo $activity['activityID'] ?>,'<?php echo $this->jsEscape($activity['name']) ?>'); return false;"
                     onmouseover="lists_change_color(this,true);" onmouseout="lists_change_color(this,false);">
                     <?php if ($activity['visible'] != 1): ?><span style="color:#bbb"><?php endif; ?>

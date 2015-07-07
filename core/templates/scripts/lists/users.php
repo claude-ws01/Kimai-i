@@ -26,7 +26,7 @@
                 </td>
 
                 <!-- name cell -->
-                <td width="100%" class="clients">
+                <td style="width:100%;" class="clients">
                     <?php echo $this->escape($user['name']) ?>
                 </td>
 
