@@ -3,12 +3,16 @@
 
         var options = {
             beforeSubmit: function () {
-                var oldGlobalRoleID = '';
+                var oldGlobalRoleID = '',
+                    password = $('#password'),
+                    retypePassword = $('#retypePassword'),
+                    message = "<?php echo $this->pureJsEscape($this->kga['lang']['confirmations']['ownGlobalRoleChange']); ?>",
+                    form = $('#adminPanel_extension_form_editUser');
 
                 oldGlobalRoleID = <?php echo $this->user_details['globalRoleID']; ?>;
 
+
                 if ($('#globalRoleID').val() != oldGlobalRoleID && $('input[name="id"]').val() == userID) {
-                    var message = "<?php echo $this->pureJsEscape($this->kga['lang']['confirmations']['ownGlobalRoleChange']); ?>";
                     message = message.replace(/%OLD%/, $("#globalRoleID>option[value='" + oldGlobalRoleID + "']").text());
                     message = message.replace(/%NEW%/, $("#globalRoleID>option:selected").text());
                     var accepted = confirm(message);
@@ -17,16 +21,22 @@
                         return false;
                 }
 
-                if ($('#password').val() != '' && !validatePassword($('#password').val(), $('#retypePassword').val()))
+                //workaround - some browser automaticaly fill the password
+                if (password.val() == '' || retypePassword.val() == '') {
+                    password.value = '';
+                    retypePassword.value = '';
+                }
+                else if (password.val() != '' && !validatePassword(password.val(), retypePassword.val())) {
                     return false;
+                }
 
                 clearFloaterErrorMessages();
 
-                if ($('#adminPanel_extension_form_editUser').attr('submitting')) {
+                if (form.attr('submitting')) {
                     return false;
                 }
                 else {
-                    $('#adminPanel_extension_form_editUser').attr('submitting', true);
+                    form.attr('submitting', true);
                     return true;
                 }
             },
