@@ -83,7 +83,7 @@ if (version_compare(PHP_VERSION, $min_php_version) < 0) {
         </style>
     </head>
     <body>
-    <div align="center">
+    <div style="text-align:center">
         <img src="grfx/caution.png" width="70" height="63" alt="Caution"><br/>
 
         <h1>newer PHP version required</h1>
@@ -132,7 +132,7 @@ else {
             </style>
         </head>
         <body>
-        <div align="center">
+        <div style="text-align:center">
             <img src="grfx/caution.png" width="70" height="63" alt="Caution"><br/>
 
             <h1>UPDATE</h1>
@@ -189,7 +189,7 @@ else {
                 </style>
             </head>
             <body>
-            <div align="center">
+            <div style="text-align:center">
                 <FORM action="" method="post">
                     <h1> <?= $kga['lang']['timezone'] ?></h1>
                     <?= $kga['lang']['updater']['timezone'] ?>

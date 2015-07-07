@@ -308,6 +308,8 @@ function adminPanel_extension_editMembershipRole(id) {
 // refreshes either user/group/advanced/DB subtab
 //
 function adminPanel_extension_refreshSubtab(tab) {
+    var options, target;
+
     options = { axAction: "refreshSubtab", axValue: tab, id: 0 };
     if (tab == 'activities') {
         options.activity_filter = $('#activity_project_filter').val();

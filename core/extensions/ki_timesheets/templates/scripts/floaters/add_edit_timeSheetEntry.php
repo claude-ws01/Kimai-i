@@ -578,11 +578,11 @@
                    <?php endif; ?>
                    
                    <li>
-                   <table><tr><td align="right"><?php echo $this->kga['lang']['budget_activity']?>:</td><td>
+                   <table><tr><td style="text-align:right"><?php echo $this->kga['lang']['budget_activity']?>:</td><td>
                         <span id="budget_activity"><?php echo $this->budget_activity?></span></td></tr>
-                        <tr><td align="right"><?php echo $this->kga['lang']['budget_activity_used']?>:</td><td>
+                        <tr><td style="text-align:right"><?php echo $this->kga['lang']['budget_activity_used']?>:</td><td>
                         <span id="budget_activity_used"><?php echo $this->budget_activity_used?></span></td></tr>
-                        <tr><td align="right"><?php echo $this->kga['lang']['budget_activity_approved']?>:</td><td>
+                        <tr><td style="text-align:right"><?php echo $this->kga['lang']['budget_activity_approved']?>:</td><td>
                         <span id="budget_activity_approved"><?php echo $this->approved_activity?></span></td></tr>
                         </table>
                    </li>
