@@ -24,7 +24,7 @@
 
 <tbody>
 <?php
-    if (!isset($this->activities) || $this->activities == '0' || count($this->activities) == 0)
+    if (!is_array($this->activities) || count($this->activities) == 0)
     {
         ?>
         <tr>

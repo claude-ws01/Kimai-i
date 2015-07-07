@@ -32,15 +32,16 @@ defined('APPLICATION_PATH') ||
 set_include_path(
     implode(
         PATH_SEPARATOR,
-        array(
-            realpath(APPLICATION_PATH . '/libraries/'),
+        array(realpath(APPLICATION_PATH . '/libraries/')
         )
     )
 );
 
 ini_set('display_errors', '0');
 
-//TEST// error_log('<<== kimai testing error log ==>',0);
+//CN, in Kimai, do not specify output option in error_log //
+//TEST//
+error_log('<<================================== kimai testing error log ==================================>');
 
 require_once 'Zend/Loader/Autoloader.php';
 $autoloader = Zend_Loader_Autoloader::getInstance();

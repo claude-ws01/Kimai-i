@@ -13,7 +13,7 @@
     </thead>
     <tbody>
     <?php
-    if (!isset($this->groups) || $this->groups == '0' || count($this->groups) == 0)
+    if (!is_array($this->groups) || count($this->groups) == 0)
     {
         ?>
     <tr>

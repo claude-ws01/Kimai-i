@@ -28,6 +28,7 @@ require(WEBROOT . 'libraries/mysql.class.php');
  */
 class Kimai_Database_Mysql extends Kimai_Database_Abstract
 {
+    public $MySQL;
 
     /**
      * Adds a new activity
@@ -844,7 +845,7 @@ class Kimai_Database_Mysql extends Kimai_Database_Abstract
         $userGroups   = $this->getGroupMemberships($userId);
         $commonGroups = array_intersect($userGroups, $objectGroups);
 
-        if (count($commonGroups) == 0) {
+        if (!is_array($commonGroups) || count($commonGroups) == 0) {
             return false;
         }
 
@@ -2884,6 +2885,7 @@ class Kimai_Database_Mysql extends Kimai_Database_Abstract
         $p      = $this->kga['server_prefix'];
         $that   = $this;
 
+        //DEBUG// error_log('<<== QUERY ==>>'.__FUNCTION__);
         if ($this->global_role_allows($user['globalRoleID'], 'core-user-otherGroup-view')) {
             // If user may see other groups we need to filter out groups he's part of but has no permission to see users in.
             $forbidden_groups = array_filter($user['groups'], function ($groupID) use ($userID, $that) {
@@ -2898,7 +2900,9 @@ class Kimai_Database_Mysql extends Kimai_Database_Abstract
             }
 
             $query  = "SELECT * FROM ${p}users AS u WHERE trash=0 $group_filter ORDER BY name";
-            $result = $this->MySQL->Query($query);
+            $this->MySQL->Query($query);
+
+            //DEBUG// error_log('<<== QUERY ==>>'.__FUNCTION__.'===='.$query);
 
             return $this->MySQL->RecordsArray(MYSQL_ASSOC);
         }

@@ -14,7 +14,7 @@
 
     <tbody>
     <?php
-    if (!isset($this->customers) || $this->customers == '0' || count($this->customers) == 0)
+    if (!is_array($this->customers) || count($this->customers) == 0)
     {
         ?>
         <tr>

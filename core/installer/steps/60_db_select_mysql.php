@@ -87,7 +87,7 @@ else {
         }
     }
 
-    if (count($db_connection) == 0) {
+    if (!is_array($db_connection) || count($db_connection) == 0) {
         if ($lang == "de") {
             echo "Keine Datenbank(en) vorhanden.<br/><br/>";
         }

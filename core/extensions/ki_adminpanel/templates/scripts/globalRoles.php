@@ -13,7 +13,7 @@
     </thead>
     <tbody>
     <?php
-    if (count($this->globalRoles) == 0)
+    if (!is_array($this->globalRoles) || count($this->globalRoles) == 0)
     {
         ?>
     <tr>

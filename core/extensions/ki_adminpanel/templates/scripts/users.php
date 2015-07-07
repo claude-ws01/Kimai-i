@@ -23,7 +23,7 @@
 
     <tbody>
     <?php
-    if (!isset($this->users) || $this->users == '0' || count($this->users) == 0)
+    if (!is_array($this->users) || count($this->users) == 0)
     {
         ?>
         <tr>

@@ -28,7 +28,7 @@ function buildRoleInsertQuery($tableName, $roleName, $allowedPermissions, $allPe
         $permission = '`' . $permission . '`';
     }
 
-    if (count($allowedPermissions) == 0) {
+    if (!is_array($allowedPermissions) || count($allowedPermissions) == 0) {
         $query = "INSERT INTO `${p}${tableName}` (`name`)  VALUES ('" . $roleName . "');";
     }
     else {

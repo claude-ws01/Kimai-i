@@ -21,6 +21,7 @@
 // = Smarty (initialize class) =
 // ============================= 
 include('../includes/basics.php');
+global $database, $kga, $view;
 $view = new Zend_View();
 $view->setBasePath(WEBROOT . '/templates');
 

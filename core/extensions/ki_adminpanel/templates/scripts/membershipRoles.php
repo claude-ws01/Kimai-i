@@ -13,7 +13,7 @@
     </thead>
     <tbody>
     <?php
-    if (count($this->membershipRoles) == 0)
+    if (!is_array($this->membershipRoles) || count($this->membershipRoles) == 0)
     {
         ?>
     <tr>

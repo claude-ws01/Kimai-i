@@ -61,14 +61,14 @@ $out             = $timeframe[1];
 
 require_once('private_func.php');
 
-if (count($_REQUEST['projectID']) == 0) {
+if (!is_array($_REQUEST['projectID']) || count($_REQUEST['projectID']) == 0) {
     echo '<script language="javascript">alert("'.$kga['lang']['ext_invoice']['noProject'].'")</script>';
     return;
 }
 
 $invoiceArray = invoice_get_data($in, $out, $_REQUEST['projectID'], $_REQUEST['filter_cleared'], isset($_REQUEST['short']));
 
-if (count($invoiceArray) == 0) {
+if (!is_array($invoiceArray) || count($invoiceArray) == 0) {
     echo '<script language="javascript">alert("'.$kga['lang']['ext_invoice']['noData'].'")</script>';
     return;
 }

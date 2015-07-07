@@ -927,7 +927,7 @@ class MySQL
         $this->ResetError();
         $this->last_sql    = $sql;
         $this->last_result = @mysqli_query($this->mysql_link, $sql);
-        if (!$this->last_result) {
+        if ($this->last_result === false) {
             $this->active_row = -1;
             $this->SetError(mysqli_error($this->mysql_link));
 
@@ -1091,7 +1091,7 @@ class MySQL
     public function RecordsArray($resultType = MYSQL_BOTH)
     {
         $this->ResetError();
-        if (mysqli_num_rows($this->last_result) >= 1) {
+        if ($this->last_result !== false && mysqli_num_rows($this->last_result) >= 1) {
 
             $result = mysqli_data_seek($this->last_result, 0);
             if ($result !== true) {

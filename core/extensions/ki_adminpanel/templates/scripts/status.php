@@ -13,7 +13,7 @@
     </thead>
     <tbody>
     <?php
-    if (!isset($this->arr_status) || $this->arr_status == '0' || count($this->arr_status) == 0)
+    if (!is_array($this->arr_status) || count($this->arr_status) == 0)
     {
         ?>
         <tr>

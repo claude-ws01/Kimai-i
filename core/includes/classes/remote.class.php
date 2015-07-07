@@ -472,7 +472,7 @@ class Kimai_Remote_Api
         $result = $this->getBackend()->get_current_recordings($uid);
 
 		// no "last" activity existing
-        if (count($result) == 0) {
+        if (!is_array($result) || count($result) == 0) {
 			return $this->getErrorResult('No active recording.');
 		}
 

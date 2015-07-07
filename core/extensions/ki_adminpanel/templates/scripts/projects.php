@@ -13,7 +13,7 @@
 
 <tbody>
 <?php
-    if (!isset($this->projects) || $this->projects == '0' || count($this->projects) == 0)
+    if (!is_array($this->projects) || count($this->projects) == 0)
     {
         ?>
         <tr>
