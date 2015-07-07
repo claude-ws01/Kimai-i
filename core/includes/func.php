@@ -85,30 +85,34 @@ function makeSelectBox($subject,$groups,$selection=null, $includeDeleted = false
     switch ($subject) {
         case 'project':
             $projects = $database->get_projects($groups);
-            foreach ($projects as $project) {
-                if ($project['visible']) {
-                    if ($kga['conf']['flip_project_display']) {
-                        $projectName = $project['customerName'] . ": " . $project['name'];
-                        if ($kga['conf']['project_comment_flag']) {
-                            $projectName .= "(" . $project['comment'] .")" ;
+            if (is_array($projects)) {
+                foreach ($projects as $project) {
+                    if ($project['visible']) {
+                        if ($kga['conf']['flip_project_display']) {
+                            $projectName = $project['customerName'] . ": " . $project['name'];
+                            if ($kga['conf']['project_comment_flag']) {
+                                $projectName .= "(" . $project['comment'] .")" ;
+                            }
+                        } else {
+                            $projectName = $project['name'] . " (" . $project['customerName'] . ")";
+                            if ($kga['conf']['project_comment_flag']) {
+                                $projectName .=  "(" . $project['comment'] .")";
+                            }
                         }
-                    } else {
-                        $projectName = $project['name'] . " (" . $project['customerName'] . ")";
-                        if ($kga['conf']['project_comment_flag']) {
-                            $projectName .=  "(" . $project['comment'] .")";
-                        }
+                        $sel[$project['projectID']] = $projectName;
                     }
-                    $sel[$project['projectID']] = $projectName;
                 }
             }
             break;
 
         case 'activity':
             $activities = $database->get_activities($groups);
-            foreach ($activities as $activity) {
-                if ($activity['visible']) {
-                    $sel[$activity['activityID']] = $activity['name'];
-                }
+            if (is_array($activities)) {
+                foreach ($activities as $activity) {
+                  if ($activity['visible']) {
+                      $sel[$activity['activityID']] = $activity['name'];
+                  }
+              }
             }
             break;
 

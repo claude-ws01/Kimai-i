@@ -80,7 +80,7 @@ else {
 }
 
     $view->projects = array();
-    if ($projects !== null && is_array($projects)) {
+    if (is_array($projects)) {
         foreach ($projects as $row=>$project) {
             $groupNames = array();
             foreach ($database->project_get_groupIDs($project['projectID']) as $groupID) {

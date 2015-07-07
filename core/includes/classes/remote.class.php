@@ -383,7 +383,6 @@ class Kimai_Remote_Api
 			return $this->getAuthErrorResult();
         }
 
-        $projects = array();
         $kga      = $this->getKimaiEnv();
         $user     = $this->getUser();
 
@@ -393,7 +392,7 @@ class Kimai_Remote_Api
 			$projects = $this->getBackend()->get_projects($user['groups']);
 		}
 
-        if (count($projects) > 0) {
+        if (is_array($projects) && count($projects) > 0) {
 			return $this->getSuccessResult($projects);
         }
 

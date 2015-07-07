@@ -219,7 +219,7 @@ switch ($axAction)
 					$projects = $database->get_projects($kga['user']['groups']);
                 }
 
-                if ($projects !== null && is_array($projects))
+                if (is_array($projects))
                 {
                     foreach ($projects as $row => $project) {
                         $groupNames = array();

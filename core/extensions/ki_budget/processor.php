@@ -106,7 +106,7 @@ switch ($axAction)
 			}
 			$activities = $database->get_activities($kga['user']['groups']);
 		}
-		if(is_array($projects) && count($projects) > 0) {
+		if(is_array($projects)) {
 			foreach ($projects as $index => $project) {
 				if ($projectsFilter === false) {
 					$projectsSelected[] = $project['projectID'];

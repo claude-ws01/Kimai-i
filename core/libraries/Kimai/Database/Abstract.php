@@ -408,6 +408,7 @@ abstract class Kimai_Database_Abstract
         $selectedIds      = array();
         $allElements      = array();
         $viewableElements = array();
+
         switch ($parentSubject . "_" . $subject) {
             case 'project_activity':
                 $selectedIds = $this->project_get_activities($parentId);
@@ -430,7 +431,10 @@ abstract class Kimai_Database_Abstract
                     break;
             }
             //if there are no elements hidden from the group, there's nothing too much that could get deleted either
-            if (count($allElements) > count($viewableElements)) {
+            $count_all      = is_array($allElements) ? count($allElements) : 0;
+            $count_viewable = is_array($viewableElements) ? count($viewableElements) : 0;
+
+            if ($count_all > $count_viewable) {
                 //1st, find the ids of the elements that are invisible for the group
                 $startvisibleIds = array();
                 $idField         = $subject . "_ID";
