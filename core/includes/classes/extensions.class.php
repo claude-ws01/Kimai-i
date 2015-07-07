@@ -102,8 +102,7 @@ class Extensions
 
         //CN - keeping tab order in relation with the folder name. I got some differences between linux and windows (?!)
         $iniFile = array();
-        foreach ($this->extensions as $key => $row)
-        {
+        foreach ($this->extensions as $key => $row) {
             $iniFile[$key] = $row['initFile'];
         }
         array_multisort($iniFile, SORT_ASC, $this->extensions);

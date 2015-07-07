@@ -17,117 +17,128 @@
  * along with Kimai; If not, see <http://www.gnu.org/licenses/>.
  */
 
-    // Include Basics
-    include('../../includes/basics.php');
+// Include Basics
+include('../../includes/basics.php');
 
-    $dir_templates = "templates/";
-    $datasrc = "config.ini";
-    $settings = parse_ini_file($datasrc);
-    $dir_ext = $settings['EXTENSION_DIR'];
+$dir_templates = "templates/";
+$datasrc       = "config.ini";
+$settings      = parse_ini_file($datasrc);
+$dir_ext       = $settings['EXTENSION_DIR'];
 
-    $user = checkUser();
-    // ============================================
-    // = initialize currently displayed timeframe =
-    // ============================================
-    $timeframe = get_timeframe();
-    $in = $timeframe[0];
-    $out = $timeframe[1];
+$user = checkUser();
+// ============================================
+// = initialize currently displayed timeframe =
+// ============================================
+$timeframe = get_timeframe();
+$in        = $timeframe[0];
+$out       = $timeframe[1];
 
-    $view = new Zend_View();
-    $view->setBasePath(WEBROOT . 'extensions/' . $dir_ext . '/' . $dir_templates);
-    $view->addHelperPath(WEBROOT.'/templates/helpers','Zend_View_Helper');
+$view = new Zend_View();
+$view->setBasePath(WEBROOT . 'extensions/' . $dir_ext . '/' . $dir_templates);
+$view->addHelperPath(WEBROOT . '/templates/helpers', 'Zend_View_Helper');
 
-    $view->kga = $kga;
+$view->kga = $kga;
 
-    $viewOtherGroupsAllowed = $database->global_role_allows($kga['user']['globalRoleID'], 'core-group-otherGroup-view');
+$viewOtherGroupsAllowed = $database->global_role_allows($kga['user']['globalRoleID'], 'core-group-otherGroup-view');
 
-    // ==========================
-    // = display customer table =
-    // ==========================
+// ==========================
+// = display customer table =
+// ==========================
 if ($database->global_role_allows($kga['user']['globalRoleID'], 'core-customer-otherGroup-view')) {
-      $customers = $database->get_customers();
+    $customers = $database->get_customers();
 }
 else {
-      $customers = $database->get_customers($kga['user']['groups']);
+    $customers = $database->get_customers($kga['user']['groups']);
 }
 
-    foreach ($customers as $row=>$data) {
-      $groupNames = array();
-      $groups = $database->customer_get_groupIDs($data['customerID']);
-      if ($groups !== false) {
+foreach ($customers as $row => $data) {
+    $groupNames = array();
+    $groups     = $database->customer_get_groupIDs($data['customerID']);
+    if (is_array($groups)) {
         foreach ($groups as $groupID) {
             if (!$viewOtherGroupsAllowed && array_search($groupID, $kga['user']['groups']) === false) {
-            continue;
+                continue;
             }
-          $data = $database->group_get_data($groupID);
-          $groupNames[] = $data['name'];
+            $data         = $database->group_get_data($groupID);
+            $groupNames[] = $data['name'];
         }
-        $customers[$row]['groups'] = implode(", ",$groupNames);
-      }
+        $customers[$row]['groups'] = implode(", ", $groupNames);
     }
+}
 
-    $view->customers = $customers;
-    $view->customer_display = $view->render("customers.php");
+$view->customers        = $customers;
+$view->customer_display = $view->render("customers.php");
 
-    // =========================
-    // = display project table =
-    // =========================
+// =========================
+// = display project table =
+// =========================
 if ($database->global_role_allows($kga['user']['globalRoleID'], 'core-project-otherGroup-view')) {
-      $projects = $database->get_projects();
+    $projects = $database->get_projects();
 }
 else {
-      $projects = $database->get_projects($kga['user']['groups']);
+    $projects = $database->get_projects($kga['user']['groups']);
 }
 
-    $view->projects = array();
-    if (is_array($projects)) {
-        foreach ($projects as $row=>$project) {
-            $groupNames = array();
-            foreach ($database->project_get_groupIDs($project['projectID']) as $groupID) {
-            if (!$viewOtherGroupsAllowed && array_search($groupID, $kga['user']['groups']) === false) {
-                  continue;
-            }
-                $data = $database->group_get_data($groupID);
+$view->projects = array();
+if (is_array($projects)) {
+    foreach ($projects as $row => $project) {
+        $groupNames = array();
+
+        $groupIDs = $database->project_get_groupIDs($project['projectID']);
+
+        if (is_array($groupIDs)) {
+            foreach ($groupIDs as $groupID) {
+                if (!$viewOtherGroupsAllowed && array_search($groupID, $kga['user']['groups']) === false) {
+                    continue;
+                }
+                $data         = $database->group_get_data($groupID);
                 $groupNames[] = $data['name'];
             }
-            $projects[$row]['groups'] = implode(", ",$groupNames);
         }
-        $view->projects = $projects;
+        $projects[$row]['groups'] = implode(", ", $groupNames);
     }
-    $view->project_display = $view->render("projects.php");
+    $view->projects = $projects;
+}
+$view->project_display = $view->render("projects.php");
 
-    // ========================
-    // = display activity table =
-    // ========================
+
+
+// ========================
+// = display activity table =
+// ========================
 if ($database->global_role_allows($kga['user']['globalRoleID'], 'core-activity-otherGroup-view')) {
-      $activities = $database->get_activities_by_project(-2);
+    $activities = $database->get_activities_by_project(-2);
 }
 else {
-      $activities = $database->get_activities_by_project(-2,$kga['user']['groups']);
+    $activities = $database->get_activities_by_project(-2, $kga['user']['groups']);
 }
 
-    foreach ($activities as $row=>$activity) {
-      $groupNames = array();
-      foreach ($database->activity_get_groups($activity['activityID']) as $groupID) {
-        if (!$viewOtherGroupsAllowed && array_search($groupID, $kga['user']['groups']) === false) {
-          continue;
+foreach ($activities as $row => $activity) {
+    $groupNames = array();
+
+    $groupIDs = $database->activity_get_groups($activity['activityID']);
+
+    if (is_array($groupIDs)) {
+        foreach ($groupIDs as $groupID) {
+            if (!$viewOtherGroupsAllowed && array_search($groupID, $kga['user']['groups']) === false) {
+                continue;
+            }
+            $data         = $database->group_get_data($groupID);
+            $groupNames[] = $data['name'];
         }
-        $data = $database->group_get_data($groupID);
-         $groupNames[] = $data['name'];
-      }
-      $activities[$row]['groups'] = implode(", ",$groupNames);
     }
+    $activities[$row]['groups'] = implode(", ", $groupNames);
+}
 
-    $view->activities = $activities;
+$view->activities               = $activities;
+$view->activity_display         = $view->render("activities.php");
+$view->selected_activity_filter = -2;
+$view->curr_user                = $kga['user']['name'];
 
-    $view->activity_display = $view->render("activities.php");
-    $view->selected_activity_filter = -2;
 
-    $view->curr_user = $kga['user']['name'];
-
-    $groups = $database->get_groups(get_cookie('adminPanel_extension_show_deleted_groups',0));
+$groups = $database->get_groups(get_cookie('adminPanel_extension_show_deleted_groups', 0));
 if ($database->global_role_allows($kga['user']['globalRoleID'], 'core-group-otherGroup-view')) {
-      $view->groups = $groups;
+    $view->groups = $groups;
 }
 else {
     $view->groups = array_filter($groups, function ($group) {
@@ -137,87 +148,88 @@ else {
     });
 }
 
-    $view->arr_statuses = $database->get_statuses();
-        
+
+$view->arr_statuses = $database->get_statuses();
+
 if ($database->global_role_allows($kga['user']['globalRoleID'], 'core-user-otherGroup-view')) {
-      $users = $database->get_users(get_cookie('adminPanel_extension_show_deleted_users',0));
+    $users = $database->get_users(get_cookie('adminPanel_extension_show_deleted_users', 0));
 }
 else {
-      $users = $database->get_users(get_cookie('adminPanel_extension_show_deleted_users',0),$kga['user']['groups']);
+    $users = $database->get_users(get_cookie('adminPanel_extension_show_deleted_users', 0), $kga['user']['groups']);
 }
 
-    // get group names
-    foreach ($users as &$user) {
-      $user['groups'] = array();
-      $groups = $database->getGroupMemberships($user['userID']);
-      if(is_array($groups)) {
-	      foreach ($groups as $group) {
+
+// get group names
+foreach ($users as &$user) {
+    $user['groups'] = array();
+    $groups         = $database->getGroupMemberships($user['userID']);
+    if (is_array($groups)) {
+        foreach ($groups as $group) {
             if (!$viewOtherGroupsAllowed && array_search($group, $kga['user']['groups']) === false) {
-            continue;
+                continue;
             }
-	        $groupData = $database->group_get_data($group);
-	        $user['groups'][] = $groupData['name'];
-	      }
-      }
+            $groupData        = $database->group_get_data($group);
+            $user['groups'][] = $groupData['name'];
+        }
     }
+}
 
-    $view->users = $users;
+$view->users = $users;
 
-    // ==============================
-    // = display global roles table =
-    // ==============================
-    $view->globalRoles = $database->global_roles();
-    $view->globalRoles_display = $view->render("globalRoles.php");
+// ==============================
+// = display global roles table =
+// ==============================
+$view->globalRoles         = $database->global_roles();
+$view->globalRoles_display = $view->render("globalRoles.php");
 
-    // ==================================
-    // = display membership roles table =
-    // ==================================
-    $view->membershipRoles = $database->membership_roles();
-    $view->membershipRoles_display = $view->render("membershipRoles.php");
-
-
-    $view->showDeletedGroups = get_cookie('adminPanel_extension_show_deleted_groups',0);
-    $view->showDeletedUsers = get_cookie('adminPanel_extension_show_deleted_users',0);
-    $view->languages = Translations::langs();
-
-    $view->timezones = timezoneList();
-    $status = $database->get_statuses();
-    $view->arr_status = $status;
-
-    $admin['users'] = $view->render("users.php");
-    $admin['groups'] = $view->render("groups.php");
-    $admin['status'] = $view->render("status.php");
+// ==================================
+// = display membership roles table =
+// ==================================
+$view->membershipRoles         = $database->membership_roles();
+$view->membershipRoles_display = $view->render("membershipRoles.php");
 
 
+$view->showDeletedGroups = get_cookie('adminPanel_extension_show_deleted_groups', 0);
+$view->showDeletedUsers  = get_cookie('adminPanel_extension_show_deleted_users', 0);
+$view->languages         = Translations::langs();
 
-    if ($kga['conf']['editLimit'] != '-') {
-      $view->editLimitEnabled = true;
-      $editLimit = $kga['conf']['editLimit']/(60*60); // convert to hours
-      $view->editLimitDays = (int) ($editLimit/24) ;
-      $view->editLimitHours = (int) ($editLimit%24) ;
-    }
-    else {
-      $view->editLimitEnabled = false;
-      $view->editLimitDays = '';
-      $view->editLimitHours = '';
-    }
-        if ($kga['conf']['roundTimesheetEntries'] != '') {
-      $view->roundTimesheetEntries = true;
-      $view->roundMinutes = $kga['conf']['roundMinutes'];
-      $view->roundSeconds = $kga['conf']['roundSeconds'];
-    }
-    else {
-      $view->roundTimesheetEntries = false;
-      $view->roundMinutes = '';
-      $view->roundSeconds = '';
-    }
+$view->timezones  = timezoneList();
+$status           = $database->get_statuses();
+$view->arr_status = $status;
 
-    $view->showAdvancedTab = $database->global_role_allows($kga['user']['globalRoleID'], 'adminPanel_extension-editAdvanced');
-    if ($view->showAdvancedTab) {
-      $admin['advanced'] = $view->render("advanced.php");
-      $admin['database'] = $view->render("database.php");
-    }
+$admin['users']  = $view->render("users.php");
+$admin['groups'] = $view->render("groups.php");
+$admin['status'] = $view->render("status.php");
 
-    $view->admin = $admin;
 
-    echo $view->render('main.php');
+if ($kga['conf']['editLimit'] != '-') {
+    $view->editLimitEnabled = true;
+    $editLimit              = $kga['conf']['editLimit'] / (60 * 60); // convert to hours
+    $view->editLimitDays    = (int) ($editLimit / 24);
+    $view->editLimitHours   = (int) ($editLimit % 24);
+}
+else {
+    $view->editLimitEnabled = false;
+    $view->editLimitDays    = '';
+    $view->editLimitHours   = '';
+}
+if ($kga['conf']['roundTimesheetEntries'] != '') {
+    $view->roundTimesheetEntries = true;
+    $view->roundMinutes          = $kga['conf']['roundMinutes'];
+    $view->roundSeconds          = $kga['conf']['roundSeconds'];
+}
+else {
+    $view->roundTimesheetEntries = false;
+    $view->roundMinutes          = '';
+    $view->roundSeconds          = '';
+}
+
+$view->showAdvancedTab = $database->global_role_allows($kga['user']['globalRoleID'], 'adminPanel_extension-editAdvanced');
+if ($view->showAdvancedTab) {
+    $admin['advanced'] = $view->render("advanced.php");
+    $admin['database'] = $view->render("database.php");
+}
+
+$view->admin = $admin;
+
+echo $view->render('main.php');

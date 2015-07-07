@@ -274,7 +274,7 @@ switch ($axAction) {
         if (count($data['errors']) == 0) {
             $rates = $database->allFittingRates($kga['user']['userID'], $_REQUEST['project'], $_REQUEST['activity']);
 
-            if ($rates !== false) {
+            if (is_array($rates)) {
                 foreach ($rates as $rate) {
                     $line = Format::formatCurrency($rate['rate']);
 
@@ -319,7 +319,7 @@ switch ($axAction) {
         if (count($data['errors']) == 0) {
             $rates = $database->allFittingFixedRates($_REQUEST['project'], $_REQUEST['activity']);
 
-            if ($rates !== false) {
+            if (is_array($rates)) {
                 foreach ($rates as $rate) {
                     $line = Format::formatCurrency($rate['rate']);
 
@@ -350,12 +350,14 @@ switch ($axAction) {
     case 'reload_activities_options':
         if (isset($kga['customer'])) die();
         $activities = $database->get_activities_by_project($_REQUEST['project'], $kga['user']['groups']);
-        foreach ($activities as $activity) {
-            if (!$activity['visible']) {
-                continue;
+        if (is_array($activities)) {
+            foreach ($activities as $activity) {
+                if (!$activity['visible']) {
+                    continue;
+                }
+                echo '<option value="' . $activity['activityID'] . '">' .
+                    $activity['name'] . '</option>\n';
             }
-            echo '<option value="' . $activity['activityID'] . '">' .
-                $activity['name'] . '</option>\n';
         }
         break;
 
@@ -591,17 +593,19 @@ switch ($axAction) {
 
             $database->transaction_begin();
 
-            foreach ($_REQUEST['userID'] as $userID) {
-                $data['userID'] = $userID;
+            if (is_array($_REQUEST['userID'])) {
+                foreach ($_REQUEST['userID'] as $userID) {
+                    $data['userID'] = $userID;
 
-                if (!timesheetAccessAllowed($data, $action, $errors)) {
-                    echo json_encode(array('errors' => $errors));
-                    $database->transaction_rollback();
-                    break 2;
+                    if (!timesheetAccessAllowed($data, $action, $errors)) {
+                        echo json_encode(array('errors' => $errors));
+                        $database->transaction_rollback();
+                        break 2;
+                    }
+
+                    Logger::logfile("timeEntry_create");
+                    $database->timeEntry_create($data);
                 }
-
-                Logger::logfile("timeEntry_create");
-                $database->timeEntry_create($data);
             }
 
             $database->transaction_end();
