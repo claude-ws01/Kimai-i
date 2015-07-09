@@ -17,10 +17,10 @@
  */
 
 $(window).load(function() {
-    $('#wrapper').fadeIn(1000);
-    $('#footer').fadeIn(1000);
+    $('#wrapper').fadeIn(500);
+    $('#footer').fadeIn(500);
     $('#jswarn').hide();
-    $('#installsteps').fadeIn('slow');
+    $('#installsteps').fadeIn(500);
     $('input').attr("checked",false);
 });
 
@@ -81,7 +81,7 @@ function lang_selected(lang) {
 // Agree to GPL
 
 function gpl_agreed() {
-    $('#installsteps button.proceed').fadeIn('slow');
+    $('#installsteps button.proceed').fadeIn(500);
 }
 
 function gpl_proceed() {
@@ -174,7 +174,7 @@ function resetPermissionIndicators() {
     $('span.ch_logfile').addClass("ok");
     $('span.ch_temporary').addClass("ok");
 
-    $('span.ch_correctit').fadeOut(500); 
+    $('span.ch_correctit').fadeOut(500);
 }
 
 function cp_proceed() {
@@ -326,8 +326,8 @@ function write_config() {
 
     $.post("processor.php", { axAction: 'write_config', hostname:hostname, username:username, password:password, lang:language, db_layer:db_layer, db_type:db_type, prefix:prefix, database:database, timezone:timezone },
         function(data) {
-            $('#wrapper').fadeOut(2000);
-            $('#footer').fadeOut(2000, function() {
+            $('#wrapper').fadeOut(500);
+            $('#footer').fadeOut(500, function() {
                 window.location.href='install.php?accept=1&db_layer='+db_layer+'&timezone='+timezone;
             });
         }

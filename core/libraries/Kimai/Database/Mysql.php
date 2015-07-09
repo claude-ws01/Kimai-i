@@ -28,7 +28,6 @@ require(WEBROOT . 'libraries/mysql.class.php');
  */
 class Kimai_Database_Mysql extends Kimai_Database_Abstract
 {
-    public $MySQL;
 
     /**
      * Adds a new activity
@@ -2394,6 +2393,9 @@ class Kimai_Database_Mysql extends Kimai_Database_Abstract
 
         $result = $this->MySQL->Query($query);
 
+        //DEBUG// error_log('<<================================== QUERY TIMESHEET ==================================>');
+        //DEBUG// error_log('<<== QUERY ==>>'.__FUNCTION__.'====' . PHP_EOL .$query);
+
         if ($result === false) {
             $this->logLastError('get_timeSheet');
         }
@@ -2902,7 +2904,7 @@ class Kimai_Database_Mysql extends Kimai_Database_Abstract
             $query  = "SELECT * FROM ${p}users AS u WHERE trash=0 $group_filter ORDER BY name";
             $this->MySQL->Query($query);
 
-            //DEBUG// error_log('<<== QUERY ==>>'.__FUNCTION__.'===='.$query);
+            //DEBUG// error_log('<<== QUERY ==>>'.__FUNCTION__.'====' . PHP_EOL .$query);
 
             return $this->MySQL->RecordsArray(MYSQL_ASSOC);
         }
@@ -3342,7 +3344,7 @@ class Kimai_Database_Mysql extends Kimai_Database_Abstract
 
         $this->MySQL->Query($query);
 
-        return $this->MySQL->RowCount() == 1;
+        return $this->MySQL->RowCount() > 0;
     }
 
     /**

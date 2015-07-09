@@ -13,7 +13,6 @@
         color:#FFF;
         left:10px;
         font-size:11px;
-        font-weight:bold;
     }
 
 
@@ -35,3 +34,5 @@ h1 {
     color:gray;
     background:yellow;
 }
+
+a { cursor: pointer }

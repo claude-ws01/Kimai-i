@@ -57,7 +57,6 @@
     overflow:auto;
 }
 
-
 #deb_ext_shoutbox {
     float:right;
     margin-top:-19px;
@@ -79,3 +78,4 @@
     color:#333;
 }
 
+a { cursor: pointer }

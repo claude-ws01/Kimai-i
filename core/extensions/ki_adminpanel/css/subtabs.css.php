@@ -26,7 +26,7 @@
 div.active .adminPanel_extension_panel_header a {
   background-image: url('<?php echo $table_header; ?>');
   color: #ffffff !important;
-  font-weight: bold;
+  font-weight: normal;
   cursor: default;
 }
 div.active .adminPanel_extension_panel_header a:hover {

@@ -27,6 +27,8 @@
  */
 
 // insert KSPI
+global $view, $kga, $database, $translations;
+
 $isCoreProcessor = 1;
 $dir_templates = "templates/scripts/"; // folder of the template files
 require("../includes/kspi.php");

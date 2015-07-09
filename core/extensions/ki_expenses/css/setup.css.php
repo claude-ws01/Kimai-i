@@ -30,7 +30,6 @@
     color:#FFF;
     left:10px;
     font-size:11px;
-    font-weight:bold;
 }
 
 #expenses_head { top:125px; }
@@ -38,9 +37,8 @@
 #expenses_head table { border:none; }
 
 #expenses_head td {
-    font-weight:bold;
     color:white;
     border-right: 1px solid rgba(0, 0, 0, 0);
 }
 
-
+a { cursor: pointer }

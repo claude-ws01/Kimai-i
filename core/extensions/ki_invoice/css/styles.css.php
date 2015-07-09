@@ -58,3 +58,5 @@
     width: 200px;
     font-weight: bold;
 }
+
+a { cursor: pointer }

@@ -28,7 +28,6 @@
     color:#FFF;
     left:10px;
     font-size:11px;
-    font-weight:bold;
 }
 
 #export_head { top:175px; }
@@ -36,7 +35,6 @@
 #export_head table { border:none; }
 
 #export_head td {
-    font-weight:bold;
     color:white;
     border-right: 1px solid rgba(0, 0, 0, 0);
 }
@@ -54,3 +52,5 @@
     border-bottom:1px solid gray;
     padding-right:10px;
 }
+
+a { cursor: pointer }

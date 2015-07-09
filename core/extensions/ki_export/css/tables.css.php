@@ -38,7 +38,6 @@ div.ki_export tr.odd td {
     border-bottom: none;
     border-left: none;
     border-right: 1px dotted #CCC;
-    /*    border-top: 1px solid #DDD;*/
     padding: 4px 0;
 }
 
@@ -49,8 +48,7 @@ div.ki_export tr.odd td {
 
 div.ki_export tr.hover td {
     background: #FFC !important;
-    /*    border-top: 1px solid #666 !important;
-        border-bottom: 1px solid #666 !important;*/
+    border-bottom: 1px solid #666 !important;*/
 }
 
 div.ki_export tr.even td {

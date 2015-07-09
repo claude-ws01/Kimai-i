@@ -6,7 +6,7 @@
     margin-left: -157px;
     top: 10px;
     left: 50%;
-    width: 314px;
+    width: 290px;
     height: 69px;
 }
 
@@ -24,7 +24,7 @@
 #dates {
     font-family: arial, sans-serif;
     font-size: 24px;
-    width: 314px;
+    width: 290px;
     height: 30px;
     padding-top: 10px;
     padding-bottom: 0;
@@ -33,7 +33,7 @@
 }
 
 #infos {
-    width: 314px;
+    width: 290px;
     height: 30px;
     text-align: center;
 }

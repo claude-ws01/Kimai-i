@@ -393,7 +393,7 @@ EOD;
 
 function get_timeframe()
 {
-    global $kga, $conn;
+    global $kga;
 
     $timeframe = array(null, null);
 

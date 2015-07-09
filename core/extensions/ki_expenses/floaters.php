@@ -20,6 +20,8 @@
 // insert KSPI
 $isCoreProcessor = 0;
 $dir_templates = "templates/";
+global $view, $kga, $database, $translations;
+
 require("../../includes/kspi.php");
 
 include('private_db_layer_'.$kga['server_conn'].'.php');

@@ -927,6 +927,9 @@ class MySQL
         $this->ResetError();
         $this->last_sql    = $sql;
         $this->last_result = @mysqli_query($this->mysql_link, $sql);
+
+        //DEBUG// error_log('<<== QUERY ==>>'.__FUNCTION__.'====' . PHP_EOL .$sql);
+
         if ($this->last_result === false) {
             $this->active_row = -1;
             $this->SetError(mysqli_error($this->mysql_link));
@@ -1123,17 +1126,14 @@ class MySQL
      *
      * @return boolean Returns TRUE on success or FALSE on failure
      */
-    public function Release()
-    {
+    public function Release_X()
+    {//CN not used anymore
         $this->ResetError();
-        if (!$this->last_result) {
-            $success = true;
-        }
-        else {
+        if ($this->last_result !== false) {
             mysqli_free_result($this->last_result);
         }
 
-        return $success;
+        return;
     }
 
     /**
@@ -1378,7 +1378,7 @@ class MySQL
      *
      * @return object Fetched row as PHP object
      */
-    public function Seek($row_number)
+    private function Seek($row_number)
     {
         $this->ResetError();
         $row_count = $this->RowCount();
@@ -1420,8 +1420,8 @@ class MySQL
      *
      * @return integer Current row number
      */
-    public function SeekPosition()
-    {
+    public function SeekPosition_X()
+    { //CN not used
         return $this->active_row;
     }
 
@@ -1433,8 +1433,8 @@ class MySQL
      *
      * @return boolean Returns TRUE on success or FALSE on error
      */
-    public function SelectDatabase($database, $charset = "")
-    {
+    public function SelectDatabase_X($database, $charset = "")
+    { //CN no longer used
         $return_value = true;
         if (!$charset) {
             $charset = $this->db_charset;

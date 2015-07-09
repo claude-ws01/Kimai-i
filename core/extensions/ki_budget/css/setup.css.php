@@ -19,7 +19,6 @@
         background-image: url('<?php echo $table_header; ?>');
         color:#FFF;
         font-size:11px;
-        font-weight:bold;
         padding:3px 4px 4px 6px;
         text-align:center;
 }
@@ -77,3 +76,5 @@
 .key_end {
   clear:both;
 }
+
+a { cursor: pointer }

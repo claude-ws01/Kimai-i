@@ -14,9 +14,7 @@
     left:10px;
 }
 
-
-
-#timeSheet { 
+#timeSheet {
     top:150px;
     z-index:2;
 }
@@ -31,7 +29,6 @@
     color:#FFF;
     left:10px;
     font-size:11px;
-    font-weight:bold;
 }
 
 #timeSheet_head { top:125px; }
@@ -39,9 +36,8 @@
 #timeSheet_head table { border:none; }
 
 #timeSheet_head td {
-    font-weight:bold;
     color:white;
     border-right: 1px solid rgba(0, 0, 0, 0);
 }
 
-
+a { cursor: pointer }

@@ -45,8 +45,9 @@
 <div id="floater_innerwrap">
 
     <div id="floater_handle">
-        <span
-            id="floater_title"><?php if (isset($id)) echo $this->kga['lang']['edit'], ': ', $this->kga['lang']['customer'];
+        <span id="floater_title"><?php if (isset($id)) {
+                echo $this->kga['lang']['edit'], ': ', $this->kga['lang']['customer'];
+            }
             else echo $this->kga['lang']['new_customer']; ?></span>
 
         <div class="right">
@@ -84,7 +85,6 @@
                 </a></li>
         </ul>
     </div>
-
     <form id="add_edit_customer" action="processor.php" method="post">
         <input name="customerFilter" type="hidden" value="0"/>
         <input name="axAction" type="hidden" value="add_edit_CustomerProjectActivity"/>
@@ -111,11 +111,13 @@
                         <label for="password"><?php echo $this->kga['lang']['password'] ?>:</label>
 
                         <div class="multiFields">
-                            <?php echo $this->formPassword('password', '', array(
-                                'cols'     => 30,
-                                'rows'     => 3,
-                                'disabled' => (!$this->password) ? 'disabled' : ''
-                            )); ?>
+                            <?php
+                            if (!$this->password) {
+                                echo $this->formText('password', '', array('cols' => 30, 'rows' => 3, 'disabled' => 'disabled'));
+                            }
+                            else {
+                                echo $this->formText('password', '', array('cols' => 30, 'rows' => 3));
+                            } ?>
                             <br/><?php echo $this->formCheckbox('no_password', '1', array('class' => 'disableInput', 'checked' => !$this->password));
                             echo $this->kga['lang']['nopassword'] ?>
                         </div>
@@ -134,7 +136,7 @@
                             :</label><?php echo $this->formTextarea('comment', $this->comment, array(
                             'cols'  => 30,
                             'rows'  => 5,
-                            'class' => 'comment'
+                            'class' => 'comment',
                         )); ?>
                     </li>
                 </ul>

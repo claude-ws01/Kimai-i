@@ -141,7 +141,7 @@ return [
     "effort"                         => "Effort",
     "erase"                          => "Effacer entrée",
     "error"                          => "An error occured!",
-    "ex_appr"                        => "appr.",
+    "ex_appr"                        => "OK?",
     "ex_bill"                        => "fact.",
     "ex_bud"                         => "bud.",
     "ex_com"                         => "comm.",
@@ -150,7 +150,7 @@ return [
     "ex_desc"                        => "desc.",
     "ex_loc"                         => "loc.",
     "ex_rate"                        => "taux",
-    "ex_stat"                        => "stat",
+    "ex_stat"                        => "statut",
     "ex_time"                        => "temps",
     "ex_tot"                         => "total",
     "ex_trk"                         => "trac",
@@ -259,6 +259,7 @@ return [
     "runbackup"                      => "Sauvegarde immédiate",
     "running"                        => "En cours...",
     "save"                           => "Sauvegarder",
+    "searchFilter"                   => "RECHERCHER",
     "seconds"                        => "Seconds",
     "secs"                           => "secondes",
     "securityWarning"                => "Alerte de sécurité",
@@ -414,7 +415,7 @@ EOF
         1 => ['hdl' => "Erreur durant l'installation!",
               'txt' => 'Kimai ne peut créer les tables neccessaires car des tables avec ce nom de préfixe existent déjà.<br/>
 Pour mettre à jour l\'installation existante, merci de cliquer <a href="../index.php">Ici</a>.<br/>
-Choisissez un autre préfixe de table ou supprimez les tables existantes avec ce préfixe pour permettre à Kimai une installation correcte.']
+Choisissez un autre préfixe de table ou supprimez les tables existantes avec ce préfixe pour permettre à Kimai une installation correcte.'],
     ],
 
     "export_extension"               => [
@@ -482,7 +483,7 @@ Choisissez un autre préfixe de table ou supprimez les tables existantes avec ce
     ],
 
     "ext_budget"                     => [
-        'unusedBudget' => 'Disponible'
+        'unusedBudget' => 'Disponible',
     ],
 
     "extensions"                     => [

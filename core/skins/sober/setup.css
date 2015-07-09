@@ -51,16 +51,26 @@ input {
     left: 15px;
 }
 
+#main_tools_button {
+    float:right;
+}
+#logged_in_name {
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
+    border: 1px solid #0C4506;
+    border-radius: 4px;
+    max-width: 200px;
+}
 #menu {
     position: absolute;
     width: 151px;
     height: 52px;
     top: 30px;
-    left: 200px;
+    left: 180px;
     z-index: 10;
     color: white;
     font-size: smaller;
-
 }
 
 #stopwatch {

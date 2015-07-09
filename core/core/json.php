@@ -35,6 +35,9 @@
  * - Ensure library/ is on include_path
  * - Register Autoloader
  */
+defined('WEBROOT') ||
+    define('WEBROOT', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
+
 defined('APPLICATION_PATH')
     || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../'));
 
@@ -46,8 +49,8 @@ set_include_path(
         )
     )
 );
-
-require_once 'Zend/Loader/Autoloader.php';
+//DEBUG// error_log('<<<========== JSON ==========>>>');
+require_once WEBROOT.'libraries/Zend/Loader/Autoloader.php';
 $autoloader = Zend_Loader_Autoloader::getInstance();
 
 /**

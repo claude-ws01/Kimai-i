@@ -137,7 +137,7 @@ return [
     "effort"                         => "Effort",
     "erase"                          => "Erase Entry",
     "error"                          => "An error occured!",
-    "ex_appr"                        => "appr.",
+    "ex_appr"                        => "OK?",
     "ex_bill"                        => "bill.",
     "ex_bud"                         => "bud.",
     "ex_com"                         => "comm.",
@@ -146,7 +146,7 @@ return [
     "ex_desc"                        => "desc.",
     "ex_loc"                         => "loc.",
     "ex_rate"                        => "rate",
-    "ex_stat"                        => "stat",
+    "ex_stat"                        => "status",
     "ex_time"                        => "time",
     "ex_tot"                         => "total",
     "ex_trk"                         => "trac",
@@ -255,6 +255,7 @@ return [
     "runbackup"                      => "Backup now",
     "running"                        => "Running...",
     "save"                           => "Save",
+    "searchFilter"                   => "SEARCH",
     "seconds"                        => "Seconds",
     "secs"                           => "seconds",
     "securityWarning"                => "security warning",
@@ -339,7 +340,7 @@ return [
         8  => "create backup",
         9  => "These backups are actually snapshots! Meaning they still live within the very same database as your actual Kimai work data. Backups via this utility are NO substitution for real backups on a physically different data medium. There are plenty of tools for database backups available on the web ;)",
         10 => "Authentication required",
-        11 => "To prevent unauthorized persons from creating, deleting or restoring backups, you need to give the password salt stored in include/autoconf.php. It only consists of letters and numbers."
+        11 => "To prevent unauthorized persons from creating, deleting or restoring backups, you need to give the password salt stored in include/autoconf.php. It only consists of letters and numbers.",
     ],
 
     "credits"                        => <<<EOF
@@ -403,7 +404,7 @@ EOF
         1 => ["hdl" => "Error during installation!",
               "txt" => 'Kimai is unable to create necessary tables because tables with the name name already exist.<br/>
 To update your existing installation please click <a href="../index.php">here</a>.<br/>
-Choose another table prefix or delete existing tables with this prefix in order to allow Kimai to perform a clean installation.']
+Choose another table prefix or delete existing tables with this prefix in order to allow Kimai to perform a clean installation.'],
     ],
 
     "export_extension"               => [
@@ -471,7 +472,7 @@ Choose another table prefix or delete existing tables with this prefix in order 
     ],
 
     "ext_budget"                     => [
-        "unusedBudget" => "unused"
+        "unusedBudget" => "unused",
     ],
 
     "extensions"                     => [

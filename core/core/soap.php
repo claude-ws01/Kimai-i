@@ -35,8 +35,11 @@
  * - Ensure library/ is on include_path
  * - Register Autoloader
  */
-defined('APPLICATION_PATH')
-    || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../'));
+defined('WEBROOT') ||
+    define('WEBROOT', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
+
+defined('APPLICATION_PATH') ||
+    define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../'));
 
 set_include_path(
     implode(
@@ -47,7 +50,8 @@ set_include_path(
     )
 );
 
-require_once 'Zend/Loader/Autoloader.php';
+//DEBUG// error_log('<<<========== SOAP ==========>>>');
+require_once WEBROOT. 'libraries/Zend/Loader/Autoloader.php';
 $autoloader = Zend_Loader_Autoloader::getInstance();
 
 /**
@@ -56,7 +60,7 @@ $autoloader = Zend_Loader_Autoloader::getInstance();
  * ==================================================================
  */
 
-require(APPLICATION_PATH.'/includes/classes/remote.class.php');
+require(APPLICATION_PATH . '/includes/classes/remote.class.php');
 
 ini_set('soap.wsdl_cache_enabled', 0);                              // @TODO
 ini_set('soap.wsdl_cache_dir', APPLICATION_PATH . '/temporary/');     // @TODO
@@ -67,18 +71,16 @@ ini_set('soap.wsdl_cache_ttl', 0);                                  // cache lif
 //$soapOpts = array('soap_version' => SOAP_1_2, 'encoding' => 'UTF-8'/*, 'uri' => $wsdlUrl*/);
 $soapOpts = array();
 
-if (isset($_GET['wsdl']) || isset($_GET['WSDL']))
-{
-	$autodiscover = new Zend_Soap_AutoDiscover();
-	$autodiscover->setClass('Kimai_Remote_Api');
-	$autodiscover->handle();
+if (isset($_GET['wsdl']) || isset($_GET['WSDL'])) {
+    $autodiscover = new Zend_Soap_AutoDiscover();
+    $autodiscover->setClass('Kimai_Remote_Api');
+    $autodiscover->handle();
 }
-else
-{
-	$wsdlUrl =  'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '?wsdl';
-	$server = new Kimai_Remote_Api();
+else {
+    $wsdlUrl = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '?wsdl';
+    $server  = new Kimai_Remote_Api();
 
-	$soap = new Zend_Soap_Server($wsdlUrl, $soapOpts);
-	$soap->setObject($server);
-	$soap->handle();
+    $soap = new Zend_Soap_Server($wsdlUrl, $soapOpts);
+    $soap->setObject($server);
+    $soap->handle();
 }

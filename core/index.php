@@ -27,24 +27,18 @@ if (!isset($_REQUEST['a'])) {
 }
 
 if (!isset($_POST['name']) || is_array($_POST['name'])) {
-    $name = ""; 
-} else { 
+    $name = "";
+}
+else {
     $name = $_POST['name'];
 }
 
 if (!isset($_POST['password']) || is_array($_POST['password'])) {
     $password = "";
-} else {
+}
+else {
     $password = $_POST['password'];
 }
-
-if (!isset($_POST['database']) || is_array($_POST['database'])) {
-    $database = ""; 
-} else { 
-    $database = $_POST['database'];
-    setcookie ("kimai_db",$database);
-}
-
 
 ob_start();
 
@@ -52,7 +46,7 @@ ob_start();
 // = standard includes =
 // =====================
 require('includes/basics.php');
-
+global $view, $kga, $database, $translations;
 $view = new Zend_View();
 $view->setBasePath(WEBROOT . '/templates');
 
@@ -76,11 +70,12 @@ checkDBversion(".");
 // = installation required? =
 // ==========================
 $users = $database->get_users();
-if (count($users) == 0) { 
-    $view->devtimespan = '2006-'.date('y');
+if (count($users) == 0) {
+    $view->devtimespan = '2006-' . date('y');
     if (isset($_REQUEST['disagreedGPL'])) {
         $view->disagreedGPL = 1;
-    } else {
+    }
+    else {
         $view->disagreedGPL = 0;
     }
     echo $view->render('install/welcome.php');
@@ -93,17 +88,22 @@ if (count($users) == 0) {
 // = User requested logout =
 // =========================
 $justLoggedOut = false;
-if ($_REQUEST['a']=="logout") {
-    setcookie ("kimai_key","0"); 
-    setcookie ("kimai_user","0");    
+if ($_REQUEST['a'] == "logout") {
+    setcookie("kimai_key", "0");
+    setcookie("kimai_user", "0");
     $justLoggedOut = true;
 }
 
 // ===========================
 // = User already logged in? =
 // ===========================
-if (isset($_COOKIE['kimai_user']) && isset($_COOKIE['kimai_key']) && $_COOKIE['kimai_user']!='0' && $_COOKIE['kimai_key']!='0' && !$_REQUEST['a']=="logout") {
-    if ($database->get_seq($_COOKIE['kimai_user']) == $_COOKIE['kimai_key']) { 
+if (isset($_COOKIE['kimai_user'])
+    && isset($_COOKIE['kimai_key'])
+    && $_COOKIE['kimai_user'] != '0'
+    && $_COOKIE['kimai_key'] != '0'
+    && !$_REQUEST['a'] == "logout"
+) {
+    if ($database->get_seq($_COOKIE['kimai_user']) == $_COOKIE['kimai_key']) {
         header("Location: core/kimai.php");
         exit;
     }
@@ -117,20 +117,20 @@ if (!$justLoggedOut
     & $authPlugin->performAutoLogin($userId)
 ) {
     if ($userId === false) {
-    $userId   = $database->user_create(array(
-                'name' => $name,
-                'globalRoleID' => $kga['user']['globalRoleID'],
-                'active' => 1
-              ));
-    $database->setGroupMemberships($userId,array($authPlugin->getDefaultGroups()));
+        $userId = $database->user_create(array(
+                                             'name'         => $name,
+                                             'globalRoleID' => $kga['user']['globalRoleID'],
+                                             'active'       => 1,
+                                         ));
+        $database->setGroupMemberships($userId, array($authPlugin->getDefaultGroups()));
     }
     $userData = $database->user_get_data($userId);
 
-    $keymai=random_code(30);
-    setcookie ("kimai_key",$keymai);
-    setcookie ("kimai_user",$userData['name']);
+    $keymai = random_code(30);
+    setcookie("kimai_key", $keymai);
+    setcookie("kimai_user", $userData['name']);
 
-    $database->user_loginSetKey($userId,$keymai);
+    $database->user_loginSetKey($userId, $keymai);
 
     header("Location: core/kimai.php");
 }
@@ -139,135 +139,112 @@ if (!$justLoggedOut
 // = processing login and displaying either login screen or errors =
 // =================================================================
 
-switch($_REQUEST['a'])
-{
+switch ($_REQUEST['a']) {
 
     case "checklogin":
         $name = htmlspecialchars(trim($name));
 
         $is_customer = $database->is_customer_name($name);
 
-        Logger::logfile("login: " . $name. ($is_customer?" as customer":" as user"));
+        Logger::logfile("login: " . $name . ($is_customer ? " as customer" : " as user"));
 
         if ($is_customer) {
-          // perform login of customer
-          $passCrypt = md5($kga['password_salt'].$password.$kga['password_salt']);
-          $id = $database->customer_nameToID($name);
-          $data = $database->customer_get_data($id);
+            // perform login of customer
+            $passCrypt = md5($kga['password_salt'] . $password . $kga['password_salt']);
+            $id        = $database->customer_nameToID($name);
+            $data      = $database->customer_get_data($id);
 
-          // TODO: add BAN support
-          if ( $data['password']==$passCrypt && $name!='' && $passCrypt!='') {
-            $keymai=random_code(30);
-            setcookie ("kimai_key",$keymai);
-            setcookie ("kimai_user",'customer_'.$name);
-            $database->customer_loginSetKey($id,$keymai);
-            header("Location: core/kimai.php");
-          }
-          else {
-            setcookie ("kimai_key","0"); setcookie ("kimai_user","0");
-            $view->headline = $kga['lang']['accessDenied'];
-            $view->message = $kga['lang']['wrongPass'];
-            $view->refresh = '<meta http-equiv="refresh" content="5;URL=index.php">';
-            echo $view->render('misc/error.php');
-          }
-        }
-        else
-        {
-          // perform login of user
-          if ($authPlugin->authenticate($name,$password,$userId)) {
-
-            if ($userId === false) {
-              $userId   = $database->user_create(array(
-                          'name' => $name,
-                          'globalRoleID' => $authPlugin->getDefaultGlobalRole(),
-                          'active' => 1
-                        ));
-              $database->setGroupMemberships($userId,array($authPlugin->getDefaultGroups()));
+            // TODO: add BAN support
+            if ($data['password'] == $passCrypt && $name != '' && $passCrypt != '') {
+                $keymai = random_code(30);
+                setcookie("kimai_key", $keymai);
+                setcookie("kimai_user", 'customer_' . $name);
+                $database->customer_loginSetKey($id, $keymai);
+                header("Location: core/kimai.php");
             }
-
-            $userData = $database->user_get_data($userId);
-
-            // global configuration must be present from now on
-            $database->get_global_config();
-
-            if (!isset($kga['conf']) || !isset($kga['conf']['loginTries']) ||
-                ($userData['ban'] < ($kga['conf']['loginTries']) || (time() - $userData['banTime']) > $kga['conf']['loginBanTime'])) {
-
-              // logintries not used up OR
-              // bantime is over
-              // => grant access
-
-              $keymai=random_code(30);
-              setcookie ("kimai_key",$keymai);
-              setcookie ("kimai_user",$userData['name']);
-
-              $database->user_loginSetKey($userId,$keymai);
-
-              header("Location: core/kimai.php");
-            } else {
-              // login attempt even though logintries are used up and bantime is not over => deny
-              setcookie ("kimai_key","0"); setcookie ("kimai_user","0");
-              $database->loginUpdateBan($userId);
-
-              $view->headline = $kga['lang']['banned'];
-              $view->message = $kga['lang']['tooManyLogins'];
-              $view->refresh = '<meta http-equiv="refresh" content="5;URL=index.php">';
-              echo $view->render('misc/error.php');
-            }
-          }
-          else {
-            // wrong username/password => deny
-            setcookie ("kimai_key","0"); setcookie ("kimai_user","0");
+            else {
+                setcookie("kimai_key", "0");
                 setcookie("kimai_user", "0");
-                if ($userId !== false) {
-              $database->loginUpdateBan($userId,true);
+                $view->headline = $kga['lang']['accessDenied'];
+                $view->message  = $kga['lang']['wrongPass'];
+                $view->refresh  = '<meta http-equiv="refresh" content="5;URL=index.php">';
+                echo $view->render('misc/error.php');
+            }
+        }
+        else {
+            // perform login of user
+            if ($authPlugin->authenticate($name, $password, $userId)) {
+
+                if ($userId === false) {
+                    $userId = $database->user_create(array(
+                                                         'name'         => $name,
+                                                         'globalRoleID' => $authPlugin->getDefaultGlobalRole(),
+                                                         'active'       => 1,
+                                                     ));
+                    $database->setGroupMemberships($userId, array($authPlugin->getDefaultGroups()));
                 }
 
-            $view->headline = $kga['lang']['accessDenied'];
-            $view->message = $kga['lang']['wrongPass'];
-            $view->refresh = '<meta http-equiv="refresh" content="5;URL=index.php">';
-            echo $view->render('misc/error.php');
-          }
+                $userData = $database->user_get_data($userId);
+
+                // global configuration must be present from now on
+                $database->get_global_config();
+
+                if (!isset($kga['conf']) || !isset($kga['conf']['loginTries']) ||
+                    ($userData['ban'] < ($kga['conf']['loginTries']) || (time() - $userData['banTime']) > $kga['conf']['loginBanTime'])
+                ) {
+
+                    // logintries not used up OR
+                    // bantime is over
+                    // => grant access
+
+                    $keymai = random_code(30);
+                    setcookie("kimai_key", $keymai);
+                    setcookie("kimai_user", $userData['name']);
+
+                    $database->user_loginSetKey($userId, $keymai);
+
+                    header("Location: core/kimai.php");
+                }
+                else {
+                    // login attempt even though logintries are used up and bantime is not over => deny
+                    setcookie("kimai_key", "0");
+                    setcookie("kimai_user", "0");
+                    $database->loginUpdateBan($userId);
+
+                    $view->headline = $kga['lang']['banned'];
+                    $view->message  = $kga['lang']['tooManyLogins'];
+                    $view->refresh  = '<meta http-equiv="refresh" content="5;URL=index.php">';
+                    echo $view->render('misc/error.php');
+                }
+            }
+            else {
+                // wrong username/password => deny
+                setcookie("kimai_key", "0");
+                setcookie("kimai_user", "0");
+                setcookie("kimai_user", "0");
+                if ($userId !== false) {
+                    $database->loginUpdateBan($userId, true);
+                }
+
+                $view->headline = $kga['lang']['accessDenied'];
+                $view->message  = $kga['lang']['wrongPass'];
+                $view->refresh  = '<meta http-equiv="refresh" content="5;URL=index.php">';
+                echo $view->render('misc/error.php');
+            }
         }
-    break;
+        break;
 
     // ============================================
     // = Show login panel depending on (demo)mode =
     // ============================================
     default:
 
-        // ======================================
-        // = Selectbox for additional databases =
-        // ======================================
-        if (isset($_COOKIE['kimai_db']) && $_COOKIE['kimai_db'] == true) {
-            $db_num = $_COOKIE['kimai_db'];
-        } else {
-            $db_num = 0;
-        }
-        $selectbox = "";
-        if (isset($server_ext_database[0]) && $server_ext_database[0] == true) {
-            $selectbox .= "\n<select name='database'>";
-            $selectbox .= "\n<option value='0'";
-            if ($db_num == 0) {
-                $selectbox .= " selected='selected'";
-            }
-            $selectbox .= sprintf(">%s</option>",$server_verbose);
-            $loops = count($server_ext_database);
-            for ($ext=0; $ext<$loops; $ext++) {
-                $selectbox .= "\n<option value='" .($ext+1). "'";
-                if ($db_num == $ext+1) {
-                    $selectbox .= " selected='selected'";
-                }
-                $selectbox .= ">".$server_ext_verbose[$ext]."</option>";
-            }
-            $selectbox .= "\n</select>";
-        }
-        $view->selectbox = $selectbox;
+        $view->selectbox = '';
 
-        $view->devtimespan = '2006-'.date('y');
+        $view->devtimespan = '2006-' . date('y');
 
         echo $view->render('login/panel.php');
-    break;
+        break;
 }
 
 ob_end_flush();

@@ -45,6 +45,7 @@ function pageWidth() {
         return pw;
     }
 }
+
 function pageHeight() {
     return window.innerHeight != null ? window.innerHeight: document.documentElement && document.documentElement.clientHeight ? document.documentElement.clientHeight:document.body != null? document.body.clientHeight:null;
     // same is true for the page bottom margin
@@ -62,7 +63,6 @@ function headerHeight() {
 }
 
 
-
 // ----------------------------------------------------------------------------------------
 // shows floating dialog windows based on processor data
 //
@@ -75,6 +75,7 @@ function floaterShow(phpFile, axAction, axValue, id, width, callback) {
             floaterLoadContent(phpFile, axAction, axValue, id, width, callback);
     }
 }    
+
 function floaterLoadContent(phpFile, axAction, axValue, id, width, callback) {
     $("#floater").load(phpFile,
         {
@@ -199,7 +200,6 @@ function kill_timeout(to) {
     eval(evalstring);
 }
 
-
 function showTools() {
     $('#main_tools_menu').fadeIn(fading_enabled ? 100 : 0);
 }
@@ -207,7 +207,6 @@ function showTools() {
 function hideTools() {
     $('#main_tools_menu').fadeOut(fading_enabled ? 100 : 0);
 }
-
 
 // ----------------------------------------------------------------------------------------
 // checks if a new stable Kimai version is available for download
@@ -333,9 +332,6 @@ function updateTimeframeWarning() {
     }
   
 }
-
-
-
 
 
 // ----------------------------------------------------------------------------------------
@@ -483,7 +479,6 @@ function buzzer_preselect_update_ui(selector,selectedID,updateRecording) {
 // modified version by x-tin
 // I would have added more credits - but you didn't leave any personal information on the forum ...
 // ... so just THX! ;)
-
 function ticktac() {
     startsecoffset = startsec ? startsec : offset;
     sek   = Math.floor((new Date()).getTime()/1000)-startsecoffset;
@@ -539,7 +534,6 @@ function editSubject(subject,id) {
 
 // ----------------------------------------------------------------------------------------
 // filters project and activity fields in add/edit record dialog
-
 function filter_selects(id, needle) {
   // cache initialisieren
   if(typeof window['__cacheselect_'+id] == "undefined") {

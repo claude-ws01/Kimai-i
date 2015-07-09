@@ -24,15 +24,15 @@
  */
 
 defined('WEBROOT') ||
-    define('WEBROOT', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
+define('WEBROOT', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
 
 defined('APPLICATION_PATH') ||
-    define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../'));
+define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../'));
 
 set_include_path(
     implode(
         PATH_SEPARATOR,
-        array(realpath(APPLICATION_PATH . '/libraries/')
+        array(realpath(APPLICATION_PATH . '/libraries/'),
         )
     )
 );
@@ -40,105 +40,65 @@ set_include_path(
 ini_set('display_errors', '0');
 
 //CN, in Kimai, do not specify output option in error_log //
-//TEST//
-error_log('<<================================== kimai testing error log ==================================>');
+//DEBUG// error_log('<<================================== kimai testing error log ==================================>');
 
-require_once 'Zend/Loader/Autoloader.php';
+require_once WEBROOT . 'libraries/Zend/Loader/Autoloader.php';
 $autoloader = Zend_Loader_Autoloader::getInstance();
 $autoloader->registerNamespace('Kimai');
 
 if (file_exists(WEBROOT . 'includes/autoconf.php')) {
-  require(WEBROOT.'includes/autoconf.php');
+    require(WEBROOT . 'includes/autoconf.php');
 }
 else {
-  header('location:installer/index.php');
-  exit;
+    header('location:installer/index.php');
+    exit;
 }
 
-require(WEBROOT.'includes/vars.php');
-require(WEBROOT.'includes/classes/format.class.php');
-require(WEBROOT.'includes/classes/logger.class.php');
-require(WEBROOT.'includes/classes/translations.class.php');
-require(WEBROOT.'includes/classes/rounding.class.php');
-require(WEBROOT.'includes/classes/extensions.class.php');
-require(WEBROOT.'includes/func.php');
-//CN
-//require WEBROOT . 'libraries/Kimai/Database/Mysql.php';
+require(WEBROOT . 'includes/vars.php');
+require(WEBROOT . 'includes/classes/format.class.php');
+require(WEBROOT . 'includes/classes/logger.class.php');
+require(WEBROOT . 'includes/classes/translations.class.php');
+require(WEBROOT . 'includes/classes/rounding.class.php');
+require(WEBROOT . 'includes/classes/extensions.class.php');
+require(WEBROOT . 'includes/func.php');
 
 
-// ==================================================================================
-// = check for additional database(s) and set $kga['server_database'] accordingly   =
-// = $kga['server_database'] stays untouched if there is no entry in the            =
-// = $server_ext_database array (for more info see /includes/vars.php)              =
-// ==================================================================================
-if (isset($_REQUEST['database'])) {
-    if ($_REQUEST['database']==true) {
+global $view, $kga, $database, $translations;
 
-        $dbnr = $_REQUEST['database'] - 1;
 
-        $kga['server_database'] = $server_ext_database[$dbnr];
-
-            if ($server_ext_username[$dbnr] != '') {
-                $kga['server_username'] = $server_ext_username[$dbnr];
-            }
-            if ($server_ext_password[$dbnr] != '') {
-                $kga['server_password'] = $server_ext_password[$dbnr];
-            }
-            if ($server_ext_prefix[$dbnr] != '') {
-                $kga['server_prefix'] = $server_ext_prefix[$dbnr];
-            }
-    }
-} else {
-    if (isset($_COOKIE['kimai_db']) && $_COOKIE['kimai_db'] == true) {
-
-        $dbnr = $_COOKIE['kimai_db'] - 1;
-
-        $kga['server_database'] = $server_ext_database[$dbnr];
-
-            if ($server_ext_username[$dbnr] != '') {
-                $kga['server_username'] = $server_ext_username[$dbnr];
-            }
-            if ($server_ext_password[$dbnr] != '') {
-                $kga['server_password'] = $server_ext_password[$dbnr];
-            }
-            if ($server_ext_prefix[$dbnr] != '') {
-                $kga['server_prefix'] = $server_ext_prefix[$dbnr];
-            }
-    }
-}
-global $kga, $database;
 $database = new Kimai_Database_Mysql($kga);
-$database->connect($kga['server_hostname'],$kga['server_database'],$kga['server_username'],$kga['server_password'],$kga['utf8'],$kga['server_type'] );
-if (!$database->isConnected()) { die('Kimai could not connect to database. Check your autoconf.php.'); }
+$database->connect($kga['server_hostname'], $kga['server_database'], $kga['server_username'], $kga['server_password'], $kga['utf8'], $kga['server_type']);
+if (!$database->isConnected()) {
+    die('Kimai could not connect to database. Check your autoconf.php.');
+}
 Kimai_Registry::setDatabase($database);
 
-global $translations;
 $translations = new Translations($kga);
 if ($kga['language'] != 'en') {
-  $translations->load($kga['language']);
+    $translations->load($kga['language']);
 }
 
 
 $vars = $database->configuration_get_data();
 if (!empty($vars)) {
-  $kga['currency_name']          = $vars['currency_name'];
-  $kga['currency_sign']          = $vars['currency_sign'];
-  $kga['show_sensible_data']     = $vars['show_sensible_data'];
-  $kga['show_update_warn']       = $vars['show_update_warn'];
-  $kga['check_at_startup']       = $vars['check_at_startup'];
-  $kga['show_daySeperatorLines'] = $vars['show_daySeperatorLines'];
-  $kga['show_gabBreaks']         = $vars['show_gabBreaks'];
-  $kga['show_RecordAgain']       = $vars['show_RecordAgain'];
-  $kga['show_TrackingNr']        = $vars['show_TrackingNr'];
-  $kga['date_format'][0]         = $vars['date_format_0'];
-  $kga['date_format'][1]         = $vars['date_format_1'];
-  $kga['date_format'][2]         = $vars['date_format_2'];
+    $kga['currency_name']          = $vars['currency_name'];
+    $kga['currency_sign']          = $vars['currency_sign'];
+    $kga['show_sensible_data']     = $vars['show_sensible_data'];
+    $kga['show_update_warn']       = $vars['show_update_warn'];
+    $kga['check_at_startup']       = $vars['check_at_startup'];
+    $kga['show_daySeperatorLines'] = $vars['show_daySeperatorLines'];
+    $kga['show_gabBreaks']         = $vars['show_gabBreaks'];
+    $kga['show_RecordAgain']       = $vars['show_RecordAgain'];
+    $kga['show_TrackingNr']        = $vars['show_TrackingNr'];
+    $kga['date_format'][0]         = $vars['date_format_0'];
+    $kga['date_format'][1]         = $vars['date_format_1'];
+    $kga['date_format'][2]         = $vars['date_format_2'];
     if ($vars['language'] != '') {
-    $kga['language']             = $vars['language'];
+        $kga['language'] = $vars['language'];
     }
     else {
         if ($kga['language'] == '') {
-    $kga['language'] = 'en';
+            $kga['language'] = 'en';
         }
     }
 }

@@ -33,12 +33,13 @@
 
 // bootstrap kimai
 require("basics.php");
+global $view, $kga, $database, $translations;
 
 // check if we are in an extension
 if (!$isCoreProcessor) {
-  $datasrc = "config.ini";
-  $settings = parse_ini_file($datasrc);
-  $dir_ext = $settings['EXTENSION_DIR'];
+    $datasrc  = "config.ini";
+    $settings = parse_ini_file($datasrc);
+    $dir_ext  = $settings['EXTENSION_DIR'];
 }
 
 // =============================
@@ -46,11 +47,12 @@ if (!$isCoreProcessor) {
 // =============================
 $view = new Zend_View();
 if ($isCoreProcessor) {
-  $view->setBasePath(WEBROOT . '/templates');
-} else {
-  $view->setBasePath(WEBROOT . 'extensions/' . $dir_ext . '/' . $dir_templates);
+    $view->setBasePath(WEBROOT . '/templates');
 }
-$view->addHelperPath(WEBROOT.'/templates/helpers','Zend_View_Helper');
+else {
+    $view->setBasePath(WEBROOT . 'extensions/' . $dir_ext . '/' . $dir_templates);
+}
+$view->addHelperPath(WEBROOT . '/templates/helpers', 'Zend_View_Helper');
 
 
 // ============================================================================================
@@ -60,37 +62,38 @@ $user = checkUser();
 
 $view->kga = $kga;
 
-$commentTypes   = array($kga['lang']['ctype0'],$kga['lang']['ctype1'],$kga['lang']['ctype2']);
+$commentTypes = array($kga['lang']['ctype0'], $kga['lang']['ctype1'], $kga['lang']['ctype2']);
 
 // ==================
 // = security check =
 // ==================
-if ( isset($_REQUEST['axAction']) && !is_array($_REQUEST['axAction']) && $_REQUEST['axAction']!="") {
-  $axAction = strip_tags($_REQUEST['axAction']);
-} else {
-  $axAction = '';
+if (isset($_REQUEST['axAction']) && !is_array($_REQUEST['axAction']) && $_REQUEST['axAction'] != "") {
+    $axAction = strip_tags($_REQUEST['axAction']);
+}
+else {
+    $axAction = '';
 }
 
 $axValue = isset($_REQUEST['axValue']) ? strip_tags($_REQUEST['axValue']) : '';
-$id = isset($_REQUEST['id']) ? strip_tags($_REQUEST['id']) : null;
+$id      = isset($_REQUEST['id']) ? strip_tags($_REQUEST['id']) : null;
 
 
 // ============================================
 // = initialize currently displayed timeframe =
 // ============================================
 $timeframe = get_timeframe();
-$in = $timeframe[0];
-$out = $timeframe[1];
+$in        = $timeframe[0];
+$out       = $timeframe[1];
 
-if ( isset( $_REQUEST['first_day'] ) ) {
-  $in  = (int)$_REQUEST['first_day'];
+if (isset($_REQUEST['first_day'])) {
+    $in = (int)$_REQUEST['first_day'];
 }
-if ( isset( $_REQUEST['last_day'] ) ) {
-  $out = mktime(23,59,59,date("n",$_REQUEST['last_day']),date("j",$_REQUEST['last_day']),date("Y",$_REQUEST['last_day']));
+if (isset($_REQUEST['last_day'])) {
+    $out = mktime(23, 59, 59, date("n", $_REQUEST['last_day']), date("j", $_REQUEST['last_day']), date("Y", $_REQUEST['last_day']));
 }
 
 if ($axAction != "reloadLogfile") {
-    Logger::logfile("KSPI axAction (".(array_key_exists('customer',$kga)?$kga['customer']['name']:$kga['user']['name'])."): " . $axAction);
+    Logger::logfile("KSPI axAction (" . (array_key_exists('customer', $kga) ? $kga['customer']['name'] : $kga['user']['name']) . "): " . $axAction);
 }
 
 // prevent IE from caching the response

@@ -219,8 +219,8 @@
         <a id="main_tools_button" href="#"><img
                 src="../skins/<?php echo $this->escape($this->kga['conf']['skin']) ?>/grfx/g3_menu_dropdown.png"
                 width="44" height="27" alt="Menu Dropdown"/></a>
-        <br/><?php echo $this->kga['lang']['logged_in_as'] ?> <b><?php echo isset($this->kga['user'])
-                ? $this->escape($this->kga['user']['name']) : $this->escape($this->kga['customer']['name']) ?></b>
+        <div id="logged_in_name"><?php echo isset($this->kga['user'])
+                ? $this->escape($this->kga['user']['name']) : $this->escape($this->kga['customer']['name']) ?></div>
     </div>
 
     <div id="main_tools_menu">
@@ -370,25 +370,25 @@
 <div class="lists" style="display:none">
     <div id="users_head">
         <input class="livefilterfield" onkeyup="lists_live_filter('users', this.value);" type="text" id="filt_user"
-               name="filt_user"/>
+               name="filt_user" placeholder="<?php echo $this->kga['lang']['searchFilter'] ?>">
         <?php echo $this->kga['lang']['users'] ?>
     </div>
 
     <div id="customers_head">
         <input class="livefilterfield" onkeyup="lists_live_filter('customers', this.value);" type="text"
-               id="filter_customer" name="filter_customer"/>
+               id="filter_customer" name="filter_customer" placeholder="<?php echo $this->kga['lang']['searchFilter'] ?>">
         <?php echo $this->kga['lang']['customers'] ?>
     </div>
 
     <div id="projects_head">
         <input class="livefilterfield" onkeyup="lists_live_filter('projects', this.value);" type="text"
-               id="filter_project" name="filter_project"/>
+               id="filter_project" name="filter_project" placeholder="<?php echo $this->kga['lang']['searchFilter'] ?>">
         <?php echo $this->kga['lang']['projects'] ?>
     </div>
 
     <div id="activities_head">
         <input class="livefilterfield" onkeyup="lists_live_filter('activities', this.value);" type="text"
-               id="filter_activity" name="filter_activity"/>
+               id="filter_activity" name="filter_activity" placeholder="<?php echo $this->kga['lang']['searchFilter'] ?>">
         <?php echo $this->kga['lang']['activities'] ?>
     </div>
 

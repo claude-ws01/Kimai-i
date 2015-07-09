@@ -27,7 +27,8 @@ abstract class Kimai_Database_Abstract
     /**
      * @var MySQL
      */
-    public $conn;
+//    public $conn;
+    public $MySQL;
     protected $kga;
 
     /**
@@ -362,7 +363,7 @@ abstract class Kimai_Database_Abstract
      * This is currently required for extensions to access the database without
      * connecting again.
      */
-    public function getConnectionHandler()
+    public function &getConnectionHandler()
     {
         return $this->MySQL;
     }

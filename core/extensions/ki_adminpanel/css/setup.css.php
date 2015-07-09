@@ -28,3 +28,5 @@ fieldset legend {
 fieldset {
   margin-top: 8px;
 }
+
+a { cursor: pointer }
