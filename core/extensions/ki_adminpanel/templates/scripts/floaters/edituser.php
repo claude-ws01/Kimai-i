@@ -200,7 +200,7 @@
 
                     <li>
                         <label for="password"><?php echo $this->kga['lang']['newPassword'] ?>:</label>
-                        <input class="formfield" type="password" id="password" name="password" size="9"
+                        <input class="formfield" type="text" id="password" name="password" size="9"
                                value=""/> <?php echo $this->kga['lang']['minLength'] ?>
                         <?php if ($this->user_details['password'] == ""): ?>
 
@@ -215,7 +215,7 @@
 
                     <li>
                         <label for="retypePassword"><?php echo $this->kga['lang']['retypePassword'] ?>:</label>
-                        <input class="formfield" type="password" id="retypePassword" name="retypePassword" size="9"/>
+                        <input class="formfield" type="text" id="retypePassword" name="retypePassword" size="9"/>
                     </li>
 
 
