@@ -1248,8 +1248,10 @@ class Kimai_Database_Mysql extends MySQL
 
 
         //DEBUG//
-        if ($_SERVER['DOCUMENT_URI'] === '/updater.php') {
-            error_log('<<== '.__FUNCTION__.'  VERSION ==>'.$return[0].'<== REVISION ==>'.$return[1].'<==>>');
+        if ($_SERVER['DOCUMENT_URI'] === '/updater.php'
+            && IN_DEV
+        ) {
+            error_log('<<== ' . __FUNCTION__ . '  VERSION ==>' . $return[0] . '<== REVISION ==>' . $return[1] . '<==>>');
         }
 
         return $return;
