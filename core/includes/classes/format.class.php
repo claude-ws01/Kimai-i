@@ -18,6 +18,7 @@ class Format
     public static function formatDuration($sek)
     {
         global $kga;
+
         if (is_array($sek)) {
             // Convert all values of the array.
             $arr = array();
@@ -29,7 +30,7 @@ class Format
         }
         else {
             // Format accordingly.
-            if ($kga['conf']['durationWithSeconds'] == 0) {
+            if ($kga['conf']['duration_with_seconds'] == 0) {
                 return sprintf('%d:%02d', $sek / 3600, $sek / 60 % 60);
             }
             else {
@@ -49,6 +50,7 @@ class Format
     public static function formatCurrency($number, $htmlNoWrap = true)
     {
         global $kga;
+
         if (is_array($number)) {
             // Convert all values of the array.
             $arr = array();
@@ -59,12 +61,12 @@ class Format
             return $arr;
         }
         else {
-            $value = str_replace(".", $kga['conf']['decimalSeparator'], sprintf("%01.2f", $number));
+            $value = str_replace(".", $kga['conf']['decimal_separator'], sprintf("%01.2f", $number));
             if ($kga['conf']['currency_first']) {
-                $value = $kga['currency_sign'] . " " . $value;
+                $value = $kga['conf']['currency_sign'] . " " . $value;
             }
             else {
-                $value = $value . " " . $kga['currency_sign'];
+                $value = $value . " " . $kga['conf']['currency_sign'];
             }
 
             if ($htmlNoWrap) {
@@ -80,15 +82,15 @@ class Format
      * Format the annotations and only include data which the user wants to see.
      * The array which is passed to the method will be modified.
      *
-     * @param $ann array the annotation array (userid => (time, costs) )
+     * @param $ann array the annotation array (user_id => (time, costs) )
      */
     public static function formatAnnotations(&$ann)
     {
-        global $database, $kga;
+        global $kga;
 
         $type = 2;
-        if (isset($kga['user'])) {
-            $type = $database->user_get_preference('ui.sublistAnnotations');
+        if (isset($kga['pref']['sublist_annotations'])) {
+            $type = $kga['pref']['sublist_annotations'];
         }
 
         $userIds = array_keys($ann);
@@ -99,7 +101,7 @@ class Format
 
         switch ($type) {
             case 0:
-                // just time
+                // only time
                 foreach ($userIds as $userId) {
                     if (isset($ann[$userId]['time'])) {
                         $ann[$userId] = self::formatDuration($ann[$userId]['time']);
@@ -111,14 +113,14 @@ class Format
                 }
                 break;
             case 1:
-                // just costs
+                // only cost
                 foreach ($userIds as $userId) {
                     $ann[$userId] = self::formatCurrency($ann[$userId]['costs']);
                 }
                 break;
             case 2:
             default:
-                // both
+                // both time & cost
                 foreach ($userIds as $userId) {
                     if (isset($ann[$userId]['time'])) {
                         $time = self::formatDuration($ann[$userId]['time']);
@@ -334,4 +336,3 @@ class Format
 
 }
 
-?>

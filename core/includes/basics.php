@@ -23,12 +23,84 @@
  * here.
  */
 
-defined('WEBROOT') ||
-define('WEBROOT', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
+define('WEBROOT', $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR);
+
+if (file_exists(WEBROOT . 'includes/autoconf.php')) {
+    require WEBROOT . 'includes/autoconf.php';
+}
+else {
+    header('location:installer/index.php');
+    exit;
+}
+
+if (file_exists(WEBROOT . 'dev')) {
+    define('IN_DEV', 1);
+}
+else {
+    define('IN_DEV', 0);
+}
+
+if (file_exists(WEBROOT . 'debug')) {
+    define('DEBUG_JS', '.debug');
+}
+else {
+    define('DEBUG_JS', '.min');
+}
+
+//DEBUG// error_log('<<================================== kimai testing error log ==================================>');
+global $database, $kga, $translations, $view;
+
+require WEBROOT . 'includes/vars.php';
+require WEBROOT . 'libraries/Kimai/Database/kimai.php';
+require WEBROOT . 'includes/classes/format.class.php';
+require WEBROOT . 'includes/classes/logger.class.php';
+require WEBROOT . 'includes/classes/translations.class.php';
+require WEBROOT . 'includes/classes/rounding.class.php';
+require WEBROOT . 'includes/classes/extensions.class.php';
+require WEBROOT . 'includes/func.php';
+
+$database = new Kimai_Database_Mysql(
+    $kga['server_hostname'],
+    $kga['server_database'],
+    $kga['server_username'],
+    $kga['server_password'],
+    $kga['utf8']);
+
+// both may be needed to log mysql errors
+ini_set('display_errors', '1');
+mysqli_report(MYSQLI_REPORT_ERROR);
+
+if (!is_object($database) || !$database->isConnected()) {
+    die('Kimai-i could not connect to database. Check your autoconf.php.');
+}
+
+
+//  initialize $kga (conf & pref) //
+config_init();
+
+//  DB need an update?   //
+$tranlastion_load_from_db = false;
+if ($_SERVER['DOCUMENT_URI'] !== '/db_restore.php'
+    && $_SERVER['DOCUMENT_URI'] !== '/installer/install.php'
+) {
+    checkDBversion('.');
+    $tranlastion_load_from_db = true;
+}
+
+
+//################################################//
+// FROM THIS POINT ON, WE NEED AN UP-TO-DATE DB   //
+//################################################//
+
+
+//  DBget the config and prefs  //
+if ($_SERVER['DOCUMENT_URI'] !== '/installer/install.php') {
+    $database->config_load();
+}
+
 
 defined('APPLICATION_PATH') ||
-define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../'));
-
+define('APPLICATION_PATH', realpath(__DIR__ . '/../'));
 set_include_path(
     implode(
         PATH_SEPARATOR,
@@ -37,68 +109,15 @@ set_include_path(
     )
 );
 
-ini_set('display_errors', '0');
-
-//CN, in Kimai, do not specify output option in error_log //
-//DEBUG// error_log('<<================================== kimai testing error log ==================================>');
 
 require_once WEBROOT . 'libraries/Zend/Loader/Autoloader.php';
 $autoloader = Zend_Loader_Autoloader::getInstance();
 $autoloader->registerNamespace('Kimai');
+$autoloader->registerNamespace('MySQL');
 
-if (file_exists(WEBROOT . 'includes/autoconf.php')) {
-    require(WEBROOT . 'includes/autoconf.php');
-}
-else {
-    header('location:installer/index.php');
-    exit;
-}
-
-require(WEBROOT . 'includes/vars.php');
-require(WEBROOT . 'includes/classes/format.class.php');
-require(WEBROOT . 'includes/classes/logger.class.php');
-require(WEBROOT . 'includes/classes/translations.class.php');
-require(WEBROOT . 'includes/classes/rounding.class.php');
-require(WEBROOT . 'includes/classes/extensions.class.php');
-require(WEBROOT . 'includes/func.php');
-
-
-global $view, $kga, $database, $translations;
-
-
-$database = new Kimai_Database_Mysql($kga);
-$database->connect($kga['server_hostname'], $kga['server_database'], $kga['server_username'], $kga['server_password'], $kga['utf8'], $kga['server_type']);
-if (!$database->isConnected()) {
-    die('Kimai could not connect to database. Check your autoconf.php.');
-}
 Kimai_Registry::setDatabase($database);
 
-$translations = new Translations($kga);
-if ($kga['language'] != 'en') {
-    $translations->load($kga['language']);
-}
 
+// TRANSLATION //
+$translations = new Translations($tranlastion_load_from_db, $kga['pref']['language']);
 
-$vars = $database->configuration_get_data();
-if (!empty($vars)) {
-    $kga['currency_name']          = $vars['currency_name'];
-    $kga['currency_sign']          = $vars['currency_sign'];
-    $kga['show_sensible_data']     = $vars['show_sensible_data'];
-    $kga['show_update_warn']       = $vars['show_update_warn'];
-    $kga['check_at_startup']       = $vars['check_at_startup'];
-    $kga['show_daySeperatorLines'] = $vars['show_daySeperatorLines'];
-    $kga['show_gabBreaks']         = $vars['show_gabBreaks'];
-    $kga['show_RecordAgain']       = $vars['show_RecordAgain'];
-    $kga['show_TrackingNr']        = $vars['show_TrackingNr'];
-    $kga['date_format'][0]         = $vars['date_format_0'];
-    $kga['date_format'][1]         = $vars['date_format_1'];
-    $kga['date_format'][2]         = $vars['date_format_2'];
-    if ($vars['language'] != '') {
-        $kga['language'] = $vars['language'];
-    }
-    else {
-        if ($kga['language'] == '') {
-            $kga['language'] = 'en';
-        }
-    }
-}

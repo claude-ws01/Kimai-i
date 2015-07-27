@@ -1,4 +1,6 @@
 <?php
-$kga['version']  = "0.9.3-mrc.1";             // kimai version
-$kga['revision'] = 1384;                // database revision number (incremented whenever the database changes)
-$kga['status']   = "Mysqli Release Candidate"; // leave blank if stable ...
+global $kga;
+$kga['core.ident']    = 'kimai-i';             // software identification
+$kga['core.version']  = '0.10.0-beta.2';        // kimai version
+$kga['core.revision'] = '2000';                // database revision number (incremented whenever the database changes)
+$kga['core.status']   = 'BETA';                // leave blank if stable (ALPHA,BETA,RELEASE)

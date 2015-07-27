@@ -20,12 +20,69 @@ class Extensions
     private $timeouts = array();
 
     private $extensionsDir;
-    private $kga;
 
-    public function __construct(&$kga, $dir)
+
+    public function __construct($dir)
     {
-        $this->kga           = & $kga;
         $this->extensionsDir = $dir;
+    }
+
+    public function activitiesChangedHooks()
+    {
+        return implode($this->activities_changed_hooks);
+    }
+
+    public function buzzerRecordHooks()
+    {
+        return implode($this->record_hooks);
+    }
+
+    public function buzzerStopHooks()
+    {
+        return implode($this->buzzer_stop_hooks);
+    }
+
+    public function cssExtensionFiles()
+    {
+        foreach ($this->css_extension_files as $key => $file) {
+            if (!preg_match('/^.+(?:\.debug|\.min)\.css$/', $file)) {
+                $test = preg_replace('/\.css$/', DEBUG_JS . '.css', $file);
+                //DEV//
+                if (IN_DEV) {
+                    error_log('<<==KEY==>>' . $key . '<<==FILE==>>' . $file . '<<==NEW==>>' . $test . '<<= DO NOT HAVE .min .debug ==>>');
+                }
+
+                $this->css_extension_files[$key] = $test;
+            }
+        }
+
+        return $this->css_extension_files;
+    }
+
+    public function customersChangedHooks()
+    {
+        return implode($this->customers_changed_hooks);
+    }
+
+    public function extensionsTabData()
+    {
+        return $this->extensions;
+    }
+
+    public function filterHooks()
+    {
+        return implode($this->filter_hooks);
+    }
+
+    public function jsExtensionFiles()
+    {
+        foreach ($this->js_extension_files as $key => $file) {
+            $test = preg_replace('/\.js$/', DEBUG_JS . '.js', $file);
+            //DEBUG// error_log('<<==KEY==>>'.$key.'<<==FILE==>>'.$file.'<<==NEW==>>'.$test.'<<=>>');
+            $this->js_extension_files[$key] = $test;
+        }
+
+        return $this->js_extension_files;
     }
 
     /**
@@ -33,12 +90,13 @@ class Extensions
      */
     public function loadConfigurations()
     {
-        global $database;
+        global $database, $kga;
+
+
         $handle = opendir($this->extensionsDir);
 
-        if (!$handle) {
-            return;
-        }
+        if (!$handle) return;
+
 
         while (false !== ($dir = readdir($handle))) {
 
@@ -60,8 +118,8 @@ class Extensions
             $settings = parse_ini_file($dir . 'config.ini');
 
             // Check if user has the correct rank to use this extension
-            if (isset($this->kga['user'])) {
-                if (!$database->global_role_allows($this->kga['user']['globalRoleID'], $settings['EXTENSION_KEY'] . '-access')) {
+            if (array_key_exists('user', $kga)) {
+                if (!$database->global_role_allows($kga['user']['global_role_id'], $settings['EXTENSION_KEY'] . '__access')) {
                     continue;
                 }
             }
@@ -71,13 +129,16 @@ class Extensions
                 }
             }
 
-            $this->extensions[] = array('name'             => $settings['EXTENSION_NAME'],
-                                        'key'              => $settings['EXTENSION_KEY'],
-                                        'initFile'         => $settings['EXTENSION_INIT_FILE'],
-                                        'tabChangeTrigger' => isset($settings['TAB_CHANGE_TRIGGER'])
-                                                ? $settings['TAB_CHANGE_TRIGGER'] : "");
+            $this->extensions[$settings['EXTENSION_KEY']] =
+                array('name'             => $settings['EXTENSION_NAME'],
+                      'key'              => $settings['EXTENSION_KEY'],
+                      'initFile'         => $settings['EXTENSION_INIT_FILE'],
+                      'tabChangeTrigger' => isset($settings['TAB_CHANGE_TRIGGER'])
+                          ? $settings['TAB_CHANGE_TRIGGER'] : "",
+                );
 
-            $this->addOptionalValue($settings, 'CSS_INCLUDE_FILES', $this->css_extension_files);
+            //CN, check if the skin has it's own css/grfx folder
+            $this->addValue(self::skinCssDir($settings), $this->css_extension_files);
 
             // add JavaScript files
             $this->addOptionalValue($settings, 'JS_INCLUDE_FILES', $this->js_extension_files);
@@ -98,19 +159,98 @@ class Extensions
 
             // add Timeout clearing
             $this->addOptionalValue($settings, 'REG_TIMEOUTS', $this->timeouts);
+
         }
 
         //CN - keeping tab order in relation with the folder name. I got some differences between linux and windows (?!)
         $iniFile = array();
-        foreach ($this->extensions as $key => $row) {
-            $iniFile[$key] = $row['initFile'];
+        foreach ($this->extensions as $row) {
+            $iniFile[] = $row['key'];
         }
         array_multisort($iniFile, SORT_ASC, $this->extensions);
 
         closedir($handle);
     }
 
-    /**
+    public function phpIncludeFiles()
+    {
+        return $this->php_include_files;
+    }
+
+    public function projectsChangedHooks()
+    {
+        return implode($this->projects_changed_hooks);
+    }
+
+    public function resizeHooks()
+    {
+        return implode($this->resize_hooks);
+    }
+
+    public function timeframeChangedHooks()
+    {
+        return implode($this->timeframe_changed_hooks);
+    }
+
+    public function timeoutList()
+    {
+        $timeoutlist = "";
+        foreach ($this->timeouts as $timeout) {
+            $timeoutlist .= "kill_timeout('" . $timeout . "');";
+        }
+
+        return $timeoutlist;
+    }
+
+    public function usersChangedHooks()
+    {
+        return implode($this->users_changed_hooks);
+    }
+
+    public static function skinCssDir($settings)
+    {   //CN, check if the skin has it's own css/grfx file for current extension
+
+        global $kga;
+
+        $skin_extension_css_file = 'skins/' . $kga['pref']['skin'] . '/' . $settings['EXTENSION_DIR'] . DEBUG_JS . '.css';
+
+
+        if (file_exists(WEBROOT . $skin_extension_css_file)) {
+            return '../' . $skin_extension_css_file;
+        }
+
+        //DEV//
+        if (IN_DEV) {
+            error_log('<<== EXTENSIONS - SKIN CSS FILE MISSING==>>' . $skin_extension_css_file);
+        }
+
+
+
+        return '../extensions/' . $settings['EXTENSION_DIR'] . '/css/styles' . DEBUG_JS . '.css';
+    }
+
+    public static function skinDir($settings)
+    {   //CN, check if the skin has it's own css/grfx folder for current extension
+
+        global $kga;
+
+        $skin_extension_dir = 'skins/' . $kga['pref']['skin'] . '/' . $settings['EXTENSION_DIR'];
+
+        if (file_exists(WEBROOT . $skin_extension_dir . '/css/styles.css')) {
+            return '../' . $skin_extension_dir;
+        }
+
+        return '../extensions/' . $settings['EXTENSION_DIR'];
+    }
+
+    private function addOptionalValue(&$settings, $key, &$list)
+    {
+        if (isset($settings[$key])) {
+            $this->addValue($settings[$key], $list);
+        }
+    }
+
+    /*
      * Add a settings value to the list. Duplicate entries will be prevented.
      * If the settings value is an array each item in the entry will be added.
      */
@@ -130,88 +270,5 @@ class Extensions
         }
     }
 
-    private function addOptionalValue(&$settings, $key, &$list)
-    {
-        if (isset($settings[$key])) {
-            $this->addValue($settings[$key], $list);
-        }
-    }
-
-    public function extensionsTabData()
-    {
-        return $this->extensions;
-    }
-
-    public function phpIncludeFiles()
-    {
-        return $this->php_include_files;
-    }
-
-    public function cssExtensionFiles()
-    {
-        return $this->css_extension_files;
-    }
-
-    public function jsExtensionFiles()
-    {
-        return $this->js_extension_files;
-    }
-
-    public function timeframeChangedHooks()
-    {
-        return implode($this->timeframe_changed_hooks);
-    }
-
-    public function buzzerRecordHooks()
-    {
-        return implode($this->record_hooks);
-    }
-
-    public function buzzerStopHooks()
-    {
-        return implode($this->buzzer_stop_hooks);
-    }
-
-    public function usersChangedHooks()
-    {
-        return implode($this->users_changed_hooks);
-    }
-
-    public function customersChangedHooks()
-    {
-        return implode($this->customers_changed_hooks);
-    }
-
-    public function projectsChangedHooks()
-    {
-        return implode($this->projects_changed_hooks);
-    }
-
-    public function activitiesChangedHooks()
-    {
-        return implode($this->activities_changed_hooks);
-    }
-
-    public function filterHooks()
-    {
-        return implode($this->filter_hooks);
-    }
-
-    public function resizeHooks()
-    {
-        return implode($this->resize_hooks);
-    }
-
-    public function timeoutList()
-    {
-        $timeoutlist = "";
-        foreach ($this->timeouts as $timeout) {
-            $timeoutlist .= "kill_timeout('" . $timeout . "');";
-        }
-
-        return $timeoutlist;
-    }
-
 }
 
-?>

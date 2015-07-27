@@ -32,25 +32,20 @@
  */
 
 // bootstrap kimai
-require("basics.php");
-global $view, $kga, $database, $translations;
+global $database, $kga, $translations, $view;
+require 'basics.php';
 
 // check if we are in an extension
 if (!$isCoreProcessor) {
-    $datasrc  = "config.ini";
+    $datasrc  = 'config.ini';
     $settings = parse_ini_file($datasrc);
-    $dir_ext  = $settings['EXTENSION_DIR'];
-}
 
-// =============================
-// = Zend_View (configuration) =
-// =============================
-$view = new Zend_View();
-if ($isCoreProcessor) {
-    $view->setBasePath(WEBROOT . '/templates');
+    $view = new Zend_View();
+    $view->setBasePath(WEBROOT . 'extensions/' . $settings['EXTENSION_DIR'] . '/' . $dir_templates);
 }
 else {
-    $view->setBasePath(WEBROOT . 'extensions/' . $dir_ext . '/' . $dir_templates);
+    $view = new Zend_View();
+    $view->setBasePath(WEBROOT . '/templates');
 }
 $view->addHelperPath(WEBROOT . '/templates/helpers', 'Zend_View_Helper');
 
@@ -58,7 +53,8 @@ $view->addHelperPath(WEBROOT . '/templates/helpers', 'Zend_View_Helper');
 // ============================================================================================
 // = assigning language and config variables / they are needed in all following smarty output =
 // ============================================================================================
-$user = checkUser();
+
+checkUser();
 
 $view->kga = $kga;
 
@@ -67,7 +63,7 @@ $commentTypes = array($kga['lang']['ctype0'], $kga['lang']['ctype1'], $kga['lang
 // ==================
 // = security check =
 // ==================
-if (isset($_REQUEST['axAction']) && !is_array($_REQUEST['axAction']) && $_REQUEST['axAction'] != "") {
+if (isset($_REQUEST['axAction']) && !is_array($_REQUEST['axAction']) && $_REQUEST['axAction'] != '') {
     $axAction = strip_tags($_REQUEST['axAction']);
 }
 else {
@@ -89,15 +85,15 @@ if (isset($_REQUEST['first_day'])) {
     $in = (int)$_REQUEST['first_day'];
 }
 if (isset($_REQUEST['last_day'])) {
-    $out = mktime(23, 59, 59, date("n", $_REQUEST['last_day']), date("j", $_REQUEST['last_day']), date("Y", $_REQUEST['last_day']));
+    $out = mktime(23, 59, 59, date('n', $_REQUEST['last_day']), date('j', $_REQUEST['last_day']), date('Y', $_REQUEST['last_day']));
 }
 
-if ($axAction != "reloadLogfile") {
-    Logger::logfile("KSPI axAction (" . (array_key_exists('customer', $kga) ? $kga['customer']['name'] : $kga['user']['name']) . "): " . $axAction);
+if ($axAction !== 'reloadLogfile') {
+    Logger::logfile('KSPI axAction (' . (array_key_exists('customer', $kga) ? $kga['customer']['name'] : $kga['user']['name']) . '): ' . $axAction);
 }
 
 // prevent IE from caching the response
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-header("Cache-Control: no-store, no-cache, must-revalidate");
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache");
+header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+header('Cache-Control: no-store, no-cache, must-revalidate');
+header('Cache-Control: post-check=0, pre-check=0', false);
+header('Pragma: no-cache');

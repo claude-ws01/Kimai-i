@@ -23,31 +23,34 @@
  */
 class Translations
 {
+    private $load_status = true;
+    private $loaded_lang = '';
 
-    private $kga;
-
-    public function __construct(&$kga)
+    public function __construct($load_status_from_db = true, $language = 'en')
     {
-        $this->kga = & $kga;
-        // load default language file
-        $this->kga['lang'] = require(WEBROOT . 'language/en.php');
+        global $kga;
+
+        $this->load_status = (bool)$load_status_from_db;
+        $kga['lang'] = array();
+        $this->load($language);
     }
 
     /**
      * returns array of language files
      *
      * @param none
+     *
      * @return array
      * @author unknown/th
      */
     public static function langs()
     {
-        $arr_files = array();
-        $arr_files[] = "";
-        $handle = opendir(WEBROOT . '/language/');
+        $arr_files   = array();
+        $arr_files[] = '';
+        $handle      = opendir(WEBROOT . '/language/');
         while (false !== ($readdir = readdir($handle))) {
-            if ($readdir != '.' && $readdir != '..' && substr($readdir, 0, 1) != '.' && endsWith($readdir, '.php')) {
-                $arr_files[] = str_replace(".php", "", $readdir);
+            if ($readdir !== '.' && $readdir !== '..' && substr($readdir, 0, 1) !== '.' && endsWith($readdir, '.php')) {
+                $arr_files[] = str_replace('.php', '', $readdir);
             }
         }
         closedir($handle);
@@ -56,17 +59,25 @@ class Translations
         return $arr_files;
     }
 
-    /**
-     * Load a translation into the kga.
-     */
     public function load($name)
     {
+        global $database;
+
         $languageName = basename($name); // prevents potential directory traversal
         $languageFile = WEBROOT . 'language/' . $languageName . '.php';
 
         if (file_exists($languageFile)) {
-            $this->kga['lang'] = array_replace_recursive($this->kga['lang'], include($languageFile));
+            $GLOBALS['kga']['lang'] = array_replace_recursive($GLOBALS['kga']['lang'], include($languageFile));
+            $this->loaded_lang = $languageName;
         }
-    }
+        elseif ($this->loaded_lang === '') {
+            $GLOBALS['kga']['lang'] = require(WEBROOT . 'language/en.php');
+            $this->loaded_lang = 'en';
+        }
 
+        if ($this->load_status) {
+            $database->status_def_load();
+        }
+
+    }
 }
