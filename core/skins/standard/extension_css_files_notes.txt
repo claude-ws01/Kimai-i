@@ -1,0 +1,11 @@
+extension css & images files notes:
+
+- must be named as the extension directory to be picked up by extension.class
+    ex: for ki_timesheet       -> <your_skin>/ki_timesheet.css
+
+- url( references must be absolute (with the "/" at the beginning)
+    ex: '/skins/<your_skin>/grfx/<your_image.png>
+
+- image files should be in /grfx
+
+

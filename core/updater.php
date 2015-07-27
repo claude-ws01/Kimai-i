@@ -22,6 +22,9 @@
  * to the current version.
  */
 
+//=================== GLOBAL ======================//
+global $view, $kga, $database, $translations;
+
 require('includes/basics.php');
 
 if (!file_exists(WEBROOT . "includes/autoconf.php")) {
@@ -50,8 +53,7 @@ unset($version_temp);
 
 $min_php_version = '5.3';
 
-if (version_compare(PHP_VERSION, $min_php_version) < 0) {
-    ?>
+if (version_compare(PHP_VERSION, $min_php_version) < 0) { ?>
     <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -93,134 +95,127 @@ if (version_compare(PHP_VERSION, $min_php_version) < 0) {
     </div>
     </body>
     </html>
-<?php
-}
-else {
-    if (!isset($_REQUEST['a']) && $kga['show_update_warn'] == 1) {
+<?php }
 
-        $RUsure = $kga['lang']['updater'][0];
+elseif (!isset($_REQUEST['a']) && $kga['show_update_warn'] == 1) {
+    $RUsure = $kga['lang']['updater'][0];
 
-        ?>
-        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-        <head>
-            <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-            <meta name="robots" content="noindex,nofollow"/>
-            <title>Kimai Update</title>
-            <style type="text/css" media="screen">
-                body {
-                    background: #46E715 url('grfx/ki_twitter_bg.jpg') no-repeat;
-                    font-family: sans-serif;
-                    color: #333;
-                }
+    ?>
+    <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <meta name="robots" content="noindex,nofollow"/>
+        <title>Kimai Update</title>
+        <style type="text/css" media="screen">
+            body {
+                background: #46E715 url('grfx/ki_twitter_bg.jpg') no-repeat;
+                font-family: sans-serif;
+                color: #333;
+            }
 
-                div {
-                    background-image: url('skins/standard/grfx/floaterborder.png');
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    width: 500px;
-                    height: 250px;
-                    margin-left: -250px;
-                    margin-top: -125px;
-                    border: 6px solid white;
-                    padding: 10px;
-                }
+            div {
+                background-image: url('skins/standard/grfx/floaterborder.png');
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 500px;
+                height: 250px;
+                margin-left: -250px;
+                margin-top: -125px;
+                border: 6px solid white;
+                padding: 10px;
+            }
 
-                #dbrecover {
-                }
+            #dbrecover {
+            }
 
-            </style>
-        </head>
-        <body>
-        <div style="text-align:center">
-            <img src="grfx/caution.png" width="70" height="63" alt="Caution"><br/>
+        </style>
+    </head>
+    <body>
+    <div style="text-align:center">
+        <img src="grfx/caution.png" width="70" height="63" alt="Caution"><br/>
 
-            <h1>UPDATE</h1>
-            <?= $RUsure ?>
-            <?php if (is_writable(__DIR__ . '/includes/autoconf.php')) { ?>
-                <FORM action="" method="post">
-                    <br/><br/>
-                    <INPUT type="hidden" name="a" value="1">
-                    <INPUT type="submit" value="START UPDATE">
-                </FORM>
-            <?php }
-            else { ?>
-                <h2 style="color:red">Cannot update:<br>includes/autoconf.php not writable</h2>
-            <?php } ?>
-            <a href="db_restore.php" id="dbrecover">Database Backup Recover Utility</a>
-        </div>
-        </body>
-        </html>
+        <h1>UPDATE</h1>
+        <?= $RUsure ?>
+        <?php if (is_writable(__DIR__ . '/includes/autoconf.php')) { ?>
+            <FORM action="" method="post">
+                <br/><br/>
+                <INPUT type="hidden" name="a" value="1">
+                <INPUT type="submit" value="START UPDATE">
+            </FORM>
+        <?php }
+        else { ?>
+            <h2 style="color:red">Cannot update:<br>includes/autoconf.php not writable</h2>
+        <?php } ?>
+        <a href="db_restore.php" id="dbrecover">Database Backup Recover Utility</a>
+    </div>
+    </body>
+    </html>
 
-    <?php
+<?php }
+elseif ((int) $revisionDB < 1219 && !isset($_REQUEST['timezone'])) { ?>
+    <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <meta name="robots" content="noindex,nofollow"/>
+        <title>Kimai Update</title>
+        <style type="text/css" media="screen">
+            body {
+                background: #46E715 url('grfx/ki_twitter_bg.jpg') no-repeat;
+                font-family: sans-serif;
+                color: #333;
+            }
 
-    }
-    else {
-        if ((int) $revisionDB < 1219 && !isset($_REQUEST['timezone'])) {
-            ?>
-            <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-            <head>
-                <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-                <meta name="robots" content="noindex,nofollow"/>
-                <title>Kimai Update</title>
-                <style type="text/css" media="screen">
-                    body {
-                        background: #46E715 url('grfx/ki_twitter_bg.jpg') no-repeat;
-                        font-family: sans-serif;
-                        color: #333;
+            div {
+                background-image: url('skins/standard/grfx/floaterborder.png');
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 500px;
+                height: 250px;
+                margin-left: -250px;
+                margin-top: -125px;
+                border: 6px solid white;
+                padding: 10px;
+            }
+
+            #dbrecover {
+            }
+
+        </style>
+    </head>
+    <body>
+    <div style="text-align:center">
+        <FORM action="" method="post">
+            <h1> <?= $kga['lang']['timezone'] ?></h1>
+            <?= $kga['lang']['updater']['timezone'] ?>
+            <br/><br/>
+            <select name="timezone">
+                <?php
+                $serverZone = @date_default_timezone_get();
+
+                foreach (timezoneList() as $name) {
+                    if ($name == $serverZone) {
+                        echo "<option selected=\"selected\">$name</option>";
                     }
-
-                    div {
-                        background-image: url('skins/standard/grfx/floaterborder.png');
-                        position: absolute;
-                        top: 50%;
-                        left: 50%;
-                        width: 500px;
-                        height: 250px;
-                        margin-left: -250px;
-                        margin-top: -125px;
-                        border: 6px solid white;
-                        padding: 10px;
+                    else {
+                        echo "<option>$name</option>";
                     }
+                }
+                ?>
+            </select>
+            <br/><br/>
+            <INPUT type="hidden" name="a" value="1">
+            <INPUT type="submit" value="START UPDATE">
 
-                    #dbrecover {
-                    }
+        </FORM>
+    </div>
+    </body>
+    </html>
 
-                </style>
-            </head>
-            <body>
-            <div style="text-align:center">
-                <FORM action="" method="post">
-                    <h1> <?= $kga['lang']['timezone'] ?></h1>
-                    <?= $kga['lang']['updater']['timezone'] ?>
-                    <br/><br/>
-                    <select name="timezone">
-                        <?php
-                        $serverZone = @date_default_timezone_get();
+<?php }
 
-                        foreach (timezoneList() as $name) {
-                            if ($name == $serverZone) {
-                                echo "<option selected=\"selected\">$name</option>";
-                            }
-                            else {
-                                echo "<option>$name</option>";
-                            }
-                        }
-                        ?>
-                    </select>
-                    <br/><br/>
-                    <INPUT type="hidden" name="a" value="1">
-                    <INPUT type="submit" value="START UPDATE">
-
-                </FORM>
-            </div>
-            </body>
-            </html>
-
-        <?php
-        }
-        else {
-            ?>
+        else {?>
             <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
             <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -408,27 +403,13 @@ else {
             {
                 global $database, $kga, $errors, $executed_queries;
 
-                $conn = $database->getConnectionHandler();
 
                 $executed_queries++;
-
-                if ($kga['server_conn'] == "pdo") {
-                    $pdo_query = $conn->prepare($query);
-                    $success   = $pdo_query->execute([]);
-                }
-                else {
-                    $success = $conn->Query($query);
-                }
+                    $success = $database->Query($query);
 
                 Logger::logfile($query);
 
-                if ($kga['server_conn'] == "pdo") {
-                    $err = $pdo_query->errorInfo();
-                    $err = serialize($err);
-                }
-                else {
-                    $err = $conn->Error();
-                }
+                    $err = $database->Error();
 
                 $query        = htmlspecialchars($query);
                 $displayQuery = htmlspecialchars($displayQuery);
@@ -450,13 +431,7 @@ else {
 
                     Logger::logfile("An error has occured in query: $query");
 
-                    if ($kga['server_conn'] == "pdo") {
-                        $err = $pdo_query->errorInfo();
-                        $err = serialize($err);
-                    }
-                    else {
-                        $err = $conn->Error();
-                    }
+                        $err = $database->Error();
 
                     Logger::logfile("Error text: $err");
                 }
@@ -487,16 +462,9 @@ else {
 
             function quoteForSql($input)
             {
-                global $kga, $database;
+                global $database;
 
-                if ($kga['server_conn'] == "pdo") {
-                    return $database->getConnectionHandler()->quote($input);
-                }
-                else {
-                    $conn = $database->getConnectionHandler();
-
-                    return "'" . mysqli_real_escape_string($conn->mysql_link, $input) . "'";
-                }
+                    return "'" . mysqli_real_escape_string($database->mysql_link, $input) . "'";
             }
 
 
@@ -634,87 +602,40 @@ else {
 
                 $query = "SELECT * FROM `${p}usr` JOIN `${p}conf` ON `${p}usr`.usr_ID = `${p}conf`.conf_usrID";
 
-                if ($kga['server_conn'] == "pdo") {
+                if (is_object($database)) {
+                    $success = $database->Query($query);
+                    $executed_queries++;
 
-                    if (is_object($pdo_conn)) {
-
-                        $pdo_query = $pdo_conn->prepare($query);
-                        $success   = $pdo_query->execute(array());
+                    $arr  = array();
+                    $rows = $database->RecordsArray(MYSQL_ASSOC);
+                    foreach ($rows as $row) {
+                        echo "<tr>";
+                        $query   =
+                            <<<SQL
+                            INSERT INTO ${p}usr_tmp (
+                            `usr_ID`,`usr_name`,`usr_grp`,`usr_sts`,`usr_trash`,`usr_active`,`usr_mail`,`pw`,`ban`,`banTime`,
+                            `secure`,`rowlimit`,`skin`,`lastProject`,`lastEvent`,`lastRecord`,`filter`,`filter_knd`,`filter_pct`,`filter_evt`,
+                            `view_knd`,`view_pct`,`view_evt`,`zef_anzahl`,`timespace_in`,`timespace_out`,`autoselection`,`quickdelete`,`allvisible`,`lang`,
+                            `flip_pct_display`) VALUES (
+                              $row[usr_ID],'$row[usr_name]',$row[usr_grp],$row[usr_sts],$row[usr_trash],$row[usr_active],'$row[usr_mail]','$row[pw]',$row[ban],$row[banTime],
+                              '$row[secure]',$row[rowlimit],'$row[skin]',$row[lastProject],$row[lastEvent],$row[lastRecord],$row[filter],$row[filter_knd],$row[filter_pct],$row[filter_evt],
+                              $row[view_knd],$row[view_pct],$row[view_evt],$row[zef_anzahl],'$row[timespace_in]','$row[timespace_out]',$row[autoselection],$row[quickdelete],$row[allvisible],'$row[lang]',
+                              '$row[flip_pct_display]');
+SQL;
+                        $success = $database->Query($query);
                         $executed_queries++;
+                        echo "<td>" . $query . "<br/>";
+                        echo "<span class='error_info'>" . $database->Error() . "</span>";
+                        echo "</td>";
 
-                        while ($result_array = $pdo_query->fetch(PDO::FETCH_ASSOC)) {
-                            echo "<tr>";
-                            $query   = <<<EOD
-INSERT INTO ${p}usr_tmp (
-`usr_ID`,`usr_name`,`usr_grp`,`usr_sts`,`usr_trash`,`usr_active`,`usr_mail`,`pw`,`ban`,`banTime`,
-`secure`,`rowlimit`,`skin`,`lastProject`,`lastEvent`,`lastRecord`,`filter`,`filter_knd`,`filter_pct`,`filter_evt`,
-`view_knd`,`view_pct`,`view_evt`,`zef_anzahl`,`timespace_in`,`timespace_out`,`autoselection`,`quickdelete`,`allvisible`,`lang`,
-`flip_pct_display`) VALUES (
-  $result_array[usr_ID],'$result_array[usr_name]',$result_array[usr_grp],$result_array[usr_sts],$result_array[usr_trash],$result_array[usr_active],'$result_array[usr_mail]','$result_array[pw]',$result_array[ban],$result_array[banTime],
-  '$result_array[secure]',$result_array[rowlimit],'$result_array[skin]',$result_array[lastProject],$result_array[lastEvent],$result_array[lastRecord],$result_array[filter],$result_array[filter_knd],$result_array[filter_pct],$result_array[filter_evt],
-  $result_array[view_knd],$result_array[view_pct],$result_array[view_evt],$result_array[zef_anzahl],'$result_array[timespace_in]','$result_array[timespace_out]',$result_array[autoselection],$result_array[quickdelete],$result_array[allvisible],'$result_array[lang]',
-  '$result_array[flip_pct_display]');
-EOD;
-                            $d_query = $pdo_conn->prepare($query);
-                            $success = $d_query->execute(array());
-                            $executed_queries++;
-
-                            $err = $d_query->errorInfo();
-                            $err = serialize($err);
-
-                            echo "<td>" . $query . "<br/>";
-                            echo "<span class='error_info'>" . $err . "</span>";
-                            echo "</td>";
-
-                            if ($success) {
-                                echo "<td class='green'>&nbsp;&nbsp;</td>";
-                            }
-                            else {
-                                echo "<td class='red'>!</td>";
-                            }
-
-                            echo "</tr>";
+                        if ($success) {
+                            echo "<td class='green'>&nbsp;&nbsp;</td>";
                         }
-                    }
-
-                }
-                else {
-
-                    if (is_object($conn)) {
-
-                        $success = $conn->Query($query);
-                        $executed_queries++;
-
-                        $arr  = array();
-                        $rows = $conn->RecordsArray(MYSQL_ASSOC);
-                        foreach ($rows as $row) {
-                            echo "<tr>";
-                            $query   = <<<EOD
-INSERT INTO ${p}usr_tmp (
-`usr_ID`,`usr_name`,`usr_grp`,`usr_sts`,`usr_trash`,`usr_active`,`usr_mail`,`pw`,`ban`,`banTime`,
-`secure`,`rowlimit`,`skin`,`lastProject`,`lastEvent`,`lastRecord`,`filter`,`filter_knd`,`filter_pct`,`filter_evt`,
-`view_knd`,`view_pct`,`view_evt`,`zef_anzahl`,`timespace_in`,`timespace_out`,`autoselection`,`quickdelete`,`allvisible`,`lang`,
-`flip_pct_display`) VALUES (
-  $row[usr_ID],'$row[usr_name]',$row[usr_grp],$row[usr_sts],$row[usr_trash],$row[usr_active],'$row[usr_mail]','$row[pw]',$row[ban],$row[banTime],
-  '$row[secure]',$row[rowlimit],'$row[skin]',$row[lastProject],$row[lastEvent],$row[lastRecord],$row[filter],$row[filter_knd],$row[filter_pct],$row[filter_evt],
-  $row[view_knd],$row[view_pct],$row[view_evt],$row[zef_anzahl],'$row[timespace_in]','$row[timespace_out]',$row[autoselection],$row[quickdelete],$row[allvisible],'$row[lang]',
-  '$row[flip_pct_display]');
-EOD;
-                            $success = $conn->Query($query);
-                            $executed_queries++;
-                            echo "<td>" . $query . "<br/>";
-                            echo "<span class='error_info'>" . $conn->Error() . "</span>";
-                            echo "</td>";
-
-                            if ($success) {
-                                echo "<td class='green'>&nbsp;&nbsp;</td>";
-                            }
-                            else {
-                                echo "<td class='red'>!</td>";
-                            }
-
-                            echo "</tr>";
+                        else {
+                            echo "<td class='red'>!</td>";
                         }
+
+                        echo "</tr>";
                     }
                 }
 
@@ -750,70 +671,30 @@ EOD;
 
                 $query = "SELECT `knd_ID`, `knd_grpID` FROM ${p}knd";
 
-                if ($kga['server_conn'] == "pdo") {
+                if (is_object($database)) {
+                    $success = $database->Query($query);
+                    $executed_queries++;
 
-                    if (is_object($pdo_conn)) {
-
-                        $pdo_query = $pdo_conn->prepare($query);
-                        $success   = $pdo_query->execute(array());
+                    $arr  = array();
+                    $rows = $database->RecordsArray(MYSQL_ASSOC);
+                    foreach ($rows as $row) {
+                        echo "<tr>";
+                        $query   = "INSERT INTO ${p}grp_knd (`grp_ID`, `knd_ID`) VALUES (" . $row[knd_grpID] . ", " . $row[knd_ID] . ")";
+                        $success = $database->Query($query);
                         $executed_queries++;
+                        echo "<td>" . $query . "<br/>";
+                        echo "<span class='error_info'>" . $database->Error() . "</span>";
+                        echo "</td>";
 
-                        while ($result_array = $pdo_query->fetch(PDO::FETCH_ASSOC)) {
-                            echo "<tr>";
-
-                            $query = "INSERT INTO ${p}grp_knd (`grp_ID`, `knd_ID`) VALUES (" . $result_array[knd_grpID] . ", " . $result_array[knd_ID] . ")";
-
-                            $d_query = $pdo_conn->prepare($query);
-                            $success = $d_query->execute(array());
-                            $executed_queries++;
-
-                            $err = $d_query->errorInfo();
-                            $err = serialize($err);
-
-                            echo "<td>" . $query . "<br/>";
-                            echo "<span class='error_info'>" . $err . "</span>";
-                            echo "</td>";
-
-                            if ($success) {
-                                echo "<td class='green'>&nbsp;&nbsp;</td>";
-                            }
-                            else {
-                                echo "<td class='red'>!</td>";
-                            }
-
-                            echo "</tr>";
+                        if ($success) {
+                            echo "<td class='green'>&nbsp;&nbsp;</td>";
                         }
-                    }
-
-                }
-                else {
-
-                    if (is_object($conn)) {
-
-                        $success = $conn->Query($query);
-                        $executed_queries++;
-
-                        $arr  = array();
-                        $rows = $conn->RecordsArray(MYSQL_ASSOC);
-                        foreach ($rows as $row) {
-                            echo "<tr>";
-                            $query   = "INSERT INTO ${p}grp_knd (`grp_ID`, `knd_ID`) VALUES (" . $row[knd_grpID] . ", " . $row[knd_ID] . ")";
-                            $success = $conn->Query($query);
-                            $executed_queries++;
-                            echo "<td>" . $query . "<br/>";
-                            echo "<span class='error_info'>" . $conn->Error() . "</span>";
-                            echo "</td>";
-
-                            if ($success) {
-                                echo "<td class='green'>&nbsp;&nbsp;</td>";
-                            }
-                            else {
-                                echo "<td class='red'>!</td>";
-                            }
-                            echo "</tr>";
-
-                            echo $conn->Error();
+                        else {
+                            echo "<td class='red'>!</td>";
                         }
+                        echo "</tr>";
+
+                        echo $database->Error();
                     }
                 }
 
@@ -826,67 +707,28 @@ EOD;
 
                 $query = "SELECT `pct_ID`, `pct_grpID` FROM ${p}pct";
 
-                if ($kga['server_conn'] == "pdo") {
+                if (is_object($database)) {
+                    $success = $database->Query($query);
+                    $executed_queries++;
 
-                    if (is_object($pdo_conn)) {
-
-                        $pdo_query = $pdo_conn->prepare($query);
-                        $success   = $pdo_query->execute(array());
+                    $arr  = array();
+                    $rows = $database->RecordsArray(MYSQL_ASSOC);
+                    foreach ($rows as $row) {
+                        echo "<tr>";
+                        $query   = "INSERT INTO ${p}grp_pct (`grp_ID`, `pct_ID`) VALUES (" . $row[pct_grpID] . ", " . $row[pct_ID] . ")";
+                        $success = $database->Query($query);
                         $executed_queries++;
+                        echo "<td>" . $query . "<br/>";
+                        echo "<span class='error_info'>" . $database->Error() . "</span>";
+                        echo "</td>";
 
-                        while ($result_array = $pdo_query->fetch(PDO::FETCH_ASSOC)) {
-                            echo "<tr>";
-
-                            $query = "INSERT INTO ${p}grp_pct (`grp_ID`, `pct_ID`) VALUES (" . $result_array[pct_grpID] . ", " . $result_array[pct_ID] . ")";
-
-                            $d_query = $pdo_conn->prepare($query);
-                            $success = $d_query->execute(array());
-                            $executed_queries++;
-
-                            $err = $d_query->errorInfo();
-                            $err = serialize($err);
-
-                            echo "<td>" . $query . "<br/>";
-                            echo "<span class='error_info'>" . $err . "</span>";
-                            echo "</td>";
-
-                            if ($success) {
-                                echo "<td class='green'>&nbsp;&nbsp;</td>";
-                            }
-                            else {
-                                echo "<td class='red'>!</td>";
-                            }
-                            echo "</tr>";
+                        if ($success) {
+                            echo "<td class='green'>&nbsp;&nbsp;</td>";
                         }
-                    }
-
-                }
-                else {
-
-                    if (is_object($conn)) {
-
-                        $success = $conn->Query($query);
-                        $executed_queries++;
-
-                        $arr  = array();
-                        $rows = $conn->RecordsArray(MYSQL_ASSOC);
-                        foreach ($rows as $row) {
-                            echo "<tr>";
-                            $query   = "INSERT INTO ${p}grp_pct (`grp_ID`, `pct_ID`) VALUES (" . $row[pct_grpID] . ", " . $row[pct_ID] . ")";
-                            $success = $conn->Query($query);
-                            $executed_queries++;
-                            echo "<td>" . $query . "<br/>";
-                            echo "<span class='error_info'>" . $conn->Error() . "</span>";
-                            echo "</td>";
-
-                            if ($success) {
-                                echo "<td class='green'>&nbsp;&nbsp;</td>";
-                            }
-                            else {
-                                echo "<td class='red'>!</td>";
-                            }
-                            echo "</tr>";
+                        else {
+                            echo "<td class='red'>!</td>";
                         }
+                        echo "</tr>";
                     }
                 }
 
@@ -900,67 +742,27 @@ EOD;
 
                 $query = "SELECT `evt_ID`, `evt_grpID` FROM ${p}evt";
 
-                if ($kga['server_conn'] == "pdo") {
+                if (is_object($database)) {
+                    $success = $database->Query($query);
+                    $executed_queries++;
 
-                    if (is_object($pdo_conn)) {
-
-                        $pdo_query = $pdo_conn->prepare($query);
-                        $success   = $pdo_query->execute(array());
+                    $arr  = array();
+                    $rows = $database->RecordsArray(MYSQL_ASSOC);
+                    foreach ($rows as $row) {
+                        echo "<tr>";
+                        $query   = "INSERT INTO ${p}grp_evt (`grp_ID`, `evt_ID`) VALUES (" . $row[evt_grpID] . ", " . $row[evt_ID] . ")";
+                        $success = $database->Query($query);
                         $executed_queries++;
+                        echo "<td>" . $query;
+                        echo "</td>";
 
-                        while ($result_array = $pdo_query->fetch(PDO::FETCH_ASSOC)) {
-                            echo "<tr>";
-
-                            $query = "INSERT INTO ${p}grp_evt (`grp_ID`, `evt_ID`) VALUES (" . $result_array[evt_grpID] . ", " . $result_array[evt_ID] . ")";
-
-                            $d_query = $pdo_conn->prepare($query);
-                            $success = $d_query->execute(array());
-                            $executed_queries++;
-
-                            $err = $d_query->errorInfo();
-                            $err = serialize($err);
-
-                            echo "<td>" . $query . "<br/>";
-                            echo "<span class='error_info'>" . $err . "</span>";
-                            echo "</td>";
-
-                            if ($success) {
-                                echo "<td class='green'>&nbsp;&nbsp;</td>";
-                            }
-                            else {
-                                echo "<td class='red'>!</td>";
-                            }
-
-                            echo "</tr>";
+                        if ($success) {
+                            echo "<td class='green'>&nbsp;&nbsp;</td>";
                         }
-                    }
-
-                }
-                else {
-
-                    if (is_object($conn)) {
-
-                        $success = $conn->Query($query);
-                        $executed_queries++;
-
-                        $arr  = array();
-                        $rows = $conn->RecordsArray(MYSQL_ASSOC);
-                        foreach ($rows as $row) {
-                            echo "<tr>";
-                            $query   = "INSERT INTO ${p}grp_evt (`grp_ID`, `evt_ID`) VALUES (" . $row[evt_grpID] . ", " . $row[evt_ID] . ")";
-                            $success = $conn->Query($query);
-                            $executed_queries++;
-                            echo "<td>" . $query;
-                            echo "</td>";
-
-                            if ($success) {
-                                echo "<td class='green'>&nbsp;&nbsp;</td>";
-                            }
-                            else {
-                                echo "<td class='red'>!</td>";
-                            }
-                            echo "</tr>";
+                        else {
+                            echo "<td class='red'>!</td>";
                         }
+                        echo "</tr>";
                     }
                 }
 
@@ -970,11 +772,9 @@ EOD;
                 exec_query("ALTER TABLE ${p}knd DROP `knd_grpID`");
                 exec_query("ALTER TABLE ${p}pct DROP `pct_grpID`");
                 exec_query("ALTER TABLE ${p}evt DROP `evt_grpID`");
-
             }
 
             //////// ---------------------------------------------------------------------------------------------------
-
 
             if ((int) $revisionDB < 733) {
 
@@ -1004,7 +804,6 @@ EOD;
                 exec_query("ALTER TABLE `${p}zef` CHANGE `zef_ID` `zef_ID` INT(10) NOT NULL AUTO_INCREMENT PRIMARY KEY;", 0);
 
             }
-
 
             if ((int) $revisionDB < 809) {
                 Logger::logfile("-- update to r810");
@@ -1072,8 +871,6 @@ EOD;
                     $kga['server_hostname'],
                     $kga['server_username'],
                     $kga['server_password'],
-                    $kga['server_conn'],
-                    $kga['server_type'],
                     $kga['server_prefix'],
                     $kga['language'],
                     $kga['password_salt'],
@@ -1177,10 +974,8 @@ EOD;
 
             if ((int) $revisionDB < 1132) {
                 Logger::logfile("-- update to r1132");
-                if ($kga['server_conn'] == "mysql") {
                     exec_query("UPDATE ${p}usr, ${p}ldr SET usr_sts = 2 WHERE usr_sts = 1");
                     exec_query("UPDATE ${p}usr, ${p}ldr SET usr_sts = 1 WHERE usr_sts = 2 AND grp_leader = usr_ID");
-                }
             }
 
             if ((int) $revisionDB < 1139) {
@@ -1250,21 +1045,19 @@ EOD;
             if ((int) $revisionDB < 1219) {
                 $timezone = quoteForSql($_REQUEST['timezone']);
                 Logger::logfile("-- update to r1219");
-                exec_query("ALTER TABLE `${p}usr`
-                          ADD `timezone` VARCHAR( 40 ) NOT NULL DEFAULT ''");
-                exec_query("UPDATE `${p}usr`
-                          SET `timezone` = $timezone");
+                exec_query("ALTER TABLE `${p}usr` ADD `timezone` VARCHAR( 40 ) NOT NULL DEFAULT ''");
+                exec_query("UPDATE `${p}usr` SET `timezone` = $timezone");
                 exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('defaultTimezone',$timezone)");
             }
 
             if ((int) $revisionDB < 1225) {
                 Logger::logfile("-- update to r1225");
                 exec_query("CREATE TABLE `${p}preferences` (
-  `userID` int(10) NOT NULL,
-  `var` varchar(255) NOT NULL,
-  `value` varchar(255) NOT NULL,
-  PRIMARY KEY (`userID`,`var`)
-  );");
+                          `userID` int(10) NOT NULL,
+                          `var` varchar(255) NOT NULL,
+                          `value` varchar(255) NOT NULL,
+                          PRIMARY KEY (`userID`,`var`)
+                          );");
 
                 $columns = array('rowlimit', 'skin', 'autoselection', 'quickdelete',
                                  'lang', 'flip_pct_display', 'pct_comment_flag', 'showIDs', 'noFading',
@@ -1281,16 +1074,12 @@ EOD;
                 foreach ($columns as $column) {
                     exec_query("ALTER TABLE ${p}usr DROP $column");
                 }
-
-
             }
 
             if ((int) $revisionDB < 1227) {
                 Logger::logfile("-- update to r1227");
-                exec_query("ALTER TABLE `${p}knd`
-  ADD `knd_vat` VARCHAR( 255 ) NOT NULL");
-                exec_query("ALTER TABLE `${p}knd`
-  ADD `knd_contact` VARCHAR( 255 ) NOT NULL");
+                exec_query("ALTER TABLE `${p}knd` ADD `knd_vat` VARCHAR( 255 ) NOT NULL");
+                exec_query("ALTER TABLE `${p}knd` ADD `knd_contact` VARCHAR( 255 ) NOT NULL");
             }
 
             if ((int) $revisionDB < 1229) {
@@ -1300,8 +1089,7 @@ EOD;
 
             if ((int) $revisionDB < 1236) {
                 Logger::logfile("-- update to r1236");
-                exec_query("ALTER TABLE `${p}pct`
-  ADD `pct_internal` TINYINT( 1 ) NOT NULL DEFAULT 0");
+                exec_query("ALTER TABLE `${p}pct` ADD `pct_internal` TINYINT( 1 ) NOT NULL DEFAULT 0");
             }
 
             if ((int) $revisionDB < 1240) {
@@ -1317,14 +1105,13 @@ EOD;
             if ((int) $revisionDB < 1257) {
                 Logger::logfile("-- update to r1257");
                 exec_query("UPDATE ${p}preferences SET var = CONCAT('ui.',var) WHERE var
-    IN ('skin', 'rowlimit', 'lang', 'autoselection', 'quickdelete', 'flip_pct_display',
-    'pct_comment_flag', 'showIDs', 'noFading', 'user_list_hidden', 'hideClearedEntries')");
+                            IN ('skin', 'rowlimit', 'lang', 'autoselection', 'quickdelete', 'flip_pct_display',
+                            'pct_comment_flag', 'showIDs', 'noFading', 'user_list_hidden', 'hideClearedEntries')");
             }
 
             if ((int) $revisionDB < 1284) {
                 Logger::logfile("-- update to r1284");
-                exec_query("ALTER TABLE `${p}exp` CHANGE `exp_multiplier`
-    `exp_multiplier` decimal(10,2) NOT NULL DEFAULT '1.00'");
+                exec_query("ALTER TABLE `${p}exp` CHANGE `exp_multiplier` `exp_multiplier` decimal(10,2) NOT NULL DEFAULT '1.00'");
             }
 
             if ((int) $revisionDB < 1291) {
@@ -1445,10 +1232,10 @@ EOD;
                 Logger::logfile("-- update to r1332");
                 $query =
                     "CREATE TABLE `${p}fixed_rates` (
-      `project_id` int(10) DEFAULT NULL,
-      `event_id` int(10) DEFAULT NULL,
-      `rate` decimal(10,2) NOT NULL
-    );";
+                      `project_id` int(10) DEFAULT NULL,
+                      `event_id` int(10) DEFAULT NULL,
+                      `rate` decimal(10,2) NOT NULL
+                    );";
                 exec_query($query);
                 exec_query("ALTER TABLE ${p}zef ADD COLUMN `zef_fixed_rate` DECIMAL( 10, 2 ) NOT NULL DEFAULT '0';");
             }
@@ -1457,10 +1244,10 @@ EOD;
                 Logger::logfile("-- update to r1333");
                 $query =
                     "CREATE TABLE `${p}grp_usr` (
-      `grp_ID` int(10) NOT NULL,
-      `usr_ID` int(10) NOT NULL,
-      PRIMARY KEY (`grp_ID`,`usr_ID`)
-    ) AUTO_INCREMENT=1;";
+                      `grp_ID` int(10) NOT NULL,
+                      `usr_ID` int(10) NOT NULL,
+                      PRIMARY KEY (`grp_ID`,`usr_ID`)
+                    ) AUTO_INCREMENT=1;";
                 exec_query($query);
 
                 $result = $database->queryAll("SELECT usr_ID,usr_grp FROM ${p}usr");
@@ -1474,24 +1261,27 @@ EOD;
             if ((int) $revisionDB < 1347) {
                 Logger::logfile("-- update to r1347");
                 exec_query("ALTER TABLE `${p}pct_evt` ADD `evt_budget` DECIMAL( 10, 2 ) NULL ,
-ADD `evt_effort` DECIMAL( 10, 2 ) NULL ,
-ADD `evt_approved` DECIMAL( 10, 2 ) NULL ;");
+                            ADD `evt_effort` DECIMAL( 10, 2 ) NULL ,
+                            ADD `evt_approved` DECIMAL( 10, 2 ) NULL ;");
 
-                exec_query("ALTER TABLE `${p}pct` ADD `pct_effort` DECIMAL( 10, 2 ) NULL AFTER `pct_budget` ,
-ADD `pct_approved` DECIMAL( 10, 2 ) NULL AFTER `pct_effort` ");
+                exec_query("ALTER TABLE `${p}pct`
+                            ADD `pct_effort` DECIMAL( 10, 2 ) NULL AFTER `pct_budget` ,
+                            ADD `pct_approved` DECIMAL( 10, 2 ) NULL AFTER `pct_effort` ");
 
-                exec_query("ALTER TABLE `${p}zef` ADD `zef_status` SMALLINT DEFAULT 1,
-ADD `zef_billable` TINYINT NULL");
+                exec_query("ALTER TABLE `${p}zef`
+                                ADD `zef_status` SMALLINT DEFAULT 1,
+                                ADD `zef_billable` TINYINT NULL");
 
                 exec_query("CREATE TABLE `${p}status` (
-`status_id` TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-`status` VARCHAR( 200 ) NOT NULL
-) ENGINE = InnoDB ");
+                            `status_id` TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+                            `status` VARCHAR( 200 ) NOT NULL
+                            ) ENGINE = InnoDB ");
 
                 exec_query("INSERT INTO `${p}status` (`status_id` ,`status`) VALUES ('1', 'open'), ('2', 'review'), ('3', 'closed');");
 
-                exec_query("ALTER TABLE `${p}zef` ADD `zef_budget` DECIMAL( 10, 2 ) NULL AFTER `zef_fixed_rate` ,
-ADD `zef_approved` DECIMAL( 10, 2 ) NULL AFTER `zef_budget` ;");
+                exec_query("ALTER TABLE `${p}zef`
+                            ADD `zef_budget` DECIMAL( 10, 2 ) NULL AFTER `zef_fixed_rate` ,
+                            ADD `zef_approved` DECIMAL( 10, 2 ) NULL AFTER `zef_budget` ;");
 
                 exec_query("ALTER TABLE `${p}zef` ADD `zef_description` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL AFTER `zef_evtID` ");
 
@@ -1521,188 +1311,183 @@ ADD `zef_approved` DECIMAL( 10, 2 ) NULL AFTER `zef_budget` ;");
                 exec_query("ALTER TABLE  `${p}evt` ADD `evt_approved`   decimal(10,2) DEFAULT NULL;", false);
 
                 exec_query("ALTER TABLE `${p}evt` RENAME TO `${p}activities`,
-    CHANGE `evt_ID`         `activityID` int(10) NOT NULL AUTO_INCREMENT,
-    CHANGE `evt_name`       `name`       varchar(255) NOT NULL,
-    CHANGE `evt_comment`    `comment`    text NOT NULL,
-    CHANGE `evt_visible`    `visible`    tinyint(1) NOT NULL DEFAULT '1',
-    CHANGE `evt_filter`     `filter`     tinyint(1) NOT NULL DEFAULT '0',
-    CHANGE `evt_trash`      `trash`      tinyint(1) NOT NULL DEFAULT '0',
-    CHANGE `evt_assignable` `assignable` tinyint(1) NOT NULL DEFAULT '0',
-    CHANGE `evt_budget`     `budget`     decimal(10,2) DEFAULT NULL,
-    CHANGE `evt_effort`     `effort`     decimal(10,2) DEFAULT NULL,
-    CHANGE `evt_approved`   `approved`   decimal(10,2) DEFAULT NULL
-    ;");
+                            CHANGE `evt_ID`         `activityID` int(10) NOT NULL AUTO_INCREMENT,
+                            CHANGE `evt_name`       `name`       varchar(255) NOT NULL,
+                            CHANGE `evt_comment`    `comment`    text NOT NULL,
+                            CHANGE `evt_visible`    `visible`    tinyint(1) NOT NULL DEFAULT '1',
+                            CHANGE `evt_filter`     `filter`     tinyint(1) NOT NULL DEFAULT '0',
+                            CHANGE `evt_trash`      `trash`      tinyint(1) NOT NULL DEFAULT '0',
+                            CHANGE `evt_assignable` `assignable` tinyint(1) NOT NULL DEFAULT '0',
+                            CHANGE `evt_budget`     `budget`     decimal(10,2) DEFAULT NULL,
+                            CHANGE `evt_effort`     `effort`     decimal(10,2) DEFAULT NULL,
+                            CHANGE `evt_approved`   `approved`   decimal(10,2) DEFAULT NULL
+                            ;");
 
                 exec_query("ALTER TABLE `${p}exp` RENAME TO `${p}expenses`,
-    CHANGE `exp_ID`           `expenseID`   int(10) NOT NULL AUTO_INCREMENT,
-    CHANGE `exp_timestamp`    `timestamp`   int(10) NOT NULL DEFAULT '0',
-    CHANGE `exp_usrID`        `userID`      int(10) NOT NULL,
-    CHANGE `exp_pctID`        `projectID`   int(10) NOT NULL,
-    CHANGE `exp_designation`  `designation` text NOT NULL,
-    CHANGE `exp_comment`      `comment`     text NOT NULL,
-    CHANGE `exp_comment_type` `commentType` tinyint(1) NOT NULL DEFAULT '0',
-    CHANGE `exp_refundable`   `refundable`  tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'expense refundable to employee (0 = no, 1 = yes)',
-    CHANGE `exp_cleared`      `cleared`     tinyint(1) NOT NULL DEFAULT '0',
-    CHANGE `exp_multiplier`   `multiplier`  decimal(10,2) NOT NULL DEFAULT '1.00',
-    CHANGE `exp_value`        `value`       decimal(10,2) NOT NULL DEFAULT '0.00'
-    ;");
+                            CHANGE `exp_ID`           `expenseID`   int(10) NOT NULL AUTO_INCREMENT,
+                            CHANGE `exp_timestamp`    `timestamp`   int(10) NOT NULL DEFAULT '0',
+                            CHANGE `exp_usrID`        `userID`      int(10) NOT NULL,
+                            CHANGE `exp_pctID`        `projectID`   int(10) NOT NULL,
+                            CHANGE `exp_designation`  `designation` text NOT NULL,
+                            CHANGE `exp_comment`      `comment`     text NOT NULL,
+                            CHANGE `exp_comment_type` `commentType` tinyint(1) NOT NULL DEFAULT '0',
+                            CHANGE `exp_refundable`   `refundable`  tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'expense refundable to employee (0 = no, 1 = yes)',
+                            CHANGE `exp_cleared`      `cleared`     tinyint(1) NOT NULL DEFAULT '0',
+                            CHANGE `exp_multiplier`   `multiplier`  decimal(10,2) NOT NULL DEFAULT '1.00',
+                            CHANGE `exp_value`        `value`       decimal(10,2) NOT NULL DEFAULT '0.00'
+                            ;");
 
-                exec_query("ALTER TABLE `${p}fixed_rates` RENAME TO `${p}fixedRates`,
-    CHANGE `project_id` `projectID`  int(10) DEFAULT NULL,
-    CHANGE `event_id`   `activityID` int(10) DEFAULT NULL
-    ;");
+                exec_query("ALTER TABLE `${p}fixed_rates` RENAME TO `${p}fixed_rate`,
+                            CHANGE `project_id` `projectID`  int(10) DEFAULT NULL,
+                            CHANGE `event_id`   `activityID` int(10) DEFAULT NULL
+                            ;");
 
-                exec_query("ALTER TABLE `${p}grp` RENAME TO `${p}groups`,
-    CHANGE `grp_ID`    `groupID` int(10) NOT NULL AUTO_INCREMENT,
-    CHANGE `grp_name`  `name`    varchar(160) NOT NULL,
-    CHANGE `grp_trash` `trash`   tinyint(1) NOT NULL DEFAULT '0'
-    ;");
+                exec_query("ALTER TABLE `${p}grp` RENAME TO `${p}group`,
+                            CHANGE `grp_ID`    `groupID` int(10) NOT NULL AUTO_INCREMENT,
+                            CHANGE `grp_name`  `name`    varchar(160) NOT NULL,
+                            CHANGE `grp_trash` `trash`   tinyint(1) NOT NULL DEFAULT '0'
+                            ;");
 
                 exec_query("ALTER TABLE `${p}grp_evt` RENAME TO `${p}groups_activities`,
-    CHANGE `grp_ID` `groupID`    int(10) NOT NULL,
-    CHANGE `evt_ID` `activityID` int(10) NOT NULL,
-    DROP `uid`,
-    ADD PRIMARY KEY (`groupID`, `activityID`)
-    ;");
+                            CHANGE `grp_ID` `groupID`    int(10) NOT NULL,
+                            CHANGE `evt_ID` `activityID` int(10) NOT NULL,
+                            DROP `uid`,
+                            ADD PRIMARY KEY (`groupID`, `activityID`);");
 
                 exec_query("ALTER TABLE `${p}grp_knd` RENAME TO `${p}groups_customers`,
-    CHANGE `grp_ID` `groupID`    int(10) NOT NULL,
-    CHANGE `knd_ID` `customerID` int(10) NOT NULL,
-    DROP `uid`,
-    ADD PRIMARY KEY (`groupID`, `customerID`)
-    ;");
+                            CHANGE `grp_ID` `groupID`    int(10) NOT NULL,
+                            CHANGE `knd_ID` `customerID` int(10) NOT NULL,
+                            DROP `uid`,
+                            ADD PRIMARY KEY (`groupID`, `customerID`);");
 
                 exec_query("ALTER TABLE `${p}grp_pct` RENAME TO `${p}groups_projects`,
-    CHANGE `grp_ID` `groupID`    int(10) NOT NULL,
-    CHANGE `pct_ID` `projectID` int(10) NOT NULL,
-    DROP `uid`,
-    ADD PRIMARY KEY (`groupID`, `projectID`)
-    ;");
+                            CHANGE `grp_ID` `groupID`    int(10) NOT NULL,
+                            CHANGE `pct_ID` `projectID` int(10) NOT NULL,
+                            DROP `uid`,
+                            ADD PRIMARY KEY (`groupID`, `projectID`);");
 
                 exec_query("ALTER TABLE `${p}grp_usr` RENAME TO `${p}groups_users`,
-    CHANGE `grp_ID` `groupID`    int(10) NOT NULL,
-    CHANGE `usr_ID` `userID` int(10) NOT NULL
-    ;");
+                            CHANGE `grp_ID` `groupID`    int(10) NOT NULL,
+                            CHANGE `usr_ID` `userID` int(10) NOT NULL;");
 
                 exec_query("ALTER TABLE `${p}knd` RENAME TO `${p}customers`,
-    CHANGE `knd_ID`       `customerID` int(10) NOT NULL AUTO_INCREMENT,
-    CHANGE `knd_name`     `name`       varchar(255) NOT NULL,
-    CHANGE `knd_password` `password`   varchar(255) DEFAULT NULL,
-    CHANGE `knd_secure`   `secure`     varchar(60) NOT NULL DEFAULT '0',
-    CHANGE `knd_comment`  `comment`    text NOT NULL,
-    CHANGE `knd_visible`  `visible`    tinyint(1) NOT NULL DEFAULT '1',
-    CHANGE `knd_filter`   `filter`     tinyint(1) NOT NULL DEFAULT '0',
-    CHANGE `knd_company`  `company`    varchar(255) NOT NULL,
-    CHANGE `knd_vat`      `vat`        varchar(255) NOT NULL,
-    CHANGE `knd_contact`  `contact`    varchar(255) NOT NULL,
-    CHANGE `knd_street`   `street`     varchar(255) NOT NULL,
-    CHANGE `knd_zipcode`  `zipcode`    varchar(255) NOT NULL,
-    CHANGE `knd_city`     `city`       varchar(255) NOT NULL,
-    CHANGE `knd_tel`      `phone`      varchar(255) NOT NULL,
-    CHANGE `knd_fax`      `fax`        varchar(255) NOT NULL,
-    CHANGE `knd_mobile`   `mobile`     varchar(255) NOT NULL,
-    CHANGE `knd_mail`     `mail`       varchar(255) NOT NULL,
-    CHANGE `knd_homepage` `homepage`   varchar(255) NOT NULL,
-    CHANGE `knd_trash`    `trash`      tinyint(1) NOT NULL DEFAULT '0',
-    CHANGE `knd_timezone` `timezone`   varchar(255) NOT NULL
-    ;");
+                            CHANGE `knd_ID`       `customerID` int(10) NOT NULL AUTO_INCREMENT,
+                            CHANGE `knd_name`     `name`       varchar(255) NOT NULL,
+                            CHANGE `knd_password` `password`   varchar(255) DEFAULT NULL,
+                            CHANGE `knd_secure`   `secure`     varchar(60) NOT NULL DEFAULT '0',
+                            CHANGE `knd_comment`  `comment`    text NOT NULL,
+                            CHANGE `knd_visible`  `visible`    tinyint(1) NOT NULL DEFAULT '1',
+                            CHANGE `knd_filter`   `filter`     tinyint(1) NOT NULL DEFAULT '0',
+                            CHANGE `knd_company`  `company`    varchar(255) NOT NULL,
+                            CHANGE `knd_vat`      `vat`        varchar(255) NOT NULL,
+                            CHANGE `knd_contact`  `contact`    varchar(255) NOT NULL,
+                            CHANGE `knd_street`   `street`     varchar(255) NOT NULL,
+                            CHANGE `knd_zipcode`  `zipcode`    varchar(255) NOT NULL,
+                            CHANGE `knd_city`     `city`       varchar(255) NOT NULL,
+                            CHANGE `knd_tel`      `phone`      varchar(255) NOT NULL,
+                            CHANGE `knd_fax`      `fax`        varchar(255) NOT NULL,
+                            CHANGE `knd_mobile`   `mobile`     varchar(255) NOT NULL,
+                            CHANGE `knd_mail`     `mail`       varchar(255) NOT NULL,
+                            CHANGE `knd_homepage` `homepage`   varchar(255) NOT NULL,
+                            CHANGE `knd_trash`    `trash`      tinyint(1) NOT NULL DEFAULT '0',
+                            CHANGE `knd_timezone` `timezone`   varchar(255) NOT NULL
+                            ;");
 
                 exec_query("ALTER TABLE `${p}ldr` RENAME TO `${p}groupleaders`,
-    CHANGE `grp_ID`     `groupID` int(10) NOT NULL,
-    CHANGE `grp_leader` `userID`  int(10) NOT NULL,
-    DROP `uid`,
-    ADD PRIMARY KEY (`groupID`, `userID`)
-    ;");
+                            CHANGE `grp_ID`     `groupID` int(10) NOT NULL,
+                            CHANGE `grp_leader` `userID`  int(10) NOT NULL,
+                            DROP `uid`,
+                            ADD PRIMARY KEY (`groupID`, `userID`)
+                            ;");
 
                 exec_query("ALTER TABLE `${p}pct` RENAME TO `${p}projects`,
-    CHANGE `pct_ID`       `projectID`  int(10) NOT NULL AUTO_INCREMENT,
-    CHANGE `pct_kndID`    `customerID` int(3) NOT NULL,
-    CHANGE `pct_name`     `name`       varchar(255) NOT NULL,
-    CHANGE `pct_comment`  `comment`    text NOT NULL,
-    CHANGE `pct_visible`  `visible`    tinyint(1) NOT NULL DEFAULT '1',
-    CHANGE `pct_filter`   `filter`     tinyint(1) NOT NULL DEFAULT '0',
-    CHANGE `pct_trash`    `trash`      tinyint(1) NOT NULL DEFAULT '0',
-    CHANGE `pct_budget`   `budget`     decimal(10,2) NOT NULL DEFAULT '0.00',
-    CHANGE `pct_effort`   `effort`     decimal(10,2) DEFAULT NULL,
-    CHANGE `pct_approved` `approved`   decimal(10,2) DEFAULT NULL,
-    CHANGE `pct_internal` `internal`   tinyint(1) NOT NULL DEFAULT '0'
-    ;");
+                            CHANGE `pct_ID`       `projectID`  int(10) NOT NULL AUTO_INCREMENT,
+                            CHANGE `pct_kndID`    `customerID` int(3) NOT NULL,
+                            CHANGE `pct_name`     `name`       varchar(255) NOT NULL,
+                            CHANGE `pct_comment`  `comment`    text NOT NULL,
+                            CHANGE `pct_visible`  `visible`    tinyint(1) NOT NULL DEFAULT '1',
+                            CHANGE `pct_filter`   `filter`     tinyint(1) NOT NULL DEFAULT '0',
+                            CHANGE `pct_trash`    `trash`      tinyint(1) NOT NULL DEFAULT '0',
+                            CHANGE `pct_budget`   `budget`     decimal(10,2) NOT NULL DEFAULT '0.00',
+                            CHANGE `pct_effort`   `effort`     decimal(10,2) DEFAULT NULL,
+                            CHANGE `pct_approved` `approved`   decimal(10,2) DEFAULT NULL,
+                            CHANGE `pct_internal` `internal`   tinyint(1) NOT NULL DEFAULT '0'
+                            ;");
 
                 // fix ER_WARN_DATA_TRUNCATED for evt_budget
                 exec_query("UPDATE `${p}pct_evt` SET `evt_budget` = 0.00 WHERE `evt_budget` IS NULL");
 
                 exec_query("ALTER TABLE `${p}pct_evt` RENAME TO `${p}projects_activities`,
-    CHANGE `pct_ID` `projectID`  int(10) NOT NULL,
-    CHANGE `evt_ID` `activityID` int(10) NOT NULL,
-    CHANGE `evt_budget`   `budget`     decimal(10,2) NOT NULL DEFAULT '0.00',
-    CHANGE `evt_effort`   `effort`     decimal(10,2) DEFAULT NULL,
-    CHANGE `evt_approved` `approved`   decimal(10,2) DEFAULT NULL,
-    DROP `uid`,
-    ADD PRIMARY KEY (`projectID`, `activityID`)
-    ;");
+                            CHANGE `pct_ID` `projectID`  int(10) NOT NULL,
+                            CHANGE `evt_ID` `activityID` int(10) NOT NULL,
+                            CHANGE `evt_budget`   `budget`     decimal(10,2) NOT NULL DEFAULT '0.00',
+                            CHANGE `evt_effort`   `effort`     decimal(10,2) DEFAULT NULL,
+                            CHANGE `evt_approved` `approved`   decimal(10,2) DEFAULT NULL,
+                            DROP `uid`,
+                            ADD PRIMARY KEY (`projectID`, `activityID`)
+                            ;");
 
                 exec_query("ALTER TABLE `${p}preferences`
-    CHANGE `var` `option` varchar(255) NOT NULL
-    ;");
+                            CHANGE `var` `option` varchar(255) NOT NULL
+                            ;");
 
                 exec_query("ALTER TABLE `${p}rates`
-    CHANGE `user_id`    `userID`     int(10) DEFAULT NULL,
-    CHANGE `project_id` `projectID`  int(10) DEFAULT NULL,
-    CHANGE `event_id`   `activityID` int(10) DEFAULT NULL
-    ;");
+                            CHANGE `user_id`    `userID`     int(10) DEFAULT NULL,
+                            CHANGE `project_id` `projectID`  int(10) DEFAULT NULL,
+                            CHANGE `event_id`   `activityID` int(10) DEFAULT NULL
+                            ;");
 
                 exec_query("ALTER TABLE `${p}status` RENAME TO `${p}statuses`,
     CHANGE `status_id` `statusID` tinyint(4) NOT NULL AUTO_INCREMENT
     ;");
 
                 exec_query("ALTER TABLE `${p}usr` RENAME TO `${p}users`,
-    CHANGE `usr_ID`        `userID`   int(10) NOT NULL,
-    CHANGE `usr_name`      `name`     varchar(160) COLLATE latin1_general_ci NOT NULL,
-    CHANGE `usr_alias`     `alias`    varchar(10) COLLATE latin1_general_ci DEFAULT NULL,
-    CHANGE `usr_sts`       `status`   tinyint(1) NOT NULL DEFAULT '2',
-    CHANGE `usr_trash`     `trash`    tinyint(1) NOT NULL DEFAULT '0',
-    CHANGE `usr_active`    `active`   tinyint(1) NOT NULL DEFAULT '1',
-    CHANGE `usr_mail`      `mail`     varchar(160) COLLATE latin1_general_ci NOT NULL DEFAULT '',
-    CHANGE `pw`            `password` varchar(254) COLLATE latin1_general_ci DEFAULT NULL,
-    CHANGE `ban`           `ban`      int(1) NOT NULL DEFAULT '0',
-    CHANGE `banTime`       `banTime`  int(10) NOT NULL DEFAULT '0',
-    CHANGE `secure`        `secure`   varchar(60) COLLATE latin1_general_ci NOT NULL DEFAULT '0',
-    CHANGE `lastEvent`     `lastActivity` int(10) NOT NULL DEFAULT '1',
-    CHANGE `timespace_in`  `timeframeBegin` varchar(60) COLLATE latin1_general_ci NOT NULL DEFAULT '0',
-    CHANGE `timespace_out` `timeframeEnd`   varchar(60) COLLATE latin1_general_ci NOT NULL DEFAULT '0',
-    DROP PRIMARY KEY,
-    ADD PRIMARY KEY (`userID`),
-    ADD UNIQUE KEY `name` (`name`)
-    ;");
+                            CHANGE `usr_ID`        `userID`   int(10) NOT NULL,
+                            CHANGE `usr_name`      `name`     varchar(160) COLLATE latin1_general_ci NOT NULL,
+                            CHANGE `usr_alias`     `alias`    varchar(10) COLLATE latin1_general_ci DEFAULT NULL,
+                            CHANGE `usr_sts`       `status`   tinyint(1) NOT NULL DEFAULT '2',
+                            CHANGE `usr_trash`     `trash`    tinyint(1) NOT NULL DEFAULT '0',
+                            CHANGE `usr_active`    `active`   tinyint(1) NOT NULL DEFAULT '1',
+                            CHANGE `usr_mail`      `mail`     varchar(160) COLLATE latin1_general_ci NOT NULL DEFAULT '',
+                            CHANGE `pw`            `password` varchar(254) COLLATE latin1_general_ci DEFAULT NULL,
+                            CHANGE `ban`           `ban`      int(1) NOT NULL DEFAULT '0',
+                            CHANGE `banTime`       `banTime`  int(10) NOT NULL DEFAULT '0',
+                            CHANGE `secure`        `secure`   varchar(60) COLLATE latin1_general_ci NOT NULL DEFAULT '0',
+                            CHANGE `lastEvent`     `lastActivity` int(10) NOT NULL DEFAULT '1',
+                            CHANGE `timespace_in`  `timeframeBegin` varchar(60) COLLATE latin1_general_ci NOT NULL DEFAULT '0',
+                            CHANGE `timespace_out` `timeframeEnd`   varchar(60) COLLATE latin1_general_ci NOT NULL DEFAULT '0',
+                            DROP PRIMARY KEY,
+                            ADD PRIMARY KEY (`userID`),
+                            ADD UNIQUE KEY `name` (`name`)
+                            ;");
 
                 exec_query("ALTER TABLE `${p}var` RENAME TO `${p}configuration`,
-    CHANGE `var` `option` varchar(255) NOT NULL
-    ;");
+                            CHANGE `var` `option` varchar(255) NOT NULL
+                            ;");
 
                 exec_query("UPDATE `${p}configuration` SET `option` = 'project_comment_flag' WHERE `option` = 'pct_comment_flag';");
 
-
                 exec_query("ALTER TABLE `${p}zef` RENAME TO `${p}timeSheet`,
-    CHANGE `zef_ID`           `timeEntryID`     int(10) NOT NULL AUTO_INCREMENT,
-    CHANGE `zef_in`           `start`           int(10) NOT NULL DEFAULT '0',
-    CHANGE `zef_out`          `end`             int(10) NOT NULL DEFAULT '0',
-    CHANGE `zef_time`         `duration`        int(6) NOT NULL DEFAULT '0',
-    CHANGE `zef_usrID`        `userID`          int(10) NOT NULL,
-    CHANGE `zef_pctID`        `projectID`       int(10) NOT NULL,
-    CHANGE `zef_evtID`        `activityID`      int(10) NOT NULL,
-    CHANGE `zef_description`  `description`     text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
-    CHANGE `zef_comment`      `comment`         text COLLATE latin1_general_ci,
-    CHANGE `zef_comment_type` `commentType`     tinyint(1) NOT NULL DEFAULT '0',
-    CHANGE `zef_cleared`      `cleared`         tinyint(1) NOT NULL DEFAULT '0',
-    CHANGE `zef_location`     `location`        varchar(50) COLLATE latin1_general_ci DEFAULT NULL,
-    CHANGE `zef_trackingnr`   `trackingNumber`  varchar(30) COLLATE latin1_general_ci DEFAULT NULL,
-    CHANGE `zef_rate`         `rate`            decimal(10,2) NOT NULL DEFAULT '0.00',
-    CHANGE `zef_fixed_rate`   `fixedRate`       decimal(10,2) NOT NULL DEFAULT '0.00',
-    CHANGE `zef_budget`       `budget`          decimal(10,2) DEFAULT NULL,
-    CHANGE `zef_approved`     `approved`        decimal(10,2) DEFAULT NULL,
-    CHANGE `zef_status`       `statusID`        smallint(6) NOT NULL,
-    CHANGE `zef_billable`     `billable`        tinyint(4) DEFAULT NULL COMMENT 'how many percent are billable to customer'
-    ;");
+                            CHANGE `zef_ID`           `timeEntryID`     int(10) NOT NULL AUTO_INCREMENT,
+                            CHANGE `zef_in`           `start`           int(10) NOT NULL DEFAULT '0',
+                            CHANGE `zef_out`          `end`             int(10) NOT NULL DEFAULT '0',
+                            CHANGE `zef_time`         `duration`        int(6) NOT NULL DEFAULT '0',
+                            CHANGE `zef_usrID`        `userID`          int(10) NOT NULL,
+                            CHANGE `zef_pctID`        `projectID`       int(10) NOT NULL,
+                            CHANGE `zef_evtID`        `activityID`      int(10) NOT NULL,
+                            CHANGE `zef_description`  `description`     text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+                            CHANGE `zef_comment`      `comment`         text COLLATE latin1_general_ci,
+                            CHANGE `zef_comment_type` `commentType`     tinyint(1) NOT NULL DEFAULT '0',
+                            CHANGE `zef_cleared`      `cleared`         tinyint(1) NOT NULL DEFAULT '0',
+                            CHANGE `zef_location`     `location`        varchar(50) COLLATE latin1_general_ci DEFAULT NULL,
+                            CHANGE `zef_trackingnr`   `trackingNumber`  varchar(30) COLLATE latin1_general_ci DEFAULT NULL,
+                            CHANGE `zef_rate`         `rate`            decimal(10,2) NOT NULL DEFAULT '0.00',
+                            CHANGE `zef_fixed_rate`   `fixedRate`       decimal(10,2) NOT NULL DEFAULT '0.00',
+                            CHANGE `zef_budget`       `budget`          decimal(10,2) DEFAULT NULL,
+                            CHANGE `zef_approved`     `approved`        decimal(10,2) DEFAULT NULL,
+                            CHANGE `zef_status`       `statusID`        smallint(6) NOT NULL,
+                            CHANGE `zef_billable`     `billable`        tinyint(4) DEFAULT NULL COMMENT 'how many percent are billable to customer'
+                            ;");
 
             }
 
@@ -1715,8 +1500,6 @@ ADD `zef_approved` DECIMAL( 10, 2 ) NULL AFTER `zef_budget` ;");
                     $kga['server_hostname'],
                     $kga['server_username'],
                     $kga['server_password'],
-                    $kga['server_conn'],
-                    $kga['server_type'],
                     $kga['server_prefix'],
                     $kga['language'],
                     $kga['password_salt'],
@@ -1738,7 +1521,6 @@ ADD `zef_approved` DECIMAL( 10, 2 ) NULL AFTER `zef_budget` ;");
                 }
             }
 
-
             if ((int) $revisionDB < 1371) {
                 // The mentioned columns were accidentially removed by the update script. But there was no release since then.
                 // Therefore this updater was fixed to to the right thing now: Keep the column and rename it correctly.
@@ -1746,28 +1528,25 @@ ADD `zef_approved` DECIMAL( 10, 2 ) NULL AFTER `zef_budget` ;");
                 // That's why these queries are allowed to fail. This will happen for all not using a development version.
 
                 exec_query("ALTER TABLE `${p}activities`
-    DROP `budget`,
-    DROP `effort`,
-    DROP `approved`
-    ;", false);
+                            DROP `budget`,
+                            DROP `effort`,
+                            DROP `approved`
+                            ;", false);
 
                 exec_query("ALTER TABLE `${p}projects_activities`
-    ADD `budget`     decimal(10,2) NOT NULL DEFAULT '0.00',
-    ADD `effort`     decimal(10,2) DEFAULT NULL,
-    ADD `approved`   decimal(10,2) DEFAULT NULL
-    ;", false);
+                            ADD `budget`     decimal(10,2) NOT NULL DEFAULT '0.00',
+                            ADD `effort`     decimal(10,2) DEFAULT NULL,
+                            ADD `approved`   decimal(10,2) DEFAULT NULL
+                            ;", false);
             }
-
 
             if ((int) $revisionDB < 1372) {
                 exec_query("ALTER TABLE `${p}users` CHANGE `alias` `alias` varchar(160);");
             }
 
-
             if ((int) $revisionDB < 1373) {
                 exec_query("ALTER TABLE `${p}activities` DROP `assignable`;");
             }
-
 
             if ((int) $revisionDB < 1374) {
 
@@ -1780,7 +1559,7 @@ ADD `zef_approved` DECIMAL( 10, 2 ) NULL AFTER `zef_budget` ;");
                 // add globalRoleID column, initialized with user role
                 exec_query("ALTER TABLE `${p}users` ADD `globalRoleID` int(10) DEFAULT $globalUserRoleID;");
                 exec_query("ALTER TABLE `${p}users` CHANGE `globalRoleID` `globalRoleID` int(10) NOT NULL;");
-                exec_query("UPDATE `${p}users` SET `globalRoleID` = (SELECT globalRoleID FROM `${p}globalRoles` WHERE name = 'Admin') WHERE status=0;");
+                exec_query("UPDATE `${p}users` SET `globalRoleID` = (SELECT globalRoleID FROM `${p}global_role` WHERE name = 'Admin') WHERE status=0;");
 
                 // set groupleader role
                 exec_query("UPDATE `${p}groups_users` SET membershipRoleID=(SELECT membershipRoleID FROM `${p}membershipRoles` WHERE name = 'Groupleader') WHERE (groupID,userID) IN (SELECT groupID, userID FROM `${p}groupleaders`)");
@@ -1789,21 +1568,19 @@ ADD `zef_approved` DECIMAL( 10, 2 ) NULL AFTER `zef_budget` ;");
                 exec_query("UPDATE `${p}groups_users` SET membershipRoleID=(SELECT membershipRoleID FROM `${p}membershipRoles` WHERE name = 'Admin') WHERE userID IN (SELECT userID FROM `${p}users` WHERE status=0)");
             }
 
-
             if ((int) $revisionDB < 1375) {
                 foreach (array('customer', 'project', 'activity', 'group', 'user') as $object) {
-                    exec_query("ALTER TABLE `${p}globalRoles` ADD `core-$object-otherGroup-view` tinyint DEFAULT 1;");
-                    exec_query("ALTER TABLE `${p}globalRoles` CHANGE `core-$object-otherGroup-view` `core-$object-otherGroup-view` tinyint DEFAULT 0;");
+                    exec_query("ALTER TABLE `${p}global_role` ADD `core-$object-otherGroup-view` tinyint DEFAULT 1;");
+                    exec_query("ALTER TABLE `${p}global_role` CHANGE `core-$object-otherGroup-view` `core-$object-otherGroup-view` tinyint DEFAULT 0;");
                 }
 
                 exec_query("DROP TABLE `${p}groupleaders`;");
 
             }
 
-
             if ((int) $revisionDB < 1376) {
-                exec_query("ALTER TABLE `${p}globalRoles` ADD `demo_ext-access` tinyint DEFAULT 0;", false);
-                exec_query("UPDATE `${p}globalRoles` SET `demo_ext-access` = 1 WHERE `name` = 'Admin';");
+                exec_query("ALTER TABLE `${p}global_role` ADD `demo_ext-access` tinyint DEFAULT 0;", false);
+                exec_query("UPDATE `${p}global_role` SET `demo_ext-access` = 1 WHERE `name` = 'Admin';");
             }
 
             if ((int) $revisionDB < 1377) {
@@ -1859,9 +1636,9 @@ ADD `zef_approved` DECIMAL( 10, 2 ) NULL AFTER `zef_budget` ;");
                 exec_query("ALTER TABLE `${p}expenses`            ADD PRIMARY KEY(`expenseID`);", false);
                 exec_query("ALTER TABLE `${p}expenses`            ADD INDEX      (`userID`);", false);
                 exec_query("ALTER TABLE `${p}expenses`            ADD INDEX      (`projectID`);", false);
-                exec_query("ALTER TABLE `${p}fixedRates`          ADD UNIQUE  KEY(`projectID`, `activityID`);", false);
-                exec_query("ALTER TABLE `${p}globalRoles`         ADD PRIMARY KEY(`globalRoleID`);", false);
-                exec_query("ALTER TABLE `${p}groups`              ADD PRIMARY KEY(`groupID`);", false);
+                exec_query("ALTER TABLE `${p}fixed_rate`          ADD UNIQUE  KEY(`projectID`, `activityID`);", false);
+                exec_query("ALTER TABLE `${p}global_role`         ADD PRIMARY KEY(`globalRoleID`);", false);
+                exec_query("ALTER TABLE `${p}group`              ADD PRIMARY KEY(`groupID`);", false);
                 exec_query("ALTER TABLE `${p}groups_activities`   ADD UNIQUE  KEY(`groupID`, `activityID`);", false);
                 exec_query("ALTER TABLE `${p}groups_customers`    ADD UNIQUE  KEY(`groupID`, `customersID`);", false);
                 exec_query("ALTER TABLE `${p}groups_projects`     ADD UNIQUE  KEY(`groupID`, `projectsID`);", false);
@@ -1891,15 +1668,59 @@ ADD `zef_approved` DECIMAL( 10, 2 ) NULL AFTER `zef_budget` ;");
                 exec_query("UPDATE `${p}membershipRoles` SET `core-user-view` = 1 WHERE `name` = 'Admin';");
                 exec_query("UPDATE `${p}membershipRoles` SET `core-user-view` = 1 WHERE `name` = 'Groupleader';");
             }
+
             if ((int) $revisionDB < 1383) {
                 Logger::logfile("-- update to r1383");
                 exec_query("INSERT INTO `${p}configuration` VALUES('defaultStatusID', '1');");
             }
+
             if ((int) $revisionDB < 1384) {
                 Logger::logfile("-- update to r1384");
                 exec_query("ALTER TABLE ${p}users ADD COLUMN `passwordResetHash` char(32) NULL DEFAULT NULL AFTER `password`");
                 exec_query("ALTER TABLE ${p}customers ADD COLUMN `passwordResetHash` char(32) NULL DEFAULT NULL AFTER `password`");
             }
+
+            if ((int) $revisionDB < 1385) {
+                Logger::logfile("-- update to r1385");
+/*
+copy userID -> entity
+convert customerID
+    customers
+    groups_customers
+    projects
+ */
+                // set new "is_customer" flag in preference for users
+                $userIds = $database->queryAll("SELECT userID FROM ${p}users");
+                foreach ($userIds as $userId) {
+                    $this->MySQL->user_set_preferences(array('is_customer' => '0'), '', $userId);
+                }
+
+                // prep, gather all userID in preferences, which can not be used by customerID.
+                $userIds = $database->queryAll("SELECT userID FROM ${p}preferences group by userID");
+
+                // convert customerID if necessary & create preference entries
+                $customerIds = $database->queryAll("SELECT customerID FROM ${p}customers");
+
+                foreach ($customerIds as $customerId) {
+
+                    $newId = $customerId;
+                    if (in_array($customerId,$userIds)) {
+                        // need new ID for customer
+                        do {
+                            $newId = random_number(9);
+                        } while (in_array($newId,$userIds) || in_array($newId,$customerIds));
+
+                        // update all
+                    }
+                }
+
+
+                exec_query("ALTER TABLE ${p}customers ADD COLUMN `passwordResetHash` char(32) NULL DEFAULT NULL AFTER `password`");
+            }
+
+
+
+
 
 
             // ============================
@@ -1993,6 +1814,4 @@ EOD;
             </html>
 
         <?php
-        }
-    }
 } // end of "do you have a backup blah" condition

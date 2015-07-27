@@ -17,8 +17,12 @@
  */
 
 function demo_ext_onload() {
+    set_lists_visibility(true, $('#gui').find('.ext.#ki_demoextension').attr('id'));
+
     $("#loader").hide();
 }
+
+
 
 function demo_ext_resize() {
 	// function must exist, so init can register it as callback

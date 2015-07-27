@@ -23,10 +23,11 @@
 $isCoreProcessor = 0;
 $dir_templates = "templates/";
 require("../../includes/kspi.php");
+global $kga, $database, $view;
 
 switch ($axAction) {
     case 'test':
-        echo $kga['user']['timeframeBegin'];
+        echo $kga['user']['timeframe_begin'];
     break;
 }
 

@@ -30,7 +30,7 @@
 }
 
 .ui-helper-clearfix:before, .ui-helper-clearfix:after {
-    content: "";
+    content: '';
     display: table
 }
 
@@ -642,7 +642,7 @@ input.ui-button::-moz-focus-inner, button.ui-button::-moz-focus-inner {
 }
 
 .ui-progressbar .ui-progressbar-overlay {
-    background: url("images/animated-overlay.gif");
+    background: url('images/animated-overlay.gif');
     height: 100%;
     filter: alpha(opacity=25);
     opacity: 0.25

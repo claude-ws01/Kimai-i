@@ -1,0 +1,22 @@
+- removed all references to 'server_conn', and 'pdo', as there are NO pdo processing in Kimai.
+- removed 'server_type', unused.
+- removed abstract mysql class, simply unnecessary with no real gain.
+- added all default preferences for new users in global config.
+- removed one unnecessary database locks ( no need when not multi table updates, even less when only select)
+- upgraded the db transaction handling method
+- preferences is now unified, for customer or user. Methods, Variables & db. User/Customer's prefs are both in
+    the preference table.
+- user_id & customer_id are now both checked for uniqness against preference table.
+- customer can now set their own preferences.
+- massive revision of global variables (some people should learn about why and how to use global/protected/private
+    variables/method, and abstract)
+    ~ GLOBALS: kga, database, view, translation
+    ~ important $kga arrays:
+        * any       (id, type, common to user & customer)
+        * conf      (copy of configuration table)
+        * customer  (when logged-in, customer's data)
+        * lang      (locale translation)
+        * pref      (preferences of both user/customer)
+        * status    (copy of status table)
+        * user      (when logged-in, user's data)
+    ~ $database

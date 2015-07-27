@@ -38,7 +38,7 @@
  ****************************************************************************************************/
 
  // set path of extension
- var demo_ext_path = "../extensions/ki_demoextension/";
+ var demo_ext_path = "../extensions/#ki_demoextension/";
 
  $(document).ready(function(){
 

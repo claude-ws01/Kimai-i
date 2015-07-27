@@ -1,0 +1,642 @@
+/*    PANEL        PANEL        PANEL        PANEL        PANEL        PANEL    */
+#xpo_panel {
+    padding: 10px 10px 10px 10px;
+    /*
+    width: 100%;
+    padding-top: 8px;
+    */
+}
+
+#xpo_panel .r .l,
+#xpo_panel .l .l,
+#xpo_panel .l .w .c,
+#xpo_panel .r .w .c,
+#xpo_panel .w .c .w .c,
+#xpo_panel .w .c .l,
+#xpo_panel .w .c .r,
+#xpo_panel .r .r {
+    background: url('../grfx/stats_panel.png');
+}
+
+#xpo_panel .l,
+#xpo_panel .r,
+#xpo_panel .w {
+    float: left;
+}
+
+#xpo_panel .l,
+#xpo_panel .r,
+#xpo_panel .c {
+    height: 49px;
+}
+
+#xpo_panel .l .l,
+#xpo_panel .r .l,
+#xpo_panel .r .r {
+    width: 4px;
+}
+
+#xpo_panel .l .w .c,
+#xpo_panel .r .w .c {
+    background-position: 0 98px;
+}
+
+#xpo_panel .l {
+    margin-left: -100%;
+    width: 133px;
+}
+
+#xpo_panel .r {
+    width: 183px;
+    margin-left: -183px;
+}
+
+#xpo_panel .r .r {
+    background-position: -27px 0;
+    margin-left: -4px;
+}
+
+#xpo_panel .w {
+    width: 100%;
+}
+
+#xpo_panel .w .c {
+    margin: 0 183px 0 133px;
+}
+
+#xpo_panel .w .c .w .c {
+    margin: 0 8px 0 15px;
+    background-position: 0 49px;
+}
+
+#xpo_panel .w .c .l {
+    background-position: -4px 0;
+    width: 15px;
+}
+
+#xpo_panel .w .c .r {
+    background-position: -19px 0;
+    width: 8px;
+    margin-left: -10px;
+}
+
+#xpo_panel .l .w .c {
+    margin: 0 0 0 1px;
+}
+
+#xpo_panel .r .w .c {
+    margin: 0 4px 0 2px;
+}
+
+#xpo_panel .select_btn, #xpo_panel .output_btn {
+    position: relative;
+    text-indent: -999em;
+    display: block;
+    width: 41px;
+    height: 42px;
+    background: url('../grfx/select.png');
+}
+
+#xpo_panel a.helpfloater {
+    display: block;
+    float: left;
+    height: 13px;
+    width: 13px;
+    text-indent: -999em;
+    background: url('../grfx/help.png');
+}
+
+#xpo_panel #export_extension_select_filter {
+    top: 3px;
+}
+
+#xpo_panel #export_extension_select_filter:hover {
+    background-position: 0 -42px;
+}
+
+#xpo_panel #export_extension_select_filter:active {
+    background-position: 0 -84px;
+}
+
+#xpo_panel #export_extension_select_filter.pressed {
+    background-position: 0 -84px;
+}
+
+#xpo_panel #export_extension_select_location {
+    left: 44px;
+    top: -39px;
+    background-position: 204px 0;
+}
+
+#xpo_panel #export_extension_select_location:hover {
+    background-position: 204px -42px;
+}
+
+#xpo_panel #export_extension_select_location:active {
+    background-position: 204px -84px;
+}
+
+#xpo_panel #export_extension_select_location.pressed {
+    background-position: 204px -84px;
+}
+
+#xpo_panel #export_extension_select_timeformat {
+    left: 88px;
+    top: -81px;
+    background-position: 163px 0;
+}
+
+#xpo_panel #export_extension_select_timeformat:hover {
+    background-position: 163px -42px;
+}
+
+#xpo_panel #export_extension_select_timeformat:active {
+    background-position: 163px -84px;
+}
+
+#xpo_panel #export_extension_select_timeformat.pressed {
+    background-position: 163px -84px;
+}
+
+#xpo_panel #export_extension_export_pdf {
+    top: 3px;
+    background-position: 122px 0;
+}
+
+#xpo_panel #export_extension_export_pdf:hover {
+    background-position: 122px -42px;
+}
+
+#xpo_panel #export_extension_export_pdf.pressed {
+    background-position: 122px -84px;
+}
+
+#xpo_panel #export_extension_export_xls {
+    left: 44px;
+    top: -39px;
+    background-position: 82px 0;
+}
+
+#xpo_panel #export_extension_export_xls:hover {
+    background-position: 82px -42px;
+}
+
+#xpo_panel #export_extension_export_xls.pressed {
+    background-position: 82px -84px;
+}
+
+#xpo_panel #export_extension_export_csv {
+    left: 88px;
+    top: -81px;
+    background-position: -41px 0;
+}
+
+#xpo_panel #export_extension_export_csv:hover {
+    background-position: -41px -42px;
+}
+
+#xpo_panel #export_extension_export_csv.pressed {
+    background-position: -41px -84px;
+}
+
+#xpo_panel #export_extension_print {
+    left: 132px;
+    top: -123px;
+    background-position: 41px 0;
+}
+
+#xpo_panel #export_extension_print:hover {
+    background-position: 41px -42px;
+}
+
+#xpo_panel #export_extension_print.pressed {
+    background-position: 41px -84px;
+}
+
+/*    SETUP        SETUP        SETUP        SETUP        SETUP    */
+
+#xpo_head {
+    border: 1px solid black;
+    border-bottom: none;
+    background-image: url('<?php echo $table_header; ?>');
+    position: absolute;
+    height: 25px;
+    text-align: left;
+    color: #FFF;
+    left: 10px;
+    font-size: 11px;
+    top: 175px;
+
+    /* border: 1px solid black;
+     border-bottom: none;
+     background-image: url("../../grfx/g3_table_header.png");
+     height: 25px;
+     color: #FFF;
+     font-size: 11px;
+     float: left;
+     margin-top: 8px;
+     width: 100%;*/
+}
+
+#xpo_head table {
+    border: none;
+    width: 100%;
+}
+
+#xpo_head td {
+    color: white;
+    border-right: 1px solid rgba(0, 0, 0, 0);
+    overflow: hidden;
+    padding: 4px 0;
+    white-space: nowrap;
+}
+
+#xpo_main {
+    border: 1px solid black;
+    margin: 0;
+    padding: 0;
+    background-color: #eee;
+    position: absolute;
+    overflow: auto;
+    left: 10px;
+    top: 200px;
+    z-index: 2;
+
+    /*
+    border: 1px solid black;
+    margin: 0;
+    padding: 0;
+    background-color: #eee;
+    position: relative;
+    overflow: auto;
+    */
+}
+
+#xpo_table {
+    width: 100%
+}
+
+/* columns width  HEAD & MAIN */
+/*
+#xpo_head td.option,
+#xpo_main td.option {
+    width: 70px;
+}
+*/
+
+#xpo_head td.date,
+#xpo_main td.date {
+    width: 50px;
+}
+
+#xpo_head td.from,
+#xpo_head td.to,
+#xpo_main td.from,
+#xpo_main td.to {
+    width: 50px;
+}
+
+#xpo_head td.time,
+#xpo_main td.time {
+    width: 40px;
+}
+
+#xpo_head td.dec_time,
+#xpo_main td.dec_time {
+    width: 40px;
+}
+
+#xpo_main td.rate {
+    width: 50px;
+}
+
+#xpo_main td.wage {
+    width: 50px;
+}
+
+#xpo_main td.budget {
+    width: 50px;
+}
+
+#xpo_main td.approved {
+    width: 50px;
+}
+
+#xpo_main td.status {
+    width: 50px;
+}
+
+#xpo_main td.billable {
+    width: 40px;
+}
+
+#xpo_main td.customer {
+    min-width: 50px;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+#xpo_main td.project {
+    min-width: 50px;
+}
+
+#xpo_main td.activity {
+    min-width: 60px;
+}
+
+#xpo_main td.description {
+    width: 120px;
+}
+
+#xpo_main td.comment {
+    width: 40px;
+}
+
+#xpo_main td.location {
+    width: 30px;
+}
+
+#xpo_main td.tracking_number {
+    width: 40px;
+}
+
+#xpo_head td.user,
+#xpo_main td.user {
+    width: 50px;
+}
+
+#xpo_head td.cleared,
+#xpo_main td.cleared {
+    width: 25px;
+}
+
+/* columns width  HEAD & MAIN (end)*/
+
+#xpo_head td.customer,
+#xpo_head td.project,
+#xpo_head td.activity,
+#xpo_head td.description,
+#xpo_head td.comment,
+#xpo_head td.location,
+#xpo_head td.user,
+#xpo_main td.customer,
+#xpo_main td.project,
+#xpo_main td.activity,
+#xpo_main td.description,
+#xpo_main td.comment,
+#xpo_main td.location,
+#xpo_main td.user {
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+#xpo_head td.cleared a,
+#xpo_head div.right a {
+    background-image: url('../grfx/invert.png');
+    overflow: hidden;
+    display: block;
+    width: 22px;
+    height: 16px;
+    text-indent: -500px;
+}
+
+.export_time_help_table {
+    border-collapse: collapse;
+}
+
+.export_time_description {
+    border-bottom: 1px solid gray;
+}
+
+.export_time_shortcut {
+    font-weight: bold;
+    border-bottom: 1px solid gray;
+    padding-right: 10px;
+}
+
+a {
+    cursor: pointer
+}
+
+/*   OPTION TABS      OPTION TABS      OPTION TABS      OPTION TABS   */
+#export_extension_tab_filter {
+    padding: 10px 0 0 0;
+    font-size: 20px;
+    color: #3a3b34;
+    display: none;
+}
+
+#export_extension_tab_filter input[type=text] {
+    font-size: 20px;
+    display: block;
+    float: left;
+    width: 100px;
+    border: none;
+    height: 25px;
+    margin-top: 1px;
+    margin-left: 5px;
+    padding-left: 3px;
+    background-color: #ddddcd;
+}
+
+#export_extension_tab_filter span {
+    margin-left: 10px;
+    float: left;
+    display: block;
+}
+
+#export_extension_tab_location {
+    padding: 10px 0 0 0;
+    font-size: 20px;
+    color: #3a3b34;
+    display: none;
+}
+
+#export_extension_tab_location input[type=text] {
+    font-size: 20px;
+    display: block;
+    float: left;
+    width: 150px;
+    border: none;
+    height: 25px;
+    margin-top: 1px;
+    margin-left: 5px;
+    padding-left: 3px;
+    background-color: #ddddcd;
+}
+
+#export_extension_tab_location span {
+    margin-left: 10px;
+    float: left;
+    display: block;
+}
+
+#export_extension_tab_timeformat {
+    padding: 10px 0 0 0;
+    font-size: 20px;
+    color: #3a3b34;
+    display: none;
+}
+
+#export_extension_tab_timeformat input[type=text] {
+    font-size: 20px;
+    display: block;
+    float: left;
+    width: 100px;
+    border: none;
+    height: 25px;
+    margin-top: 1px;
+    margin-left: 5px;
+    padding-left: 3px;
+    background-color: #ddddcd;
+}
+
+#export_extension_tab_timeformat span {
+    margin-left: 10px;
+    float: left;
+    display: block;
+}
+
+#export_extension_tab_timeformat {
+    display: block;
+}
+
+/*   TABLE      TABLE      TABLE      TABLE      TABLE   */
+div.ki_export table {
+    border-collapse: collapse;
+    font-size: 11px;
+    color: #363636;
+    border-bottom: 1px solid #888;
+    text-align: center;
+    width: 100%;
+}
+
+div.ki_export table a.preselect_lnk {
+    color: #363636;
+    text-decoration: none;
+    border-bottom: 1px dotted #bbb;
+}
+
+div.ki_export table a:hover {
+    color: #0F9E00;
+    border-bottom: none;
+}
+
+div.ki_export table thead {
+    height: 25px;
+    text-align: left;
+    color: #FFF;
+}
+
+div.ki_export table thead th {
+    background-image: url("../../grfx/g3_table_header.png");
+}
+
+div.ki_export tr.even td,
+div.ki_export tr.odd td {
+    border-bottom: none;
+    border-left: none;
+    border-right: 1px dotted #CCC;
+    padding: 4px 0;
+}
+
+div.ki_export tr.hover td {
+    background: #FFC !important;
+    border-bottom: 1px solid #666 !important;
+}
+
+div.ki_export tr.even td {
+    background: #FFF;
+}
+
+div.ki_export tr.odd td {
+    background: #EEE;
+}
+
+div#xpo_table tr.odd td.comment,
+div#xpo_table tr.odd td.tracking_number,
+div#xpo_table tr.odd td.location {
+    background: #CFE3F5;
+}
+
+div#xpo_table tr.even td.comment,
+div#xpo_table tr.even td.tracking_number,
+div#xpo_table tr.even td.location {
+    background: #ECF7FD;
+}
+
+div#xpo_table tr.even.expense td {
+    background: #E5FFBF;
+}
+
+div#xpo_table tr.odd.expense td {
+    background: #DCF4B7;
+}
+
+div#xpo_table tr.odd.expense td.comment,
+div#xpo_table tr.odd.expense td.tracking_number,
+div#xpo_table tr.odd.expense td.location {
+    background: #A3F1A6;
+}
+
+div#xpo_table tr.even.expense td.comment,
+div#xpo_table tr.even.expense td.tracking_number,
+div#xpo_table tr.even.expense td.location {
+    background: #C8F1CC;
+}
+
+div#xpo_table tr.odd td.cleared {
+    background: #6E7882;
+}
+
+div#xpo_table tr.even td.cleared {
+    background: #86939F;
+}
+
+div#xpo_table tr td.time {
+    border-bottom: 1px dotted white;;
+}
+
+div#xpo_table tr.even td.time {
+    background: #A4E7A5;
+}
+
+div#xpo_table tr.odd td.time {
+    background: #64BF61;
+}
+
+div#xpo_table tr.active td.time {
+    background: #F00;
+}
+
+div#xpo_table tr.expense td.time {
+    background-image: url("../../grfx/schraff3.png");
+}
+
+div#xpo_table > table > tbody > tr > td.cleared {
+    border-right: none;
+}
+
+div.ki_export table tr.odd td.disabled {
+    background-color: #FFC7BB !important;
+}
+
+div.ki_export table tr.even td.disabled {
+    background-color: #FFE1DB !important;
+}
+
+div.ki_export table td.cleared a {
+    width: 13px;
+    height: 13px;
+    display: block;
+    margin: 0 auto;
+}
+
+div.ki_export table td.cleared a.is_cleared {
+    background: url('../grfx/cleared.png') 0 -13px no-repeat;
+}
+
+div.ki_export table td.cleared a.isnt_cleared {
+    background: url('../grfx/cleared.png') no-repeat;
+}
+

@@ -1,0 +1,283 @@
+/* reset */
+
+/*
+* {
+    border: 0;
+    box-sizing: content-box;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-style: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    vertical-align: top;
+}
+*/
+/* page */
+
+html {
+    font: 16px/1 'Open Sans', sans-serif;
+    overflow: auto;
+    padding: 0.5in;
+    background: #999;
+    cursor: default;
+}
+
+body {
+    box-sizing: border-box;
+    min-height: 11in;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 0.5in;
+    width: 8.5in;
+    background: #FFF;
+    border-radius: 1px;
+    box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5);
+}
+
+p,h1,h2 {
+    margin: 0;
+    padding: 0;
+}
+/* heading */
+
+h1 {
+    font: bold 100% sans-serif;
+    letter-spacing: 0.5em;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+/* table */
+
+table {
+    font-size: 75%;
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 2px;
+}
+
+th, td {
+    padding: 0.5em;
+    border: 1px solid;
+    position: relative;
+    text-align: left;
+    border-radius: 0.25em;
+}
+
+th {
+    background: #EEE;
+    border-color: #BBB;
+}
+
+td {
+    border-color: #DDD;
+}
+
+
+
+/* header */
+
+header {
+    margin: 0 0 2em;
+}
+
+header:after {
+    clear: both;
+    content: "";
+    display: table;
+}
+
+header h1 {
+    background: #737373;
+    border-radius: 0.25em;
+    color: #FFF;
+    margin: 0 0 1em;
+    padding: 0.5em 0;
+}
+
+header address {
+    float: right;
+    font-size: 90%;
+    font-style: normal;
+    line-height: 1.25;
+    width: 300px;
+}
+
+header address p {
+    margin: 0 0 0.25em;
+    text-align: left;
+}
+
+header span,
+header img {
+    display: block;
+    float: left;
+}
+
+header span {
+    max-height: 25%;
+    max-width: 60%;
+    position: relative;
+}
+
+header img {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+/* article */
+
+article {
+    min-height: 6.7in;
+}
+
+article,
+article address,
+table.meta,
+table.timesheets {
+    margin: 0 0 2em;
+}
+.timesheets td {
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+}
+table.meta {
+    float: right;
+    width: 300px;
+}
+
+table.meta th {
+    width: 100px;
+}
+
+table.meta td {
+    text-align: center;
+}
+
+article:after {
+    clear: both;
+    content: "";
+    display: table;
+}
+
+article address {
+    float: left;
+}
+article address h2 {
+    font-size: 0.8em;
+}
+article address p {
+    padding-left: 10px;
+}
+
+/* table meta & totals */
+
+table.meta:after,
+table.totals:after {
+    clear: both;
+    content: "";
+    display: table;
+}
+
+/* table meta */
+
+
+/* table items */
+
+table.timesheets {
+    clear: both;
+    width: 100%;
+}
+
+table.timesheets th {
+    font-weight: bold;
+}
+
+.rate {
+    text-align: center;
+    width: 50px;
+}
+.qty {
+    text-align: center;
+    width: 50px;
+}
+.amount {
+    text-align: right;
+    width: 90px;
+}
+
+/* table totals */
+
+table.totals {
+    float: right;
+    width: 40%;
+}
+
+/* aside */
+
+aside {
+    width: 7.5in;
+}
+
+aside h1 {
+    border: none;
+    border-width: 0 0 1px;
+    margin: 0 0 1em;
+}
+
+aside h1 {
+    border-color: #999;
+    border-bottom-style: solid;
+}
+
+aside p {
+    font-size: 85%;
+}
+
+aside div {
+    margin-top: 15px;
+}
+
+aside div p {
+    line-height: 1.4;
+}
+
+aside p span {
+    width: 130px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+@media print {
+    * {
+        -webkit-print-color-adjust: exact;
+    }
+
+    html {
+        background: none;
+        padding: 0;
+    }
+
+    body {
+        box-shadow: none;
+        margin: 0;
+    }
+
+    span:empty {
+        display: none;
+    }
+
+    .add, .cut {
+        display: none;
+    }
+}
+
+@page {
+    margin: 0;
+}
