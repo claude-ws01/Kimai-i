@@ -1,7 +1,7 @@
 Kimai-i Time Tracking
 ====================================
 
-This is NOT the repository of Kimai.
+(This is NOT the repository of The original Kimai)
 
 It is a branch from original Kimai v0.9.3rc1.
 It includes
