@@ -64,7 +64,7 @@ $view->kga = $kga;
 // ===================================
 // = current database setup correct? =
 // ===================================
-checkDBversion('.');
+checkDBversion();
 
 // =================================================================
 // = processing login and displaying either login screen or errors =

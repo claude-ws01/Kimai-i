@@ -1,3 +1,10 @@
+=== v0.10.0-b4 ======= 2015-07-27 ============ db revision 2000 ========================================================
+
+- strengthen even more the choosing of update/install process with cleaner/safer redirection.
+
+- revised internal version check. Now, if no db revision, then only update core.version number. No need to run updater.
+
+
 === v0.10.0-b3 ======= 2015-07-27 ============ db revision 2000 ========================================================
 
 - grrr. having some difficulties with git...

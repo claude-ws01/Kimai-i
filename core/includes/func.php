@@ -55,36 +55,48 @@ function any_get_global_role_id()
  * @return array
  * @author th
  */
-function checkDBversion($path)
+function checkDBversion()
 {
     global $kga, $database;
 
     // check for versions before 0.7.13r96
     $installedVersion = $database->get_DBversion();
-    $db_version     = (string)$installedVersion[0];
-    $db_revision     = (int)$installedVersion[1];
+    $db_version       = (string)$installedVersion[0];
+    $db_revision      = (int)$installedVersion[1];
 
-    //$checkVersion     = "$checkVersion";
 
-    if ($db_version === '0.5.1' && count($database->get_users()) == 0) {
+    if ($db_version === '0.5.1'
+        && count($database->get_users()) === 0
+        && strpos(basename($_SERVER['DOCUMENT_URI']), 'installer') === 0
+    ) {
         // fresh install
-        header("Location: $path/installer");
+        header("Location: http://${_SERVER['SERVER_NAME']}/installer");
         exit;
     }
 
-    if ($db_version !== $kga['core.version']) {
-        header("Location: $path/updater.php");
-        exit;
-    }
 
     // the check for revision is much simpler ...
-    if ($db_revision < (int)$kga['core.revision']) {
-        header("Location: $path/updater.php");
+    if ($db_revision < (int)$kga['core.revision']
+        && strpos(basename($_SERVER['DOCUMENT_URI']), 'updater') === 0
+    ) {
+        header("Location: http://${_SERVER['SERVER_NAME']}/updater.php");
+        exit;
+    }
+
+
+    if ($db_version !== $kga['core.version']) {
+        // only need to update conf values
+        config_set('core.version', $kga['core.version'], true);
+        $database->config_replace();
+    }
+
+    if (preg_match('/^(?:updater|install)$/', basename($_SERVER['DOCUMENT_URI'], '.php'))) {
+        header("Location: http://${_SERVER['SERVER_NAME']}/index.php");
         exit;
     }
 }
 
-/**
+/*
  * @brief Check the permission to access an object.
  *
  * This method is meant to check permissions for adding, editing and deleting customers,

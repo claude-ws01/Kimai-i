@@ -89,7 +89,7 @@ $tranlastion_load_from_db = false;
 if ($_SERVER['DOCUMENT_URI'] !== '/db_restore.php'
     && $_SERVER['DOCUMENT_URI'] !== '/installer/install.php'
 ) {
-    checkDBversion('.');
+    checkDBversion();
     $tranlastion_load_from_db = true;
 }
 

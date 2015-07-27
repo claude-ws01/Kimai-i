@@ -52,7 +52,7 @@ function quoteForSql($input)
 //        MAIN        MAIN        MAIN        MAIN        MAIN        MAIN        //
 //        MAIN        MAIN        MAIN        MAIN        MAIN        MAIN        //
 if (!isset($_REQUEST['accept'])) {
-    header('Location: ../index.php?disagreedGPL=1');
+    header("Location: http://${_SERVER['SERVER_NAME']}/installer/index.php?disagreedGPL=1");
     exit;
 }
 global $database, $kga, $view;

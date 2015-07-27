@@ -42,7 +42,7 @@ checkUser();
 // Jedes neue update schreibt seine Versionsnummer in die Datenbank.
 // Beim nächsten Update kommt dann in der Datei /includes/var.php die neue V-Nr. mit.
 // der updater.php weiss dann welche Aenderungen an der Datenbank vorgenommen werden muessen. 
-checkDBversion('..');
+checkDBversion();
 
 $extensions = new Extensions(WEBROOT . '/extensions/');
 $extensions->loadConfigurations();

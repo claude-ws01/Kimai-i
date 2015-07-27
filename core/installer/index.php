@@ -20,13 +20,13 @@ define('WEBROOT', $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR);
 
 if (file_exists(WEBROOT . 'includes/autoconf.php')) {
     //CN safety from re-installing
-    header('location:http://'. $_SERVER['SERVER_NAME'] . '/index.php');
+    header("location:http://${_SERVER['SERVER_NAME']}/index.php");
     exit;
 }
 
 $installsteps = 8;
 $kga = array();
-require("../includes/version.php");
+require('../includes/version.php');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -68,7 +68,7 @@ require("../includes/version.php");
             </script>";
             ?>
         </div>
-        <h1>Installation <?php echo "v" . $GLOBALS['kga']['core.version'] . "." . $GLOBALS['kga']['core.revision'] ?></h1>
+        <h1>Installation <?php echo 'v' . $GLOBALS['kga']['core.version'] . '.' . $GLOBALS['kga']['core.revision'] ?></h1>
     </div>
     <div id="body">
 

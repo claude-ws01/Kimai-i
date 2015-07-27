@@ -59,6 +59,11 @@ if (!is_object($database) || !$database->isConnected()) {
 }
 
 config_init();
+
+// pre-check. redirect if no need to db-update
+checkDBversion();
+
+
 $translations = new Translations(false);
 
 
@@ -89,12 +94,6 @@ error_log(serialize($V));
 unset($V);
 
 $min_php_version = '5.4';
-
-if ($revisionDB === (int)$kga['core.revision']
-    && $versionDB === $kga['core.version']) {
-    header('location:http://'. $_SERVER['SERVER_NAME'] . '/index.php');
-    exit;
-}
 
 if (1385 < $revisionDB && $revisionDB < 2000) {
     // version belongs to original kimai at a version not covered here.
