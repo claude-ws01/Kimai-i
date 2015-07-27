@@ -1,4 +1,11 @@
-=== v0.10.0 ======= 2015-07-25  ========================================================================================
+=== v0.10.0b2 ======= 2015-07-27 ======================================================================================
+
+- languages: some modifications in EN and FR.
+- bugfix: iconv_set_encoding deprecated WARNINGS with PHP v5.6: Made new function ki_iconv_set_encoding to replace
+    iconv_set_encoding. Function checks PHP version. This affects only zend framework 1.
+- bugfix: java validation of time in timesheet edit. We do not care about seconds!!
+
+=== v0.10.0b1 ======= 2015-07-25  ======================================================================================
 Notes: This jump to v0.10.0 db revision 2000, is my major overhaul of original Kimia v0.9.3rc1. There is still work to
 do, but from what I have revised, the core is functionnal.  Here a short and incomplete list of what I have done.
 

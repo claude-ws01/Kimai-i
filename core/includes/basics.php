@@ -66,9 +66,15 @@ $database = new Kimai_Database_Mysql(
     $kga['server_password'],
     $kga['utf8']);
 
-// both may be needed to log mysql errors
-ini_set('display_errors', '1');
-mysqli_report(MYSQLI_REPORT_ERROR);
+
+// PHP & MYSQL WARNINGS //
+if (IN_DEV) {
+    ini_set('display_errors', '1');
+    mysqli_report(MYSQLI_REPORT_ERROR);
+}
+else {
+    ini_set('display_errors', '0');
+}
 
 if (!is_object($database) || !$database->isConnected()) {
     die('Kimai-i could not connect to database. Check your autoconf.php.');

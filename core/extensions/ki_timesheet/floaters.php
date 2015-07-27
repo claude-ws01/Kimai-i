@@ -180,7 +180,7 @@ switch ($axAction) {
 
             $view->user_id = $kga['user']['user_id'];
 
-            if ($kga['user']['last_record'] != 0 && $kga['conf']['round_timesheet_entries'] != '') {
+            if ($kga['user']['last_record'] != 0 && $kga['conf']['round_timesheet_entries'] !== '') {
                 $timeSheetData = $database->timesheet_get_data($kga['user']['last_record']);
                 $minutes       = date('i');
                 if ($kga['conf']['round_minutes'] < 60) {

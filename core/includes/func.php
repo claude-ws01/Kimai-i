@@ -711,7 +711,18 @@ function makeSelectBox($subject, $groups, $selection = null, $includeDeleted = f
     return $sel;
 
 }
+function ki_iconv_set_encoding($type, $charset = 'UTF-8') {
+    // iconv_set_encoding deprecated WARNINGS //
 
+    if (PHP_VERSION_ID < 50600) {
+        iconv_set_encoding($type, $charset);
+    }
+    else {
+        ini_set('default_charset', $charset);
+    }
+
+    return true;
+}
 /*
  * returns a random code with given length
  *

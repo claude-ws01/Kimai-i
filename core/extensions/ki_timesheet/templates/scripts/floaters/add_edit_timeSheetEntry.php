@@ -133,6 +133,11 @@
                         inVal = inTimeMatches[i];
                         outVal = outTimeMatches[i];
 
+                        if (inVal == undefined)
+                            inVal = 0;
+                        if (outVal == undefined)
+                            outVal = 0;
+
                         if (inVal[0] == ":")
                             inVal = inVal.substr(1);
                         if (outVal[0] == ":")
@@ -140,11 +145,6 @@
 
                         inVal = parseInt(inVal);
                         outVal = parseInt(outVal);
-
-                        if (inVal == undefined)
-                            inVal = 0;
-                        if (outVal == undefined)
-                            outVal = 0;
 
                         if (inVal > outVal) {
                             alert("<?php echo $kga['lang']['StartTimeBeforeEndTime']?>");
@@ -320,12 +320,14 @@
     <div id="floater_handle">
         <span id="floater_title">
             <?php if (isset($this->id)) {
+                $new_entry = false;
                 echo $kga['lang']['edit'],
                 ' - ', $this->escape($this->start_day),
                 ' - ', $this->escape($this->start_time),
                 ' - ', $this->escape($this->customer_name);
             }
             else {
+                $new_entry = true;
                 echo $kga['lang']['add'];
             } ?>
         </span>
@@ -435,18 +437,18 @@
 
                     <li>
                         <label><?php echo $kga['lang']['day'] ?>:</label>
-                    <span style="width: 120px; display: inline-block;">
-                     <input id='start_day'
-                            type='text'
-                            name='start_day'
-                            value='<?php echo $this->escape($this->start_day) ?>'
-                            maxlength='10'
-                            size='8'
-                            tabindex='6'
-                            style="text-align:center;"
-                            onChange="ts_ext_timeToDuration();" <?php if ($kga['pref']['autoselection']): ?>
-                         onClick="this.select();" <?php endif; ?> />
-                    </span>
+                        <span style="width: 150px; display: inline-block;">
+                         <input id='start_day'
+                                type='text'
+                                name='start_day'
+                                value='<?php echo $this->escape($this->start_day) ?>'
+                                maxlength='10'
+                                size='8'
+                                tabindex='6'
+                                style="text-align:center;"
+                                onChange="ts_ext_timeToDuration();" <?php if ($kga['pref']['autoselection']): ?>
+                             onClick="this.select();" <?php endif; ?> />
+                        </span>
                         <input id='end_day'
                                type='text'
                                name='end_day'
@@ -461,7 +463,7 @@
 
                     <li style="vertical-align:top;">
                         <label><?php echo $kga['lang']['timelabel'] ?>:</label>
-                       <span style="width: 120px; display: inline-block;">
+                       <span style="width: 150px; display: inline-block;">
                             <input id='start_time' type='text' name='start_time' style="text-align:center;"
                                    value='<?php echo $this->escape($this->start_time) ?>'
                                    maxlength='5' size='3' tabindex='8' onChange="ts_ext_startTimeToDuration();"
@@ -484,7 +486,7 @@
                     </li>
                     <li>
                         <label for="duration"><?php echo $kga['lang']['durationlabel'] ?>:</label>
-                        <span style="width: 180px; display: inline-block;text-align:center;">
+                        <span style="width: 210px; display: inline-block;text-align:center;">
                             <input id='duration' type='text' name='duration' value='' style="text-align:center;"
                                    onChange="ts_ext_durationToTime();" maxlength='5' size='3' tabindex='10'
                                 <?php if ($kga['pref']['autoselection']): ?> onClick="this.select();"<?php endif; ?> />
@@ -554,10 +556,12 @@
                         <input type="hidden" name="user_id" value="<?php echo $kga['user']['user_id']; ?>"/>
                     <?php endif; ?>
 
-                    <li>
-                        <label for="erase"><?php echo $kga['lang']['erase'] ?>:</label>
-                        <input type='checkbox' id='erase' name='erase' tabindex='16'/>
-                    </li>
+                    <?php if (!$new_entry) { ?>
+                        <li>
+                           <label for="erase"><?php echo $kga['lang']['erase'] ?>:</label>
+                           <input type='checkbox' id='erase' name='erase' tabindex='16'/>
+                       </li>
+                    <?php } ?>
 
                     <li>
                         <label for="cleared"><?php echo $kga['lang']['cleared'] ?>:</label>
