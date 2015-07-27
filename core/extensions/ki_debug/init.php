@@ -26,7 +26,6 @@ $datasrc       = "config.ini";
 $settings      = parse_ini_file($datasrc);
 $dir_ext       = $settings['EXTENSION_DIR'];
 
-//PREV// $kga['user'] = checkUser();
 checkUser();
 // ============================================
 // = initialize currently displayed timeframe =
@@ -62,6 +61,6 @@ if ($kga['logfile_lines'] == "@") {
 else {
     $view->limitText = "(limited to " . $kga['logfile_lines'] . " lines)";
 }
-$view->skin_dir = Extensions::skin_dir($settings);
+$view->skinDir = Extensions::skinDir($settings);
 
 echo $view->render('index.php');

@@ -1,16 +1,17 @@
-<?php 
+<?php
 echo '<script type="text/javascript" charset="utf-8">current=70;</script>';
 
-$database = $_REQUEST['database'];
-$prefix = $_REQUEST['prefix'];
-if ( strlen($database) > 64 || !preg_match('/^[a-zA-Z0-9_-]+$/', $database) ||
-     strlen($prefix)   > 64 || !preg_match('/^[a-zA-Z0-9_-]*$/', $prefix) ) {
-echo '<script type="text/javascript" charset="utf-8">step_back();</script>';
+$db_name = $_REQUEST['database'];
+$prefix  = $_REQUEST['prefix'];
+if (strlen($db_name) > 64 || !preg_match('/^[a-zA-Z0-9_-]+$/', $db_name) ||
+    strlen($prefix) > 64 || !preg_match('/^[a-zA-Z0-9_-]*$/', $prefix)
+) {
+    echo '<script type="text/javascript" charset="utf-8">step_back();</script>';
 }
 
-if ($_REQUEST['lang']=="en") {
+if ($_REQUEST['language'] === "en") {
 
-echo<<<EOD
+    echo <<<EOD
     <h2>Write Config-File</h2>
     
     Now all data has been collected. By clicking OK you will install Kimai as follows:
@@ -35,9 +36,10 @@ echo<<<EOD
     <button onClick="install(); return false;" class="proceed">Install</button>
 EOD;
 
-} else {
+}
+else {
 
-echo<<<EOD
+    echo <<<EOD
     <h2>Config-Datei Schreiben</h2>
     
     Die Daten sind jetzt komplett. Kimai kann jetzt mit folgender Datanbank-Verbindung installiert werden:
@@ -64,4 +66,3 @@ EOD;
 
 }
 
-?>

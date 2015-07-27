@@ -19,11 +19,11 @@
 
 // insert KSPI
 $isCoreProcessor = 0;
-$dir_templates   = "templates/";
+$dir_templates   = 'templates/';
 
 global $database, $kga, $view;
 
-require("../../includes/kspi.php");
+require('../../includes/kspi.php');
 include('private_db_layer_mysql.php');
 
 
@@ -31,44 +31,45 @@ function expenseAccessAllowed($entry, $action, &$errors)
 {   // SECURITY //
     global $database, $kga;
 
-    if (!isset($kga['user'])) {
+    if (!array_key_exists('user', $kga)) {
         $errors[''] = $kga['lang']['errorMessages']['permissionDenied'];
 
         return false;
     }
 
-    if ($kga['is_user_root']) return true;
+    if ($kga['is_user_root']) {return true;}
 
 
     // check if expense is too far in the past to allow editing (or deleting)
-    if (isset($entry['id']) && $kga['conf']['edit_limit'] != "-" && time() - $entry['timestamp'] > $kga['conf']['edit_limit']) {
+    if (isset($entry['id']) && $kga['conf']['edit_limit'] != '-' && time() - $entry['timestamp'] > $kga['conf']['edit_limit']) {
         $errors[''] = $kga['lang']['editLimitError'];
     }
 
-    $groups = $database->user_get_group_ids($entry['user_id']);
 
     if ($entry['user_id'] == $kga['user']['user_id']) {
-        $permissionName = "ki_expenses__own_entry__${action}";
+        $permissionName = "ki_expense__own_entry__${action}";
         if ($database->global_role_allows(any_get_global_role_id(), $permissionName)) {
             return true;
         }
         else {
-            Logger::logfile("missing global permission $permissionName for user " . $kga['user']['name'] . " to access expense");
+            Logger::logfile("missing global permission $permissionName for user " . $kga['user']['name'] . ' to access expense');
             $errors[''] = $kga['lang']['errorMessages']['permissionDenied'];
 
             return false;
         }
     }
 
-    $assignedOwnGroups = array_intersect($groups, $database->user_get_group_ids($kga['user']['user_id']));
+    $groups = $database->user_get_group_ids($entry['user_id'], false);
+    //CN..original $assignedOwnGroups = array_intersect($groups, $database->user_get_group_ids($kga['user']['user_id']));
+    $assignedOwnGroups = array_intersect($groups, $kga['user']['groups']);
 
     if (count($assignedOwnGroups) > 0) {
-        $permissionName = "ki_expenses__other_entry__own_group__${action}";
+        $permissionName = "ki_expense__other_entry__own_group__${action}";
         if ($database->checkMembershipPermission($kga['user']['user_id'], $assignedOwnGroups, $permissionName)) {
             return true;
         }
         else {
-            Logger::logfile("missing membership permission $permissionName of own group(s) " . implode(", ", $assignedOwnGroups) . " for user " . $kga['user']['name']);
+            Logger::logfile("missing membership permission $permissionName of own group(s) " . implode(', ', $assignedOwnGroups) . ' for user ' . $kga['user']['name']);
             $errors[''] = $kga['lang']['errorMessages']['permissionDenied'];
 
             return false;
@@ -76,12 +77,12 @@ function expenseAccessAllowed($entry, $action, &$errors)
 
     }
 
-    $permissionName = "ki_expenses__other_entry__other_group__${action}";
+    $permissionName = "ki_expense__other_entry__other_group__${action}";
     if ($database->global_role_allows(any_get_global_role_id(), $permissionName)) {
         return true;
     }
     else {
-        Logger::logfile("missing global permission $permissionName for user " . $kga['user']['name'] . " to access expense");
+        Logger::logfile("missing global permission $permissionName for user " . $kga['user']['name'] . ' to access expense');
         $errors[''] = $kga['lang']['errorMessages']['permissionDenied'];
 
         return false;
@@ -97,7 +98,7 @@ switch ($axAction) {
     // ===========================================
     case 'reload_exp':
         $filters = explode('|', $axValue);
-        if ($filters[0] == "") {
+        if ($filters[0] == '') {
             $filterUsers = array();
         }
         else {
@@ -107,23 +108,23 @@ switch ($axAction) {
         $filterCustomers = array_map(function ($customer) {
             return $customer['customer_id'];
         }, $database->get_customers(any_get_group_ids()));
-        if ($filters[1] != "") {
+        if ($filters[1] != '') {
             $filterCustomers = array_intersect($filterCustomers, explode(':', $filters[1]));
         }
 
         $filterProjects = array_map(function ($project) {
             return $project['project_id'];
         }, $database->get_projects(any_get_group_ids()));
-        if ($filters[2] != "") {
+        if ($filters[2] != '') {
             $filterProjects = array_intersect($filterProjects, explode(':', $filters[2]));
         }
 
         // if no userfilter is set, set it to current user
-        if (isset($kga['user']) && count($filterUsers) == 0) {
+        if (array_key_exists('user', $kga) && count($filterUsers) == 0) {
             array_push($filterUsers, $kga['user']['user_id']);
         }
 
-        if (isset($kga['customer'])) {
+        if (array_key_exists('customer', $kga)) {
             $filterCustomers = array($kga['customer']['customer_id']);
         }
 
@@ -148,14 +149,14 @@ switch ($axAction) {
 
         $view->activity_annotations = array();
 
-        if (isset($kga['user'])) {
+        if (array_key_exists('user', $kga)) {
             $view->hideComments = $kga['pref']['show_comments_by_default'] != 1;
         }
         else {
             $view->hideComments = true;
         }
 
-        echo $view->render("expenses.php");
+        echo $view->render('expenses.php');
         break;
 
     // =======================================
@@ -211,7 +212,7 @@ switch ($axAction) {
         }
 
         // get new data
-        $data['project_id']   = $_REQUEST['project_id'];
+        $data['project_id']   = array_key_exists('project_id',$_REQUEST) ? $_REQUEST['project_id'] : '';
         $data['description'] = $_REQUEST['description'];
         $data['comment']     = $_REQUEST['comment'];
         $data['comment_type'] = $_REQUEST['comment_type'];

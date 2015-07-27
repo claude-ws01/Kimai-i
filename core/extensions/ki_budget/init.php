@@ -18,13 +18,14 @@
  */
 // Include Basics
 include ('../../includes/basics.php');
+global $kga, $database, $view;
 
 $dir_templates = "templates/";
 $datasrc = "config.ini";
 $settings = parse_ini_file($datasrc);
 $dir_ext = $settings['EXTENSION_DIR'];
 
-$user = checkUser();
+checkUser();
 
 $view = new Zend_View();
 $view->setBasePath(WEBROOT . 'extensions/' . $dir_ext . '/' . $dir_templates);
@@ -33,4 +34,3 @@ $view->setBasePath(WEBROOT . 'extensions/' . $dir_ext . '/' . $dir_templates);
 $view->kga = $kga;
 echo $view->render('index.php');
 
-?>

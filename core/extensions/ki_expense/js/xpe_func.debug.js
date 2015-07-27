@@ -1,4 +1,4 @@
-/*! ki_expenses */
+/*! ki_expense */
 /**
  * This file is part of
  * Kimai - Open Source Time Tracking // http://www.kimai.org
@@ -26,7 +26,7 @@
  */
 function xpe_ext_onload() {
 
-    set_lists_visibility(true, $('#gui').find('div.ext.ki_expenses').attr('id'));
+    set_lists_visibility(true, $('#gui').find('div.ext.ki_expense').attr('id'));
 
     xpe_ext_applyHoverIntent();
     xpe_ext_resize();
@@ -166,7 +166,7 @@ function xpe_ext_triggerchange() {
 
 function xpe_ext_timeframe_changed() {
 
-    if ($('.ki_expenses').css('display') == "block") {
+    if ($('.ki_expense').css('display') == "block") {
         xpe_ext_reload();
     } else {
         xpe_timeframe_changed_hook_flag++;
@@ -175,7 +175,7 @@ function xpe_ext_timeframe_changed() {
 
 function xpe_ext_triggerCHK() {
 
-    if ($('.ki_expenses').css('display') == "block") {
+    if ($('.ki_expense').css('display') == "block") {
         xpe_ext_reload();
     } else {
         xpe_customers_changed_hook_flag++;
@@ -184,7 +184,7 @@ function xpe_ext_triggerCHK() {
 
 function xpe_ext_triggerCHP() {
 
-    if ($('.ki_expenses').css('display') == "block") {
+    if ($('.ki_expense').css('display') == "block") {
         xpe_ext_reload();
     } else {
         xpe_projects_changed_hook_flag++;
@@ -193,7 +193,7 @@ function xpe_ext_triggerCHP() {
 
 function xpe_ext_triggerCHE() {
 
-    if ($('.ki_expenses').css('display') == "block") {
+    if ($('.ki_expense').css('display') == "block") {
         xpe_ext_reload();
     } else {
         xpe_activities_changed_hook_flag++;

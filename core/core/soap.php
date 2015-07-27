@@ -36,10 +36,10 @@
  * - Register Autoloader
  */
 defined('WEBROOT') ||
-    define('WEBROOT', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
+define('WEBROOT', $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR);
 
 defined('APPLICATION_PATH') ||
-    define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../'));
+    define('APPLICATION_PATH', realpath(__DIR__ . '/../'));
 
 set_include_path(
     implode(

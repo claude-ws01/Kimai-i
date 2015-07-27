@@ -61,8 +61,7 @@ class Zend_View_Helper_FormSelect extends Zend_View_Helper_FormElement
      *
      * @return string The select tag and options XHTML.
      */
-    public function formSelect($name, $value = null, $attribs = null,
-        $options = null, $listsep = "<br />\n")
+    public function formSelect($name, $value = null, $attribs = null, $options = null, $listsep = "<br />\n")
     {
         $info = $this->_getInfo($name, $value, $attribs, $options, $listsep);
         extract($info); // name, id, value, attribs, options, listsep, disable

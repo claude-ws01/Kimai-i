@@ -20,25 +20,26 @@ if ($this->expenses) {
             $timestamp_buffer = 0;
 
             foreach ($this->expenses as $row) {
-                $cur_day_buffer       = strftime("%d", $row['timestamp']);
-                $cur_timestamp_buffer = strftime("%H%M", $row['timestamp']);
+                $cur_day_buffer       = strftime('%d', $row['timestamp']);
+                $cur_timestamp_buffer = strftime('%H%M', $row['timestamp']);
 
                 $td_class = null;
-                if ($cur_day_buffer != $day_buffer && $kga['conf']['show_day_separator_lines']) {
-                    $td_class =  " break_day ";
+                if ($cur_day_buffer !== $day_buffer && $kga['conf']['show_day_separator_lines']) {
+                    $td_class =  ' break_day ';
                 }
-                elseif ($cur_timestamp_buffer != $timestamp_buffer && $kga['conf']['show_gab_breaks']) {
-                    $td_class =  " break_gap ";
+                elseif ($cur_timestamp_buffer !== $timestamp_buffer && $kga['conf']['show_gab_breaks']) {
+                    $td_class =  ' break_gap ';
                 }
 
 
                 ?>
                 <tr id="xpe_<?php echo $row['expense_id'] ?>"
-                    class="<?php echo $this->cycle(array("odd", "even"))->next() ?>">
+                    class="<?php echo $this->cycle(array('odd', 'even'))->next() ?>">
 
                     <td style="white-space: nowrap" class="option <?php echo $td_class ?>">
 
-                        <?php if (isset($kga['user']) && ($kga['conf']['edit_limit'] == "-" || time() - $row['timestamp'] <= $kga['conf']['edit_limit'])): ?>
+                        <?php if (array_key_exists('user', $kga) && ($kga['conf']['edit_limit'] === '-' 
+                                || time() - $row['timestamp'] <= $kga['conf']['edit_limit'])): ?>
                             <a href='#'
                                onClick="xpe_ext_editRecord(<?php echo $row['expense_id'] ?>); $(this).blur(); return false;"
                                title='<?php echo $kga['lang']['edit'] ?>'>
@@ -65,7 +66,7 @@ if ($this->expenses) {
                     </td>
 
                     <td class="time <?php echo $td_class ?>">
-                        <?php echo $this->escape(strftime("%H:%M", $row['timestamp'])) ?>
+                        <?php echo $this->escape(strftime('%H:%M', $row['timestamp'])) ?>
                     </td>
 
                     <td class="value <?php echo $td_class ?>">
@@ -140,7 +141,9 @@ else { echo $this->error(); } ?>
     var expense_activity_annotations = <?php echo json_encode($this->activity_annotations) ?>;
     expenses_total = '<?php echo $this->total?>';
 
-    lists_update_annotations(parseInt($('#gui').find('div.ext.ki_expenses').attr('id').substring(7)), expense_user_annotations, expense_customer_annotations, expense_project_annotations, expense_activity_annotations);
+    lists_update_annotations(parseInt($('#gui').find('div.ext.ki_expense').attr('id').substring(7)),
+        expense_user_annotations, expense_customer_annotations,
+        expense_project_annotations, expense_activity_annotations);
     $('#display_total').html(expenses_total);
 
 </script>

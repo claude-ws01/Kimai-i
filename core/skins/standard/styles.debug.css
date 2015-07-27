@@ -1,5 +1,12 @@
 /*! main - styles.css */
 
+/*  SOME RESETS  */
+ul, ol {
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+    -webkit-padding-start: 0;
+}
+
 /* way off screen, used for measuring scrollbar in js*/
 .scrollbar-measure {
     width: 100px;
@@ -15,7 +22,7 @@
 
 */
 html {
-    min-width: 970px;
+    min-width: 900px;
     font-size: 95%;
 }
 
@@ -64,20 +71,115 @@ input {
     z-index: 250;
 }
 
+/*
+      TOP            TOP            TOP            TOP            TOP
+
+*/
 #top {
     width: 100%;
     background-color: #000;
     height: 88px;
 }
 
-#logo {
-    position: absolute;
-    width: 122px;
-    height: 52px;
-    top: 20px;
-    left: 15px;
+table#t_table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 5px;
+    border: none;
 }
 
+/*
+*/
+#tt_logo {
+    padding: 10px 0 0 10px;
+    width: 142px;
+}
+
+#logo {
+    height: 52px;
+}
+
+#tt_logo,
+#logo {
+}
+
+/*
+*/
+#tt_menu {
+    padding: 0 8px 0;
+    vertical-align: bottom;
+}
+
+#menu {
+    height: 52px;
+    z-index: 10;
+    color: white;
+    font-size: smaller;
+}
+
+#tt_menu,
+#menu {
+    width: 108px;
+}
+
+/*
+*/
+#tt_display {
+    padding: 0 3px;
+}
+
+#display {
+    height: 69px;
+    background: url('../../skins/standard/grfx/g3_display.png') no-repeat;
+    color: #51534a;
+    margin: 0 auto;
+    width: 290px;
+}
+
+#tt_display,
+#display {
+}
+
+/*
+*/
+#tt_selector {
+    padding: 0 3px;
+}
+
+#tt_selector,
+#preselector,
+#stopwatch {
+    width: 224px;
+}
+
+#preselector,
+#stopwatch {
+    height: 69px;
+    display: block;
+    background: url('../../skins/standard/grfx/g3_buzzer_display.png') no-repeat;
+    color: #51534A;
+    margin: 0 auto;
+    font-size: 11px;
+    z-index: 20;
+}
+
+/*
+*/
+#tt_buzzer {
+    padding: 2px 10px 0 0;
+}
+
+#buzzer {
+    height: 73px;
+}
+
+#tt_buzzer,
+#buzzer {
+    width: 73px;
+}
+
+/*
+*/
 #logged_in_name {
     font-weight: bold;
     width: 100%;
@@ -89,57 +191,35 @@ input {
     background-color: #0C4506;
 }
 
-#menu {
-    position: absolute;
-    width: 110px;
-    height: 52px;
-    top: 28px;
-        left: 170px;
-    z-index: 10;
-    color: white;
-    font-size: smaller;
-}
 table#menu_btns {
-    padding:0;
-    margin:0;
-    border:none;
+    padding: 0;
+    margin: 0;
+    border: none;
     width: 100%;
     border-spacing: 0;
 }
+
 table#menu_btns img {
     border: 1px solid rgba(0, 0, 0, 0);
 }
+
 table#menu_btns img:hover {
     border: 1px solid rgba(255, 0, 0, 0.91);
     border-radius: 5px;
 }
+
 table#menu_btns td {
-    padding:0;
-    margin:0;
+    padding: 0;
+    margin: 0;
     text-align: center;
 }
+
 table#menu_btns td#first {
     text-align: left;
 }
 
 table#menu_btns td#last {
     text-align: right;
-}
-
-
-#stopwatch {
-    position: absolute;
-    margin: 0;
-    top: 22px;
-    right: 95px;
-    width: 136px;
-    height: 44px;
-    z-index: 10;
-    font: 22px 'Lucida Grande', Lucida, Verdana, sans-serif;
-    text-align: center;
-    padding: 8px 0 0;
-    display: none;
-    color: #51534a;
 }
 
 #button_comment {
@@ -261,40 +341,33 @@ table#menu_btns td#last {
     B U Z Z E R         B U Z Z E R         B U Z Z E R         B U Z Z E R         B U Z Z E R
 
 */
-#buzzer {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 75px;
-    height: 75px;
-    overflow: hidden;
-}
 
 #buzzer div {
     display: block;
     background: url('../../skins/standard/grfx/g3_buzzer.png') no-repeat 0 0;
-    width: 75px;
-    height: 75px;
+    width: 73px;
+    height: 73px;
     text-indent: -1000px;
 }
 
 #buzzer div:hover {
     cursor: pointer;
-    background: url('../../skins/standard/grfx/g3_buzzer.png') no-repeat 0 -75px;
+    background: url('../../skins/standard/grfx/g3_buzzer.png') no-repeat 0 -73px;
 }
 
 #buzzer.act div {
-    background: url('../../skins/standard/grfx/g3_buzzer.png') no-repeat 0 -150px;
+    background: url('../../skins/standard/grfx/g3_buzzer.png') no-repeat 0 -146px;
 }
 
 #buzzer.act div:hover {
     cursor: pointer;
-    background: url('../../skins/standard/grfx/g3_buzzer.png') no-repeat 0 -225px;
+    background: url('../../skins/standard/grfx/g3_buzzer.png') no-repeat 0 -219px;
 }
 
-#buzzer.disabled div, #buzzer.disabled div:hover {
+#buzzer.disabled div,
+#buzzer.disabled div:hover {
     cursor: auto;
-    background: url('../../skins/standard/grfx/g3_buzzer.png') no-repeat 0 -300px;
+    background: url('../../skins/standard/grfx/g3_buzzer.png') no-repeat 0 -292px;
 }
 
 /*
@@ -302,16 +375,6 @@ table#menu_btns td#last {
     T I M E F R A M E         T I M E F R A M E         T I M E F R A M E         T I M E F R A M E
 
 */
-#display {
-    background: url('../../skins/standard/grfx/g3_display.png') no-repeat;
-    color: #51534a;
-    position: relative;
-    margin: 0 0 0 -187px;
-    top: 10px;
-    left: 50%;
-    width: 290px;
-    height: 69px;
-}
 
 #display a,
 #display a:visited {
@@ -347,97 +410,31 @@ table#menu_btns td#last {
 
 /*
 
-    D R O P D O W N S          D R O P D O W N S          D R O P D O W N S          D R O P D O W N S
+    P R E S E L E C T O R              P R E S E L E C T O R               P R E S E L E C T O R
+    S T O P W A T C H        S T O P W A T C H        S T O P W A T C H        S T O P W A T C H
 
 */
-#selector div.dropdown {
-    position: relative;
-    /*display: block;*/
-    z-index: 110;
-    left: 17px;
-    top: 20px;
-    background-color: white;
-    padding: 3px;
-    border: 1px solid black;
-    display: none;
-    overflow: auto;
-    opacity: .9;
-}
 
-#selector div.dropdown {
-    width: 180px;
-}
-
-#selector span.entry {
-    font-size: 12px;
-    padding: 0;
-    height: 16px;
-    margin: 0 0 3px;
-    display: block;
-}
-
-#selector span.entry:hover {
-    color: red;
-
-}
-
-#selector img.icon {
-    vertical-align: middle;
-    padding: 0;
-    margin: 0;
-    height: 16px;
-    width: 16px;
-}
-
-#selector a,
-#selector a:visited {
-    color: #000;
-    text-decoration: none;
-}
-
-/*
-
-    S E L E C T O R         S E L E C T O R         S E L E C T O R         S E L E C T O R
-
-*/
-#selector {
-    background: url('../../skins/standard/grfx/g3_buzzer_display.png') no-repeat;
-    color: #51534A;
-    overflow: hidden;
-    width: 224px;
-    height: 69px;
-    display: block;
-    position: absolute;
-    top: 10px;
-    right: 95px;
-    font-size: 11px;
-    z-index: 20;
-
-}
-
-#selector .preselection {
-    width: 205px;
-    height: 52px;
+#preselector > span {
     padding: 7px 10px 0;
     overflow: hidden;
     line-height: 13px;
+    display: block;
 }
 
-#selector span.selection {
+#preselector span.selection {
     overflow: hidden;
     width: 190px;
     height: 13px;
-    display: block;
-    float: left;
     padding-left: 2px;
 
 }
 
-#selector span.none {
+#preselector span.none {
     color: red;
 }
 
-#selector strong.short {
+#preselector strong.short {
     color: #BEBDB3;
     display: block;
     float: left;
@@ -445,63 +442,39 @@ table#menu_btns td#last {
     height: 13px;
 }
 
-/*
-
-    S T O P W A T C H        S T O P W A T C H        S T O P W A T C H        S T O P W A T C H
-
-*/
-#stopwatch {
-    position: absolute;
-    font-size: 11px;
-    right: 95px;
-    top: 11px;
-    background: url('../../skins/standard/grfx/g3_buzzer_display.png') no-repeat;
-    color: #51534A;
-    overflow: hidden;
-    width: 224px;
-    height: 69px;
+#sw_counter {
     display: block;
-    z-index: 20;
-
-}
-
-#stopwatch .watch {
-    position: relative;
+    width: 100%;
+    height: 39px;
+    line-height: 39px;
     color: red;
-    top: 11px;
-    font-family: arial, sans-serif;
     font-size: 35px;
-    width: 205px;
-    height: 52px;
-    padding: 0;
-    overflow: hidden;
-    line-height: 13px;
+    font-family: arial, sans-serif;
+    text-align: center;
+    padding-top: 5px;
 }
 
-#stopwatch_ticker {
-    position: absolute;
+#sw_ticker {
     font-size: 11px;
-    right: 97px;
-    top: 46px;
     color: #51534A;
     z-index: 60;
+    width: 100%;
+    display: block;
 }
 
-#stopwatch_ticker ul {
+#sw_ticker ul {
     list-style-type: none;
 }
 
-#stopwatch_ticker ul li {
-    text-align: center;
-    width: 220px;
-    height: 15px;
-    margin-left: -40px;
-    margin-top: -3px;
-    padding: 0;
+#sw_ticker ul li {
     overflow: hidden;
+    text-align: center;
+    height: 15px;
+    padding: 0;
+    margin: 0;
 }
 
-* + html #stopwatch_ticker ul li {
+* + html #sw_ticker ul li {
     margin-top: -3px;
 }
 
@@ -748,16 +721,20 @@ fieldset#activitiestab input {
     border: 1px dotted white;
 }
 
-
 /*
 
     L I S T S         L I S T S         L I S T S         L I S T S         L I S T S         L I S T S
 
 */
-.lists > #users, .lists > #customers, .lists > #activities, .lists > #projects {
+.lists > #users,
+.lists > #customers,
+.lists > #activities,
+.lists > #projects {
     height: 175px;
     z-index: 1;
     border: 1px solid black;
+    border-top: none;
+    border-bottom: none;
     margin: 0;
     padding: 0;
     background-color: #eee;
@@ -766,17 +743,22 @@ fieldset#activitiestab input {
     left: 10px;
 }
 
-#users_head, #customers_head, #projects_head, #activities_head,
-#users_foot, #customers_foot, #projects_foot, #activities_foot {
+#users_head, #customers_head, #projects_head, #activities_head {
     border: 1px solid black;
     border-bottom: none;
+}
+#users_foot, #customers_foot, #projects_foot, #activities_foot {
+    border: 1px solid black;
+    border-top: none;
+}
+#users_head, #customers_head, #projects_head, #activities_head,
+#users_foot, #customers_foot, #projects_foot, #activities_foot {
     background-image: url('../../skins/standard/grfx/g3_table_header.png');
     position: absolute;
     text-align: left;
     color: #FFF;
     left: 10px;
     font-size: 11px;
-    font-weight: bold;
     padding: 3px 0 0 5px;
 }
 

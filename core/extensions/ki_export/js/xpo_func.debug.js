@@ -215,7 +215,7 @@ function xpo_ext_set_TableWidths() {
     xpo_h_tr.find("td.description").css("width", xpo_m_tr.find("td.description").width());
     xpo_h_tr.find("td.comment").css("width", xpo_m_tr.find("td.comment").width());
     xpo_h_tr.find("td.location").css("width", xpo_m_tr.find("td.location").width());
-    xpo_h_tr.find("td.trackingNumber").css("width", xpo_m_tr.find("td.trackingNumber").width());
+    xpo_h_tr.find("td.ref_code").css("width", xpo_m_tr.find("td.ref_code").width());
     xpo_h_tr.find("td.user").css("width", xpo_m_tr.find("td.user").width());
 }
 
@@ -290,9 +290,9 @@ function xpo_ext_activities_changed() {
 function xpo_ext_reload() {
 
     // don't reload if extension is not loaded
-    if ($('.ki_export').html() == '')
-        return;
+    if ($('.ki_export').html() == '') return;
 
+    $('#ajax_wait').show();
     $.post(xpo_ext_path + "processor.php", {
             axAction: "reload",
             axValue: filterUsers.join(":")
@@ -309,11 +309,13 @@ function xpo_ext_reload() {
             first_day: new Date($('#pick_in').val()).getTime() / 1000,
             last_day: new Date($('#pick_out').val()).getTime() / 1000
         },
+
         function (data) {
+            $('#ajax_wait').hide();
+
             var xpo_main = $("#xpo_main"),
                 xpo_h_tbl = $("#xpo_h_tbl"),
                 xpo_m_tbl = $("#xpo_m_tbl");
-
 
             xpo_main.html(data);
 
@@ -343,19 +345,32 @@ function xpo_ext_toggle_column(name) {
         returnfunction;
 
     if (xpo_h_tbl.find("td." + name).hasClass('disabled')) {
-        returnfunction = new Function("data", "if (data!=1) return;\
+
+        returnfunction = new Function("data", "$('#ajax_wait').hide();\
+                    if (data!=1) return;\
                     $('#xpo_h_tbl td." + name + "').removeClass('disabled');\
                     $('#xpo_m_tbl td." + name + "').removeClass('disabled'); ");
-        $.post(xpo_ext_path + "processor.php", {axAction: "toggle_header", axValue: name},
+
+        $('#ajax_wait').show();
+        $.post(xpo_ext_path + "processor.php", {
+                axAction: "toggle_header",
+                axValue: name},
+
             returnfunction
         );
 
     }
     else {
-        returnfunction = new Function("data", "if (data!=1) return;\
+        returnfunction = new Function("data", "$('#ajax_wait').hide();\
+                    if (data!=1) return;\
                     $('#xpo_h_tbl td." + name + "').addClass('disabled'); \
                     $('#xpo_m_tbl td." + name + "').addClass('disabled'); ");
-        $.post(xpo_ext_path + "processor.php", {axAction: "toggle_header", axValue: name},
+
+        $('#ajax_wait').show();
+        $.post(xpo_ext_path + "processor.php", {
+                axAction: "toggle_header",
+                axValue: name},
+
             returnfunction
         );
     }
@@ -370,19 +385,33 @@ function xpo_ext_toggle_cleared(id) {
 
     path = "#xpo_" + id + ">td.cleared>a";
     if ($(path).hasClass("is_cleared")) {
-        returnfunction = new Function("data", "if (data!=1) return;\
+
+        returnfunction = new Function("data", "$('#ajax_wait').hide();\
+                    if (data!=1) return;\
                     $('" + path + "').removeClass('is_cleared');\
                     $('" + path + "').addClass('isnt_cleared');");
-        $.post(xpo_ext_path + "processor.php", {axAction: "set_cleared", axValue: 0, id: id},
+
+        $('#ajax_wait').show();
+        $.post(xpo_ext_path + "processor.php", {
+                axAction: "set_cleared",
+                axValue: 0,
+                id: id},
+
             returnfunction
         );
-
     }
     else {
-        returnfunction = new Function("data", "if (data!=1) return;\
+        returnfunction = new Function("data", "$('#ajax_wait').hide();\
+                    if (data!=1) return;\
                     $('" + path + "').removeClass('isnt_cleared');\
                     $('" + path + "').addClass('is_cleared');");
-        $.post(xpo_ext_path + "processor.php", {axAction: "set_cleared", axValue: 1, id: id},
+
+        $('#ajax_wait').show();
+        $.post(xpo_ext_path + "processor.php", {
+                axAction: "set_cleared",
+                axValue: 1,
+                id: id},
+
             returnfunction
         );
     }
@@ -395,7 +424,7 @@ function xpo_ext_toggle_cleared(id) {
 function xpo_ext_enabled_columns() {
 
     var columns = ['date', 'from', 'to', 'time', 'dec_time', 'rate', 'wage', 'budget', 'approved', 'status',
-            'billable', 'customer', 'project', 'activity', 'description', 'comment', 'location', 'trackingNumber',
+            'billable', 'customer', 'project', 'activity', 'description', 'comment', 'location', 'ref_code',
             'user', 'cleared'],
         columnsString = '',
         firstColumn = true,

@@ -7,9 +7,9 @@
 
 <div id="ts_head">
     <div class="left">
-        <?php if (isset($kga['user'])): ?>
+        <?php if (array_key_exists('user', $kga)): ?>
             <a href="#"
-               onClick="floaterShow('../extensions/ki_timesheets/floaters.php',
+               onClick="floaterShow('../extensions/ki_timesheet/floaters.php',
                'add_edit_timeSheetEntry',
                selected_project+'|'+selected_activity,0,650);
                $(this).blur();

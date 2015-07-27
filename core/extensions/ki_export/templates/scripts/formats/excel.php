@@ -47,26 +47,27 @@ mso-number-format:Fixed;
 <table> 
 <thead><tr> 
 <!-- column headers -->
-<?php if (isset($this->columns['date'])):         ?> <td><?php echo $this->kga['lang']['datum']?></td>       <?php endif; ?>
-<?php if (isset($this->columns['from'])):         ?> <td><?php echo $this->kga['lang']['in']?></td>          <?php endif; ?>
-<?php if (isset($this->columns['to'])):           ?> <td><?php echo $this->kga['lang']['out']?></td>         <?php endif; ?>
-<?php if (isset($this->columns['time'])):         ?> <td><?php echo $this->kga['lang']['time']?></td>        <?php endif; ?>
-<?php if (isset($this->columns['dec_time'])):     ?> <td><?php echo $this->kga['lang']['timelabel']?></td>   <?php endif; ?>
-<?php if (isset($this->columns['rate'])):         ?> <td><?php echo $this->kga['lang']['rate']?></td>        <?php endif; ?>
-<?php if (isset($this->columns['wage'])):         ?> <td><?php echo $this->kga['currency_name']?>}</td>      <?php endif; ?>
-<?php if (isset($this->columns['budget'])):       ?> <td><?php echo $this->kga['lang']['budget']?></td>      <?php endif; ?>
-<?php if (isset($this->columns['approved'])):     ?> <td><?php echo $this->kga['lang']['approved']?></td>    <?php endif; ?>
-<?php if (isset($this->columns['status'])):       ?> <td><?php echo $this->kga['lang']['status']?></td>      <?php endif; ?>
-<?php if (isset($this->columns['billable'])):     ?> <td><?php echo $this->kga['lang']['billable']?></td>    <?php endif; ?>
-<?php if (isset($this->columns['customer'])):     ?> <td><?php echo $this->kga['lang']['customer']?></td>    <?php endif; ?>
-<?php if (isset($this->columns['project'])):      ?> <td><?php echo $this->kga['lang']['project']?></td>     <?php endif; ?>
-<?php if (isset($this->columns['activity'])):     ?> <td><?php echo $this->kga['lang']['activity']?></td>    <?php endif; ?>
-<?php if (isset($this->columns['description'])):  ?> <td><?php echo $this->kga['lang']['description']?></td> <?php endif; ?>
-<?php if (isset($this->columns['comment'])):      ?> <td><?php echo $this->kga['lang']['comment']?></td>     <?php endif; ?>
-<?php if (isset($this->columns['location'])):     ?> <td><?php echo $this->kga['lang']['location']?></td>   <?php endif; ?>
-<?php if (isset($this->columns['trackingNumber'])):   ?> <td><?php echo $this->kga['lang']['trackingNumber']?></td>  <?php endif; ?>
-<?php if (isset($this->columns['user'])):         ?> <td><?php echo $this->kga['lang']['username']?></td>    <?php endif; ?>
-<?php if (isset($this->columns['cleared'])):      ?> <td><?php echo $this->kga['lang']['cleared']?></td>     <?php endif; ?>
+    <?php global $kga ?>
+<?php if (isset($this->columns['date'])):         ?> <td><?php echo $kga['lang']['datum']?></td>       <?php endif; ?>
+<?php if (isset($this->columns['from'])):         ?> <td><?php echo $kga['lang']['in']?></td>          <?php endif; ?>
+<?php if (isset($this->columns['to'])):           ?> <td><?php echo $kga['lang']['out']?></td>         <?php endif; ?>
+<?php if (isset($this->columns['time'])):         ?> <td><?php echo $kga['lang']['time']?></td>        <?php endif; ?>
+<?php if (isset($this->columns['dec_time'])):     ?> <td><?php echo $kga['lang']['timelabel']?></td>   <?php endif; ?>
+<?php if (isset($this->columns['rate'])):         ?> <td><?php echo $kga['lang']['rate']?></td>        <?php endif; ?>
+<?php if (isset($this->columns['wage'])):         ?> <td><?php echo $kga['lang']['wage']?>}</td>      <?php endif; ?>
+<?php if (isset($this->columns['budget'])):       ?> <td><?php echo $kga['lang']['budget']?></td>      <?php endif; ?>
+<?php if (isset($this->columns['approved'])):     ?> <td><?php echo $kga['lang']['approved']?></td>    <?php endif; ?>
+<?php if (isset($this->columns['status'])):       ?> <td><?php echo $kga['lang']['status']?></td>      <?php endif; ?>
+<?php if (isset($this->columns['billable'])):     ?> <td><?php echo $kga['lang']['billable']?></td>    <?php endif; ?>
+<?php if (isset($this->columns['customer'])):     ?> <td><?php echo $kga['lang']['customer']?></td>    <?php endif; ?>
+<?php if (isset($this->columns['project'])):      ?> <td><?php echo $kga['lang']['project']?></td>     <?php endif; ?>
+<?php if (isset($this->columns['activity'])):     ?> <td><?php echo $kga['lang']['activity']?></td>    <?php endif; ?>
+<?php if (isset($this->columns['description'])):  ?> <td><?php echo $kga['lang']['description']?></td> <?php endif; ?>
+<?php if (isset($this->columns['comment'])):      ?> <td><?php echo $kga['lang']['comment']?></td>     <?php endif; ?>
+<?php if (isset($this->columns['location'])):     ?> <td><?php echo $kga['lang']['location']?></td>   <?php endif; ?>
+<?php if (isset($this->columns['ref_code'])): ?> <td><?php echo $kga['lang']['xpe_ref_code']?></td>  <?php endif; ?>
+<?php if (isset($this->columns['user'])):         ?> <td><?php echo $kga['lang']['username']?></td>    <?php endif; ?>
+<?php if (isset($this->columns['cleared'])):      ?> <td><?php echo $kga['lang']['cleared']?></td>     <?php endif; ?>
 </tr> 
 </thead> 
 <?php foreach($this->exportData as $row): ?>
@@ -77,7 +78,7 @@ mso-number-format:Fixed;
                         <?php  if ($this->custom_dateformat)
                             echo $this->escape(strftime($this->custom_dateformat,$row['time_in']));
                           else
-                            echo $this->escape(strftime($this->kga['date_format'][1], $row['time_in']));
+                            echo $this->escape(strftime($kga['conf']['date_format_1'], $row['time_in']));
                         ?>
                     </td>
 <?php endif; ?>
@@ -112,14 +113,14 @@ mso-number-format:Fixed;
 
 <?php if (isset($this->columns['time'])): ?>
                     <td align=right class=duration>
-                        <?php echo $row['duration'] ? $row['formattedDuration'] : "&ndash;:&ndash;&ndash;" ?>
+                        <?php echo $row['duration'] ? $row['formatted_duration'] : "&ndash;:&ndash;&ndash;" ?>
                     </td>
 <?php endif; ?>
 
 
 <?php if (isset($this->columns['dec_time'])): ?>
                     <td align=right class=decimal>
-                        <?php echo $row['decimalDuration'] ?$row['decimalDuration'] : "&ndash;:&ndash;&ndash;" ?>
+                        <?php echo $row['decimal_duration'] ?$row['decimal_duration'] : "&ndash;:&ndash;&ndash;" ?>
                     </td>
 <?php endif; ?>
 
@@ -169,14 +170,14 @@ mso-number-format:Fixed;
 
 <?php if (isset($this->columns['customer'])): ?>
                     <td>
-                        <?php echo $this->escape($row['customerName']); ?>
+                        <?php echo $this->escape($row['customer_name']); ?>
                     </td>
 <?php endif; ?>
 
 
 <?php if (isset($this->columns['project'])): ?>
                     <td>
-                            <?php echo $this->escape($row['projectName']); ?>
+                            <?php echo $this->escape($row['project_name']); ?>
                     </td>
 <?php endif; ?>
 
@@ -184,7 +185,7 @@ mso-number-format:Fixed;
 
 <?php if (isset($this->columns['activity'])): ?>
                     <td>
-                            <?php echo $this->escape($row['activityName']); ?> 
+                            <?php echo $this->escape($row['activity_name']); ?>
                     </td>
 <?php endif; ?>
 
@@ -211,9 +212,9 @@ mso-number-format:Fixed;
 <?php endif; ?>
 
 
-<?php if (isset($this->columns['trackingNumber'])): ?>
+<?php if (isset($this->columns['ref_code'])): ?>
                     <td>
-                        <?php echo $this->escape($row['trackingNumber']); ?>
+                        <?php echo $this->escape($row['ref_code']); ?>
                         
                     </td>
 <?php endif; ?>

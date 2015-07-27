@@ -19,18 +19,21 @@
 
 // insert KSPI
 $isCoreProcessor = 0;
-$dir_templates = "templates/";
-require("../../includes/kspi.php");
+$dir_templates   = 'templates/';
+require('../../includes/kspi.php');
+global $database, $kga, $view;
 
 switch ($axAction) {
 
-  case "editVat":  
-    if (isset($kga['customer'])) die();  
+    case 'editVatRate':
+        if (array_key_exists('customer',$kga)) {
+            die();
+        }
 
-    $view->kga = $kga;
+        $view->kga = $kga;
 
-    echo $view->render("floaters/editVat.php"); 
+        echo $view->render('floaters/editVatRate.php');
 
-    break;        
+        break;
 
 }

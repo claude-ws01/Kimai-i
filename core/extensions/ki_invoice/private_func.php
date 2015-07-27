@@ -19,8 +19,8 @@
 
 // Determine if the expenses extension is used.
 $expense_ext_available = false;
-if (file_exists('../ki_expenses/private_db_layer_' . $kga['server_conn'] . '.php')) {
-    include('../ki_expenses/private_db_layer_' . $kga['server_conn'] . '.php');
+if (file_exists('../ki_expense/private_db_layer_mysql.php')) {
+    include('../ki_expense/private_db_layer_mysql.php');
     $expense_ext_available = true;
 }
 
@@ -30,28 +30,31 @@ function invoice_add_to_array(&$array, $row, $short_form)
 {
     global $activityIndexMap;
 
-    if ($short_form && $row['type'] == 'timeSheet') {
+    if ($short_form && $row['type'] === 'timesheet') {
         if (isset($activityIndexMap[$row['desc']])) {
-            $index = $activityIndexMap[$row['desc']];
-            $totalTime = $array[$index]['hour'];
-            $totalAmount = $array[$index]['amount'];
+            $index         = $activityIndexMap[$row['desc']];
+            $totalTime     = $array[$index]['hour'];
+            $totalAmount   = $array[$index]['amount'];
             $array[$index] = array(
-                'type' => 'timeSheet',
-                'location' => $row['location'],
-                'desc' => $row['desc'],
-                'hour' => $totalTime + $row['hour'],
-                'fduration' => $row['fduration'],
-                'amount' => $totalAmount + $row['amount'],
-                'date' => $row['date'],
-                'description' => $row['description'],
-                'rate' => ($totalAmount + $row['amount']) / ($totalTime + $row['hour']),
-                'trackingNr' => $row['trackingNr'],
-                'comment' => $row['comment'],
-                'username' => $row['username'],
-                'useralias' => $row['useralias']
+                'type'         => 'timesheet',
+                'project_name' => $row['project_name'],
+                'location'     => $row['location'],
+                'desc'         => $row['desc'],
+                'hour'         => $totalTime + $row['hour'],
+                'fduration'    => $row['fduration'],
+                'amount'       => $totalAmount + $row['amount'],
+                'date'         => $row['date'],
+                'description'  => $row['description'],
+                'rate'         => ($totalAmount + $row['amount']) / ($totalTime + $row['hour']),
+                'ref_code'     => $row['ref_code'],
+                'comment'      => $row['comment'],
+                'username'     => $row['username'],
+                'user_alias'   => $row['user_alias'],
             );
+
             return;
-        } else {
+        }
+        else {
             $activityIndexMap[$row['desc']] = count($array);
         }
     }
@@ -63,129 +66,133 @@ function invoice_add_to_array(&$array, $row, $short_form)
  *
  * FIXME this method is the worst nightmare i have seen in month - kevin
  *
- * @param int $start Time from which to take entries into account.
- * @param int $end Time until which to take entries into account.
- * @param array $projects Array of project IDs to filter by.
- * @param int $filter_cleared (-1: show all, 0:only cleared 1: only not cleared) entries
- * @param bool $short_form should the short form be created
+ * @param int   $start          Time from which to take entries into account.
+ * @param int   $end            Time until which to take entries into account.
+ * @param array $projects       Array of project IDs to filter by.
+ * @param int   $filter_cleared (-1: show all, 0:only cleared 1: only not cleared) entries
+ * @param bool  $short_form     should the short form be created
+ *
  * @return array with time recordings and expenses chronologically sorted
  */
-function invoice_get_data($start, $end, $projects, $filter_cleared, $short_form)
+function invoice_get_details($start, $end, $projects, $filter_cleared, $short_form)
 {
     global $expense_ext_available, $database;
-    $limit = false;
-    $reverse_order = false;
-    $limitCommentSize = true;
+
+    $blank = array(
+        'type'          => null,
+        'project_name'  => null,
+        'location'      => null,
+        'desc'          => null,
+        'hour'          => null,
+        'fduration'     => null,
+        'amount'        => null,
+        'date'          => null,
+        'description'   => null,
+        'rate'          => null,
+        'ref_code'      => null,
+        'comment'       => null,
+        'activity_name' => null,
+        'username'      => null,
+        'user_alias'    => null,
+    );
+
+    $limit             = false;
+    $reverse_order     = false;
+    $limitCommentSize  = true;
     $filter_refundable = -1;
-    $timeSheetEntries = array();
-    $expenses = array();
-    $timeSheetEntries = $database->get_timeSheet($start, $end, null, null, $projects, null, $limit, $reverse_order, $filter_cleared);
-    if ($expense_ext_available)
-        $expenses = get_expenses($start, $end, null, null, $projects, $limit, $reverse_order, $filter_refundable, $filter_cleared);
-    $result_arr = array();
-    $timeSheetEntries_index = 0;
-    $expenses_index = 0;
-    $keys = array('type', 'desc', 'hour', 'fduration', 'amount', 'date', 'description', 'rate', 'comment', 'username', 'useralias', 'location');
-    while ($timeSheetEntries_index < count($timeSheetEntries) && $expenses_index < count($expenses)) {
-        $arr = array();
-        foreach ($keys as $key)
-            $arr[$key] = null;
 
-        if ((!$reverse_order && ($timeSheetEntries[$timeSheetEntries_index]['start'] > $expenses[$expenses_index]['timestamp'])) || ($reverse_order && ($timeSheetEntries[$timeSheetEntries_index]['start'] < $expenses[$expenses_index]['timestamp']))) {
-            if ($timeSheetEntries[$timeSheetEntries_index]['end'] != 0) {
-                // active recordings will be omitted
-                $arr['type'] = 'timeSheet';
-                $arr['location'] = $timeSheetEntries[$timeSheetEntries_index]['location'];
-                $arr['desc'] = $timeSheetEntries[$timeSheetEntries_index]['activityName'];
-                $arr['hour'] = $timeSheetEntries[$timeSheetEntries_index]['duration'] / 3600;
-                $arr['fDuration'] = $timeSheetEntries[$timeSheetEntries_index]['formattedDuration'];
-                $arr['amount'] = $timeSheetEntries[$timeSheetEntries_index]['wage'];
-                $arr['date'] = date("m/d/Y", $timeSheetEntries[$timeSheetEntries_index]['start']);
-                $arr['description'] = $timeSheetEntries[$timeSheetEntries_index]['description'];
-                $arr['rate'] = $timeSheetEntries[$timeSheetEntries_index]['rate'];
-                $arr['trackingNr'] = $timeSheetEntries[$timeSheetEntries_index]['trackingNumber'];
-                if ($limitCommentSize)
-                    $arr['comment'] = Format::addEllipsis($timeSheetEntries[$timeSheetEntries_index]['comment'], 150);
-                else
-                    $arr['comment'] = $timeSheetEntries[$timeSheetEntries_index]['comment'];
-                $arr['username'] = $timeSheetEntries[$timeSheetEntries_index]['userName'];
-                $arr['useralias'] = $timeSheetEntries[$timeSheetEntries_index]['userAlias'];
-            }
-            $timeSheetEntries_index++;
-        } else {
-            $arr['type'] = 'expense';
-            $arr['desc'] = $expenses[$expenses_index]['designation'];
-            $arr['multiplier'] = $expenses[$expenses_index]['multiplier'];
-            $arr['value'] = $expenses[$expenses_index]['value'];
-            $arr['fDuration'] = $expenses[$expenses_index]['multiplier'];
-            $arr['amount'] = sprintf("%01.2f", $expenses[$expenses_index]['value'] * $expenses[$expenses_index]['multiplier']);
-            $arr['date'] = date("m/d/Y", $expenses[$expenses_index]['timestamp']);
-            $arr['rate'] = $expenses[$expenses_index]['value'];
-            if ($limitCommentSize)
-                $arr['comment'] = Format::addEllipsis($expenses[$expenses_index]['comment'], 150);
-            else
-                $arr['comment'] = $expenses[$expenses_index]['comment'];
-            $arr['activityName'] = $expenses[$expenses_index]['designation'];
-            $arr['username'] = $expenses[$expenses_index]['userName'];
-            $arr['useralias'] = $expenses[$expenses_index]['userAlias'];
-            $expenses_index++;
-        }
+    $ts_entries = $database->get_timesheet($start, $end, null, null, $projects, null, $limit, $reverse_order,
+                                           $filter_cleared);
 
-        invoice_add_to_array($result_arr, $arr, $short_form);
+    $xpe_entries = array();
+    if ($expense_ext_available) {
+        $xpe_entries = get_expenses($start, $end, null, null, $projects, $limit, $reverse_order,
+                                    $filter_refundable, $filter_cleared);
     }
 
-    // timesheet entries
-    while ($timeSheetEntries_index < count($timeSheetEntries)) {
-        if ($timeSheetEntries[$timeSheetEntries_index]['end'] != 0) {
-            // active recordings will be omitted
-            $arr = array();
-            foreach ($keys as $key)
-                $arr[$key] = null;
 
-            $arr['type'] = 'timeSheet';
-            $arr['location'] = $timeSheetEntries[$timeSheetEntries_index]['location'];
-            $arr['desc'] = $timeSheetEntries[$timeSheetEntries_index]['activityName'];
-            $arr['hour'] = $timeSheetEntries[$timeSheetEntries_index]['duration'] / 3600;
-            $arr['fDuration'] = $timeSheetEntries[$timeSheetEntries_index]['formattedDuration'];
-            $arr['amount'] = $timeSheetEntries[$timeSheetEntries_index]['wage'];
-            $arr['date'] = date("m/d/Y", $timeSheetEntries[$timeSheetEntries_index]['start']);
-            $arr['description'] = $timeSheetEntries[$timeSheetEntries_index]['description'];
-            $arr['rate'] = $timeSheetEntries[$timeSheetEntries_index]['rate'];
-            $arr['trackingNr'] = $timeSheetEntries[$timeSheetEntries_index]['trackingNumber'];
-            if ($limitCommentSize)
-                $arr['comment'] = Format::addEllipsis($timeSheetEntries[$timeSheetEntries_index]['comment'], 150);
-            else
-                $arr['comment'] = $timeSheetEntries[$timeSheetEntries_index]['comment'];
-            $arr['username'] = $timeSheetEntries[$timeSheetEntries_index]['userName'];
-            $arr['useralias'] = $timeSheetEntries[$timeSheetEntries_index]['userAlias'];
+    $m_time = $m_type = $m_data = array();
+    // fill in timesheets
+    foreach ($ts_entries as $key => $ts_entry) {
+        $m_time[] = $ts_entry['start'];
+        $m_type[] = 'ts';
+        $m_data[] = &$ts_entries[$key];
+    }
+    // fill in expenses
+    foreach ($xpe_entries as $key => $xpe_entry) {
+        $m_time[] = $xpe_entry['timestamp'];
+        $m_type[] = 'xpe';
+        $m_data[] = &$xpe_entries[$key];
+    }
+
+    // safety
+    if (count($m_time) === 0) {
+        return array();
+    }
+
+    // sort array
+    if ($reverse_order) {
+        array_multisort($m_time, SORT_DESC, SORT_NUMERIC, $m_type, $m_data);
+    }
+    else {
+        array_multisort($m_time, SORT_ASC, SORT_NUMERIC, $m_type, $m_data);
+    }
+
+
+    $result_arr = array();
+    foreach ($m_data as $K => $row) {
+        $arr = $blank;
+
+        if ($m_type[$K] === 'ts') {
+            if ($row['end'] !== 0) {
+                // active recordings will be omitted
+                $arr['type']         = 'timesheet';
+                $arr['project_name'] = $row['project_name'];
+                $arr['location']     = $row['location'];
+                $arr['hour']         = $row['duration'] / 3600;
+                $arr['desc']         = $row['activity_name']; // use as short
+                $arr['fDuration']    = $row['formatted_duration'];
+                $arr['amount']       = $row['wage'];
+                $arr['date']         = date('m/d/Y', $row['start']);
+                $arr['description']  = $row['description'];
+                $arr['rate']         = $row['rate'];
+                $arr['ref_code']     = $row['ref_code'];
+                if ($limitCommentSize) {
+                    $arr['comment'] = Format::addEllipsis($row['comment'], 150);
+                }
+                else {
+                    $arr['comment'] = $row['comment'];
+                }
+                $arr['activity_name'] = $row['activity_name'];
+                $arr['username']      = $row['username'];
+                $arr['user_alias']    = $row['user_alias'];
+
+                invoice_add_to_array($result_arr, $arr, $short_form);
+            }
+        }
+
+        else {
+            $arr['type']         = 'expense';
+            $arr['project_name'] = $row['project_name'];
+            $arr['desc']         = $row['description']; // use as short
+            $arr['multiplier']   = $row['multiplier'];
+            $arr['value']        = $row['value'];
+            $arr['amount']       = sprintf('%01.2f', $row['value'] * $row['multiplier']);
+            $arr['date']         = date('m/d/Y', $row['timestamp']);
+            $arr['description']  = $row['description'];
+
+            if ($limitCommentSize) {
+                $arr['comment'] = Format::addEllipsis($row['comment'], 150);
+            }
+            else {
+                $arr['comment'] = $row['comment'];
+            }
+            $arr['username']   = $row['username'];
+            $arr['user_alias'] = $row['user_alias'];
+
             invoice_add_to_array($result_arr, $arr, $short_form);
         }
-        $timeSheetEntries_index++;
-    }
 
-    // expenses entries
-    while ($expenses_index < count($expenses)) {
-        $arr = array();
-        foreach ($keys as $key)
-            $arr[$key] = null;
-
-        $arr['type'] = 'expense';
-        $arr['desc'] = $expenses[$expenses_index]['designation'];
-        $arr['multiplier'] = $expenses[$expenses_index]['multiplier'];
-        $arr['value'] = $expenses[$expenses_index]['value'];
-        $arr['fDuration'] = $expenses[$expenses_index]['multiplier'];
-        $arr['amount'] = sprintf("%01.2f", $expenses[$expenses_index]['value'] * $expenses[$expenses_index]['multiplier']);
-        $arr['date'] = date("m/d/Y", $expenses[$expenses_index]['timestamp']);
-        $arr['rate'] = $expenses[$expenses_index]['value'];
-        if ($limitCommentSize)
-            $arr['comment'] = Format::addEllipsis($expenses[$expenses_index]['comment'], 150);
-        else
-            $arr['comment'] = $expenses[$expenses_index]['comment'];
-        $arr['activityName'] = $expenses[$expenses_index]['designation'];
-        $arr['username'] = $expenses[$expenses_index]['userName'];
-        $arr['useralias'] = $expenses[$expenses_index]['userAlias'];
-        $expenses_index++;
-        invoice_add_to_array($result_arr, $arr, $short_form);
     }
 
     return $result_arr;

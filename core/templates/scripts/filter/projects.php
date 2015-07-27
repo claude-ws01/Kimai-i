@@ -36,15 +36,15 @@ $projects = $this->filterListEntries($this->projects);
                              title='<?php echo $kga['lang']['filter'] ?>' border='0'/>
                     </a>
 
-                    <?php if (isset($kga['user'])) { ?>
+                    <?php if (array_key_exists('user', $kga)) { ?>
                     <a href="#" class="preselect" title="<?php echo $kga['lang']['tip']['g_select_for_recording']; ?>"
                        onclick="buzzer_preselect_project(<?php
                             echo ($project['project_id'] . ", '" . $this->jsEscape($project['name']). "',"
-                                . $project['customer_id'] . ", '" . $this->jsEscape($project['customerName']) . "'"); ?>); return false;"
+                                . $project['customer_id'] . ", '" . $this->jsEscape($project['customer_name']) . "'"); ?>); return false;"
                        id="ps<?php echo $project['project_id'] ?>">
                         <img src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/preselect_off.png'
-                            width='13' height='13' alt='<?php echo $kga['lang']['select'] ?>'
-                            title='<?php echo $kga['lang']['select'] ?> (ID:<?php echo $project['project_id'] ?>)'
+                            width='13' height='13' alt='<?php echo $kga['lang']['tip']['g_select_for_recording'] ?>'
+                            title='<?php echo $kga['lang']['tip']['g_select_for_recording'] ?> (ID:<?php echo $project['project_id'] ?>)'
                             border='0'/>
                     </a>
                     <?php } ?>
@@ -54,7 +54,7 @@ $projects = $this->filterListEntries($this->projects);
                     onmouseout="lists_change_color(this,false);"
                     onclick="buzzer_preselect_project(<?php
                         echo ($project['project_id'] . ", '" . $this->jsEscape($project['name']). "',"
-                            . $project['customer_id'] . ", '" . $this->jsEscape($project['customerName']) . "'"); ?>);
+                            . $project['customer_id'] . ", '" . $this->jsEscape($project['customer_name']) . "'"); ?>);
                         lists_reload('activity'); return false;">
                     <?php if ($project['visible'] != 1) { ?><span style="color:#bbb"><?php } ?>
 
@@ -63,7 +63,7 @@ $projects = $this->filterListEntries($this->projects);
                                 <span class="ids"><?php echo $project['project_id'] ?></span>
                             <?php } ?>
                             <span class="lighter">
-                                <?php echo $this->escape($this->truncate($project['customerName'], 30, '...')) ?>:
+                                <?php echo $this->escape($this->truncate($project['customer_name'], 30, '...')) ?>:
                             </span>
                             <?php echo $this->escape($project['name']) ?>
 
@@ -79,7 +79,7 @@ $projects = $this->filterListEntries($this->projects);
                                     <?php if ($project['comment']) {
                                         echo "(" . $this->escape($this->truncate($project['comment'], 30, '...')) . ")";
                                     } else { ?>
-                                        <span class="lighter"><?php echo "(" . $this->escape($project['customerName']) . ")"; ?></span>
+                                        <span class="lighter"><?php echo "(" . $this->escape($project['customer_name']) . ")"; ?></span>
                                     <?php } ?>
                                 </span>
                             <?php } else { ?>
@@ -88,7 +88,7 @@ $projects = $this->filterListEntries($this->projects);
                                 <?php }
                                 echo $this->escape($project['name']) ?>
                                 <span class="lighter">
-                                    <?php echo  "(" . $this->escape($this->truncate($project['customerName'], 30, '...')) . ")"; ?>
+                                    <?php echo  "(" . $this->escape($this->truncate($project['customer_name'], 30, '...')) . ")"; ?>
                                 </span>
                             <?php } ?>
                         <?php } ?>

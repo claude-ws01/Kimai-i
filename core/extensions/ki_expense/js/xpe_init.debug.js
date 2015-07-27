@@ -1,4 +1,4 @@
-/*! ki_expenses */
+/*! ki_expense */
 
 /**
  * This file is part of
@@ -26,7 +26,7 @@
 
 
 // set path of extension
-var xpe_ext_path = "../extensions/ki_expenses/";
+var xpe_ext_path = "../extensions/ki_expense/";
 var expenses_total = '';
 
 var drittel;

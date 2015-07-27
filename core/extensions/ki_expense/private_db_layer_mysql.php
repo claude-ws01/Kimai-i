@@ -160,7 +160,7 @@ function get_expenses($start, $end, $users = null, $customers = null, $projects 
 
     $whereClauses = expenses_widthhereClausesFromFilters($users, $customers, $projects);
 
-    if (isset($kga['customer'])) {
+    if (array_key_exists('customer', $kga)) {
         $whereClauses[] = "project.internal = 0";
     }
 

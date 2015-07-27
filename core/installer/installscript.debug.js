@@ -25,8 +25,9 @@ $(window).load(function () {
 });
 
 function step_ahead() {
-    $('#progressbar>span').removeClass('step_yap');
-    $('#progressbar>span').addClass('step_nope');
+    var i;
+
+    $('#progressbar>span').removeClass('step_yap').addClass('step_nope');
 
     for (i = 1; i < step + 1; i++) {
         $evalstring = "$('#progressbar>span:eq(" + (i - 1) + ")').addClass('step_yap');"
@@ -36,6 +37,7 @@ function step_ahead() {
 }
 
 function step_back() {
+    var target;
 
     switch (current) {
     case 25:
@@ -69,16 +71,16 @@ function step_back() {
     $('#installsteps').slideUp(500, function () {
         $.post("steps/" + target + ".php", {
                 hostname: hostname,
+                database: database,
                 username: username,
                 password: password,
-                lang: language,
-                db_type: db_type,
                 prefix: prefix,
-                database: database
+                language: language,
+                timezone: timezone
             },
+
             function (data) {
-                $('#installsteps').html(data);
-                $('#installsteps').slideDown(500);
+                $('#installsteps').html(data).slideDown(500);
             }
         );
     });
@@ -92,10 +94,12 @@ function lang_selected(lang) {
     language = lang;
     $('#installsteps').slideUp(500, function () {
         target = "20_gpl";
-        $.post("steps/" + target + ".php", {lang: language},
+        $.post("steps/" + target + ".php", {
+                language: language
+            },
+
             function (data) {
-                $('#installsteps').html(data);
-                $('#installsteps').slideDown(500);
+                $('#installsteps').html(data).slideDown(500);
             }
         );
     });
@@ -112,7 +116,7 @@ function gpl_proceed() {
     step_ahead();
     $('#installsteps').slideUp(500, function () {
         target = "25_system_requirements";
-        $.post("steps/" + target + ".php", {lang: language},
+        $.post("steps/" + target + ".php", {language: language},
             function (data) {
                 $('#installsteps').html(data);
                 $('#installsteps').slideDown(500);
@@ -132,7 +136,6 @@ function check_system_requirements() {
     );
 }
 
-
 function resetRequirementsIndicators() {
     $('div.sp_phpversion').removeClass("fail");
     $('div.sp_magicquotes').removeClass("fail");
@@ -149,7 +152,7 @@ function system_requirements_proceed() {
     step_ahead();
     $('#installsteps').slideUp(500, function () {
         target = "28_timezone";
-        $.post("steps/" + target + ".php", {lang: language},
+        $.post("steps/" + target + ".php", {language: language},
             function (data) {
                 $('#installsteps').html(data);
                 $('#installsteps').slideDown(500);
@@ -161,13 +164,15 @@ function system_requirements_proceed() {
 // -------------------------------------------------
 // Timezone selection
 
-
 function timezone_proceed() {
     step_ahead();
     timezone = $('#timezone').val();
     $('#installsteps').slideUp(500, function () {
         target = "40_permissions";
-        $.post("steps/" + target + ".php", {lang: language},
+        $.post("steps/" + target + ".php", {
+                language: language,
+                timezone: timezone
+            },
             function (data) {
                 $('#installsteps').html(data);
                 $('#installsteps').slideDown(500);
@@ -205,7 +210,7 @@ function cp_proceed() {
     $('#installsteps').slideUp(500, function () {
         target = "50_enter_access_data";
 
-        $.post("steps/" + target + ".php", {lang: language},
+        $.post("steps/" + target + ".php", {language: language},
             function (data) {
                 $('#installsteps').html(data);
                 $('#installsteps').slideDown(500);
@@ -243,8 +248,8 @@ function host_proceed() {
                     hostname: hostname,
                     username: username,
                     password: password,
-                    db_type: db_type,
-                    lang: language
+                    language: language,
+                    timezone: timezone
                 },
                 function (data) {
                     $('#installsteps').html(data);
@@ -282,13 +287,13 @@ function db_check() {
         $('#installsteps').slideUp(500, function () {
             $.post("steps/" + target + ".php", {
                     hostname: hostname,
+                    database: database,
                     username: username,
                     password: password,
-                    db_type: db_type,
-                    lang: language,
-                    database: database,
-                    create_database: create_database,
                     prefix: prefix,
+                    language: language,
+                    timezone: timezone,
+                    create_database: create_database,
                     redirect: true
                 },
                 function (data) {
@@ -316,12 +321,12 @@ function db_proceed() {
 
     $.post("steps/" + target + ".php", {
             hostname: hostname,
+            database: database,
             username: username,
             password: password,
-            db_type: db_type,
-            lang: language,
-            database: database,
-            prefix: prefix
+            prefix: prefix,
+            language: language,
+            timezone: timezone
         },
         function (data) {
             $('#installsteps').html(data);
@@ -349,12 +354,12 @@ function create_db() {
     $.post("processor.php", {
             axAction: 'make_database',
             hostname: hostname,
+            database: database,
             username: username,
             password: password,
-            lang: language,
-            db_type: db_type,
             prefix: prefix,
-            database: database
+            language: language,
+            timezone: timezone
         },
         function (data) {
 
@@ -365,7 +370,7 @@ function create_db() {
 
                 target = "db_error";
 
-                $.post("steps/" + target + ".php", {lang: language},
+                $.post("steps/" + target + ".php", {language: language},
                     function (data) {
                         $('#installsteps').html(data);
                         $('#installsteps').slideDown(500);
@@ -383,12 +388,11 @@ function write_config() {
     $.post("processor.php", {
             axAction: 'write_config',
             hostname: hostname,
+            database: database,
             username: username,
             password: password,
-            lang: language,
-            db_type: db_type,
             prefix: prefix,
-            database: database,
+            language: language,
             timezone: timezone
         },
         function (data) {

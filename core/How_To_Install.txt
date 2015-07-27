@@ -54,9 +54,7 @@ If you already have a autoconf.php in your installation skip this.
 
 Rename your conf.php file to autoconf.php.
 
-Then edit it and add two new variables:
-
-$server_conn = "mysql";
+Then edit it and add one new variables:
 
 $password_salt   = "";
 

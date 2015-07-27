@@ -1,9 +1,9 @@
-<?php 
+<?php
 echo '<script type="text/javascript" charset="utf-8">current=40;</script>';
 
-if ($_REQUEST['lang']=="en") {
+if ($_REQUEST['language'] === "en") {
 
-echo<<<EOD
+    echo <<<EOD
     <h2>Write-permissions</h2>
     PHP must have permissions to write to the following files/folders:<br/><br/>
 
@@ -16,9 +16,10 @@ echo<<<EOD
     <span class="ch_correctit invisible arrow">Please correct the write-permissions and press the button again!</span><br/>
 EOD;
 
-} else {
+}
+else {
 
-echo<<<EOD
+    echo <<<EOD
     <h2>Schreibrechte</h2>
     PHP muss Schreibrechte auf folgende Dateien und Ordner haben:<br/><br/>
 
@@ -35,4 +36,3 @@ EOD;
 
 echo '<script type="text/javascript" charset="utf-8">check_permissions();</script>';
 
-?>

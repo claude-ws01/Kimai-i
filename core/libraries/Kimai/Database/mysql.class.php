@@ -1,5 +1,5 @@
-<?
-require(WEBROOT . 'libraries/Kimai/Database/Mysql.php');
+<?php
+// require WEBROOT . 'libraries/Kimai/Database/kimai.php';
 
 /**
  * Ultimate MySQL Wrapper Class
@@ -15,44 +15,40 @@ require(WEBROOT . 'libraries/Kimai/Database/Mysql.php');
  *   Douglas Gintz
  *   Emre Erkan
  */
-class MySQL extends Kimai_Database_Mysql
+class MySQL
 {
     // SET THESE VALUES TO MATCH YOUR DATA CONNECTION
-    const SQLVALUE_BIT = "bit"; // server name
-    const SQLVALUE_BOOLEAN = "boolean"; // user name
-    const SQLVALUE_DATE = "date"; // password
-    const SQLVALUE_DATETIME = "datetime"; // database name
-    const SQLVALUE_NUMBER = "number"; // optional character set (i.e. utf8)
-    const SQLVALUE_T_F = "t-f"; // use persistent connection?
+    const SQLVALUE_BIT = 'bit'; // server name
+    const SQLVALUE_BOOLEAN = 'boolean'; // user name
+    const SQLVALUE_DATE = 'date'; // password
+    const SQLVALUE_DATETIME = 'datetime'; // database name
+    const SQLVALUE_NUMBER = 'number'; // optional character set (i.e. utf8)
+    const SQLVALUE_T_F = 't-f'; // use persistent connection?
 
     // constants for SQLValue function
-    const SQLVALUE_TEXT = "text";
-    const SQLVALUE_TIME = "time";
-    const SQLVALUE_Y_N = "y-n";
-    /**
-     * Determines if an error throws an exception
-     *
-     * @var boolean Set to true to throw error exceptions
-     */
-    public $ThrowExceptions = false;
-    public $mysql_link = null;
-    private $db_host = "localhost";
-    private $db_user = "";
-    private $db_pass = "";
-    private $db_dbname = "";
+    const SQLVALUE_TEXT = 'text';
+    const SQLVALUE_TIME = 'time';
+    const SQLVALUE_Y_N = 'y-n';
+    public $link; // mysql link resource
+    public $num_rows = 0;
+/*  Determines if an error throws an exception
+    @var boolean Set to true to throw error exceptions */
+    public $ThrowExceptions = false; //    was protected $kga;
+    private $db_host = 'localhost';
+    private $db_user = '';
+    private $db_pass = '';
+    private $db_name = '';
 
     // class-internal variables - do not change
-    private $db_charset = "";
-    private $db_pcon = false; // current row
-    private $active_row = -1; // last mysql error string
-    private $error_desc = ""; // last mysql error number
-    private $error_number = 0; // used for transactions
-    private $in_transaction = false; // last id of record inserted
-    private $last_insert_id; // last mysql query result
-    private $last_result; // last mysql query
-    private $last_sql = ""; // mysql link resource
-    private $time_diff = 0; // holds the difference in time
-    private $time_start = 0; // start time for the timer
+    private $db_charset = '';
+    private $db_pcon = false; //perseverant connection
+    private $active_row = -1;
+    private $error_desc = '';
+    private $error_number = 0;
+    private $in_transaction = 0; // level, number of transaction begin requested
+    private $last_insert_id;
+    private $last_result;
+    private $last_sql = '';
 
     /**
      * Constructor: Opens the connection to the database
@@ -64,25 +60,36 @@ class MySQL extends Kimai_Database_Mysql
      * @param string  $charset  (Optional) Character set
      * @param boolean $pcon     (Optional) Persistent connection
      */
-    public function __construct($database, $host, $username, $password = '', $charset = null, $pcon = false)
+    public function __construct($host, $database, $username, $password = '', $charset = null, $pcon = false)
+
     {
+        $this->db_host = $host;
+        $this->db_name = $database;
+        $this->db_user = $username;
+        $this->db_pass = $password;
+        if ($charset !== null) {
+            $this->db_charset = $charset;
+        }
+        if (is_bool($pcon)) {
+            $this->db_pcon = $pcon;
+        }
 
-        $this->db_dbname = $database;
-        $this->db_host   = $host;
-        $this->db_user   = $username;
-        $this->db_pass   = $password;
-        if ($charset !== null) $this->db_charset = $charset;
-        if (is_bool($pcon)) $this->db_pcon = $pcon;
+        $this->connect();
+    }
 
+    public function connect()
+    {
         if ($this->db_pcon) {
             // persistent connection
-            $this->mysql_link = @mysqli_connect(
-                "p:" . $this->db_host, $this->db_user, $this->db_pass, $this->db_dbname);
+            $this->link = @mysqli_connect(
+                'p:' . $this->db_host, $this->db_user, $this->db_pass, $this->db_name);
         }
         else {
             // normal connection
-            $this->mysql_link = @mysqli_connect(
-                $this->db_host, $this->db_user, $this->db_pass, $this->db_dbname);
+            $this->link = mysqli_connect(
+                $this->db_host, $this->db_user, $this->db_pass, $this->db_name);
+
+
         }
     }
 
@@ -102,42 +109,19 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return boolean Returns TRUE on success or FALSE on error
      */
-    public function AutoInsertUpdate($tableName, $valuesArray, $whereArray)
+    public function autoInsertUpdate($tableName, $valuesArray, $whereArray)
     {
-        $this->ResetError();
-        $this->SelectRows($tableName, $whereArray);
-        if (!$this->Error()) {
-            if ($this->HasRecords()) {
-                return $this->UpdateRows($tableName, $valuesArray, $whereArray);
+        $this->resetError();
+        $this->selectRows($tableName, $whereArray);
+        if (!$this->error()) {
+            if ($this->hasRecords()) {
+                return $this->updateRows($tableName, $valuesArray, $whereArray);
             }
             else {
-                return $this->InsertRow($tableName, $valuesArray);
+                return $this->insertRow($tableName, $valuesArray);
             }
         }
         else {
-            return false;
-        }
-    }
-
-    /**
-     * Returns true if the internal pointer is at the beginning of the records
-     *
-     * @return boolean TRUE if at the first row or FALSE if not
-     */
-    public function BeginningOfSeek()
-    {
-        $this->ResetError();
-        if ($this->IsConnected()) {
-            if ($this->active_row < 1) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-        else {
-            $this->SetError("No connection");
-
             return false;
         }
     }
@@ -147,23 +131,27 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return object Returns TRUE on success or FALSE on error
      */
-    public function Close()
+    public function close()
     {
-        $this->ResetError();
+        $this->resetError();
         $this->active_row = -1;
 
-        if (!empty($this->mysql_link)) {
-            $success = @mysqli_close($this->mysql_link);
+        if ($this->in_transaction > 0) {
+            $this->setError('Warning: in_transation > 0 when closing dbConnection. Missing a transactionEnd?');
+            Logger::logfile('Warning: in_transation > 0 when closing dbConnection. Missing a transactionEnd?');
+            $this->in_transaction = 0;
+        }
+
+        if (!$this->link) {
+            $success = @mysqli_close($this->link);
             if (!$success) {
-                $this->SetError();
+                $this->setError();
 
                 return false;
             }
         }
 
-        unset($this->last_sql);
-        unset($this->last_result);
-        unset($this->mysql_link);
+        unset($this->last_sql, $this->last_result, $this->link);
 
         return true;
     }
@@ -181,18 +169,18 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return boolean Returns TRUE on success or FALSE on error
      */
-    public function DeleteRows($tableName, $whereArray = null)
+    public function deleteRows($tableName, $whereArray = null)
     {
-        $this->ResetError();
-        if (!$this->IsConnected()) {
-            $this->SetError("No connection");
+        $this->resetError();
+        if (!$this->isConnected()) {
+            $this->setError('No connection');
 
             return false;
         }
         else {
-            $sql = self::BuildSQLDelete($tableName, $whereArray);
+            $sql = self::buildSqlDelete($tableName, $whereArray);
             // Execute the UPDATE
-            if (!$this->Query($sql)) {
+            if (!$this->query($sql)) {
                 return false;
             }
             else {
@@ -206,11 +194,11 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return boolean TRUE if at the last row or FALSE if not
      */
-    public function EndOfSeek()
+    public function endOfSeek()
     {
-        $this->ResetError();
-        if ($this->IsConnected()) {
-            if ($this->active_row >= ($this->RowCount())) {
+        $this->resetError();
+        if ($this->isConnected()) {
+            if ($this->rowCount() === 0 || $this->active_row >= ($this->rowCount())) {
                 return true;
             }
             else {
@@ -218,7 +206,7 @@ class MySQL extends Kimai_Database_Mysql
             }
         }
         else {
-            $this->SetError("No connection");
+            $this->setError('No connection');
 
             return false;
         }
@@ -229,80 +217,22 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return string Error text from last known error
      */
-    public function Error()
+    public function error()
     {
         $error = $this->error_desc;
-        if (empty($error)) {
-            if ($this->error_number <> 0) {
-                $error = "Unknown Error (#" . $this->error_number . ")";
-            }
-            else {
-                $error = false;
+        if (!$error) {
+            $error = false;
+            if ($this->error_number !== 0) {
+                $error = 'Unknown Error (#' . $this->error_number . ')';
             }
         }
         else {
             if ($this->error_number > 0) {
-                $error .= " (#" . $this->error_number . ")";
+                $error .= ' (#' . $this->error_number . ')';
             }
         }
 
         return $error;
-    }
-
-    /**
-     * Returns the last MySQL error as a number
-     *
-     * @return integer Error number from last known error
-     */
-    public function ErrorNumber()
-    {
-        if (strlen($this->error_desc) > 0) {
-            if ($this->error_number <> 0) {
-                return $this->error_number;
-            }
-            else {
-                return -1;
-            }
-        }
-        else {
-            return $this->error_number;
-        }
-    }
-
-    /**
-     * Returns the comments for fields in a table into an
-     * array or NULL if the table has not got any fields
-     *
-     * @param string $table Table name
-     *
-     * @return array An array that contains the column comments
-     */
-    public function GetColumnComments($table)
-    {
-        $this->ResetError();
-        $records = mysqli_query($this->mysql_link, "SHOW FULL COLUMNS FROM " . $table);
-        if (!$records) {
-            $this->SetError();
-
-            return false;
-        }
-        else {
-            // Get the column names
-            $columnNames = $this->GetColumnNames($table);
-            if ($this->Error()) {
-                return false;
-            }
-            else {
-                $index = 0;
-                // Fetchs the array to be returned (column 8 is field comment):
-                while ($array_data = mysqli_fetch_array($records)) {
-                    $columns[ $index ]                   = $array_data[8];
-                    $columns[ $columnNames[ $index++ ] ] = $array_data[8];
-                }
-
-                return $columns;
-            }
-        }
     }
 
     /**
@@ -313,19 +243,19 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return integer The total count of columns
      */
-    public function GetColumnCount($table = "")
+    public function getColumnCount($table = '')
     {
-        $this->ResetError();
-        if (empty($table)) {
+        $this->resetError();
+        if (!$table) {
             $result = mysqli_num_fields($this->last_result);
             if (!$result) {
-                $this->SetError();
+                $this->setError();
             }
         }
         else {
-            $records = mysqli_query($this->mysql_link, "SELECT * FROM " . $table . " LIMIT 1");
+            $records = mysqli_query($this->link, 'SELECT * FROM $table LIMIT 1');
             if (!$records) {
-                $this->SetError();
+                $this->setError();
                 $result = false;
             }
             else {
@@ -338,412 +268,13 @@ class MySQL extends Kimai_Database_Mysql
     }
 
     /**
-     * This function returns the data type for a specified column. If
-     * the column does not exists or no records exist, it returns FALSE
-     *
-     * @param string $column Column name or number (first column is 0)
-     * @param string $table  (Optional) If a table name is not specified, the
-     *                       last returned records are used
-     *
-     * @return string MySQL data (field) type
-     */
-    public function GetColumnDataType($column, $table = "")
-    {
-        $this->ResetError();
-        if (empty($table)) {
-            if ($this->RowCount() > 0) {
-                if (is_numeric($column)) {
-                    $finfo = mysqli_fetch_field_direct($this->last_result, $column);
-                }
-                else {
-                    $finfo = mysqli_fetch_field_direct($this->last_result, $this->GetColumnID($column));
-                }
-
-                return $finfo->type;
-            }
-            else {
-                return false;
-            }
-        }
-        else {
-            if (is_numeric($column)) {
-                $column = $this->GetColumnName($column, $table);
-            }
-            $result = mysqli_query($this->mysql_link, "SELECT " . $column . " FROM " . $table . " LIMIT 1");
-            if (mysqli_num_fields($result) > 0) {
-                $finfo = mysqli_fetch_field_direct($result, 0);
-
-                return $finfo->type;
-            }
-            else {
-                $this->SetError("The specified column or table does not exist, or no data was returned", -1);
-
-                return false;
-            }
-        }
-    }
-
-    /**
-     * This function returns the field length or returns FALSE on error
-     *
-     * @param string $column Column name
-     * @param string $table  (Optional) If a table name is not specified, the
-     *                       last returned records are used.
-     *
-     * @return integer Field length
-     */
-    public function GetColumnLength($column, $table = "")
-    {
-        $this->ResetError();
-        if (empty($table)) {
-            if (is_numeric($column)) {
-                $columnID = $column;
-            }
-            else {
-                $columnID = $this->GetColumnID($column);
-            }
-            if (!$columnID) {
-                return false;
-            }
-            else {
-                $finfo  = mysqli_fetch_field_direct($this->last_result, $columnID);
-                $result = $finfo->length;
-                if (!$result) {
-                    $this->SetError();
-
-                    return false;
-                }
-                else {
-                    return $result;
-                }
-            }
-        }
-        else {
-            $records = mysqli_query($this->mysql_link, "SELECT " . $column . " FROM " . $table . " LIMIT 1");
-            if (!$records) {
-                $this->SetError();
-
-                return false;
-            }
-            $finfo = mysqli_fetch_field_direct($records, 0);
-
-            if (!$finfo->length) {
-                $this->SetError();
-
-                return false;
-            }
-            else {
-                return $finfo->length;
-            }
-        }
-    }
-
-    /**
-     * This function returns the name for a specified column number. If
-     * the index does not exists or no records exist, it returns FALSE
-     *
-     * @param string $columnID Column position (0 is the first column)
-     * @param string $table    (Optional) If a table name is not specified, the
-     *                         last returned records are used.
-     *
-     * @return integer Field Length
-     */
-    public function GetColumnName($columnID, $table = "")
-    {
-        $this->ResetError();
-        if (empty($table)) {
-            if ($this->RowCount() > 0) {
-                $finfo  = mysqli_fetch_field_direct($this->last_result, $columnID);
-                $result = $finfo->name;
-                if (!$result) {
-                    $this->SetError();
-                }
-            }
-            else {
-                $result = false;
-            }
-        }
-        else {
-            $records = mysqli_query($this->mysql_link, "SELECT * FROM " . $table . " LIMIT 1");
-            if (!$records) {
-                $this->SetError();
-                $result = false;
-            }
-            else {
-                if (mysqli_num_fields($records) > 0) {
-                    $finfo  = mysqli_fetch_field_direct($records, $columnID);
-                    $result = $finfo->name;
-                    if (!$result) {
-                        $this->SetError();
-                    }
-                }
-                else {
-                    $result = false;
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Returns the field names in a table or query in an array
-     *
-     * @param string $table (Optional) If a table name is not specified, the
-     *                      last returned records are used
-     *
-     * @return array An array that contains the column names
-     */
-    public function GetColumnNames($table = "")
-    {
-        $columns = false;
-
-        $this->ResetError();
-        if (empty($table)) {
-            $columnCount = mysqli_num_fields($this->last_result);
-            if (!$columnCount) {
-                $this->SetError();
-            }
-            else {
-                for ($column = 0; $column < $columnCount; $column++) {
-                    $finfo     = mysqli_fetch_field_direct($this->last_result, $column);
-                    $columns[] = $finfo->name;
-                }
-            }
-        }
-        else {
-            $result = mysqli_query($this->mysql_link, "SHOW COLUMNS FROM " . $table);
-            if (!$result) {
-                $this->SetError();
-            }
-            else {
-                while ($array_data = mysqli_fetch_array($result)) {
-                    $columns[] = $array_data[0];
-                }
-            }
-        }
-
-        // Returns the array
-        return $columns;
-    }
-
-    /**
-     * This function returns the last query as an HTML table
-     *
-     * @param boolean $showCount   (Optional) TRUE if you want to show the row count,
-     *                             FALSE if you do not want to show the count
-     * @param string  $styleTable  (Optional) Style information for the table
-     * @param string  $styleHeader (Optional) Style information for the header row
-     * @param string  $styleData   (Optional) Style information for the cells
-     *
-     * @return string HTML containing a table with all records listed
-     */
-    public function GetHTML($showCount = true, $styleTable = null, $styleHeader = null, $styleData = null)
-    {
-        if ($styleTable === null) {
-            $tb = "border-collapse:collapse;empty-cells:show";
-        }
-        else {
-            $tb = $styleTable;
-        }
-        if ($styleHeader === null) {
-            $th = "border-width:1px;border-style:solid;background-color:navy;color:white";
-        }
-        else {
-            $th = $styleHeader;
-        }
-        if ($styleData === null) {
-            $td = "border-width:1px;border-style:solid";
-        }
-        else {
-            $td = $styleData;
-        }
-
-        if ($this->last_result) {
-            if ($this->RowCount() > 0) {
-                $html = "";
-                if ($showCount) {
-                    $html = "Record Count: " . $this->RowCount() . "<br />\n";
-                }
-                $html .= "<table style=\"$tb\" cellpadding=\"2\" cellspacing=\"2\">\n";
-                $this->MoveFirst();
-                $header = false;
-                while ($member = mysqli_fetch_object($this->last_result)) {
-                    if (!$header) {
-                        $html .= "\t<tr>\n";
-                        foreach ($member as $key => $value) {
-                            $html .= "\t\t<td style=\"$th\"><strong>" . htmlspecialchars($key) . "</strong></td>\n";
-                        }
-                        $html .= "\t</tr>\n";
-                        $header = true;
-                    }
-                    $html .= "\t<tr>\n";
-                    foreach ($member as $key => $value) {
-                        $html .= "\t\t<td style=\"$td\">" . htmlspecialchars($value) . "</td>\n";
-                    }
-                    $html .= "\t</tr>\n";
-                }
-                $this->MoveFirst();
-                $html .= "</table>";
-            }
-            else {
-                $html = "No records were returned.";
-            }
-        }
-        else {
-            $this->active_row = -1;
-            $html             = false;
-        }
-
-        return $html;
-    }
-
-    /**
-     * Returns the last query as a JSON document
-     *
-     * @return string JSON containing all records listed
-     */
-    public function GetJSON()
-    {
-        if ($this->last_result) {
-            if ($this->RowCount() > 0) {
-                for ($i = 0, $il = mysqli_num_fields($this->last_result); $i < $il; $i++) {
-                    $finfo       = mysqli_fetch_field_direct($this->last_result, $i);
-                    $types[ $i ] = $finfo->type;
-                }
-                $json = '[';
-                $this->MoveFirst();
-                while ($member = mysqli_fetch_object($this->last_result)) {
-                    $json .= json_encode($member) . ",";
-                }
-                $json .= ']';
-                $json = str_replace("},]", "}]", $json);
-            }
-            else {
-                $json = 'null';
-            }
-        }
-        else {
-            $this->active_row = -1;
-            $json             = 'null';
-        }
-
-        return $json;
-    }
-
-    /**
      * Returns the last autonumber ID field from a previous INSERT query
      *
      * @return  integer ID number from previous INSERT query
      */
-    public function GetLastInsertID()
+    public function getLastInsertID()
     {
         return $this->last_insert_id;
-    }
-
-    /**
-     * Returns the last SQL statement executed
-     *
-     * @return string Current SQL query string
-     */
-    public function GetLastSQL()
-    {
-        return $this->last_sql;
-    }
-
-    /**
-     * This function returns table names from the database
-     * into an array. If the database does not contains
-     * any tables, the returned value is FALSE
-     *
-     * @return array An array that contains the table names
-     */
-    public function GetTables()
-    {
-        $this->ResetError();
-        // Query to get the tables in the current database:
-        $records = mysqli_query($this->mysql_link, "SHOW TABLES");
-        if (!$records) {
-            $this->SetError();
-
-            return false;
-        }
-        else {
-            while ($array_data = mysqli_fetch_array($records)) {
-                $tables[] = $array_data[0];
-            }
-
-            // Returns the array or NULL
-            if (count($tables) > 0) {
-                return $tables;
-            }
-            else {
-                return false;
-            }
-        }
-    }
-
-    /**
-     * Returns the last query as an XML Document
-     *
-     * @return string XML containing all records listed
-     */
-    public function GetXML()
-    {
-        // Create a new XML document
-        $doc = new DomDocument('1.0'); // ,'UTF-8');
-
-        // Create the root node
-        $root = $doc->createElement('root');
-        $root = $doc->appendChild($root);
-
-        // If there was a result set
-        if (is_object($this->last_result)) {
-
-            // Show the row count and query
-            $root->setAttribute('rows',
-                ($this->RowCount() ? $this->RowCount() : 0));
-            $root->setAttribute('query', $this->last_sql);
-            $root->setAttribute('error', "");
-
-            // process one row at a time
-            $rowCount = 0;
-            while ($row = mysqli_fetch_assoc($this->last_result)) {
-
-                // Keep the row count
-                $rowCount = $rowCount + 1;
-
-                // Add node for each row
-                $element = $doc->createElement('row');
-                $element = $root->appendChild($element);
-                $element->setAttribute('index', $rowCount);
-
-                // Add a child node for each field
-                foreach ($row as $fieldname => $fieldvalue) {
-                    $child = $doc->createElement($fieldname);
-                    $child = $element->appendChild($child);
-
-                    // $fieldvalue = iconv("ISO-8859-1", "UTF-8", $fieldvalue);
-                    $fieldvalue = htmlspecialchars($fieldvalue);
-                    $value      = $doc->createTextNode($fieldvalue);
-                    $value      = $child->appendChild($value);
-                } // foreach
-            } // while
-        }
-        else {
-            // Process any errors
-            $root->setAttribute('rows', 0);
-            $root->setAttribute('query', $this->last_sql);
-            if ($this->Error()) {
-                $root->setAttribute('error', $this->Error());
-            }
-            else {
-                $root->setAttribute('error', "No query has been executed.");
-            }
-        }
-
-        // Show the XML document
-        return $doc->saveXML();
     }
 
     /**
@@ -754,15 +285,15 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return boolean TRUE if records exist, FALSE if not or query error
      */
-    public function HasRecords($sql = "")
+    public function hasRecords($sql = '')
     {
         if (strlen($sql) > 0) {
-            $this->Query($sql);
-            if ($this->Error()) {
+            $this->query($sql);
+            if ($this->error()) {
                 return false;
             }
         }
-        if ($this->RowCount() > 0) {
+        if ($this->rowCount() > 0) {
             return true;
         }
         else {
@@ -781,22 +312,22 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return integer Returns last insert ID on success or FALSE on failure
      */
-    public function InsertRow($tableName, $valuesArray)
+    public function insertRow($tableName, $valuesArray)
     {
-        $this->ResetError();
-        if (!$this->IsConnected()) {
-            $this->SetError("No connection");
+        $this->resetError();
+        if (!$this->isConnected()) {
+            $this->setError('No connection');
 
             return false;
         }
         else {
             // Execute the query
-            $sql = self::BuildSQLInsert($tableName, $valuesArray);
-            if (!$this->Query($sql)) {
+            $sql = self::buildSqlInsert($tableName, $valuesArray);
+            if (!$this->query($sql)) {
                 return false;
             }
             else {
-                return $this->GetLastInsertID();
+                return $this->getLastInsertID();
             }
         }
     }
@@ -806,27 +337,13 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return boolean TRUE idf connectect or FALSE if not connected
      */
-    public function IsConnected()
+    public function isConnected()
     {
-        if (is_object($this->mysql_link)) {
+        if (is_object($this->link)) {
             return true;
         }
         else {
             return false;
-        }
-    }
-
-    /**
-     * Stop executing (die/exit) and show last MySQL error message
-     *
-     */
-    public function Kill($message = "")
-    {
-        if (strlen($message) > 0) {
-            exit($message);
-        }
-        else {
-            exit($this->Error());
         }
     }
 
@@ -835,11 +352,11 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return boolean Returns TRUE on success or FALSE on error
      */
-    public function MoveFirst()
+    public function moveFirst()
     {
-        $this->ResetError();
-        if (!$this->Seek(0)) {
-            $this->SetError();
+        $this->resetError();
+        if (!$this->seek(0)) {
+            $this->setError();
 
             return false;
         }
@@ -848,74 +365,6 @@ class MySQL extends Kimai_Database_Mysql
 
             return true;
         }
-    }
-
-    /**
-     * Seeks to the end of the records
-     *
-     * @return boolean Returns TRUE on success or FALSE on error
-     */
-    public function MoveLast()
-    {
-        $this->ResetError();
-        $this->active_row = $this->RowCount() - 1;
-        if (!$this->Error()) {
-            if (!$this->Seek($this->active_row)) {
-                return false;
-            }
-            else {
-                return true;
-            }
-        }
-        else {
-            return false;
-        }
-    }
-
-    /**
-     * Connect to specified MySQL server
-     *
-     * @param string  $database (Optional) Database name
-     * @param string  $server   (Optional) Host address
-     * @param string  $username (Optional) User name
-     * @param string  $password (Optional) Password
-     * @param string  $charset  (Optional) Character set
-     * @param boolean $pcon     (Optional) Persistant connection
-     *
-     * @return boolean Returns TRUE on success or FALSE on error
-     */
-    public function Open_x($database = null, $server = null, $username = null,
-                         $password = null, $charset = null, $pcon = false)
-    {
-        $this->ResetError();
-
-        // Use defaults?
-        if ($database !== null) $this->db_dbname = $database;
-        if ($server !== null) $this->db_host = $server;
-        if ($username !== null) $this->db_user = $username;
-        if ($password !== null) $this->db_pass = $password;
-        if ($charset !== null) $this->db_charset = $charset;
-        if (is_bool($pcon)) $this->db_pcon = $pcon;
-
-        $this->active_row = -1;
-
-        // Open persistent or normal connection
-        if ($pcon) {
-            $this->mysql_link = @mysqli_connect(
-                "p:" . $this->db_host, $this->db_user, $this->db_pass, $this->db_dbname);
-        }
-        else {
-            $this->mysql_link = @mysqli_connect(
-                $this->db_host, $this->db_user, $this->db_pass, $this->db_dbname);
-        }
-        // Connect to mysql server failed?
-        if (!$this->IsConnected()) {
-            $this->SetError();
-
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -928,51 +377,58 @@ class MySQL extends Kimai_Database_Mysql
      *                TRUE or FALSE for all others i.e. UPDATE, DELETE, DROP
      *                AND FALSE on all errors (setting the local Error message)
      */
-    public function Query($sql)
+    public function query($sql)
     {
-        $this->ResetError();
-        $this->last_sql    = $sql;
-        $this->last_result = @mysqli_query($this->mysql_link, $sql);
+        // error_reporting(E_ALL);
+        $this->resetError();
+        $this->last_sql = $sql;
+        $this->last_insert_id = 0;
+        $this->active_row = -1;
 
-        //DEBUG// error_log('<<== QUERY ==>>'.__FUNCTION__.'====' . PHP_EOL .$sql);
+
+        $this->last_result = mysqli_query($this->link, $sql);
+        //DEBUG// error_log('<<============ QUERY ============>>');
+
 
         if ($this->last_result === false) {
-            $this->active_row = -1;
-            $this->SetError(mysqli_error($this->mysql_link));
+            //DEBUG// error_log('<<== QUERY EMPTY ==>>' . PHP_EOL . $sql);
+
+            $this->setError(mysqli_error($this->link));
 
             return false;
         }
-        else {
-            if (strpos(strtolower($sql), "insert") === 0) {
-                $this->last_insert_id = mysqli_insert_id($this->mysql_link);
-                if ($this->last_insert_id === false) {
-                    $this->SetError();
 
-                    return false;
-                }
-                else {
-                    $this->active_row = -1;
+        elseif (strpos(strtolower($sql), 'insert') === 0) {
 
-                    return $this->last_result;
-                }
+            $this->last_insert_id = mysqli_insert_id($this->link);
+            //DEBUG// error_log('<<== QUERY INSERT - ID ==>' . $this->last_insert_id . '<== ID ==>>' . PHP_EOL . $sql);
+
+            if ($this->last_insert_id === false) {
+                $this->setError();
+
+                return false;
             }
             else {
-                if (strpos(strtolower($sql), "select") === 0) {
-                    $numrows = mysqli_num_rows($this->last_result);
-                    if ($numrows > 0) {
-                        $this->active_row = 0;
-                    }
-                    else {
-                        $this->active_row = -1;
-                    }
-                    $this->last_insert_id = 0;
-
-                    return $this->last_result;
-                }
-                else {
-                    return $this->last_result;
-                }
+                return $this->last_result;
             }
+        }
+
+        elseif (strpos(strtolower($sql), 'select') === 0) {
+
+            $this->num_rows = mysqli_num_rows($this->last_result);
+            //DEBUG// error_log('<<== QUERY SELECT - nb of records ==>' . $this->num_rows . '<== RECORDS ==>>' . PHP_EOL . $sql);
+
+            if ($this->num_rows > 0) {
+                $this->active_row = 0;
+            }
+
+            return $this->last_result;
+        }
+
+        else {
+            //DEBUG//error_log('<<== QUERY OTHER ==>>' . PHP_EOL . $sql);
+
+            return $this->last_result;
         }
     }
 
@@ -986,106 +442,15 @@ class MySQL extends Kimai_Database_Mysql
      * @return array A multi-dimensional array containing all the data
      *               returned from the query or FALSE on all errors
      */
-    public function QueryArray($sql, $resultType = MYSQL_BOTH)
+    protected function queryArray($sql, $resultType = MYSQL_BOTH)
     {
-        $this->Query($sql);
-        if (!$this->Error()) {
-            return $this->RecordsArray($resultType);
+        $this->query($sql);
+        if (!$this->error()) {
+            return $this->recordsArray($resultType);
         }
         else {
             return false;
         }
-    }
-
-    /**
-     * Executes the given SQL query and returns only one (the first) row
-     *
-     * @param string $sql The query string should not end with a semicolon
-     *
-     * @return object PHP resource object containing the first row or
-     *                FALSE if no row is returned from the query
-     */
-    public function QuerySingleRow($sql)
-    {
-        $this->Query($sql);
-        if ($this->RowCount() > 0) {
-            return $this->Row();
-        }
-        else {
-            return false;
-        }
-    }
-
-    /**
-     * Executes the given SQL query and returns the first row as an array
-     *
-     * @param string  $sql        The query string should not end with a semicolon
-     * @param integer $resultType (Optional) The type of array
-     *                            Values can be: MYSQL_ASSOC, MYSQL_NUM, MYSQL_BOTH
-     *
-     * @return array An array containing the first row or FALSE if no row
-     *               is returned from the query
-     */
-    public function QuerySingleRowArray($sql, $resultType = MYSQL_BOTH)
-    {
-        $this->Query($sql);
-        if ($this->RowCount() > 0) {
-            return $this->RowArray(null, $resultType);
-        }
-        else {
-            return false;
-        }
-    }
-
-    /**
-     * Executes a query and returns a single value. If more than one row
-     * is returned, only the first value in the first column is returned.
-     *
-     * @param string $sql The query string should not end with a semicolon
-     *
-     * @return mixed The value returned or FALSE if no value
-     */
-    public function QuerySingleValue($sql)
-    {
-        $this->Query($sql);
-        if ($this->RowCount() > 0 && $this->GetColumnCount() > 0) {
-            $row = $this->RowArray(null, MYSQL_NUM);
-
-            return $row[0];
-        }
-        else {
-            return false;
-        }
-    }
-
-    /**
-     * Executes the given SQL query, measures it, and saves the total duration
-     * in microseconds
-     *
-     * @param string $sql The query string should not end with a semicolon
-     *
-     * @return object PHP 'mysql result' resource object containing the records
-     *                on SELECT, SHOW, DESCRIBE or EXPLAIN queries and returns
-     *                TRUE or FALSE for all others i.e. UPDATE, DELETE, DROP
-     */
-    public function QueryTimed($sql)
-    {
-        $this->TimerStart();
-        $result = $this->Query($sql);
-        $this->TimerStop();
-
-        return $result;
-    }
-
-    /**
-     * Returns the records from the last query
-     *
-     * @return object PHP 'mysql result' resource object containing the records
-     *                for the last query executed
-     */
-    public function Records()
-    {
-        return $this->last_result;
     }
 
     /**
@@ -1095,20 +460,22 @@ class MySQL extends Kimai_Database_Mysql
      * @param integer $resultType (Optional) The type of array
      *                            Values can be: MYSQL_ASSOC, MYSQL_NUM, MYSQL_BOTH
      *
-     * @return Records in array form
+     * @return array||boolean   Records in array form
      */
-    public function RecordsArray($resultType = MYSQL_BOTH)
+    public function recordsArray($resultType = MYSQL_BOTH)
     {
-        $this->ResetError();
+        $this->resetError();
         if ($this->last_result !== false && mysqli_num_rows($this->last_result) >= 1) {
 
             $result = mysqli_data_seek($this->last_result, 0);
             if ($result !== true) {
-                $this->SetError();
+                $this->setError();
 
                 return false;
             }
             else {
+                $members = array();
+
                 //while($member = mysqli_fetch_object($this->last_result)){
                 while ($member = mysqli_fetch_array($this->last_result, $resultType)) {
                     $members[] = $member;
@@ -1121,25 +488,10 @@ class MySQL extends Kimai_Database_Mysql
         }
         else {
             $this->active_row = -1;
-            $this->SetError("No query results exist", -1);
+            $this->setError('No query results exist', -1);
 
             return false;
         }
-    }
-
-    /**
-     * Frees memory used by the query results and returns the function result
-     *
-     * @return boolean Returns TRUE on success or FALSE on failure
-     */
-    public function Release_X()
-    {//CN not used anymore
-        $this->ResetError();
-        if ($this->last_result !== false) {
-            mysqli_free_result($this->last_result);
-        }
-
-        return;
     }
 
     /**
@@ -1150,17 +502,17 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return object PHP object or FALSE on error
      */
-    public function Row($optional_row_number = null)
+    public function row($optional_row_number = null)
     {
-        $this->ResetError();
+        $this->resetError();
         if (!$this->last_result) {
-            $this->SetError("No query results exist", -1);
+            $this->setError('No query results exist', -1);
 
             return false;
         }
         elseif ($optional_row_number === null) {
-            if (($this->active_row) > $this->RowCount()) {
-                $this->SetError("Cannot read past the end of the records", -1);
+            if (($this->active_row) > $this->rowCount()) {
+                $this->setError('Cannot read past the end of the records', -1);
 
                 return false;
             }
@@ -1169,19 +521,19 @@ class MySQL extends Kimai_Database_Mysql
             }
         }
         else {
-            if ($optional_row_number >= $this->RowCount()) {
-                $this->SetError("Row number is greater than the total number of rows", -1);
+            if ($optional_row_number >= $this->rowCount()) {
+                $this->setError('Row number is greater than the total number of rows', -1);
 
                 return false;
             }
             else {
                 $this->active_row = $optional_row_number;
-                $this->Seek($optional_row_number);
+                $this->seek($optional_row_number);
             }
         }
         $row = mysqli_fetch_object($this->last_result);
         if (!$row) {
-            $this->SetError();
+            $this->setError();
 
             return false;
         }
@@ -1200,17 +552,17 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return array Array that corresponds to fetched row or FALSE if no rows
      */
-    public function RowArray($optional_row_number = null, $resultType = MYSQL_BOTH)
+    public function rowArray($optional_row_number = null, $resultType = MYSQL_BOTH)
     {
-        $this->ResetError();
+        $this->resetError();
         if (!$this->last_result) {
-            $this->SetError("No query results exist", -1);
+            $this->setError('No query results exist', -1);
 
             return false;
         }
         elseif ($optional_row_number === null) {
-            if (($this->active_row) > $this->RowCount()) {
-                $this->SetError("Cannot read past the end of the records", -1);
+            if (($this->active_row) > $this->rowCount()) {
+                $this->setError('Cannot read past the end of the records', -1);
 
                 return false;
             }
@@ -1219,19 +571,19 @@ class MySQL extends Kimai_Database_Mysql
             }
         }
         else {
-            if ($optional_row_number >= $this->RowCount()) {
-                $this->SetError("Row number is greater than the total number of rows", -1);
+            if ($optional_row_number >= $this->rowCount()) {
+                $this->setError('Row number is greater than the total number of rows', -1);
 
                 return false;
             }
             else {
                 $this->active_row = $optional_row_number;
-                $this->Seek($optional_row_number);
+                $this->seek($optional_row_number);
             }
         }
         $row = mysqli_fetch_array($this->last_result, $resultType);
         if (!$row) {
-            $this->SetError();
+            $this->setError();
 
             return false;
         }
@@ -1245,30 +597,32 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return integer Row count or FALSE on error
      */
-    public function RowCount()
+    public function rowCount()
     {
-        $this->ResetError();
-        if (!$this->IsConnected()) {
-            $this->SetError("No connection", -1);
+        return $this->num_rows;
+
+/*        $this->resetError();
+        if (!$this->isConnected()) {
+            $this->setError('No connection', -1);
 
             return false;
         }
         elseif (!$this->last_result) {
-            $this->SetError("No query results exist", -1);
+            $this->setError('No query results exist', -1);
 
             return false;
         }
         else {
             $result = @mysqli_num_rows($this->last_result);
             if (!$result) {
-                $this->SetError();
+                $this->setError();
 
                 return false;
             }
             else {
                 return $result;
             }
-        }
+        }*/
     }
 
     /**
@@ -1283,94 +637,75 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return string
      */
-    public function SQLValue($value, $datatype = self::SQLVALUE_TEXT)
+    public function sqlValue($value, $datatype = self::SQLVALUE_TEXT)
     {
+        $return_value = 'NULL'; // DEFAULT VALUE - KEEP THERE
 
         switch (strtolower(trim($datatype))) {
-            case "text":
-            case "string":
-            case "varchar":
-            case "char":
-                // wolfgang@sybermon.com disabled because of kimai db structure
-                // I had to disable the following as kimai db structure
-                // does not allow NULL values
-                //if (strlen($value) == 0) {
-                //	$return_value = "NULL";
-                //} else {
+            case 'text':
+            case 'string':
+            case 'varchar':
+            case 'char':
                 if (get_magic_quotes_gpc()) {
                     $value = stripslashes($value);
                 }
-                $return_value = "'" . mysqli_real_escape_string($this->mysql_link, $value) . "'";
-                //}
+                $return_value = "'" . mysqli_real_escape_string($this->link, $value) . "'";
                 break;
-            case "number":
-            case "integer":
-            case "int":
-            case "double":
-            case "float":
-                // wolfgang@sybermon.com disabled because of kimai db structure
-                // I had to disable the following as kimai db structure
-                // does not allow NULL values
+
+            case 'number':
+            case 'integer':
+            case 'int':
+            case 'double':
+            case 'float':
+                $return_value = 0;
                 if (is_numeric($value)) {
                     $return_value = $value;
                 }
-                else {
-                    //$return_value = "NULL";
-                    $return_value = 0;
+                break;
+
+            case 'boolean': //boolean to use this with a bit field
+            case 'bool':
+            case 'bit':
+                $return_value = '0';
+                if (self::getBooleanValue($value)) {
+                    $return_value = '1';
                 }
                 break;
-            case "boolean": //boolean to use this with a bit field
-            case "bool":
-            case "bit":
-                if (self::GetBooleanValue($value)) {
-                    $return_value = "1";
-                }
-                else {
-                    $return_value = "0";
+
+            case 'y-n': //boolean to use this with a char(1) field
+                $return_value = '\'N\'';
+                if (self::getBooleanValue($value)) {
+                    $return_value = '\'Y\'';
                 }
                 break;
-            case "y-n": //boolean to use this with a char(1) field
-                if (self::GetBooleanValue($value)) {
-                    $return_value = "'Y'";
-                }
-                else {
-                    $return_value = "'N'";
-                }
-                break;
-            case "t-f": //boolean to use this with a char(1) field
-                if (self::GetBooleanValue($value)) {
-                    $return_value = "'T'";
-                }
-                else {
-                    $return_value = "'F'";
+
+            case 't-f': //boolean to use this with a char(1) field
+                $return_value = '\'F\'';
+                if (self::getBooleanValue($value)) {
+                    $return_value = '\'T\'';
                 }
                 break;
-            case "date":
-                if (self::IsDate($value)) {
-                    $return_value = "'" . date('Y-m-d', strtotime($value)) . "'";
-                }
-                else {
-                    $return_value = "NULL";
+
+            case 'date':
+                if (self::isDate($value)) {
+                    $return_value = '\'' . date('Y-m-d', strtotime($value)) . '\'';
                 }
                 break;
-            case "datetime":
-                if (self::IsDate($value)) {
-                    $return_value = "'" . date('Y-m-d H:i:s', strtotime($value)) . "'";
-                }
-                else {
-                    $return_value = "NULL";
+
+            case 'datetime':
+                if (self::isDate($value)) {
+                    $return_value = '\'' . date('Y-m-d H:i:s', strtotime($value)) . '\'';
                 }
                 break;
-            case "time":
-                if (self::IsDate($value)) {
-                    $return_value = "'" . date('H:i:s', strtotime($value)) . "'";
-                }
-                else {
-                    $return_value = "NULL";
+
+            case 'time':
+                if (self::isDate($value)) {
+                    $return_value = '\'' . date('H:i:s', strtotime($value)) . '\'';
                 }
                 break;
+
             default:
-                exit("ERROR: Invalid data type specified in SQLValue method");
+                exit('ERROR: Invalid data type specified in SQLValue method');
         }
 
         return $return_value;
@@ -1384,15 +719,15 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return object Fetched row as PHP object
      */
-    private function Seek($row_number)
+    private function seek($row_number)
     {
-        $this->ResetError();
-        $row_count = $this->RowCount();
+        $this->resetError();
+        $row_count = $this->rowCount();
         if (!$row_count) {
             return false;
         }
         elseif ($row_number >= $row_count) {
-            $this->SetError("Seek parameter is greater than the total number of rows", -1);
+            $this->setError('Seek parameter is greater than the total number of rows', -1);
 
             return false;
         }
@@ -1400,14 +735,14 @@ class MySQL extends Kimai_Database_Mysql
             $this->active_row = $row_number;
             $result           = mysqli_data_seek($this->last_result, $row_number);
             if (!$result) {
-                $this->SetError();
+                $this->setError();
 
                 return false;
             }
             else {
                 $record = mysqli_fetch_row($this->last_result);
                 if (!$record) {
-                    $this->SetError();
+                    $this->setError();
 
                     return false;
                 }
@@ -1419,47 +754,6 @@ class MySQL extends Kimai_Database_Mysql
                 }
             }
         }
-    }
-
-    /**
-     * Returns the current cursor row location
-     *
-     * @return integer Current row number
-     */
-    public function SeekPosition_X()
-    { //CN not used
-        return $this->active_row;
-    }
-
-    /**
-     * Selects a different database and character set
-     *
-     * @param string $database Database name
-     * @param string $charset  (Optional) Character set (i.e. utf8)
-     *
-     * @return boolean Returns TRUE on success or FALSE on error
-     */
-    public function SelectDatabase_X($database, $charset = "")
-    { //CN no longer used
-        $return_value = true;
-        if (!$charset) {
-            $charset = $this->db_charset;
-        }
-        $this->ResetError();
-        if (!(mysqli_select_db($this->mysql_link, $database))) {
-            $this->SetError();
-            $return_value = false;
-        }
-        else {
-            if ((strlen($charset) > 0)) {
-                if (!(mysqli_query($this->mysql_link, "SET CHARACTER SET '{$charset}'"))) {
-                    $this->SetError();
-                    $return_value = false;
-                }
-            }
-        }
-
-        return $return_value;
     }
 
     /**
@@ -1476,76 +770,23 @@ class MySQL extends Kimai_Database_Mysql
      *                               This only works if $sortColumns are specified
      * @param         integer        /string $limit (Optional) The limit of rows to return
      *
-     * @return boolean Returns records on success or FALSE on error
+     * @return boolean|array         Returns records on success or FALSE on error
      */
-    public function SelectRows($tableName, $whereArray = null, $columns = null,
-                               $sortColumns = null, $sortAscending = true,
-                               $limit = null)
+    public function selectRows($tableName, $whereArray = null, $columns = null, $sortColumns = null,
+                               $sortAscending = true, $limit = null)
     {
-        $this->ResetError();
-        if (!$this->IsConnected()) {
-            $this->SetError("No connection");
+        $this->resetError();
+        if (!$this->isConnected()) {
+            $this->setError('No connection');
 
             return false;
         }
         else {
-            $sql = self::BuildSQLSelect($tableName, $whereArray,
+            $sql = self::buildSqlSelect($tableName, $whereArray,
                                         $columns, $sortColumns, $sortAscending, $limit);
-            // Execute the SELECT
-            if (!$this->Query($sql)) {
-                return $this->last_result;
-            }
-            else {
-                return true;
-            }
+
+            return $this->query($sql);
         }
-    }
-
-    /**
-     * Retrieves all rows in a specified table
-     *
-     * @param string $tableName The name of the table
-     *
-     * @return boolean Returns records on success or FALSE on error
-     */
-    public function SelectTable($tableName)
-    {
-        return $this->SelectRows($tableName);
-    }
-
-    /**
-     * Returns last measured duration (time between TimerStart and TimerStop)
-     *
-     * @param integer $decimals (Optional) The number of decimal places to show
-     *
-     * @return Float Microseconds elapsed
-     */
-    public function TimerDuration($decimals = 4)
-    {
-        return number_format($this->time_diff, $decimals);
-    }
-
-    /**
-     * Starts time measurement (in microseconds)
-     *
-     */
-    public function TimerStart()
-    {
-        $parts            = explode(" ", microtime());
-        $this->time_diff  = 0;
-        $this->time_start = $parts[1] . substr($parts[0], 1);
-    }
-
-    /**
-     * Stops time measurement (in microseconds)
-     *
-     */
-    public function TimerStop()
-    {
-        $parts            = explode(" ", microtime());
-        $time_stop        = $parts[1] . substr($parts[0], 1);
-        $this->time_diff  = ($time_stop - $this->time_start);
-        $this->time_start = 0;
     }
 
     /**
@@ -1553,33 +794,55 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return boolean Returns TRUE on success or FALSE on error
      */
-    public function TransactionBegin()
+    public function transactionBegin()
     {
-        $this->ResetError();
-        if (!$this->IsConnected()) {
-            $this->SetError("No connection");
+        $this->resetError();
+        if (!$this->isConnected()) {
+            $this->setError('No connection');
 
             return false;
         }
-        else {
-            if (!$this->in_transaction) {
-                if (!mysqli_query($this->mysql_link, "START TRANSACTION")) {
-                    $this->SetError();
 
-                    return false;
-                }
-                else {
-                    $this->in_transaction = true;
+        if ($this->in_transaction > 0) {
+            $this->in_transaction++;
 
-                    return true;
+            return true;
+        }
+
+        // set autocommit OFF
+        if (!mysqli_autocommit($this->link, false)) {
+            $this->setError();
+
+            return false;
+        }
+
+        // start transaction
+        if (phpversion() < '5.5.0') {
+            if (!mysqli_query($this->link, 'START TRANSACTION')) {
+                $this->setError();
+
+                // autocommit back ON
+                if (!($result = mysqli_autocommit($this->link, true))) {
+                    $this->setError();
                 }
-            }
-            else {
-                $this->SetError("Already in transaction", -1);
 
                 return false;
             }
         }
+        elseif (!mysqli_begin_transaction($this->link)) {
+            $this->setError();
+
+            // autocommit back ON
+            if (!($result = mysqli_autocommit($this->link, true))) {
+                $this->setError();
+            }
+
+            return false;
+        }
+
+        $this->in_transaction++;
+
+        return true;
     }
 
     /**
@@ -1587,34 +850,61 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return boolean Returns TRUE on success or FALSE on error
      */
-    public function TransactionEnd()
+    public function transactionEnd()
     {
-        $this->ResetError();
-        if (!$this->IsConnected()) {
-            $this->SetError("No connection");
+        $rtn = true;
+        $this->resetError();
 
-            return false;
+        if (!$this->isConnected()) {
+            $this->setError('No connection');
+            $this->in_transaction = 0;
+            $rtn                  = false;
         }
+
+        elseif ($this->in_transaction > 1) {
+            // still other transactionEnd to come
+            $this->in_transaction--;
+            $rtn = true;
+        }
+        elseif ($this->in_transaction === 1) {
+            if (!mysqli_commit($this->link)) {
+                $this->setError();
+                $rtn = false;
+
+                // failed commit, let's rollback
+                mysqli_rollback($this->link);
+            }
+
+            if (!($result = mysqli_autocommit($this->link, true))) {
+                $this->setError();
+                $rtn = false;
+            }
+            $this->in_transaction = 0;
+        }
+
         else {
-            if ($this->in_transaction) {
-                if (!mysqli_query($this->mysql_link, "COMMIT")) {
-                    // $this->TransactionRollback();
-                    $this->SetError();
+            // safety - should get here - so let's check autocommit
+            $this->setError('Not in a transaction', -1);
+            $rtn = false;
 
-                    return false;
+            // check autocommit status
+            if ($result = mysqli_query($this->link, 'SELECT @@autocommit')) {
+                $row = mysqli_fetch_row($result);
+
+                if (!is_bool($result)) {
+                    mysqli_free_result($result);
                 }
-                else {
-                    $this->in_transaction = false;
 
-                    return true;
+                // autocommit is OFF, needs to be ON
+                if (is_array($row[0]) && !$row[0] && !mysqli_autocommit($this->link, true)) {
+                    $this->setError();
+
                 }
             }
-            else {
-                $this->SetError("Not in a transaction", -1);
-
-                return false;
-            }
+            $this->in_transaction = 0;
         }
+
+        return $rtn;
     }
 
     /**
@@ -1622,52 +912,29 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return boolean Returns TRUE on success or FALSE on failure
      */
-    public function TransactionRollback()
+    public function transactionRollback()
     {
-        $this->ResetError();
-        if (!$this->IsConnected()) {
-            $this->SetError("No connection");
+        $rtn = true;
+        $this->resetError();
 
-            return false;
+        if (!$this->isConnected()) {
+            $this->setError('No connection');
+            $rtn = false;
         }
-        else {
-            if (!mysqli_query($this->mysql_link, "ROLLBACK")) {
-                $this->SetError("Could not rollback transaction");
-
-                return false;
-            }
-            else {
-                $this->in_transaction = false;
-
-                return true;
-            }
+        elseif (!mysqli_rollback($this->link)) {
+            $this->setError('Could not rollback transaction');
+            $rtn = false;
         }
-    }
 
-    /**
-     * Truncates a table removing all data
-     *
-     * @param string $tableName The name of the table
-     *
-     * @return boolean Returns TRUE on success or FALSE on error
-     */
-    public function TruncateTable($tableName)
-    {
-        $this->ResetError();
-        if (!$this->IsConnected()) {
-            $this->SetError("No connection");
+        if (!($result = mysqli_autocommit($this->link, true))) {
+            $this->setError();
+            $rtn = false;
+        }
 
-            return false;
-        }
-        else {
-            $sql = "TRUNCATE TABLE `" . $tableName . "`";
-            if (!$this->Query($sql)) {
-                return false;
-            }
-            else {
-                return true;
-            }
-        }
+
+        $this->in_transaction = $rtn ? 1 : 0;
+
+        return $rtn;
     }
 
     /**
@@ -1687,18 +954,18 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return boolean Returns TRUE on success or FALSE on error
      */
-    public function UpdateRows($tableName, $valuesArray, $whereArray = null)
+    private function updateRows($tableName, $valuesArray, $whereArray = null)
     {
-        $this->ResetError();
-        if (!$this->IsConnected()) {
-            $this->SetError("No connection");
+        $this->resetError();
+        if (!$this->isConnected()) {
+            $this->setError('No connection');
 
             return false;
         }
         else {
-            $sql = self::BuildSQLUpdate($tableName, $valuesArray, $whereArray);
+            $sql = self::buildSqlUpdate($tableName, $valuesArray, $whereArray);
             // Execute the UPDATE
-            if (!$this->Query($sql)) {
+            if (!$this->query($sql)) {
                 return false;
             }
             else {
@@ -1713,7 +980,7 @@ class MySQL extends Kimai_Database_Mysql
      */
     public function __destruct()
     {
-        $this->Close();
+        $this->close();
     }
 
     /**
@@ -1728,11 +995,11 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return string Returns the SQL DELETE statement
      */
-    static public function BuildSQLDelete($tableName, $whereArray = null)
+    public static function buildSqlDelete($tableName, $whereArray = null)
     {
-        $sql = "DELETE FROM `" . $tableName . "`";
-        if (!is_null($whereArray)) {
-            $sql .= self::BuildSQLWhereClause($whereArray);
+        $sql = "DELETE FROM `${tableName}`";
+        if ($whereArray !== null) {
+            $sql .= self::buildSqlWhereClause($whereArray);
         }
 
         return $sql;
@@ -1749,12 +1016,11 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return string Returns a SQL INSERT statement
      */
-    static public function BuildSQLInsert($tableName, $valuesArray)
+    public static function buildSqlInsert($tableName, $valuesArray)
     {
-        $columns = self::BuildSQLColumns(array_keys($valuesArray));
-        $values  = self::BuildSQLColumns($valuesArray, false, false);
-        $sql     = "INSERT INTO `" . $tableName .
-            "` (" . $columns . ") VALUES (" . $values . ")";
+        $columns = self::buildSqlColumns(array_keys($valuesArray));
+        $values  = self::buildSqlColumns($valuesArray, false, false);
+        $sql     = "INSERT INTO `$tableName` ($columns) VALUES ($values)";
 
         return $sql;
     }
@@ -1775,26 +1041,25 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return string Returns a SQL SELECT statement
      */
-    static public function BuildSQLSelect($tableName, $whereArray = null, $columns = null,
-                                          $sortColumns = null, $sortAscending = true, $limit = null)
+    private static function buildSqlSelect($tableName, $whereArray = null, $columns = null,
+                                           $sortColumns = null, $sortAscending = true, $limit = null)
     {
-        if (!is_null($columns)) {
-            $sql = self::BuildSQLColumns($columns);
+        $sql = '*';
+        if ($columns !== null) {
+            $sql = self::buildSqlColumns($columns);
         }
-        else {
-            $sql = "*";
-        }
-        $sql = "SELECT " . $sql . " FROM `" . $tableName . "`";
+
+        $sql = 'SELECT ' . $sql . ' FROM `' . $tableName . '`';
         if (is_array($whereArray)) {
-            $sql .= self::BuildSQLWhereClause($whereArray);
+            $sql .= self::buildSqlWhereClause($whereArray);
         }
-        if (!is_null($sortColumns)) {
-            $sql .= " ORDER BY " .
-                self::BuildSQLColumns($sortColumns, true, false) .
-                " " . ($sortAscending ? "ASC" : "DESC");
+        if ($sortColumns !== null) {
+            $sql .= ' ORDER BY ' .
+                self::buildSqlColumns($sortColumns, true, false) .
+                ' ' . ($sortAscending ? 'ASC' : 'DESC');
         }
-        if (!is_null($limit)) {
-            $sql .= " LIMIT " . $limit;
+        if ($limit !== null) {
+            $sql .= ' LIMIT ' . $limit;
         }
 
         return $sql;
@@ -1816,21 +1081,49 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return string Returns a SQL UPDATE statement
      */
-    static public function BuildSQLUpdate($tableName, $valuesArray, $whereArray = null)
+    public static function buildSqlUpdate($tableName, $valuesArray, $whereArray = null)
     {
-        $sql = "";
+        $sql  = '';
+        $coma = '';
         foreach ($valuesArray as $key => $value) {
-            if (strlen($sql) == 0) {
-                $sql = "`" . $key . "` = " . $value;
-            }
-            else {
-                $sql .= ", `" . $key . "` = " . $value;
-            }
+            $sql  .= $coma . '`' . $key . '` = ' . $value;
+            $coma = ', ';
         }
-        $sql = "UPDATE `" . $tableName . "` SET " . $sql;
+
+        $sql = "UPDATE `${tableName}` SET " . $sql;
         if (is_array($whereArray)) {
-            $sql .= self::BuildSQLWhereClause($whereArray);
+            $sql .= self::buildSqlWhereClause($whereArray);
         }
+
+        return $sql;
+    }
+
+    protected static function buildSqlReplace($tableName, $columnArray, $valueArray)
+    {
+        $columns = '';
+        $coma1   = '';
+        foreach ($columnArray as $col) {
+            $columns .= "${coma1} `${col}`";
+            $coma1 = ',';
+        }
+
+        $values = '';
+        $coma1  = '';
+        foreach ($valueArray as $values1) {
+
+            $coma2 = '';
+            $val2  = '(';
+            foreach ($values1 as $value) {
+
+                $val2 .= "$coma2 $value";
+                $coma2 = ',';
+            }
+
+            $values .= $coma1 . $val2 . ')';
+            $coma1 = ',';
+        }
+
+        $sql = "REPLACE INTO `${tableName}` (${columns}) VALUES ${values};";
 
         return $sql;
     }
@@ -1847,29 +1140,22 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return string Returns a string containing the SQL WHERE clause
      */
-    static public function BuildSQLWhereClause($whereArray)
+    private static function buildSqlWhereClause($whereArray)
     {
-        $where = "";
+        $sql   = '';
+        $where = ' WHERE ';
         foreach ($whereArray as $key => $value) {
-            if (strlen($where) == 0) {
-                if (is_string($key)) {
-                    $where = " WHERE `" . $key . "` = " . $value;
-                }
-                else {
-                    $where = " WHERE " . $value;
-                }
+
+            if (is_string($key)) {
+                $sql .= $where . '`' . $key . '` = ' . $value;
             }
             else {
-                if (is_string($key)) {
-                    $where .= " AND `" . $key . "` = " . $value;
-                }
-                else {
-                    $where .= " AND " . $value;
-                }
+                $sql .= $where . ' ' . $value;
             }
+            $where = ' AND ';
         }
 
-        return $where;
+        return $sql;
     }
 
     /**
@@ -1879,10 +1165,10 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return boolean Returns TRUE or FALSE
      */
-    static public function GetBooleanValue($value)
+    private static function getBooleanValue($value)
     {
-        if (gettype($value) == "boolean") {
-            if ($value == true) {
+        if (gettype($value) === 'boolean') {
+            if ($value === true) {
                 return true;
             }
             else {
@@ -1900,16 +1186,16 @@ class MySQL extends Kimai_Database_Mysql
         else {
             $cleaned = strtoupper(trim($value));
 
-            if ($cleaned == "ON") {
+            if ($cleaned === 'ON') {
                 return true;
             }
-            elseif ($cleaned == "SELECTED" || $cleaned == "CHECKED") {
+            elseif ($cleaned === 'SELECTED' || $cleaned === 'CHECKED') {
                 return true;
             }
-            elseif ($cleaned == "YES" || $cleaned == "Y") {
+            elseif ($cleaned === 'YES' || $cleaned === 'Y') {
                 return true;
             }
-            elseif ($cleaned == "TRUE" || $cleaned == "T") {
+            elseif ($cleaned === 'TRUE' || $cleaned === 'T') {
                 return true;
             }
             else {
@@ -1925,10 +1211,10 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return boolean Returns TRUE if value is date or FALSE if not date
      */
-    static public function IsDate($value)
+    private static function isDate($value)
     {
         $date = date('Y', strtotime($value));
-        if ($date == "1969" || $date == '') {
+        if ($date === '1969' || $date === '') {
             return false;
         }
         else {
@@ -1937,136 +1223,51 @@ class MySQL extends Kimai_Database_Mysql
     }
 
     /**
-     * [STATIC] Converts a boolean into a formatted TRUE or FALSE value of choice
-     *
-     * @param mixed  $value      value to analyze for TRUE or FALSE
-     * @param mixed  $trueValue  value to use if TRUE
-     * @param mixed  $falseValue value to use if FALSE
-     * @param string $datatype   Use SQLVALUE constants or the strings:
-     *                           string, text, varchar, char, boolean, bool,
-     *                           Y-N, T-F, bit, date, datetime, time, integer,
-     *                           int, number, double, float
-     *
-     * @return string SQL formatted value of the specified data type
-     */
-    static public function SQLBooleanValue($value, $trueValue, $falseValue, $datatype = self::SQLVALUE_TEXT)
-    {
-        if (self::GetBooleanValue($value)) {
-            $return_value = self::SQLValue($trueValue, $datatype);
-        }
-        else {
-            $return_value = self::SQLValue($falseValue, $datatype);
-        }
-
-        return $return_value;
-    }
-
-    /**
-     * [STATIC] Returns string suitable for SQL
-     *
-     * @param string $value
-     *
-     * @return string SQL formatted value
-     */
-    static public function SQLFix($value)
-    {
-        return @addslashes($value);
-    }
-
-    /**
-     * [STATIC] Returns MySQL string as normal string
-     *
-     * @param string $value
-     *
-     * @return string
-     */
-    static public function SQLUnfix($value)
-    {
-        return @stripslashes($value);
-    }
-
-    /**
-     * This function returns the position of a column
-     *
-     * @param string $column Column name
-     * @param string $table  (Optional) If a table name is not specified, the
-     *                       last returned records are used.
-     *
-     * @return integer Column ID
-     */
-    private function GetColumnID($column, $table = "")
-    {
-        $this->ResetError();
-        $columnNames = $this->GetColumnNames($table);
-        if (!$columnNames) {
-            return false;
-        }
-        else {
-            $index = 0;
-            $found = false;
-            foreach ($columnNames as $columnName) {
-                if ($columnName == $column) {
-                    $found = true;
-                    break;
-                }
-                $index++;
-            }
-            if ($found) {
-                return $index;
-            }
-            else {
-                $this->SetError("Column name not found", -1);
-
-                return false;
-            }
-        }
-    }
-
-    /**
      * Clears the internal variables from any error information
      *
      */
-    private function ResetError()
+    private function resetError()
     {
         $this->error_desc   = '';
         $this->error_number = 0;
     }
 
-    /**
+    /*
      * Sets the local variables with the last error information
      *
      * @param string  $errorMessage The error description
      * @param integer $errorNumber  The error number
      */
-    private function SetError($errorMessage = "", $errorNumber = 0)
+    private function setError($errorMessage = '', $errorNumber = 0)
     {
         try {
             if (strlen($errorMessage) > 0) {
                 $this->error_desc = $errorMessage;
             }
-            else {
-                if ($this->IsConnected()) {
-                    $this->error_desc = mysqli_error($this->mysql_link);
-                }
-                else {
-                    $this->error_desc = mysqli_error($this->mysql_link);
-                }
+            elseif ($this->isConnected()) {
+                $this->error_desc = mysqli_error($this->link);
             }
-            if ($errorNumber <> 0) {
+            else {
+                $this->error_desc = mysqli_error($this->link);
+            }
+
+
+            if ($errorNumber !== 0) {
                 $this->error_number = $errorNumber;
             }
-            else {
-                if ($this->IsConnected()) {
-                    $this->error_number = @mysqli_errno($this->mysql_link);
-                }
-                else {
-                    $this->error_number = @mysqli_errno($this->mysql_link);
-                }
+            elseif ($this->isConnected()) {
+                $this->error_number = @mysqli_errno($this->link);
             }
+            else {
+                $this->error_number = @mysqli_errno($this->link);
+            }
+
         } catch (Exception $e) {
             $this->error_desc   = $e->getMessage();
             $this->error_number = -999;
         }
+
+
         if ($this->ThrowExceptions) {
             throw new Exception($this->error_desc);
         }
@@ -2081,36 +1282,37 @@ class MySQL extends Kimai_Database_Mysql
      *
      * @return string Returns the SQL column list
      */
-    static private function BuildSQLColumns($columns, $addQuotes = true, $showAlias = true)
+    private static function buildSqlColumns($columns, $addQuotes = true, $showAlias = true)
     {
+        $quote = '';
         if ($addQuotes) {
-            $quote = "`";
+            $quote = '`';
         }
-        else {
-            $quote = "";
-        }
+
+
         switch (gettype($columns)) {
-            case "array":
-                $sql = "";
+            case 'array':
+                $sql  = '';
+                $coma = '';
+
                 foreach ($columns as $key => $value) {
                     // Build the columns
-                    if (strlen($sql) == 0) {
-                        $sql = $quote . $value . $quote;
+                    $sql .= $coma . $quote . $value . $quote;
+
+                    if ($showAlias && is_string($key)) {
+                        $sql .= " AS '$key'";
                     }
-                    else {
-                        $sql .= ", " . $quote . $value . $quote;
-                    }
-                    if ($showAlias && is_string($key) && (!empty($key))) {
-                        $sql .= ' AS "' . $key . '"';
-                    }
+                    $coma = ', ';
                 }
 
                 //DEBUG// error_log('<<==== QUERY ====>>' . PHP_EOL . $sql);
                 return $sql;
                 break;
-            case "string":
+
+            case 'string':
                 return $quote . $columns . $quote;
                 break;
+
             default:
                 return false;
                 break;

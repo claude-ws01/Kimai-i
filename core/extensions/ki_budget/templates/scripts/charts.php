@@ -2,7 +2,7 @@
     $(document).ready(function() {
 //        try {
 	   		chartColors = <?php echo $this->chartColors ?>;
-			budget_extension_plot(<?php echo $this->javascript_arr_plotdata ?>);
+			bud_ext_plot(<?php echo $this->javascript_arr_plotdata ?>);
 				recalculateWindow();
 //		} catch(e) {
 //			alert(e);
@@ -11,19 +11,19 @@
     </script>
 
 <?php foreach ($this->projects as $project): ?>
-<?php if (array_search($project['projectID'],$this->projects_selected) === false) continue; ?>
+<?php if (array_search($project['project_id'],$this->projects_selected) === false) continue; ?>
 <div class="budget_project">
 <div class="project_head project_overview">
 <?php echo $this->escape($project['name']) ?>
 </div>
-<div id="budget_chartdiv_<?php echo $project['projectID']?>" class="budget_plot_area" style="height:140px;width:200px;"></div> 
-<?php $temp = $project['projectID']?>
+<div id="budget_chartdiv_<?php echo $project['project_id']?>" class="budget_plot_area" style="height:140px;width:200px;"></div>
+<?php $temp = $project['project_id']?>
 <span class="total">Total: <?php echo sprintf("%.2f", $this->arr_plotdata[$temp]['total']) ?></span><br/>
 <span class="budget">Budget: <?php echo sprintf("%.2f", $this->arr_plotdata[$temp]['budget']) ?></span> <br/>
 <span class="approved">Billable: <?php echo sprintf("%.2f", $this->arr_plotdata[$temp]['billable_total']) ?></span><br/>
 <span class="approved">Approved: <?php echo sprintf("%.2f", $this->arr_plotdata[$temp]['approved']) ?></span>
 <?php if ($this->arr_plotdata[$temp]['budget']-$this->arr_plotdata[$temp]['budget'] < 0): ?>
-<br><span style="text-color: red;" class="budgetminus"><?php echo $this->kga['lang']['budget_minus']?>: <?php 
+<br><span style="text-color: red;" class="budgetminus"><?php echo $GLOBALS['kga']['lang']['budget_minus']?>: <?php
 $budget = $this->arr_plotdata[$temp]['budget'];
 $total = $this->arr_plotdata[$temp]['total'];
 $makePlus = 1;
@@ -38,12 +38,12 @@ echo round(($budget-$total)*-$makePlus,2)?> </span> <br/>
 <?php echo $this->escape($project['name']), '&nbsp',
 $this->escape($activity['name'])?>
 </div>
-<div id="budget_chartdiv_<?php echo $project['projectID']?>_activity_<?php echo $id?>" class="budget_plot_area" style="height:140px;width:200px; "></div>
+<div id="budget_chartdiv_<?php echo $project['project_id']?>_activity_<?php echo $id?>" class="budget_plot_area" style="height:140px;width:200px; "></div>
 <span class="total">Total: <?php echo sprintf("%.2f", $activity['total'])?></span><br>
 <span class="budget">Budget: <?php echo sprintf("%.2f", $activity['budget_total'])?></span> <br>
 <span class="approved">Approved: <?php sprintf("%.2f", $activity['approved_total'])?></span>
 <?php if ($activity['budget'] <= 0): ?>
-<br><span style="text-color: red;" class="budgetminus"><?php echo $this->kga['lang']['budget_minus']?>: <?php 
+<br><span style="text-color: red;" class="budgetminus"><?php echo $GLOBALS['kga']['lang']['budget_minus']?>: <?php
 $budget = $activity['budget_total'];
 $total = $activity['total'];
 $makePlus = 1;

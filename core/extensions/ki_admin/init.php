@@ -21,12 +21,11 @@
 include('../../includes/basics.php');
 global $database, $kga, $view;
 
-$dir_templates = "templates/";
-$datasrc       = "config.ini";
+$dir_templates = 'templates/';
+$datasrc       = 'config.ini';
 $settings      = parse_ini_file($datasrc);
 $dir_ext       = $settings['EXTENSION_DIR'];
 
-//PREV// $kga['user'] = checkUser();
 checkUser();
 // ============================================
 // = initialize currently displayed timeframe =
@@ -59,18 +58,18 @@ foreach ($customers as $row => $data) {
     $groups     = $database->customer_get_group_ids($data['customer_id']);
     if (is_array($groups)) {
         foreach ($groups as $groupID) {
-            if (!$viewOtherGroupsAllowed && array_search($groupID, any_get_group_ids()) === false) {
+            if (!$viewOtherGroupsAllowed && in_array($groupID, any_get_group_ids(),true) === false) {
                 continue;
             }
             $data         = $database->group_get_data($groupID);
             $groupNames[] = $data['name'];
         }
-        $customers[$row]['groups'] = implode(", ", $groupNames);
+        $customers[$row]['groups'] = implode(', ', $groupNames);
     }
 }
 
 $view->customers        = $customers;
-$view->customer_display = $view->render("customers.php");
+$view->customer_display = $view->render('customers.php');
 
 
 // =========================
@@ -92,18 +91,18 @@ if (is_array($projects)) {
 
         if (is_array($groupIDs)) {
             foreach ($groupIDs as $groupID) {
-                if (!$viewOtherGroupsAllowed && array_search($groupID, any_get_group_ids()) === false) {
+                if (!$viewOtherGroupsAllowed && in_array($groupID, any_get_group_ids(),true) === false) {
                     continue;
                 }
                 $data         = $database->group_get_data($groupID);
                 $groupNames[] = $data['name'];
             }
         }
-        $projects[$row]['groups'] = implode(", ", $groupNames);
+        $projects[$row]['groups'] = implode(', ', $groupNames);
     }
     $view->projects = $projects;
 }
-$view->project_display = $view->render("projects.php");
+$view->project_display = $view->render('projects.php');
 
 
 // ========================
@@ -123,18 +122,18 @@ foreach ($activities as $row => $activity) {
 
     if (is_array($groupIDs)) {
         foreach ($groupIDs as $groupID) {
-            if (!$viewOtherGroupsAllowed && array_search($groupID, any_get_group_ids()) === false) {
+            if (!$viewOtherGroupsAllowed && in_array($groupID, any_get_group_ids(),true) === false) {
                 continue;
             }
             $data         = $database->group_get_data($groupID);
             $groupNames[] = $data['name'];
         }
     }
-    $activities[$row]['groups'] = implode(", ", $groupNames);
+    $activities[$row]['groups'] = implode(', ', $groupNames);
 }
 
 $view->activities               = $activities;
-$view->activity_display         = $view->render("activities.php");
+$view->activity_display         = $view->render('activities.php');
 $view->selected_activity_filter = -2;
 $view->curr_user                = $kga['user']['name'];
 
@@ -145,9 +144,7 @@ if ($database->global_role_allows(any_get_global_role_id(), 'core__group__other_
 }
 else {
     $view->groups = array_filter($groups, function ($group) {
-        global $kga;
-
-        return array_search($group['group_id'], any_get_group_ids()) !== false;
+        return in_array($group['group_id'], any_get_group_ids(),true) !== false;
     });
 }
 
@@ -162,13 +159,13 @@ else {
 }
 
 
-// get group names
+// get group names for user list
 foreach ($users as &$user) {
     $user['groups'] = array();
-    $groups         = $database->user_get_group_ids($user['user_id']);
+    $groups         = $database->user_get_group_ids($user['user_id'], false);
     if (is_array($groups)) {
         foreach ($groups as $group) {
-            if (!$viewOtherGroupsAllowed && array_search($group, any_get_group_ids()) === false) {
+            if (!$viewOtherGroupsAllowed && in_array($group, any_get_group_ids(), true) === false) {
                 continue;
             }
             $groupData        = $database->group_get_data($group);
@@ -176,6 +173,7 @@ foreach ($users as &$user) {
         }
     }
 }
+unset($user);
 
 $view->users = $users;
 
@@ -183,14 +181,14 @@ $view->users = $users;
 // = display global roles table =
 // ==============================
 $view->globalRoles         = $database->global_roles();
-$view->globalRoles_display = $view->render("globalRoles.php");
+$view->globalRoles_display = $view->render('globalRoles.php');
 
 
 // ==================================
 // = display membership roles table =
 // ==================================
 $view->membershipRoles         = $database->membership_roles();
-$view->membershipRoles_display = $view->render("membershipRoles.php");
+$view->membershipRoles_display = $view->render('membershipRoles.php');
 
 
 $view->showDeletedGroups = get_cookie('adm_ext_show_deleted_groups', 0);
@@ -201,9 +199,9 @@ $view->timezones  = timezoneList();
 $status           = $database->get_statuses();
 $view->arr_status = $status;
 
-$admin['users']  = $view->render("users.php");
-$admin['groups'] = $view->render("groups.php");
-$admin['status'] = $view->render("status.php");
+$admin['users']  = $view->render('users.php');
+$admin['groups'] = $view->render('groups.php');
+$admin['status'] = $view->render('status.php');
 
 
 if ($kga['conf']['edit_limit'] != '-') {
@@ -228,12 +226,12 @@ else {
     $view->round_seconds          = '';
 }
 
-$view->showAdvancedTab = $database->global_role_allows(any_get_global_role_id(), 'admin_panel_extension__edit_advanced');
+$view->showAdvancedTab = $database->global_role_allows(any_get_global_role_id(), 'ki_admin__edit_advanced');
 if ($view->showAdvancedTab) {
     $skins = array();
     $langs = array();
 
-    $allSkins = glob(WEBROOT . "/skins/*", GLOB_ONLYDIR);
+    $allSkins = glob(WEBROOT . '/skins/*', GLOB_ONLYDIR);
     foreach ($allSkins as $skin) {
         $name         = basename($skin);
         $skins[$name] = $name;
@@ -246,8 +244,8 @@ if ($view->showAdvancedTab) {
     $view->skins = $skins;
     $view->langs = $langs;
 
-    $admin['advanced'] = $view->render("advanced.php");
-    $admin['database'] = $view->render("database.php");
+    $admin['advanced'] = $view->render('advanced.php');
+    $admin['database'] = $view->render('database.php');
 }
 
 $view->admin = $admin;

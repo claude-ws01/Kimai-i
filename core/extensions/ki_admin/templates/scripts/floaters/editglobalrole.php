@@ -7,20 +7,28 @@ $this->getHelper('ParseHierarchy')->parseHierarchy($this->permissions, $extensio
 ?>
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#adm_ext_form_editRole').ajaxForm({
-            'beforeSubmit': function () {
-                clearFloaterErrorMessages();
 
-                if ($('#adm_ext_form_editRole').attr('submitting')) {
+        $('#adm_ext_form_editRole').ajaxForm({
+
+            'beforeSubmit': function () {
+                var editRole = $('#adm_ext_form_editRole');
+
+                clearFloaterErrorMessages();
+                if (editRole.attr('submitting')) {
                     return false;
                 }
                 else {
-                    $('#adm_ext_form_editRole').attr('submitting', true);
+                    $("#ajax_wait").show();
+                    editRole.attr('submitting', true);
                     return true;
                 }
             },
+
             'success': function (result) {
+
                 $('#adm_ext_form_editRole').removeAttr('submitting');
+                $("#ajax_wait").hide();
+
                 for (var fieldName in result.errors)
                     setFloaterErrorMessage(fieldName, result.errors[fieldName]);
 
@@ -29,8 +37,10 @@ $this->getHelper('ParseHierarchy')->parseHierarchy($this->permissions, $extensio
                     adm_ext_refreshSubtab('<?php echo $this->jsEscape($this->reloadSubtab); ?>');
                 }
             },
+
             'error': function () {
                 $('#adm_ext_form_editRole').removeAttr('submitting');
+                $("#ajax_wait").hide();
             }
         });
         $('#floater_innerwrap').tabs({selected: 0});
@@ -56,8 +66,8 @@ $this->getHelper('ParseHierarchy')->parseHierarchy($this->permissions, $extensio
                     <span class="bb"><?php echo $kga['lang']['general'] ?></span>
                     <span class="cc">&nbsp;</span>
                 </a></li><?php
-            foreach ($keyHierarchy as $key => $subKeys):
-                if (count($subKeys) == 1 && array_key_exists('access', $subKeys)) {
+            foreach ($keyHierarchy as $key => $subKeys) {
+                if (array_key_exists('access', $subKeys) && count($subKeys) === 1) {
                     continue;
                 }
 
@@ -72,11 +82,11 @@ $this->getHelper('ParseHierarchy')->parseHierarchy($this->permissions, $extensio
                         <span class="cc">&nbsp;</span>
                     </a></li>
 
-            <?php endforeach; ?>
+            <?php } ?>
         </ul>
     </div>
 
-    <form id="adm_ext_form_editRole" action="../extensions/ki_adminpanel/processor.php" method="post">
+    <form id="adm_ext_form_editRole" action="../extensions/ki_admin/processor.php" method="post">
         <input name="id" type="hidden" value="<?php echo $this->id ?>"/>
         <input name="axAction" type="hidden" value="<?php echo $this->action; ?>"/>
 
@@ -94,15 +104,16 @@ $this->getHelper('ParseHierarchy')->parseHierarchy($this->permissions, $extensio
                     <?php if (count($extensions) > 0): ?>
                         <legend><?php echo $kga['lang']['extensionsTitle']; ?></legend><?php
                     endif;
-                    foreach ($extensions as $key => $value):
+                    foreach ($extensions as $key => $value) {
                         $name = $key;
                         if (isset($kga['lang']['extensions'][$name])) {
                             $name = $kga['lang']['extensions'][$name];
-                        }
-                        ?><span class="permission">
+                        } ?>
+                        <span class="permission">
                         <input type="checkbox" value="1" name="<?php echo $key ?>__access"
-                               <?php if ($value == 1): ?>checked="checked" <?php endif; ?> /><?php echo $name ?>
-                        </span><?php endforeach; ?>
+                        <?php if ($value === 1) { ?>checked="checked" <?php } ?> /><?php echo $name ?>
+                        </span>
+                    <?php } ?>
                 </fieldset>
             </fieldset>
 

@@ -136,7 +136,7 @@ abstract class Kimai_Invoice_AbstractRenderer
             'customerFax' => $customer['fax'],
             'customerMobile' => $customer['mobile'],
             'customerURL' => $customer['homepage'],
-            'customerVat' => $customer['vat']
+            'customerVat' => $customer['vat_rate']
         );
 
         return $new;

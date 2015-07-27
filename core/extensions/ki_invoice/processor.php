@@ -23,8 +23,9 @@
 
 // insert KSPI
 $isCoreProcessor = 0;
-$dir_templates = "templates/";
-require("../../includes/kspi.php");
+$dir_templates   = 'templates/';
+global $database, $kga, $view;
+require('../../includes/kspi.php');
 
 // ==================
 // = handle request =
@@ -35,43 +36,48 @@ switch ($axAction) {
     // = Reload the timespan and return it =
     // =====================================
     case 'reload_timespan':
-        
+
         $timeframe = get_timeframe();
-        $view->in = $timeframe[0];
+        $view->in  = $timeframe[0];
         $view->out = $timeframe[1];
 
-        echo $view->render("timespan.php");
-    break;
+        echo $view->render('timespan.php');
+        break;
 
     // ==========================
     // = Change the default vat =
     // ==========================
-    case 'editVat':
-        
-        $vat = str_replace($kga['conf']['decimalSeparator'],'.',$_REQUEST['vat']);
-        
-        if (!is_numeric($vat)) {
-          echo "0";
-          return;
+    case 'editVatRate':
+
+        $vat_rate = str_replace($kga['conf']['decimal_separator'], '.', $_REQUEST['vat_rate']);
+
+        if (!is_numeric($vat_rate)) {
+            echo '0';
+
+            return;
         }
 
-        $database->configuration_edit(array('defaultVat'=>$vat));
-        echo "1";
-    break;
+        config_set('vat_rate', $vat_rate, false, 'dec', 4);
+        $database->config_replace();
+        //cn // $database->configuration_edit(array('vat_rate'=>$vat));
+        echo '1';
+        break;
 
     // ==========================
     // = Change the default vat =
     // ==========================
     case 'projects':
-      if (isset($kga['customer']))
-        $db_projects = $database->get_projects_by_customer($kga['customer']['customerID'], $kga['customer']['groups']);
-      else
-        $db_projects = $database->get_projects_by_customer($_GET['customerID'], $kga['user']['groups']);
-      $js_projects = array();
-      foreach ($db_projects as $project) {
-        $js_projects[$project['projectID']] = $project['name'];
-      }
-      header("Content-Type: application/json");
-      echo json_encode($js_projects);
-    break;
+        if (array_key_exists('user', $kga)) {
+            $db_projects = $database->get_projects_by_customer($_GET['customer_id'], any_get_group_ids());
+        }
+        else {
+            $db_projects = $database->get_projects_by_customer($kga['customer']['customer_id'], any_get_group_ids());
+        }
+        $js_projects = array();
+        foreach ($db_projects as $project) {
+            $js_projects[$project['project_id']] = $project['name'];
+        }
+        header('Content-Type: application/json');
+        echo json_encode($js_projects);
+        break;
 }

@@ -1,68 +1,67 @@
-    <script type="text/javascript">
-        $(document).ready(function() {
-            export_extension_onload();
-        });
-    </script>
+<?php global $kga ?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        xpo_ext_onload();
+    });
+</script>
 
 
-<div id="export_head">
-<!--    <div class="right">-->
-<!--	        <a href="#" onClick="$('#xptable td.cleared>a').click(); return false;">invert</a>-->
-<!--    </div>-->
-
-    <table>
+<div id="xpo_head">
+    <table id="xpo_h_tbl">
         <colgroup>
-          <col class="date" />
-          <col class="from" />
-          <col class="to" />
-          <col class="time" />
-          <col class="dec_time" />
-          <col class="rate" />
-          <col class="wage" />
-          <col class="budget" />
-          <col class="approved" />
-          <col class="status" />
-          <col class="billable" />
-          <col class="customer" />
-          <col class="project" />
-          <col class="activity" />
-          <col class="description" />
-          <col class="comment" />
-          <col class="location" />
-          <col class="trackingNumber" />
-          <col class="user" />
-          <col class="cleared" />
+            <col class="date"/>
+            <col class="from"/>
+            <col class="to"/>
+            <col class="time"/>
+            <col class="dec_time"/>
+            <col class="rate"/>
+            <col class="wage"/>
+            <col class="budget"/>
+            <col class="approved"/>
+            <col class="status"/>
+            <col class="billable"/>
+            <col class="customer"/>
+            <col class="project"/>
+            <col class="activity"/>
+            <col class="description"/>
+            <col class="comment"/>
+            <col class="location"/>
+            <col class="ref_code"/>
+            <col class="user"/>
+            <col class="cleared"/>
         </colgroup>
         <tbody>
-            <tr>
-                <td class="date <?php if (isset($this->disabled_columns['date'])):?> disabled <?php endif; ?>"><a onClick="export_toggle_column('date');"><?php echo $this->kga['lang']['ex_date']?></a></td>
-                <td class="from <?php if (isset($this->disabled_columns['from'])):?> disabled <?php endif; ?>"><a onClick="export_toggle_column('from');"><?php echo $this->kga['lang']['in']?></a></td>
-                <td class="to <?php if (isset($this->disabled_columns['to'])):?> disabled <?php endif; ?>"><a onClick="export_toggle_column('to');"><?php echo $this->kga['lang']['out']?></a></td>
-                <td class="time <?php if (isset($this->disabled_columns['time'])):?> disabled <?php endif; ?>"><a onClick="export_toggle_column('time');"><?php echo $this->kga['lang']['time']?></a></td>
-                <td class="dec_time <?php if (isset($this->disabled_columns['dec_time'])):?> disabled <?php endif; ?>"><a onClick="export_toggle_column('dec_time');"><?php echo $this->kga['lang']['ex_time']?></a></td>
-                <td class="rate"><a class="rate <?php if (isset($this->disabled_columns['rate'])):?> disabled <?php endif; ?>" onClick="export_toggle_column('rate');"><?php echo $this->kga['lang']['ex_rate']?></a></td>
-                <td class="wage"><a class="wage <?php if (isset($this->disabled_columns['wage'])):?> disabled <?php endif; ?>" onClick="export_toggle_column('wage');"><?php echo $this->kga['lang']['ex_tot']?></a></td>
-                <td class="budget <?php if (isset($this->disabled_columns['budget'])):?> disabled <?php endif; ?>"><a onClick="export_toggle_column('budget');"><?php echo $this->kga['lang']['ex_bud']?></a></td>
-                <td class="approved <?php if (isset($this->disabled_columns['approved'])):?> disabled <?php endif; ?>"><a onClick="export_toggle_column('approved');"><?php echo $this->kga['lang']['ex_appr']?></a></td>
-                <td class="status <?php if (isset($this->disabled_columns['status'])):?> disabled <?php endif; ?>"><a onClick="export_toggle_column('status');"><?php echo $this->kga['lang']['ex_stat']?></a></td>
-                <td class="billable <?php if (isset($this->disabled_columns['billable'])):?> disabled <?php endif; ?>"><a onClick="export_toggle_column('billable');"><?php echo $this->kga['lang']['ex_bill']?></a></td>
-                <td class="customer <?php if (isset($this->disabled_columns['customer'])):?> disabled <?php endif; ?>"><a onClick="export_toggle_column('customer');"><?php echo $this->kga['lang']['ex_cust']?></a></td>
-                <td class="project <?php if (isset($this->disabled_columns['project'])):?> disabled <?php endif; ?>"><a onClick="export_toggle_column('project');"><?php echo $this->kga['lang']['project']?></a></td>
-                <td class="activity <?php if (isset($this->disabled_columns['activity'])):?> disabled <?php endif; ?>"><a onClick="export_toggle_column('activity');"><?php echo $this->kga['lang']['activity']?></a></td>
-                <td class="description <?php if (isset($this->disabled_columns['description'])):?> disabled <?php endif; ?>"><a onClick="export_toggle_column('description');"><?php echo $this->kga['lang']['ex_desc']?></a></td>
+        <tr><?php // @formatter:off  
+            $K = &$kga['lang']['tip'];
+            $DC = &$this->disabled_columns; ?>
+            
+                <td class="date               <?php echo $DC['date'];?>"><a               title="<?php echo $K['xpo_exclude']; ?>" onClick="xpo_ext_toggle_column('date');"><?php              echo $kga['lang']['xpo_date']?></a></td>
+                <td class="from               <?php echo $DC['from'];?>"><a               title="<?php echo $K['xpo_exclude']; ?>" onClick="xpo_ext_toggle_column('from');"><?php              echo $kga['lang']['in']?></a></td>
+                <td class="to                 <?php echo $DC['to'];?>"><a                 title="<?php echo $K['xpo_exclude']; ?>" onClick="xpo_ext_toggle_column('to');"><?php                echo $kga['lang']['out']?></a></td>
+                <td class="time               <?php echo $DC['time'];?>"><a               title="<?php echo $K['xpo_exclude']; ?>" onClick="xpo_ext_toggle_column('time');"><?php              echo $kga['lang']['time']?></a></td>
+                <td class="dec_time           <?php echo $DC['dec_time'];?>"><a           title="<?php echo $K['xpo_exclude']; ?>" onClick="xpo_ext_toggle_column('dec_time');"><?php          echo $kga['lang']['xpo_time']?></a></td>
+                <td class="rate               <?php echo $DC['rate'];?>"><a               title="<?php echo $K['xpo_exclude']; ?>" onClick="xpo_ext_toggle_column('rate');"><?php              echo $kga['lang']['xpo_rate']?></a></td>
+                <td class="wage               <?php echo $DC['wage'];?>"><a               title="<?php echo $K['xpo_exclude']; ?>" onClick="xpo_ext_toggle_column('wage');"><?php              echo $kga['lang']['xpo_tot']?></a></td>
+                <td class="budget             <?php echo $DC['budget'];?>"><a             title="<?php echo $K['xpo_exclude']; ?>" onClick="xpo_ext_toggle_column('budget');"><?php            echo $kga['lang']['xpo_bud']?></a></td>
+                <td class="approved           <?php echo $DC['approved'];?>"><a           title="<?php echo $K['xpo_exclude']; ?>" onClick="xpo_ext_toggle_column('approved');"><?php          echo $kga['lang']['xpo_appr']?></a></td>
+                <td class="status             <?php echo $DC['status'];?>"><a             title="<?php echo $K['xpo_exclude']; ?>" onClick="xpo_ext_toggle_column('status');"><?php            echo $kga['lang']['xpo_stat']?></a></td>
+                <td class="billable           <?php echo $DC['billable'];?>"><a           title="<?php echo $K['xpo_exclude']; ?>" onClick="xpo_ext_toggle_column('billable');"><?php          echo $kga['lang']['xpo_bill']?></a></td>
+                <td class="customer           <?php echo $DC['customer'];?>"><a           title="<?php echo $K['xpo_exclude']; ?>" onClick="xpo_ext_toggle_column('customer');"><?php          echo $kga['lang']['xpo_cust']?></a></td>
+                <td class="project            <?php echo $DC['project'];?>"><a            title="<?php echo $K['xpo_exclude']; ?>" onClick="xpo_ext_toggle_column('project');"><?php           echo $kga['lang']['project']?></a></td>
+                <td class="activity           <?php echo $DC['activity'];?>"><a           title="<?php echo $K['xpo_exclude']; ?>" onClick="xpo_ext_toggle_column('activity');"><?php          echo $kga['lang']['activity']?></a></td>
+                <td class="description        <?php echo $DC['description'];?>"><a        title="<?php echo $K['xpo_exclude']; ?>" onClick="xpo_ext_toggle_column('description');"><?php       echo $kga['lang']['xpo_desc']?></a></td>
+				<td class="comment            <?php echo $DC['comment'];?>"><a            title="<?php echo $K['xpo_exclude']; ?>" onClick="xpo_ext_toggle_column('comment');"><?php           echo $kga['lang']['xpo_com']?></a></td>
+                <td class="location           <?php echo $DC['location'];?>"><a           title="<?php echo $K['xpo_exclude']; ?>" onClick="xpo_ext_toggle_column('location');"><?php          echo $kga['lang']['xpo_loc']?></a></td>
+                <td class="ref_code    <?php echo $DC['ref_code'];?>"><a    title="<?php echo $K['xpo_exclude']; ?>" onClick="xpo_ext_toggle_column('ref_code');"><?php   echo $kga['lang']['xpo_trk']?></a></td>
+                <td class="user               <?php echo $DC['user'];?>"><a               title="<?php echo $K['xpo_exclude']; ?>" onClick="xpo_ext_toggle_column('user');"><?php              echo $kga['lang']['xpo_user']?></a></td>
 
-                <td class="moreinfo" colspan="3">
-					<a class="comment <?php if (isset($this->disabled_columns['comment'])):?> disabled <?php endif; ?>" onClick="export_toggle_column('comment');"><?php echo $this->kga['lang']['ex_com']?></a>
-	                <a class="location <?php if (isset($this->disabled_columns['location'])):?> disabled <?php endif; ?>" onClick="export_toggle_column('location');"><?php echo $this->kga['lang']['ex_loc']?></a>
-	                <a class="trackingNumber <?php if (isset($this->disabled_columns['trackingNumber'])):?> disabled <?php endif; ?>" onClick="export_toggle_column('trackingNumber');"><?php echo $this->kga['lang']['ex_trk']?></a>
-				</td>
-
-                <td class="user <?php if (isset($this->disabled_columns['user'])):?> disabled <?php endif; ?>"><a onClick="export_toggle_column('user');"><?php echo $this->kga['lang']['ex_user']?></a></td>
-                <td class="cleared"><a href="#" onClick="$('#xptable td.cleared>a').click(); return false;">invert</a></td>
-
-            </tr>
+                <td class="cleared"><a href="#" title="<?php echo $K['xpo_cleared_all']; ?>" onClick="$('#xpo_m_tbl td.cleared>a').click(); return false;">invert</a></td>
+                <?php // @formatter:on ?>
+        </tr>
         </tbody>
     </table>
 </div>
 
-<div id="xp"><?php echo $this->table_display?> </div>
+<div id="xpo_main">
+    <?php echo $this->table_display ?>
+</div>

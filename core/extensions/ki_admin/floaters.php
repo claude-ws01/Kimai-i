@@ -19,119 +19,118 @@
 
 // insert KSPI
 $isCoreProcessor = 0;
-$dir_templates = "templates";
-require("../../includes/kspi.php");
+$dir_templates   = 'templates';
 global $database, $kga, $view;
+require('../../includes/kspi.php');
 
-$datasrc = "config.ini";
+$datasrc  = 'config.ini';
 $settings = parse_ini_file($datasrc);
-$dir_ext = $settings['EXTENSION_DIR'];
-$view->addHelperPath(WEBROOT . 'extensions/' . $dir_ext . '/templates/helpers','Zend_View_Helper');
+$dir_ext  = $settings['EXTENSION_DIR'];
+$view->addHelperPath(WEBROOT . 'extensions/' . $dir_ext . '/templates/helpers', 'Zend_View_Helper');
 
 switch ($axAction) {
 
-    case "editUser":
-    // =============================
-    // = Builds edit-user dialogue =
-    // =============================
+    case 'editUser':
+        // =============================
+        // = Builds edit-user dialogue =
+        // =============================
 
         $userDetails = $database->user_get_data($id);
 
-        $userDetails['rate'] = $database->get_rate( $userDetails['user_id'], null, null );
-        
+        $userDetails['rate'] = $database->get_rate($userDetails['user_id'], null, null);
+
         $view->globalRoles = array();
         foreach ($database->global_roles() as $role) {
-          $view->globalRoles[$role['global_role_id']] = $role['name'];
-        }
-        
-        $view->memberships = array();
-        foreach ($database->user_get_group_ids($id) as $groupId) {
-          $view->memberships[$groupId] = $database->user_get_membership_role($id, $groupId);
+            $view->globalRoles[$role['global_role_id']] = $role['name'];
         }
 
-        $groups = $database->get_groups(get_cookie('adm_ext_show_deleted_groups',0));
-        if ( $database->global_role_allows( any_get_global_role_id(), 'core__group__other_group__view' ) ) {
-          $view->groups = $groups;
-        } else {
-            $view->groups = array_filter( $groups, function ( $group ) {
+        $view->memberships = array();
+        foreach ($database->user_get_group_ids($id, false) as $groupId) {
+            $view->memberships[$groupId] = $database->user_get_membership_role($id, $groupId);
+        }
+
+        $groups = $database->get_groups(get_cookie('adm_ext_show_deleted_groups', 0));
+        if ($database->global_role_allows(any_get_global_role_id(), 'core__group__other_group__view')) {
+            $view->groups = $groups;
+        }
+        else {
+            $view->groups = array_filter($groups, function ($group) {
                 global $kga;
 
-                return array_search( $group['group_id'], $kga['user']['groups'] ) !== false;
-            } );
+                return in_array($group['group_id'], $kga['user']['groups'], true);
+            });
         }
 
         $view->membershipRoles = array();
         foreach ($database->membership_roles() as $role)
-          $view->membershipRoles[$role['membership_role_id']] = $role['name'];
+            $view->membershipRoles[$role['membership_role_id']] = $role['name'];
 
         $view->user_details = $userDetails;
-        echo $view->render("floaters/edituser.php");  
-        
-    break;
+        echo $view->render('floaters/edituser.php');
 
-    case "editGroup":    
-    // =============================
-    // = Builds edit-group dialogue =
-    // =============================
-        
+        break;
+
+    case 'editGroup':
+        // =============================
+        // = Builds edit-group dialogue =
+        // =============================
+
         $groupDetails = $database->group_get_data($_REQUEST['id']);
-                      
-        $view->users = makeSelectBox('sameGroupUser',null,null,true);
-        
+
+        $view->users = makeSelectBox('sameGroupUser', null, null, true);
+
         $view->group_details = $groupDetails;
-        echo $view->render("floaters/editgroup.php"); 
-        
-    break;     
-    
-    case "editStatus":    
-    // =============================
-    // = Builds edit-status dialogue =
-    // =============================
-        
+        echo $view->render('floaters/editgroup.php');
+
+        break;
+
+    case 'editStatus':
+        // =============================
+        // = Builds edit-status dialogue =
+        // =============================
+
         $statusDetails = $database->status_get_data($_REQUEST['id']);
-        
+
         $view->status_details = $statusDetails;
-        echo $view->render("floaters/editstatus.php"); 
-        
-    break;    
+        echo $view->render('floaters/editstatus.php');
 
-    case "editGlobalRole":    
-    // =============================
-    // = Builds edit-group dialogue =
-    // =============================
-        
+        break;
+
+    case 'editGlobalRole':
+        // =============================
+        // = Builds edit-group dialogue =
+        // =============================
+
         $globalRoleDetails = $database->globalRole_get_data($_REQUEST['id']);
-        
-        $view->id = $globalRoleDetails['global_role_id'];
-        $view->name = $globalRoleDetails['name'];
-        $view->action = 'editGlobalRole';
-        $view->reloadSubtab = 'globalRoles';
-        $view->title =  $kga['lang']['editGlobalRole'];
-        $view->permissions = $globalRoleDetails;
-        unset($view->permissions['global_role_id']);
-        unset($view->permissions['name']);
-        echo $view->render("floaters/editglobalrole.php"); 
-        
-    break;     
 
-    case "editMembershipRole":    
-    // =============================
-    // = Builds edit-group dialogue =
-    // =============================
-        
+        $view->id           = $globalRoleDetails['global_role_id'];
+        $view->name         = $globalRoleDetails['name'];
+        $view->action       = 'editGlobalRole';
+        $view->reloadSubtab = 'globalRoles';
+        $view->title        = $kga['lang']['editGlobalRole'];
+        $view->permissions  = $globalRoleDetails;
+        unset($view->permissions['global_role_id'], $view->permissions['name']);
+        echo $view->render('floaters/editglobalrole.php');
+
+        break;
+
+    case 'editMembershipRole':
+        // =============================
+        // = Builds edit-group dialogue =
+        // =============================
+
         $membershipRoleDetails = $database->membershipRole_get_data($_REQUEST['id']);
-        
-        $view->id = $membershipRoleDetails['membership_role_id'];
-        $view->name = $membershipRoleDetails['name'];
-        $view->action = 'editMembershipRole';
+
+        $view->id           = $membershipRoleDetails['membership_role_id'];
+        $view->name         = $membershipRoleDetails['name'];
+        $view->action       = 'editMembershipRole';
         $view->reloadSubtab = 'membershipRoles';
-        $view->title =  $kga['lang']['editMembershipRole'];
-        $view->permissions = $membershipRoleDetails;
-        unset($view->permissions['membership_role_id']);
-        unset($view->permissions['name']);
-        echo $view->render("floaters/editglobalrole.php"); 
-        
-    break;     
+        $view->title        = $kga['lang']['editMembershipRole'];
+        $view->permissions  = $membershipRoleDetails;
+        unset($view->permissions['membership_role_id'], $view->permissions['name']);
+        echo $view->render('floaters/editglobalrole.php');
+
+        break;
 
 }
 

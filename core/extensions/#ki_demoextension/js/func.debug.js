@@ -47,8 +47,14 @@ function demo_ext_tab_changed() {
 
 function demo_ext_timeframe_changed() {
 
-    $.post(demo_ext_path + "processor.php", {axAction: "test", axValue: 0, id: 0},
+    $('#ajax_wait').show();
+    $.post(demo_ext_path + "processor.php", {
+            axAction: "test",
+            axValue: 0,
+            id: 0},
+
         function (data) {
+            $('#ajax_wait').hide();
             $('#demo_timeframe').find('span.timeframe_target').html(data);
         });
 }

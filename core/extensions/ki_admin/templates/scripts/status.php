@@ -52,7 +52,7 @@
                 </td>
 
                 <td>
-                    <?php echo $statusarray['status_id'] == $GLOBALS['kga']['conf']['defaultStatusID'] ? $GLOBALS['kga']['lang']['default'] : '' ?>
+                    <?php echo $statusarray['status_id'] == $GLOBALS['kga']['conf']['default_status_id'] ? $GLOBALS['kga']['lang']['default'] : '' ?>
                 </td>
             </tr>
             <?php

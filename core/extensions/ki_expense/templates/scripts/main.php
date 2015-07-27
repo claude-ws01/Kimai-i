@@ -7,9 +7,9 @@
 
 <div id="xpe_head">
     <div class="left">
-        <?php if (isset($kga['user'])): ?>
+        <?php if (array_key_exists('user', $kga)): ?>
             <a href="#"
-               onClick="floaterShow('../extensions/ki_expenses/floaters.php','add_edit_record',0,0,600);
+               onClick="floaterShow('../extensions/ki_expense/floaters.php','add_edit_record',0,0,600);
                 $(this).blur();
                 return false;">
                 <?php echo $kga['lang']['add'] ?></a>

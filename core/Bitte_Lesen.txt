@@ -53,9 +53,7 @@ Existiert bereits eine autoconf.php sind diese Schritte nicht durchzuführen.
 
 Die Datei conf.php in autoconf.php umbenennen.
 
-Anschließend müssen 2 Variablen zu autoconf.php hinzugefügt werden:
-
-$server_conn = "mysql";
+Anschließend müssen 1 Variablen zu autoconf.php hinzugefügt werden:
 
 $password_salt = "";
 

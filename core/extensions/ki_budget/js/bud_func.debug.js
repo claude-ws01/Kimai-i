@@ -144,6 +144,9 @@ function bud_ext_plot(plotdata) {
 // reloads timesheet, customer, project and activity tables
 //
 function bud_ext_reload() {
+
+    $('#ajax_wait').show();
+
     $.ajax({
         dataType: "html",
         url: bud_ext_path + 'processor.php',
@@ -155,9 +158,11 @@ function bud_ext_reload() {
             id: 0
         },
         success: function (data) {
+            $('#ajax_wait').hide();
             $('#budgetArea').html(data);
         },
         error: function (error) {
+            $('#ajax_wait').hide();
             alert(error);
         }
     });

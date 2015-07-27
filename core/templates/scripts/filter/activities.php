@@ -38,20 +38,20 @@ $activities = $this->filterListEntries($this->activities);
                              width='13' height='13' alt='<?php echo $kga['lang']['filter'] ?>'
                              title='<?php echo $kga['lang']['filter'] ?>' border='0'/>
                     </a>
-                    <?php if (isset($kga['user'])) { ?>
-                        <a href="#" class="preselect"
+                    <?php if (array_key_exists('user', $kga)) { ?>
+                        <a href="#" class="preselect" title="<?php echo $kga['lang']['tip']['g_select_for_recording']; ?>"
                            onclick="buzzer_preselect_activity(<?php echo $activity['activity_id'] ?>,'<?php echo $this->jsEscape($activity['name']) ?>'); return false;"
                            id="ps<?php echo $activity['activity_id'] ?>">
                             <img
                                 src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/preselect_off.png'
-                                width='13' height='13' alt='<?php echo $kga['lang']['select'] ?>'
-                                title='<?php echo $kga['lang']['select'] ?> (ID:<?php echo $activity['activity_id'] ?>)'
+                                width='13' height='13' alt='<?php echo $kga['lang']['tip']['g_select_for_recording'] ?>'
+                                title='<?php echo $kga['lang']['tip']['g_select_for_recording'] ?> (ID:<?php echo $activity['activity_id'] ?>)'
                                 border='0'/>
                         </a>
                     <?php } ?>
                 </td>
 
-                <td style="width:100%;" class="activities"
+                <td style="width:100%;" class="activities"  title="<?php echo $kga['lang']['tip']['g_select_for_recording']; ?>"
                     onclick="buzzer_preselect_activity(<?php echo $activity['activity_id'] ?>,'<?php echo $this->jsEscape($activity['name']) ?>'); return false;"
                     onmouseover="lists_change_color(this,true);" onmouseout="lists_change_color(this,false);">
                     <?php if ($activity['visible'] != 1): ?><span style="color:#bbb"><?php endif; ?>

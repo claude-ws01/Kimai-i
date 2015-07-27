@@ -23,12 +23,13 @@
  *
  * @author Kevin Papst <kpapst@gmx.net>
  */
+global $kga;
 
-$entries     = $this->timesheets;
-$amount      = $this->amount;
-$vat         = $this->vat_rate;
+$details     = $this->details;
+$netTotal    = $this->netTotal;
+$vatTotal    = $this->vatTotal;
 $vatRate     = $this->vatRate;
-$total       = $this->total;
+$gTotal      = $this->gTotal;
 $projects    = $this->projects;
 $customer    = $this->customer;
 $invoiceId   = $this->invoiceId;
@@ -43,7 +44,7 @@ $invoiceDate = $this->invoiceDate;
 <head>
     <meta charset="utf-8">
     <title>Invoice</title>
-    <link rel="stylesheet" href="invoices/05_de_HTML/style.css">
+    <link rel="stylesheet" href="invoices/de_a4_01_HTML/style.css">
 </head>
 <body>
 <header>
@@ -58,7 +59,7 @@ $invoiceDate = $this->invoiceDate;
 
         <p>(0123) 456-78901</p>
     </address>
-    <span><img alt="" src="invoices/05_de_HTML/logo.png"></span>
+    <span><img alt="" src="invoices/de_a4_01_HTML/logo.png"></span>
 </header>
 <article>
     <h1>Empfänger</h1>
@@ -94,25 +95,25 @@ $invoiceDate = $this->invoiceDate;
         </tr>
         </thead>
         <tbody>
-        <?php foreach ($entries as $row) {
+        <?php foreach ($details as $row) {
             if ($row['type'] == 'timesheet') {
                 ?>
                 <tr>
-                    <td><span><?php echo $row['description']; ?></span></td>
-                    <td><span><?php echo $row['ref_code']; ?></span></td>
-                    <td><span><?php echo $currency; ?></span> <span><?php echo number_format($row['rate'], 2); ?></span>
-                    </td>
-                    <td><span><?php echo number_format($row['hour'], 2); ?></span></td>
-                    <td><span><?php echo $currency; ?></span> <span><?php echo $row['amount']; ?></span></td>
+                <td><span><?php echo $row['description']; ?></span></td>
+                <td><span><?php echo $row['ref_code']; ?></span></td>
+                <td><span><?php echo $currency; ?></span> <span><?php echo number_format($row['rate'], 2); ?></span>
+                </td>
+                <td><span><?php echo number_format($row['hour'], 2); ?></span></td>
+                <td><span><?php echo $currency; ?></span> <span><?php echo $row['amount']; ?></span></td>
                 </tr><?php }
             else { ?>
                 <tr>
-                    <td><span><?php echo $row['description']; ?></span></td>
-                    <td></td>
-                    <td><span><?php echo $currency; ?></span>
-                        <span><?php echo number_format($row['value'], 2); ?></span></td>
-                    <td><span><?php echo number_format($row['multiplier'], 2); ?></span></td>
-                    <td><span><?php echo $currency; ?></span> <span><?php echo $row['amount']; ?></span></td>
+                <td><span><?php echo $row['description']; ?></span></td>
+                <td></td>
+                <td><span><?php echo $currency; ?></span>
+                    <span><?php echo number_format($row['value'], 2); ?></span></td>
+                <td><span><?php echo number_format($row['multiplier'], 2); ?></span></td>
+                <td><span><?php echo $currency; ?></span> <span><?php echo $row['amount']; ?></span></td>
                 </tr><?php }
         } ?>
         </tbody>
@@ -120,17 +121,19 @@ $invoiceDate = $this->invoiceDate;
     <table class="balance">
         <tr>
             <th><span>Rechnungsbetrag (netto)</span></th>
-            <td><span data-prefix><?php echo $currency; ?></span> <span><?php echo number_format($amount, 2); ?></span>
+            <td><span data-prefix><?php echo $currency; ?></span>
+                <span><?php echo number_format($netTotal, 2); ?></span>
             </td>
         </tr>
         <tr>
             <th><span>zzgl. <?php echo $vatRate; ?>% Umsatzsteuer</span></th>
-            <td><span data-prefix><?php echo $currency; ?></span> <span><?php echo number_format($vat, 2); ?></span>
+            <td><span data-prefix><?php echo $currency; ?></span>
+                <span><?php echo number_format($vatTotal, 2); ?></span>
             </td>
         </tr>
         <tr>
             <th><span>Rechnungsendbetrag</span></th>
-            <td><span data-prefix><?php echo $currency; ?></span> <span><?php echo number_format($total, 2); ?></span>
+            <td><span data-prefix><?php echo $currency; ?></span> <span><?php echo number_format($gTotal, 2); ?></span>
             </td>
         </tr>
     </table>

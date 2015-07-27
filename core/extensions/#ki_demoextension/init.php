@@ -26,7 +26,6 @@ $datasrc       = "config.ini";
 $settings      = parse_ini_file($datasrc);
 $dir_ext       = $settings['EXTENSION_DIR'];
 
-//PREV// $GLOBALS['kga']['user'] = checkUser();
 checkUser();
 // =========================================
 // = Get the currently displayed timeframe =

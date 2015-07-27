@@ -26,10 +26,10 @@
  */
 function exec_query($query)
 {
-    global $conn, $errors;
+    global $database, $errors;
 
-    $success   = $conn->Query($query);
-    $errorInfo = serialize($conn->Error());
+    $success   = $database->query($query);
+    $errorInfo = serialize($database->error());
 
     Logger::logfile($query);
     if (!$success) {
@@ -44,14 +44,13 @@ function exec_query($query)
  * snapshots.
  */
 
-global $database, $conn, $kga, $errors, $executed_queries, $translations;
+global $database, $kga, $errors, $executed_queries, $translations;
 
 require('includes/basics.php');
 
-if (isset($_REQUEST['submit']) &&
-    isset($_REQUEST['salt']) &&
-    $_REQUEST['submit'] == $kga['lang']['login'] &&
-    $_REQUEST['salt'] == $kga['password_salt']
+if (isset($_REQUEST['submit'], $_REQUEST['salt'])
+    && $_REQUEST['submit'] == $kga['lang']['login']
+    && $_REQUEST['salt'] == $kga['password_salt']
 ) {
     $cookieValue = sha1($kga['password_salt']);
     setcookie('db_restore_authCode', $cookieValue);
@@ -64,31 +63,30 @@ if (isset($_REQUEST['submit']) && $authenticated) {
     $versionDB    = $version_temp[0];
     $revisionDB   = $version_temp[1];
     $p            = $kga['server_prefix'];
-    $conn         = $database->getConnectionHandler();
 
     if ($_REQUEST['submit'] == $kga['lang']['backup'][8]) {
         /**
          * Create a backup.
          */
 
-        Logger::logfile("-- begin backup -----------------------------------");
+        Logger::logfile('-- begin backup -----------------------------------');
         $backup_stamp = time();
-        $query        = ("SHOW TABLES;");
+        $query        = ('SHOW TABLES;');
 
-        if (is_object($conn)) {
-            $success       = $conn->Query($query);
-            $tables        = $conn->RecordsArray();
+        if (is_object($database)) {
+            $success = $database->query($query);
+            $tables  = $database->recordsArray();
 
             $prefix_length = strlen($p);
 
             if (is_array($tables)) {
                 foreach ($tables as $row) {
-                    if ((substr($row[0], 0, $prefix_length) == $p) && (substr($row[0], 0, 10) != "kimai_bak_")) {
-                        $backupTable = "kimai_bak_" . $backup_stamp . "_" . $row[0];
-                        $query       = "CREATE TABLE " . $backupTable . " LIKE " . $row[0];
+                    if ((substr($row[0], 0, $prefix_length) == $p) && (substr($row[0], 0, 10) != 'kimai_bak_')) {
+                        $backupTable = 'kimai_bak_' . $backup_stamp . '_' . $row[0];
+                        $query       = 'CREATE TABLE ' . $backupTable . ' LIKE ' . $row[0];
                         exec_query($query);
 
-                        $query = "INSERT INTO " . $backupTable . " SELECT * FROM " . $row[0];
+                        $query = 'INSERT INTO ' . $backupTable . ' SELECT * FROM ' . $row[0];
                         exec_query($query);
 
                         if ($errors) {
@@ -96,17 +94,17 @@ if (isset($_REQUEST['submit']) && $authenticated) {
                         }
                     }
                 }
-                Logger::logfile("-- backup finished -----------------------------------");
+                Logger::logfile('-- backup finished -----------------------------------');
             }
             else {
-                Logger::logfile("-- backup - no tables found --------------------------");
+                Logger::logfile('-- backup - no tables found --------------------------');
             }
         }
         else {
-            Logger::logfile("-- backup failed - no DB connection -----------------------------------");
+            Logger::logfile('-- backup failed - no DB connection -----------------------------------');
         }
 
-        header("location: db_restore.php");
+        header('location: db_restore.php');
     }
 
     if ($_REQUEST['submit'] == $kga['lang']['backup'][3]) {
@@ -115,35 +113,35 @@ if (isset($_REQUEST['submit']) && $authenticated) {
          */
         $dates = $_REQUEST['dates'];
 
-        $query = ("SHOW TABLES;");
+        $query = ('SHOW TABLES;');
 
-        if (is_object($conn)) {
-            $success = $conn->Query($query);
-            $tables  = $conn->RecordsArray();
+        if (is_object($database)) {
+            $success = $database->query($query);
+            $tables  = $database->recordsArray();
         }
 
         foreach ($tables as $row) {
-            if ((substr($row[0], 0, 10) == "kimai_bak_")) {
+            if ((substr($row[0], 0, 10) == 'kimai_bak_')) {
                 if (in_array(substr($row[0], 10, 10), $dates)) {
-                    $arr2[] = "DROP TABLE `" . $row[0] . "`;";
+                    $arr2[] = 'DROP TABLE `' . $row[0] . '`;';
                 }
             }
         }
 
-        if (is_object($conn)) {
+        if (is_object($database)) {
             foreach ($arr2 AS $row) {
-                $success = $conn->Query($row);
+                $success = $database->query($row);
                 if (!$success) {
                     break;
                 }
             }
         }
-        header("location: db_restore.php");
+        header('location: db_restore.php');
     }
 }
 
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+?><!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN'
+    'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html>
 <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
@@ -151,18 +149,37 @@ if (isset($_REQUEST['submit']) && $authenticated) {
     <title>Kimai Backup Restore Utility</title>
     <style type="text/css" media="screen">
         body {
-            background: #46E715 url('grfx/ki_twitter_bg.jpg') no-repeat;
+            background: #111 url('grfx/ki_twitter_bg.png') no-repeat;
             font-family: sans-serif;
-            color: #333;
         }
 
+        a {
+            color: grey;
+        }
+        a:hover {
+            color: white;
+        }
+        h1 {
+            margin:0
+        }
         div.main {
-            margin-left: 420px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 500px;
+            height: 250px;
+            margin-left: -250px;
+            margin-top: -125px;
+            background-color: rgba(64, 64, 64, 0.7);;
+            border-radius: 20px;
+            color: #ccc;
+            padding: 10px;
+            text-shadow: #000 1px 1px 1px;
         }
 
         div.warn {
             padding: 5px;
-            background-image: url('skins/standard/grfx/floaterborder.png');
+            background-color: rgba(64, 64, 64, 0.7);;
             color: red;
             font-weight: bold;
             text-align: center;
@@ -181,27 +198,17 @@ if (isset($_REQUEST['submit']) && $authenticated) {
             width: 300px;
         }
 
-        p.label_checkbox {
-            clear: left;
-            height: .6em;
-        }
-
-        p.radio {
-            display: block;
-            float: left;
-        }
-
         h1.message {
             border: 3px solid white;
             padding: 10px;
-            background-image: url('skins/standard/grfx/floaterborder.png');
+            background-color: rgba(64, 64, 64, 0.7);;
             margin-right: 20px;
         }
 
         h1.fail {
             border: 3px solid red;
             padding: 10px;
-            background-image: url('skins/standard/grfx/floaterborder.png');
+            background-color: rgba(64, 64, 64, 0.7);;
             color: red;
             margin-right: 20px;
         }
@@ -212,8 +219,7 @@ if (isset($_REQUEST['submit']) && $authenticated) {
 
         p.caution {
             font-size: 80%;
-            color: #136C00;
-            width: 300px;
+            width: 100%;
         }
     </style>
 </head>
@@ -230,24 +236,25 @@ if (isset($_REQUEST['submit']) && $authenticated) {
         if (($_REQUEST['submit'] == $kga['lang']['backup'][2]) && (isset($_REQUEST['dates']))) {
 
             if (count($_REQUEST['dates']) > 1) {
-                echo "<h1 class='fail'>" . $kga['lang']['backup'][5] . "</h1>";
+                echo '<h1 class="fail">' . $kga['lang']['backup'][5] . '</h1>';
             }
             else {
                 $restoreDate = intval($_REQUEST['dates'][0]);
-                $query       = ("SHOW TABLES;");
+                $query       = ('SHOW TABLES;');
 
 
-                if (is_object($conn)) {
-                    $success = $conn->Query($query);
-                    $tables  = $conn->RecordsArray();
+                $tables = array();
+                if (is_object($database)) {
+                    $success = $database->query($query);
+                    $tables  = $database->recordsArray();
                 }
 
                 $arr  = array();
                 $arr2 = array();
 
                 foreach ($tables as $row) {
-                    if ((substr($row[0], 0, 10) == "kimai_bak_")) {
-                        if (substr($row[0], 10, 10) == $restoreDate) {
+                    if ((substr($row[0], 0, 10) == 'kimai_bak_')) {
+                        if (substr($row[0], 10, 10) === $restoreDate) {
                             $table  = $row[0];
                             $arr[]  = $table;
                             $arr2[] = substr($row[0], 21, 100);
@@ -257,74 +264,74 @@ if (isset($_REQUEST['submit']) && $authenticated) {
 
                 $i = 0;
                 foreach ($arr2 AS $newTable) {
-                    $query = "DROP TABLE " . $arr2[ $i ];
+                    $query = 'DROP TABLE ' . $arr2[$i];
                     exec_query($query, 1);
 
-                    $query = "CREATE TABLE " . $newTable . " LIKE " . $arr[ $i ];
+                    $query = 'CREATE TABLE ' . $newTable . ' LIKE ' . $arr[$i];
                     exec_query($query, 1);
-                    $query = "INSERT INTO " . $newTable . " SELECT * FROM " . $arr[ $i ];
+                    $query = 'INSERT INTO ' . $newTable . ' SELECT * FROM ' . $arr[$i];
                     exec_query($query, 1);
                     $i++;
                 }
 
-                $date = @date("d. M Y, H:i:s", $restoreDate);
-                echo "<h1 class='message'>" . $kga['lang']['backup'][6] . " " . $date . "<br>" . $kga['lang']['backup'][7] . "</h1>";
+                $date = @date('d. M Y, H:i:s', $restoreDate);
+                echo '<h1 class="message">' . $kga['lang']['backup'][6] . ' ' . $date . '<br>' . $kga['lang']['backup'][7] . '</h1>';
             }
         }
     }
+    ?>
+    <form method="post" accept-charset="utf-8"><?php
 
-    echo '<form method="post" accept-charset="utf-8">';
+        if (!$authenticated) {
+            echo '<h1>' . $kga['lang']['backup'][10] . '</h1>',
+            '<p class="caution">', $kga['lang']['backup'][11], '</p>'; ?>
+            <input type="text" name="salt"/>
+            <input type="submit" name="submit" value="<?php echo $kga['lang']['login'] ?>"/>
+        <?php }
+        else {
+            echo '<h1>' . $kga['lang']['backup'][1] . '</h1>';
 
-    if (!$authenticated) {
-        echo "<h1>" . $kga['lang']['backup'][10] . "</h1>";
-        echo '<p class="caution">', $kga['lang']['backup'][11], '</p>';
-        echo '<input type="text" name="salt"/>';
-        echo '<input type="submit" name="submit" value="', $kga['lang']['login'], '"/>';
-    }
-    else {
-        echo "<h1>" . $kga['lang']['backup'][1] . "</h1>";
+            $query = ('SHOW TABLES;');
 
-        $query = ("SHOW TABLES;");
+            $result_backup = $database->queryAll($query);
 
-        $result_backup = $database->queryAll($query);
+            $arr  = array();
+            $arr2 = array();
 
-        $arr  = array();
-        $arr2 = array();
-
-        foreach ($result_backup as $row) {
-            if ((substr($row[0], 0, 10) == "kimai_bak_")) {
-                $time  = substr($row[0], 10, 10);
-                $arr[] = $time;
+            foreach ($result_backup as $row) {
+                if ((substr($row[0], 0, 10) == 'kimai_bak_')) {
+                    $time  = substr($row[0], 10, 10);
+                    $arr[] = $time;
+                }
             }
-        }
 
-        $neues_array = array_unique($arr);
+            $neues_array = array_unique($arr);
 
 
-        foreach ($neues_array AS $date) {
-            $value = @date("d. M Y - H:i:s", $date);
+            foreach ($neues_array AS $date) {
+                $value = @date('d. M Y - H:i:s', $date);
 
-            if (@date("dMY", $date) == @date("dMY", time())) {
-                $label = $kga['lang']['heute'] . @date(" - H:i:s", $date);
-            }
-            else {
-                $label = $value;
-            }
-            echo <<<EOD
+                if (@date('dMY', $date) == @date('dMY', time())) {
+                    $label = $kga['lang']['today'] . @date(' - H:i:s', $date);
+                }
+                else {
+                    $label = $value;
+                }
+                echo <<<EOD
         <p class="label_checkbox">
         <input type="checkbox" id="$value " name="dates[]" value="$date">
         <label for="$value">$label</label>
         </p>
 EOD;
-        }
+            }
 
-        ?><p class="submit">
-        <input type="submit" name="submit" value="<?php echo $kga['lang']['backup'][2]; ?>"> <!-- restore -->
-        <input type="submit" name="submit" value="<?php echo $kga['lang']['backup'][3]; ?>"> <!-- delete -->
-        <input type="submit" name="submit" value="<?php echo $kga['lang']['backup'][8]; ?>"> <!-- backup -->
-        </p><?php
-    }
-    ?>
+            ?><p class="submit">
+            <input type="submit" name="submit" value="<?php echo $kga['lang']['backup'][2]; ?>"> <!-- restore -->
+            <input type="submit" name="submit" value="<?php echo $kga['lang']['backup'][3]; ?>"> <!-- delete -->
+            <input type="submit" name="submit" value="<?php echo $kga['lang']['backup'][8]; ?>"> <!-- backup -->
+            </p><?php
+        }
+        ?>
 
     </form>
     <br/>

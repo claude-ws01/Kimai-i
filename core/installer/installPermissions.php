@@ -2,17 +2,18 @@
 
 function buildRoleTableCreateQuery($tableName, $idColumnName, $permissions)
 {
-    global $p;
+    global $kga;
+    
+    $p = $kga['server_prefix'];
+
     $query =
         "CREATE TABLE `${p}${tableName}` (
           `${idColumnName}` int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-          `name` VARCHAR( 255 ) NOT NULL,";
+          `name` VARCHAR( 40 ) NOT NULL,";
 
-    $permissionColumns           = array();
     $permissionColumnDefinitions = array();
     foreach ($permissions as $permission) {
-        $permissionColumns[]           = '`' . $permission . '`';
-        $permissionColumnDefinitions[] = '`' . $permission . '` TINYINT DEFAULT 0';
+        $permissionColumnDefinitions[] = '`' . $permission . '` TINYINT(1) DEFAULT 0';
     }
     $query .= implode(', ', $permissionColumnDefinitions);
 
@@ -21,15 +22,19 @@ function buildRoleTableCreateQuery($tableName, $idColumnName, $permissions)
     return $query;
 }
 
-function buildRoleInsertQuery($tableName, $roleName, $allowedPermissions, $allPermissions)
+function buildRoleInsertQuery($tableName, $roleName, $allowedPermissions)
 {
-    global $p;
+    global $kga;
+    
+    $p = $kga['server_prefix'];
+
     foreach ($allowedPermissions as &$permission) {
         $permission = '`' . $permission . '`';
     }
+    unset($permission);
 
-    if (!is_array($allowedPermissions) || count($allowedPermissions) == 0) {
-        $query = "INSERT INTO `${p}${tableName}` (`name`)  VALUES ('" . $roleName . "');";
+    if (!is_array($allowedPermissions) || count($allowedPermissions) === 0) {
+        $query = "INSERT INTO `${p}${tableName}` (`name`)  VALUES ('${roleName}');";
     }
     else {
         $query = "INSERT INTO `${p}${tableName}` (`name`, " . implode(', ', $allowedPermissions) . ")  VALUES ('" . $roleName . "', " .
@@ -40,7 +45,8 @@ function buildRoleInsertQuery($tableName, $roleName, $allowedPermissions, $allPe
 }
 
 
-//  MAIN    MAIN    MAIN    MAIN    MAIN  //
+//  MAIN    MAIN    MAIN    MAIN    MAIN  MAIN    MAIN    MAIN    MAIN    MAIN  //
+//  MAIN    MAIN    MAIN    MAIN    MAIN  MAIN    MAIN    MAIN    MAIN    MAIN  //
 global $database;
 
 // Global roles table
@@ -49,113 +55,127 @@ $globalPermissions = array();
 $membershipPermissions = array();
 
 // extension permissions
-foreach (array('deb_ext', 'adminPanel_extension', 'ki_budget', 'ki_expenses', 'ki_export', 'ki_invoice', 'ki_timesheet', 'demo_ext') as $extension) {
-    $globalPermissions[] = $extension . '-access';
+foreach (array(
+             'ki_debug',
+             'ki_admin',
+             'ki_budget',
+             'ki_expense',
+             'ki_export',
+             'ki_invoice',
+             'ki_timesheet',
+             'demo_ext') as $extension) {
+    $globalPermissions[] = $extension . '__access';
 }
 
 // domain object permissions
 foreach (array('customer', 'project', 'activity', 'user') as $object) {
-    foreach (array('add', 'edit', 'delete', 'assign', 'unassign') as $action) {
-        $globalPermissions[]     = 'core-' . $object . '-otherGroup-' . $action;
-        $membershipPermissions[] = 'core-' . $object . '-' . $action;
-    }
+
+  foreach (array('add', 'edit', 'delete', 'assign', 'unassign') as $action) {
+
+    $globalPermissions[] = 'core__' . $object . '__other_group__' . $action;
+    $membershipPermissions[] = 'core__' .  $object . '__' . $action;
+  }
 }
 
 // status permissions
 foreach (array('add', 'edit', 'delete') as $action) {
-    $globalPermissions[] = 'core-status-' . $action;
+    $globalPermissions[] = 'core__status__' . $action;
 }
 
 // group permissions
-$globalPermissions[] = 'core-group-add';
-$globalPermissions[] = 'core-group-otherGroup-edit';
-$globalPermissions[] = 'core-group-otherGroup-delete';
-$membershipPermissions[] = 'core-user-view';
-$membershipPermissions[] = 'core-group-edit';
-$membershipPermissions[] = 'core-group-delete';
+$globalPermissions[] = 'core__group__add';
+$globalPermissions[] = 'core__group__other_group__edit';
+$globalPermissions[] = 'core__group__other_group__delete';
+$membershipPermissions[] = 'core__user__view';
+$membershipPermissions[] = 'core__group__edit';
+$membershipPermissions[] = 'core__group__delete';
 
 // adminpanel permissions
-$globalPermissions[] = 'adminPanel_extension-editAdvanced';
+$globalPermissions[] = 'ki_admin__edit_advanced';
 
 // timesheet permissions
-$globalPermissions[] = 'ki_timesheets-ownEntry-add';
-$membershipPermissions[] = 'ki_timesheets-otherEntry-ownGroup-add';
-$globalPermissions[] = 'ki_timesheets-otherEntry-otherGroup-add';
-$globalPermissions[] = 'ki_timesheets-ownEntry-edit';
-$membershipPermissions[] = 'ki_timesheets-otherEntry-ownGroup-edit';
-$globalPermissions[] = 'ki_timesheets-otherEntry-otherGroup-edit';
-$globalPermissions[] = 'ki_timesheets-ownEntry-delete';
-$membershipPermissions[] = 'ki_timesheets-otherEntry-ownGroup-delete';
-$globalPermissions[] = 'ki_timesheets-otherEntry-otherGroup-delete';
+$globalPermissions[] = 'ki_timesheet__own_entry__add';
+$membershipPermissions[] = 'ki_timesheet__other_entry__own_group__add';
+$globalPermissions[] = 'ki_timesheet__other_entry__other_group__add';
+$globalPermissions[] = 'ki_timesheet__own_entry__edit';
+$membershipPermissions[] = 'ki_timesheet__other_entry__own_group__edit';
+$globalPermissions[] = 'ki_timesheet__other_entry__other_group__edit';
+$globalPermissions[] = 'ki_timesheet__own_entry__delete';
+$membershipPermissions[] = 'ki_timesheet__other_entry__own_group__delete';
+$globalPermissions[] = 'ki_timesheet__other_entry__other_group__delete';
 
-$globalPermissions[] = 'ki_timesheets-showRates';
-$globalPermissions[] = 'ki_timesheets-editRates';
+$globalPermissions[] = 'ki_timesheet__show_rates';
+$globalPermissions[] = 'ki_timesheet__edit_rates';
 
 // expenses permissions
-$globalPermissions[] = 'ki_expenses-ownEntry-add';
-$membershipPermissions[] = 'ki_expenses-otherEntry-ownGroup-add';
-$globalPermissions[] = 'ki_expenses-otherEntry-otherGroup-add';
-$globalPermissions[] = 'ki_expenses-ownEntry-edit';
-$membershipPermissions[] = 'ki_expenses-otherEntry-ownGroup-edit';
-$globalPermissions[] = 'ki_expenses-otherEntry-otherGroup-edit';
-$globalPermissions[] = 'ki_expenses-ownEntry-delete';
-$membershipPermissions[] = 'ki_expenses-otherEntry-ownGroup-delete';
-$globalPermissions[] = 'ki_expenses-otherEntry-otherGroup-delete';
+$globalPermissions[] = 'ki_expense__own_entry__add';
+$membershipPermissions[] = 'ki_expense__other_entry__own_group__add';
+$globalPermissions[] = 'ki_expense__other_entry__other_group__add';
+$globalPermissions[] = 'ki_expense__own_entry__edit';
+$membershipPermissions[] = 'ki_expense__other_entry__own_group__edit';
+$globalPermissions[] = 'ki_expense__other_entry__other_group__edit';
+$globalPermissions[] = 'ki_expense__own_entry__delete';
+$membershipPermissions[] = 'ki_expense__other_entry__own_group__delete';
+$globalPermissions[] = 'ki_expense__other_entry__other_group__delete';
 
 
-$query = buildRoleTableCreateQuery('globalRoles', 'globalRoleID', $globalPermissions);
+$query = buildRoleTableCreateQuery('global_role', 'global_role_id', $globalPermissions);
 exec_query($query);
 
 // global admin role
-$query = buildRoleInsertQuery('globalRoles', 'Admin', $globalPermissions, $globalPermissions);
+$query = buildRoleInsertQuery('global_role', 'Admin', $globalPermissions);
 exec_query($query);
-$globalAdminRoleID = mysqli_insert_id($database->MySQL->mysql_link);
+$globalAdminRoleID = mysqli_insert_id($database->link);
 
 // global user role
 $allowedPermissions = array(
-    'ki_budget-access',
-    'ki_expenses-access',
-    'ki_export-access',
-    'ki_invoice-access',
-    'ki_timesheet-access',
-    'ki_timesheets-showRates',
-    'ki_timesheets-ownEntry-add',
-    'ki_timesheets-ownEntry-edit',
-    'ki_timesheets-ownEntry-delete',
-    'ki_expenses-ownEntry-add',
-    'ki_expenses-ownEntry-edit',
-    'ki_expenses-ownEntry-delete',
+  'ki_budget__access',
+  'ki_expense__access',
+  'ki_export__access',
+  'ki_invoice__access',
+  'ki_timesheet__access',
+  'ki_timesheet__show_rates',
+  'ki_timesheet__own_entry__add',
+  'ki_timesheet__own_entry__edit',
+  'ki_timesheet__own_entry__delete',
+  'ki_expense__own_entry__add',
+  'ki_expense__own_entry__edit',
+  'ki_expense__own_entry__delete',
 );
-$query = buildRoleInsertQuery('globalRoles', 'User', $allowedPermissions, $globalPermissions);
+$query              = buildRoleInsertQuery('global_role', 'User', $allowedPermissions);
 exec_query($query);
-$globalUserRoleID = mysqli_insert_id($database->MySQL->mysql_link);
+$globalUserRoleID = mysqli_insert_id($database->link);
 
 
-$query = buildRoleTableCreateQuery('membershipRoles', 'membershipRoleID', $membershipPermissions);
+$query = buildRoleTableCreateQuery('membership_role', 'membership_role_id', $membershipPermissions);
 exec_query($query);
+
 
 // membership admin role
-$query = buildRoleInsertQuery('membershipRoles', 'Admin', $membershipPermissions, $membershipPermissions);
+$query = buildRoleInsertQuery('membership_role', 'Admin', $membershipPermissions);
 exec_query($query);
-$membershipAdminRoleID = mysqli_insert_id($database->MySQL->mysql_link);
+$membershipAdminRoleID = mysqli_insert_id($database->link);
+
 
 // membership user role
 $allowedPermissions = array();
-$query = buildRoleInsertQuery('membershipRoles', 'User', $allowedPermissions, $membershipPermissions);
+$query              = buildRoleInsertQuery('membership_role', 'User', $allowedPermissions);
 exec_query($query);
-$membershipUserRoleID = mysqli_insert_id($database->MySQL->mysql_link);
+$membershipUserRoleID = mysqli_insert_id($database->link);
+
 
 // membership groupleader role
 $allowedPermissions = array_merge($allowedPermissions, array(
-    'ki_timesheets-otherEntry-ownGroup-add',
-    'ki_timesheets-otherEntry-ownGroup-edit',
-    'ki_timesheets-otherEntry-ownGroup-delete',
-    'ki_expenses-otherEntry-ownGroup-add',
-    'ki_expenses-otherEntry-ownGroup-edit',
-    'ki_expenses-otherEntry-ownGroup-delete',
+  'ki_timesheet__other_entry__own_group__add',
+  'ki_timesheet__other_entry__own_group__edit',
+  'ki_timesheet__other_entry__own_group__delete',
+  'ki_expense__other_entry__own_group__add',
+  'ki_expense__other_entry__own_group__edit',
+  'ki_expense__other_entry__own_group__delete',
 ));
-$query = buildRoleInsertQuery('membershipRoles', 'Groupleader', $allowedPermissions, $membershipPermissions);
-exec_query($query);
-$membershipGroupleaderRoleID = mysqli_insert_id($database->MySQL->mysql_link);
 
-?>
+$query = buildRoleInsertQuery('membership_role', 'Groupleader', $allowedPermissions);
+
+exec_query($query);
+$membershipGroupleaderRoleID = mysqli_insert_id($database->link);
+

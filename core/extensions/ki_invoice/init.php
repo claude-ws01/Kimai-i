@@ -21,14 +21,15 @@
 // ==================================
 // = implementing standard includes =
 // ==================================
+global $kga, $database, $view;
 include('../../includes/basics.php');
 
-$dir_templates = "templates/";
-$datasrc = "config.ini";
-$settings = parse_ini_file($datasrc);
-$dir_ext = $settings['EXTENSION_DIR'];
+$dir_templates = 'templates/';
+$datasrc       = 'config.ini';
+$settings      = parse_ini_file($datasrc);
+$dir_ext       = $settings['EXTENSION_DIR'];
 
-$user = checkUser();
+checkUser();
 
 $view = new Zend_View();
 $view->setBasePath(WEBROOT . 'extensions/' . $dir_ext . '/' . $dir_templates);
@@ -36,32 +37,36 @@ $view->setBasePath(WEBROOT . 'extensions/' . $dir_ext . '/' . $dir_templates);
 $view->kga = $kga;
 
 // get list of projects for select box
-if (isset($kga['customer']))
-  $view->customers = array($kga['customer']['customerID'] => $kga['customer']['name']);
-else
-  $view->customers = makeSelectBox("customer",$kga['user']['groups']);
+if (array_key_exists('customer', $kga)) {
+    $view->customers = array($kga['customer']['customer_id'] => $kga['customer']['name']);
+}
+else {
+    $view->customers = makeSelectBox('customer', any_get_group_ids());
+}
 
-$tmpCustomers = array_keys($view->customers);
-$projects = $database->get_projects_by_customer($tmpCustomers[0], $kga['user']['groups']);
 $view->projects = array();
-foreach ($projects as $project) {
-  $view->projects[$project['projectID']] = $project['name'];
+if (count($view->customers) > 0) {
+    $tmpCustomers = array_keys($view->customers);
+    $projects     = $database->get_projects_by_customer($tmpCustomers[0], any_get_group_ids());
+    foreach ($projects as $project) {
+        $view->projects[$project['project_id']] = $project['name'];
+    }
 }
 
 // Select values for Round Time option
-$roundingOptions = array(
-  '1' => '0.1h',
-  '2.5' =>'0.25h',
-  '5' => '0.5h',
-  '10' => '1.0h'
+$roundingOptions       = array(
+    '1'   => '0.1h',
+    '2.5' => '0.25h',
+    '5'   => '0.5h',
+    '10'  => '1.0h',
 );
 $view->roundingOptions = $roundingOptions;
 
 // Get Invoice Template FileNames
 
-$invoice_template_files = Array(); 
-$handle = opendir('invoices/');
-while (false!== ($file = readdir($handle))) { 
+$invoice_template_files = Array();
+$handle                 = opendir('invoices/');
+while (false !== ($file = readdir($handle))) {
     if (stripos($file, '.') !== 0) {
         $invoice_template_files[$file] = $file;
     }
@@ -72,9 +77,9 @@ $view->sel_form_files = $invoice_template_files;
 
 // Retrieve start & stop times
 $timeframe = get_timeframe();
-$view->in = $timeframe[0];
+$view->in  = $timeframe[0];
 $view->out = $timeframe[1];
 
-$view->timespan_display = $view->render("timespan.php");
+$view->timespan_display = $view->render('timespan.php');
 
 echo $view->render('main.php');

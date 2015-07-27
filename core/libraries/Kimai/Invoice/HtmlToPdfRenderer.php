@@ -40,7 +40,7 @@ class Kimai_Invoice_HtmlToPdfRenderer extends Kimai_Invoice_HtmlRenderer
         $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
         // set document information
-        $pdf->SetCreator('Kimai Timetracking (http://www.kimai.org)');
+        $pdf->SetCreator('Kimai-i Timetracking');
         //$pdf->SetAuthor('Kevin Papst');
 
         //$pdf->SetTitle('Invoice');
@@ -91,7 +91,7 @@ class Kimai_Invoice_HtmlToPdfRenderer extends Kimai_Invoice_HtmlRenderer
 
     protected function getTemplateFilename()
     {
-        return 'index.html.pdf';
+        return 'index.php.pdf';
     }
 
 }

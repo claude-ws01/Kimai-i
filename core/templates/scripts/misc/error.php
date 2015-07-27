@@ -5,7 +5,7 @@
     <link rel="SHORTCUT ICON" href="favicon.ico">
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <meta name="robots" content="noindex,nofollow" />
-    <title>Kimai Error</title>
+    <title>Kimai-i Error</title>
     <link rel="stylesheet" type="text/css" media="screen" href="css/error.css" />
     <script src="libraries/jQuery/jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
         <script type="text/javascript"> 

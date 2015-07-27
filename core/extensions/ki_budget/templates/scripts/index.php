@@ -1,7 +1,7 @@
     <script type="text/javascript"> 
         $(document).ready(function() {
 try {
-        	budget_extension_onload();
+        	bud_ext_onload();
 } catch(e) {
 	alert(e);
 }

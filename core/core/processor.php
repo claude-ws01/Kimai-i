@@ -21,7 +21,7 @@
  * ==================
  * = Core Processor =
  * ==================
- * 
+ *
  * Called via AJAX from the Kimai user interface. Depending on $axAction
  * actions are performed, e.g. editing preferences or returning a list
  * of customers.
@@ -29,131 +29,138 @@
 
 // insert KSPI 
 $isCoreProcessor = 1;
-$dir_templates = "templates/core/";
-require("../includes/kspi.php");
+$dir_templates   = "templates/core/";
+global $kga, $database, $view;
+require "../includes/kspi.php";
 
 switch ($axAction) {
-    
+
     /**
      * Append a new entry to the logfile.
      */
     case 'logfile':
         Logger::logfile("JavaScript: " . $axValue);
-    break;
+        break;
 
     /**
-     * Remember which project and activity the user has selected for 
+     * Remember which project and activity the user has selected for
      * the quick recording via the buzzer.
      */
     case 'saveBuzzerPreselection':
-        if ( !isset( $kga['user'] ) ) {
+        if (array_key_exists('customer', $kga)) {
             return;
         }
 
-      $data= array();
-        if ( isset( $_REQUEST['project'] ) ) {
-        $data['lastProject'] = $_REQUEST['project'];
+        $data = array();
+        if (isset($_REQUEST['project'])) {
+            $data['last_project'] = $_REQUEST['project'];
         }
-        if ( isset( $_REQUEST['activity'] ) ) {
-        $data['lastActivity']   = $_REQUEST['activity'];
+        if (isset($_REQUEST['activity'])) {
+            $data['last_activity'] = $_REQUEST['activity'];
         }
 
-      $database->user_edit($kga['user']['userID'],$data);
-    break;
-
+        $database->user_edit($kga['user']['user_id'], $data);
+        break;
 
     /**
      * Store the user preferences entered in the preferences dialog.
      */
     case 'editPrefs':
-        if ( isset( $kga['customer'] ) ) {
-            die();
-        }
-    
-        $preferences['skin']                    = $_REQUEST['skin'];
-        $preferences['autoselection']           = getRequestBool('autoselection');
-        $preferences['openAfterRecorded']       = getRequestBool('openAfterRecorded');
-        $preferences['quickdelete']             = $_REQUEST['quickdelete'];
-        $preferences['rowlimit']                = $_REQUEST['rowlimit'];
-        $preferences['lang']                    = $_REQUEST['lang'];
-        $preferences['flip_project_display']    = getRequestBool('flip_project_display');
-        $preferences['project_comment_flag']    = getRequestBool('project_comment_flag');
-        $preferences['showIDs']                 = getRequestBool('showIDs');
-        $preferences['noFading']                = getRequestBool('noFading');
-        $preferences['user_list_hidden']        = getRequestBool('user_list_hidden');
-        $preferences['hideClearedEntries']      = getRequestBool('hideClearedEntries');
-        $preferences['showCommentsByDefault']   = getRequestBool('showCommentsByDefault');
-        $preferences['showTrackingNumber']      = getRequestBool('showTrackingNumber');
-        $preferences['sublistAnnotations']      = $_REQUEST['sublistAnnotations'];
-        $preferences['hideOverlapLines']        = getRequestBool('hideOverlapLines');
 
-        $database->user_set_preferences($preferences,'ui.');
-        $database->user_set_preferences(array('timezone'=>$_REQUEST['timezone']));
+        $pref['autoselection']        = getRequestBool('autoselection');
+        $pref['flip_project_display'] = getRequestBool('flip_project_display');
+        $pref['hide_cleared_entries'] = getRequestBool('hide_cleared_entries');
+        $pref['hide_overlap_lines']   = getRequestBool('hide_overlap_lines');
+        $pref['language']             = $_REQUEST['language'];
+        $pref['no_fading']            = getRequestBool('no_fading');
+        $pref['open_after_recorded']  = getRequestBool('open_after_recorded');
+        $pref['project_comment_flag'] = getRequestBool('project_comment_flag');
+        if (isset($_REQUEST['quickdelete'])) $pref['quickdelete'] = $_REQUEST['quickdelete'];
+        $pref['rowlimit']                 = $_REQUEST['rowlimit'];
+        $pref['show_comments_by_default'] = getRequestBool('show_comments_by_default');
+        $pref['show_ids']                 = getRequestBool('show_ids');
+        $pref['show_ref_code']            = getRequestBool('show_ref_code');
+        $pref['skin']                     = $_REQUEST['skin'];
+        $pref['sublist_annotations']      = $_REQUEST['sublist_annotations'];
+        $pref['timezone']                 = $_REQUEST['timezone'];
+        $pref['user_list_hidden']         = getRequestBool('user_list_hidden');
 
-        $rate = str_replace($kga['conf']['decimalSeparator'],'.',$_REQUEST['rate']);
-        if ( is_numeric( $rate ) ) {
-            $database->save_rate( $kga['user']['userID'], null, null, $rate );
-        } else {
-            $database->remove_rate( $kga['user']['userID'], null, null );
+
+        if (array_key_exists('customer', $kga)) {
+            $database->pref_replace($pref, 'ui.', $kga['customer']['customer_id']);
+
+            if (!empty($_REQUEST['password'])) {
+                $userData['password'] = password_encrypt($_REQUEST['password']);
+                $database->customer_edit($kga['customer']['customer_id'], $userData);
+            }
         }
-        
-        // If the password field is empty don't overwrite the old password.
-        if (trim($_REQUEST['password']) != "") {
-            $userData['password'] = md5($kga['password_salt'].$_REQUEST['password'].$kga['password_salt']);
-            $database->user_edit($kga['user']['userID'], $userData);
+
+
+        else {
+            $database->pref_replace($pref, 'ui.', $kga['user']['user_id']);
+
+            $rate = str_replace($kga['conf']['decimal_separator'], '.', $_REQUEST['rate']);
+            if (is_numeric($rate)) {
+                $database->save_rate($kga['user']['user_id'], null, null, $rate);
+            }
+            else {
+                $database->remove_rate($kga['user']['user_id'], null, null);
+            }
+
+            if (!empty($_REQUEST['password'])) {
+                $userData['password'] = password_encrypt($_REQUEST['password']);
+                $database->user_edit($kga['user']['user_id'], $userData);
+            }
         }
-        
-        
-    break;
-    
+
+
+        break;
+
     /**
      * When the user changes the timeframe it is stored in the database so
      * it can be restored, when the user reloads the page.
      */
     case 'setTimeframe':
-        if ( !isset( $kga['user'] ) ) {
-            die();
-        }
-    
-        $timeframe = explode('|',$axValue);
-         
-        $timeframe_in  = explode('-',$timeframe[0]);
-        $timeframe_in  = (int)mktime(0,0,0,$timeframe_in[0],$timeframe_in[1],$timeframe_in[2]);
-        if ( $timeframe_in < 950000000 ) {
+
+        $timeframe = explode('|', $axValue);
+
+        $timeframe_in = explode('-', $timeframe[0]);
+        $timeframe_in = (int)mktime(0, 0, 0, $timeframe_in[0], $timeframe_in[1], $timeframe_in[2]);
+        if ($timeframe_in < 950000000) {
             $timeframe_in = $in;
         }
-        
-        $timeframe_out = explode('-',$timeframe[1]);
-        $timeframe_out = (int)mktime(23,59,59,$timeframe_out[0],$timeframe_out[1],$timeframe_out[2]);
-        if ( $timeframe_out < 950000000 ) {
+
+        $timeframe_out = explode('-', $timeframe[1]);
+        $timeframe_out = (int)mktime(23, 59, 59, $timeframe_out[0], $timeframe_out[1], $timeframe_out[2]);
+        if ($timeframe_out < 950000000) {
             $timeframe_out = $out;
         }
-        
-        $database->save_timeframe($timeframe_in,$timeframe_out,$kga['user']['userID']);
-    break;
+
+        $database->save_timeframe($timeframe_in, $timeframe_out);
+        break;
 
     /**
      * The user started the recording of an activity via the buzzer. If this method
      * is called while another recording is running the first one will be stopped.
      */
-    case 'startRecord':
-        if ( isset( $kga['customer'] ) ) {
+    case 'start_record':
+        if (array_key_exists('customer', $kga)) {
             die();
         }
-    
-        $IDs = explode('|',$axValue);
-        $newID = $database->startRecorder($IDs[0],$IDs[1],$id, $_REQUEST['startTime']);
+
+        $IDs   = explode('|', $axValue);
+        $newID = $database->startRecorder($IDs[0], $IDs[1], $id, $_REQUEST['startTime']);
         echo json_encode(array(
-          'id' =>  $newID
-        ));
-    break;
-    
+                             'id' => $newID,
+                         ));
+        break;
+
     /**
      * Stop the running recording.
      */
-    case 'stopRecord':
+    case 'stop_record':
         $database->stopRecorder($id);
-    break;
+        break;
 
     /**
      * Return a list of users. Customers are not shown any users. The
@@ -161,44 +168,47 @@ switch ($axAction) {
      * See get_user_watchable_users.
      */
     case 'reload_users':
-        if ( isset( $kga['customer'] ) ) {
+        if (array_key_exists('customer', $kga)) {
             $view->users = array();
-        } else {
+        }
+        else {
             $view->users = $database->get_user_watchable_users($kga['user']);
         }
 
-        echo $view->render("lists/users.php");
-    break;
+        echo $view->render("filter/users.php");
+        break;
 
     /**
      * Return a list of customers. A customer can only see himself.
      */
     case 'reload_customers':
-        if ( isset( $kga['customer'] ) ) {
-          $view->customers = array($database->customer_get_data($kga['customer']['customerID']));
-        } else {
-          $view->customers = $database->get_customers($kga['user']['groups']);
+        if (array_key_exists('customer', $kga)) {
+            $view->customers = array($database->customer_get_data($kga['customer']['customer_id']));
+        }
+        else {
+            $view->customers = $database->get_customers(any_get_group_ids());
         }
 
         $view->show_customer_edit_button = coreObjectActionAllowed('customer', 'edit');
 
-        echo $view->render("lists/customers.php");
-    break;
+        echo $view->render("filter/customers.php");
+        break;
 
     /**
      * Return a list of projects. Customers are only shown their projects.
      */
     case 'reload_projects':
-        if ( isset( $kga['customer'] ) ) {
-          $view->projects = $database->get_projects_by_customer(($kga['customer']['customerID']));
-        } else {
-          $view->projects = $database->get_projects($kga['user']['groups']);
+        if (array_key_exists('customer', $kga)) {
+            $view->projects = $database->get_projects_by_customer(($kga['customer']['customer_id']));
+        }
+        else {
+            $view->projects = $database->get_projects(any_get_group_ids());
         }
 
         $view->show_project_edit_button = coreObjectActionAllowed('project', 'edit');
 
-        echo $view->render("lists/projects.php");
-    break;
+        echo $view->render("filter/projects.php");
+        break;
 
     /**
      * Return a list of activities. Customers are only shown activities which are
@@ -206,223 +216,259 @@ switch ($axAction) {
      * only activities for that project are shown.
      */
     case 'reload_activities':
-        if ( isset( $kga['customer'] ) ) {
-          $view->activities = $database->get_activities_by_customer($kga['customer']['customerID']);
-        } else {
-            if ( isset( $_REQUEST['project'] ) ) {
-          $view->activities = $database->get_activities_by_project($_REQUEST['project'],$kga['user']['groups']);
-            } else {
-          $view->activities = $database->get_activities($kga['user']['groups']);
+        if (array_key_exists('customer', $kga)) {
+            $view->activities = $database->get_activities_by_customer($kga['customer']['customer_id']);
+        }
+        else {
+            if (isset($_REQUEST['project'])) {
+                $view->activities = $database->get_activities_by_project($_REQUEST['project'], any_get_group_ids());
+            }
+            else {
+                $view->activities = $database->get_activities(any_get_group_ids());
             }
         }
 
         $view->show_activity_edit_button = coreObjectActionAllowed('activity', 'edit');
 
-        echo $view->render("lists/activities.php");
-    break;
-
+        echo $view->render("filter/activities.php");
+        break;
 
     /**
      * Add a new customer, project or activity. This is a core function as it's
      * used at least by the admin panel and the timesheet extension.
      */
     case 'add_edit_CustomerProjectActivity':
-        switch($axValue) {
+        switch ($axValue) {
             /**
              * add or edit a customer
              */
             case "customer":
-            	$data['name']     = $_REQUEST['name'];
-            	$data['comment']  = $_REQUEST['comment'];
-            	$data['company']  = $_REQUEST['company'];
-                $data['vat']      = $_REQUEST['vat'];
+                $data['name']     = $_REQUEST['name'];
+                $data['comment']  = $_REQUEST['comment'];
+                $data['company']  = $_REQUEST['company'];
+                $data['vat_rate'] = $_REQUEST['vat_rate'];
                 $data['contact']  = $_REQUEST['contactPerson'];
                 $data['timezone'] = $_REQUEST['timezone'];
-            	$data['street']   = $_REQUEST['street'];
-            	$data['zipcode']  = $_REQUEST['zipcode'];
-            	$data['city']     = $_REQUEST['city'];
-            	$data['phone']    = $_REQUEST['phone'];
-            	$data['fax']      = $_REQUEST['fax'];
-            	$data['mobile']   = $_REQUEST['mobile'];
-            	$data['mail']     = $_REQUEST['mail'];
-            	$data['homepage'] = $_REQUEST['homepage'];
-            	$data['visible']  = getRequestBool('visible');
-            	$data['filter']   = $_REQUEST['customerFilter'];
-        
-              // If password field is empty dont overwrite the password.
-              if (isset($_REQUEST['password']) && $_REQUEST['password'] != "") {
-                $data['password'] = md5($kga['password_salt'].$_REQUEST['password'].$kga['password_salt']);
-              }
-              if (isset($_REQUEST['no_password']) && $_REQUEST['no_password']) {
-                $data['password'] = '';
-              }
+                $data['street']   = $_REQUEST['street'];
+                $data['zipcode']  = $_REQUEST['zipcode'];
+                $data['city']     = $_REQUEST['city'];
+                $data['phone']    = $_REQUEST['phone'];
+                $data['fax']      = $_REQUEST['fax'];
+                $data['mobile']   = $_REQUEST['mobile'];
+                $data['mail']     = $_REQUEST['mail'];
+                $data['homepage'] = $_REQUEST['homepage'];
+                $data['visible']  = getRequestBool('visible');
+                $data['filter']   = $_REQUEST['customerFilter'];
 
-              $oldGroups = array();
-                if ( $id ) {
-                $oldGroups = $database->customer_get_groupIDs($id);
+                // If password field is empty dont overwrite the password.
+                if (isset($_REQUEST['password']) && $_REQUEST['password'] != "") {
+                    $data['password'] = password_encrypt($_REQUEST['password']);
+                }
+                if (isset($_REQUEST['no_password']) && $_REQUEST['no_password']) {
+                    $data['password'] = '';
                 }
 
-              // validate data
-              $errorMessages = array();
-
-                if ( $database->user_name2id( $data['name'] ) !== false ) {
-                $errorMessages['name'] = $kga['lang']['errorMessages']['userWithSameName'];
+                $oldGroups = array();
+                if ($id) {
+                    $oldGroups = $database->customer_get_group_ids($id);
                 }
 
-                if ( count( $_REQUEST['customerGroups'] ) == 0 ) {
-                $errorMessages['customerGroups'] = $kga['lang']['atLeastOneGroup'];
+                // validate data
+                $errorMessages = array();
+
+                if ($database->user_name2id($data['name']) !== false) {
+                    $errorMessages['name'] = $kga['lang']['errorMessages']['userWithSameName'];
                 }
 
-                if ( !checkGroupedObjectPermission( 'Customer', $id ? 'edit' : 'add', $oldGroups, $_REQUEST['customerGroups'] ) ) {
-                $errorMessages[''] = $kga['lang']['errorMessages']['permissionDenied'];
+                if (count($_REQUEST['customer_groups']) == 0) {
+                    $errorMessages['customer_groups'] = $kga['lang']['atLeastOneGroup'];
                 }
 
-              
-              if (count($errorMessages) == 0) {
-            	
-                // add or update the customer
-                  if (!$id) {
-                      $id = $database->customer_create($data);
-                  } else {
-                      $database->customer_edit($id, $data);
-                  }
+                if (!checkGroupedObjectPermission('customer', $id ? 'edit' : 'add', $oldGroups, $_REQUEST['customer_groups'])) {
+                    $errorMessages[''] = $kga['lang']['errorMessages']['permissionDenied'];
+                }
 
-                // set the customer group mappings
-                $database->assign_customerToGroups($id, $_REQUEST['customerGroups']);
-              }
-              
-              header('Content-Type: application/json;charset=utf-8');
-              echo json_encode(array(
-                'errors' => $errorMessages));
-              
-            break;
-            
+
+                if (count($errorMessages) == 0) {
+
+                    // add or update the customer
+                    if (!$id) {
+                        $id = $database->customer_create($data);
+                    }
+                    else {
+                        $database->customer_edit($id, $data);
+                    }
+
+                    // set the customer group mappings
+                    $database->assign_customerToGroups($id, $_REQUEST['customer_groups']);
+                }
+
+                header('Content-Type: application/json;charset=utf-8');
+                echo json_encode(array('errors' => $errorMessages));
+
+                break;
+
             /**
              * add or edit a project
              */
             case "project":
-              $data['name']         = $_REQUEST['name'];
-              $data['customerID']   = $_REQUEST['customerID'];
-              $data['comment']      = $_REQUEST['projectComment'];
-              $data['visible']      = getRequestBool('visible');
-              $data['internal']     = getRequestBool('internal');
-              $data['filter']       = $_REQUEST['projectFilter'];
-              $data['budget']       = getRequestDecimal($_REQUEST['project_budget']);
-              $data['effort']       = getRequestDecimal($_REQUEST['project_effort']);
-              $data['approved']     = getRequestDecimal($_REQUEST['project_approved']);
-              $data['defaultRate']  = getRequestDecimal($_REQUEST['defaultRate']);
-              $data['myRate']       = getRequestDecimal($_REQUEST['myRate']);
-              $data['fixedRate']    = getRequestDecimal($_REQUEST['fixedRate']);
+                $data['customer_id'] = $_REQUEST['customer_id'];
+                $data['name']        = $_REQUEST['name'];
+                $data['comment']     = $_REQUEST['project_comment'];
+                $data['visible']     = getRequestBool('visible');
+                $data['filter']      = $_REQUEST['project_filter'];
 
-              $oldGroups = array();
-                if ( $id ) {
-                $oldGroups = $database->project_get_groupIDs($id);
+                $data['budget']   = getRequestDecimal($_REQUEST['project_budget']);
+                $data['effort']   = getRequestDecimal($_REQUEST['project_effort']);
+                $data['approved'] = getRequestDecimal($_REQUEST['project_approved']);
+                $data['internal'] = getRequestBool('internal');
+
+                $data['default_rate'] = getRequestDecimal($_REQUEST['default_rate']);
+                $data['my_rate']      = getRequestDecimal($_REQUEST['my_rate']);
+                $data['fixed_rate']   = getRequestDecimal($_REQUEST['fixed_rate']);
+
+                $oldGroups = array();
+                if ($id) {
+                    $oldGroups = $database->project_get_groupIDs($id);
                 }
 
-              // validate data
-              $errorMessages = array();
+                // validate data
+                $errorMessages = array();
 
-                if ( count( $_REQUEST['projectGroups'] ) == 0 ) {
-                $errorMessages['projectGroups'] = $kga['lang']['atLeastOneGroup'];
+                if (count($_REQUEST['projectGroups']) == 0) {
+                    $errorMessages['projectGroups'] = $kga['lang']['atLeastOneGroup'];
                 }
 
-                if ( !checkGroupedObjectPermission( 'Project', $id ? 'edit' : 'add', $oldGroups, $_REQUEST['projectGroups'] ) ) {
-                $errorMessages[''] = $kga['lang']['errorMessages']['permissionDenied'];
+                if (!checkGroupedObjectPermission('project', $id ? 'edit' : 'add', $oldGroups, $_REQUEST['projectGroups'])) {
+                    $errorMessages[''] = $kga['lang']['errorMessages']['permissionDenied'];
                 }
 
-              if (count($errorMessages) == 0) {
-                  // add or update the project
-                if (!$id) {
-                  $id = $database->project_create($data);
-                } else {
-                  $database->project_edit($id, $data);
-                }
-
-                    if ( isset( $_REQUEST['projectGroups'] ) ) {
-                  $database->assign_projectToGroups($id, $_REQUEST['projectGroups']);
+                if (empty($errorMessages)) {
+                    if (!$database->transactionBegin()) {
+                        $errorMessages[''] = $kga['lang']['errorMessages']['internalError'];
                     }
 
-                if (isset($_REQUEST['assignedActivities'])) {
-                  $database->assignProjectToActivitiesForGroup($id, array_values($_REQUEST['assignedActivities']), $kga['user']['groups']);
-
-                  foreach($_REQUEST['assignedActivities'] as $index => $activityID) {
-                            if ( $activityID <= 0 ) {
-                        continue;
+                    // add or update the project
+                    if (empty($errorMessages)) {
+                        if (!$id) {
+                            if (!$id = $database->project_create($data)) {
+                                $errorMessages[''] = $kga['lang']['errorMessages']['internalError'];
                             }
-
-                    $data = array();
-                    foreach (array('budget', 'effort', 'approved') as $key) {
-                        $value = getRequestDecimal($_REQUEST[$key][$index]);
-                        if ($value !== null) {
-                            $data[$key] = max(0, $value);
-                                } else {
-                          $data[$key] = "null";
+                        }
+                        else {
+                            if (!$database->project_edit($id, $data)) {
+                                $errorMessages[''] = $kga['lang']['errorMessages']['internalError'];
+                            }
+                        }
                     }
-                            }
 
-                    $database->project_activity_edit($id, $activityID, $data);
-                  }
+
+                    if (empty($errorMessages) && isset($_REQUEST['projectGroups'])) {
+                        if (!$database->assign_projectToGroups($id, $_REQUEST['projectGroups'])) {
+                            $errorMessages[''] = $kga['lang']['errorMessages']['internalError'];
+                        }
+                    }
+
+                    if (empty($errorMessages) && isset($_REQUEST['assignedActivities'])) {
+                        if (!$database->assignProjectToActivitiesForGroup(
+                            $id, array_values($_REQUEST['assignedActivities']), any_get_group_ids())
+                        ) {
+                            $errorMessages[''] = $kga['lang']['errorMessages']['internalError'];
+                        }
+
+                        if (empty($errorMessages)) {
+
+                            foreach ($_REQUEST['assignedActivities'] as $index => $activityID) {
+
+                                if ($activityID <= 0) continue;
+
+                                $data = array();
+                                foreach (array('budget', 'effort', 'approved') as $key) {
+                                    $value = getRequestDecimal($_REQUEST[$key][$index]);
+                                    if ($value !== null) {
+                                        $data[$key] = max(0, $value);
+                                    }
+                                    else {
+                                        $data[$key] = "null";
+                                    }
+                                }
+
+                                if (!$database->project_activity_edit($id, $activityID, $data)) {
+                                    $errorMessages[''] = $kga['lang']['errorMessages']['internalError'];
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if (empty($errorMessages) && !$database->transactionEnd()) {
+                        $errorMessages[''] = $kga['lang']['errorMessages']['internalError'];
+                    }
+
+                    if (!empty($errorMessages)) {
+                        $database->transactionRollback();
+                    }
                 }
-              }
-              
-              header('Content-Type: application/json;charset=utf-8');
-              echo json_encode(array(
-                'errors' => $errorMessages));
-            break;
-            
+
+                header('Content-Type: application/json;charset=utf-8');
+                echo json_encode(array('errors' => $errorMessages));
+                break;
+
             /**
              * add or edit a activity
              */
             case "activity":
-              $data['name']         = $_REQUEST['name'];
-              $data['comment']      = $_REQUEST['comment'];
-              $data['visible']      = getRequestBool('visible');
-              $data['filter']       = $_REQUEST['activityFilter'];
-              $data['defaultRate']  = getRequestDecimal($_REQUEST['defaultRate']);
-              $data['myRate']       = getRequestDecimal($_REQUEST['myRate']);
-              $data['fixedRate']    = getRequestDecimal($_REQUEST['fixedRate']);
+                $data['name']         = $_REQUEST['name'];
+                $data['comment']      = $_REQUEST['comment'];
+                $data['visible']      = getRequestBool('visible');
+                $data['filter']       = $_REQUEST['activityFilter'];
+                $data['default_rate'] = getRequestDecimal($_REQUEST['default_rate']);
+                $data['my_rate']      = getRequestDecimal($_REQUEST['my_rate']);
+                $data['fixed_rate']   = getRequestDecimal($_REQUEST['fixed_rate']);
 
-              $oldGroups = array();
-                if ( $id ) {
-                $oldGroups = $database->activity_get_groupIDs($id);
+                $oldGroups = array();
+                if ($id) {
+                    $oldGroups = $database->activity_get_groupIDs($id);
                 }
 
-              // validate data
-              $errorMessages = array();
+                // validate data
+                $errorMessages = array();
 
-                if ( count( $_REQUEST['activityGroups'] ) == 0 ) {
-                $errorMessages['activityGroups'] = $kga['lang']['atLeastOneGroup'];
+                if (count($_REQUEST['activityGroups']) == 0) {
+                    $errorMessages['activityGroups'] = $kga['lang']['atLeastOneGroup'];
                 }
 
-                if ( !checkGroupedObjectPermission( 'Activity', $id ? 'edit' : 'add', $oldGroups, $_REQUEST['activityGroups'] ) ) {
-                $errorMessages[''] = $kga['lang']['errorMessages']['permissionDenied'];
+                if (!checkGroupedObjectPermission('activity', $id ? 'edit' : 'add', $oldGroups, $_REQUEST['activityGroups'])) {
+                    $errorMessages[''] = $kga['lang']['errorMessages']['permissionDenied'];
                 }
 
-              if (count($errorMessages) == 0) {
-                // add or update the project
-                if (!$id) {
-                  $id = $database->activity_create($data);
-                } else {
-                  $database->activity_edit($id, $data);
-                }
-
-                // set the activity group and activity project mappings
-                    if ( isset( $_REQUEST['activityGroups'] ) ) {
-                  $database->assign_activityToGroups($id, $_REQUEST['activityGroups']);
+                if (count($errorMessages) == 0) {
+                    // add or update the project
+                    if (!$id) {
+                        $id = $database->activity_create($data);
+                    }
+                    else {
+                        $database->activity_edit($id, $data);
                     }
 
-                    if ( isset( $_REQUEST['projects'] ) ) {
-                  $database->assignActivityToProjectsForGroup($id, $_REQUEST['projects'], $kga['user']['groups']);
-                    } else {
-                  $database->assignActivityToProjectsForGroup($id, array(), $kga['user']['groups']);
-              }
+                    // set the activity group and activity project mappings
+                    if (isset($_REQUEST['activityGroups'])) {
+                        $database->assign_activityToGroups($id, $_REQUEST['activityGroups']);
+                    }
+
+                    if (isset($_REQUEST['projects'])) {
+                        $database->assignActivityToProjectsForGroup($id, $_REQUEST['projects'], any_get_group_ids());
+                    }
+                    else {
+                        $database->assignActivityToProjectsForGroup($id, array(), any_get_group_ids());
+                    }
                 }
 
-              header('Content-Type: application/json;charset=utf-8');
-              echo json_encode(array(
-                'errors' => $errorMessages));
-            break;
+                header('Content-Type: application/json;charset=utf-8');
+                echo json_encode(array(
+                                     'errors' => $errorMessages));
+                break;
         }
-    break;
+        break;
 
 }

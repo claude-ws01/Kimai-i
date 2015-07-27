@@ -38,6 +38,7 @@ class Kimai_Update_Version
      *
      * @param $version
      * @param $revision
+     *
      * @return bool
      */
     public function compare($version, $revision = null)
@@ -46,8 +47,8 @@ class Kimai_Update_Version
         $remote  = $this->vars['version'];
 
         if ($revision != null) {
-            $current = $current.'.'.$revision;
-            $remote  = $remote.'.'.$this->vars['revision'];
+            $current = $current . '.' . $revision;
+            $remote  = $remote . '.' . $this->vars['revision'];
         }
 
         return version_compare($remote, $current);
@@ -67,12 +68,13 @@ class Kimai_Update_Version
      * Check if all required fields are set.
      *
      * @param array $versionInfo
+     *
      * @return bool
      */
     protected function validate(array $versionInfo)
     {
         $required = array("time", "version", "status", "revision");
-        foreach($required as $k) {
+        foreach ($required as $k) {
             if (!isset($versionInfo[$k])) {
                 return false;
             }

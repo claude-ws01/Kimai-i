@@ -56,7 +56,7 @@ switch ($axAction)
             $view->refundable       = $expense['refundable'];
 
             // check if this entry may be edited
-            if (!$database->global_role_allows(any_get_global_role_id(),'ki_expenses__own_entry__edit'))
+            if (!$database->global_role_allows(any_get_global_role_id(),'ki_expense__own_entry__edit'))
               break;
 
             if (!isset($view->projects[$expense['project_id']])) {
@@ -74,7 +74,7 @@ switch ($axAction)
           $view->multiplier = '1'.$GLOBALS['kga']['conf']['decimal_separator'].'0';
 
           // check if this entry may be added
-          if (!$database->global_role_allows(any_get_global_role_id(),'ki_expenses__own_entry__add'))
+          if (!$database->global_role_allows(any_get_global_role_id(),'ki_expense__own_entry__add'))
             break;
         }
 

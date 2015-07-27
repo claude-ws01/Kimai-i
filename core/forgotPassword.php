@@ -22,19 +22,21 @@
  * will be redirected to core/kimai.php.
  */
 
-if ( !isset( $_REQUEST['a'] ) ) {
+if (!isset($_REQUEST['a'])) {
     $_REQUEST['a'] = '';
 }
 
 if (!isset($_REQUEST['name']) || is_array($_REQUEST['name'])) {
-    $name = ""; 
-} else { 
+    $name = '';
+}
+else {
     $name = $_REQUEST['name'];
 }
 
 if (!isset($_REQUEST['key']) || is_array($_REQUEST['key'])) {
-    $key = "nokey";  // will never match since hash values are either NULL or 32 characters
-} else { 
+    $key = 'nokey';  // will never match since hash values are either NULL or 32 characters
+}
+else {
     $key = $_REQUEST['key'];
 }
 
@@ -42,6 +44,7 @@ if (!isset($_REQUEST['key']) || is_array($_REQUEST['key'])) {
 // =====================
 // = standard includes =
 // =====================
+global $database, $kga;
 require('includes/basics.php');
 
 $view = new Zend_View();
@@ -50,9 +53,9 @@ $view->setBasePath(WEBROOT . '/templates');
 // =========================
 // = authentication method =
 // =========================
-$authClass = 'Kimai_Auth_' . ucfirst($kga['authenticator']);
+$authClass = 'Kimai_Auth_' . ucfirst($GLOBALS['kga']['authenticator']);
 if (!class_exists($authClass)) {
-    $authClass = 'Kimai_Auth_' . ucfirst($kga['authenticator']);
+    $authClass = 'Kimai_Auth_' . ucfirst($GLOBALS['kga']['authenticator']);
 }
 $authPlugin = new $authClass($database, $kga);
 
@@ -61,32 +64,31 @@ $view->kga = $kga;
 // ===================================
 // = current database setup correct? =
 // ===================================
-checkDBversion(".");
+checkDBversion('.');
 
 // =================================================================
 // = processing login and displaying either login screen or errors =
 // =================================================================
 //
-$name = htmlspecialchars(trim($name));
+$name        = htmlspecialchars(trim($name));
 $is_customer = $database->is_customer_name($name);
 if ($is_customer) {
-  $id = $database->customer_nameToID($name);
-  $customer = $database->customer_get_data($id);
-  $keyCorrect = $key == $customer['passwordResetHash'];
+    $id         = $database->customer_nameToID($name);
+    $customer   = $database->customer_get_data($id);
+    $keyCorrect = $key == $customer['password_reset_hash'];
 }
 else {
-  $id = $database->user_name2id($name);
-  $user = $database->user_get_data($id);
-  $keyCorrect = $key == $user['passwordResetHash'];
+    $id         = $database->user_name2id($name);
+    $user       = $database->user_get_data($id);
+    $keyCorrect = $key == $user['password_reset_hash'];
 }
 
-switch($_REQUEST['a'])
-{
+switch ($_REQUEST['a']) {
 
-    case "request":
+    case 'request':
 
-        Logger::logfile("password reset: " . $name. ($is_customer?" as customer":" as user"));
-    break;
+        Logger::logfile('password reset: ' . $name . ($is_customer ? ' as customer' : ' as user'));
+        break;
 
     // ============================
     // = Show password reset page =
@@ -94,13 +96,12 @@ switch($_REQUEST['a'])
     default:
 
 
-      $view->devtimespan = '2006-'.date('y');
-      $view->keyCorrect = $keyCorrect;
-      $view->requestData = array(
-        'key' => $key,
-        'name' => $name
-      );
+        $view->keyCorrect  = $keyCorrect;
+        $view->requestData = array(
+            'key'  => $key,
+            'name' => $name,
+        );
 
-      echo $view->render('login/forgotPassword.php');
-    break;
+        echo $view->render('login/forgotPassword.php');
+        break;
 }

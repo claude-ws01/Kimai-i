@@ -150,7 +150,7 @@ class Kimai_User
      */
     public function getBanTime()
     {
-        return $this->banTime;
+        return $this->ban_time;
     }
 
     /**
@@ -166,7 +166,7 @@ class Kimai_User
      */
     public function getLastActivity()
     {
-        return $this->lastActivity;
+        return $this->last_activity;
     }
 
     /**
@@ -174,7 +174,7 @@ class Kimai_User
      */
     public function getLastProject()
     {
-        return $this->lastProject;
+        return $this->last_project;
     }
 
     /**
@@ -182,7 +182,7 @@ class Kimai_User
      */
     public function getLastRecord()
     {
-        return $this->lastRecord;
+        return $this->last_record;
     }
 
     /**
@@ -224,7 +224,7 @@ class Kimai_User
      */
     public function getTimeframeBegin()
     {
-        return $this->timeframeBegin;
+        return $this->timeframe_begin;
     }
 
     /**
@@ -232,7 +232,7 @@ class Kimai_User
      */
     public function getTimeframeEnd()
     {
-        return $this->timeframeEnd;
+        return $this->timeframe_end;
     }
 
     /**
@@ -240,7 +240,7 @@ class Kimai_User
      */
     public function getUserID()
     {
-        return $this->userID;
+        return $this->user_id;
     }
 
 }

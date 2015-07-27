@@ -66,6 +66,7 @@ class Kimai_Auth_Http extends Kimai_Auth_Abstract
      **/
     public function performAutoLogin(&$userId)
     {
+        global $database, $kga;
         $userId = false;
 
         // No autologin if not allowed or if no remote user authorized by web server
@@ -91,17 +92,20 @@ class Kimai_Auth_Http extends Kimai_Auth_Abstract
         }
 
         // User is authenticated by web server. Does the user exist in Kimai yet?
-        global $kga;
 
         $check_username = $this->HTAUTH_FORCE_USERNAME_LOWERCASE ? strtolower($check_username) : $check_username;
-        $check_username = mysqli_real_escape_string($this->mysql_link, $check_username);
+        $check_username = mysqli_real_escape_string($database->link, $check_username);
 
-        $result = mysqli_query($this->mysql_link, sprintf("SELECT * FROM %susers WHERE name ='%s';", $kga['server_prefix'], $check_username));
+        $p = $kga['server_prefix'];
+        $query = "SELECT * FROM ${p}user WHERE name ='${check_username}';";
+        $result = mysqli_query($database->link, $query);
+        // $result = mysqli_query($this->link, sprintf("SELECT * FROM %susers WHERE name ='%s';", $kga['server_prefix'], $check_username));
+
         if ($result !== false && mysqli_num_rows($result) > 0) {
 
             // User found in Kimai DB: get info and return true
             $row    = mysqli_fetch_assoc($result);
-            $userId = $row['userID'];
+            $userId = $row['user_id'];
 
             return true;
         }
@@ -110,16 +114,16 @@ class Kimai_Auth_Http extends Kimai_Auth_Abstract
         if ($this->HTAUTH_USER_AUTOCREATE) {
 
             // AutoCreate the user and return true
-            $userId = $this->database->user_create(array(
+            $userId = $database->user_create(array(
                                                        'name'         => $check_username,
-                                                       'globalRoleID' => $this->getDefaultGlobalRole(),
+                                                       'global_role_id' => $this->getDefaultGlobalRole(),
                                                        'active'       => 1
                                                    ));
-            $this->database->setGroupMemberships($userId, array($this->getDefaultGroups()));
+            $database->setGroupMemberships($userId, array($this->getDefaultGroups()));
 
             // Set a random password, unknown to the user. Autologin must be used until user sets own password
             $userData = array('password' => md5($kga['password_salt'] . md5(uniqid(rand(), true)) . $kga['password_salt']));
-            $this->database->user_edit($userId, $userData);
+            $database->user_edit($userId, $userData);
 
             return true;
         }
@@ -129,12 +133,16 @@ class Kimai_Auth_Http extends Kimai_Auth_Abstract
 
     public function authenticate($username, $password, &$userId)
     {
-        global $kga;
+        global $kga, $database;
 
-        $passCrypt = md5($kga['password_salt'] . $password . $kga['password_salt']);
-        $username  = mysqli_real_escape_string($this->mysql_link, $username);
+        $passCrypt = password_encrypt($password);
+        $username  = mysqli_real_escape_string($database->link, $username);
 
-        $result = mysqli_query($this->mysql_link, sprintf("SELECT * FROM %susers WHERE name ='%s';", $kga['server_prefix'], $username));
+        $p = $kga['server_prefix'];
+        $query = "SELECT * FROM ${p}user WHERE name ='${username}';";
+        $result = mysqli_query($database->link, $query);
+        //$result = mysqli_query($this->link, sprintf("SELECT * FROM %susers WHERE name ='%s';", $kga['server_prefix'], $username));
+
         if ($result !== false || mysqli_num_rows($result) < 1) {
             $userId = false;
 
@@ -144,8 +152,8 @@ class Kimai_Auth_Http extends Kimai_Auth_Abstract
         $row     = mysqli_fetch_assoc($result);
         $pass    = $row['password'];
         $ban     = $row['ban'];
-        $banTime = $row['banTime'];
-        $userId  = $row['userID'];
+        $banTime = $row['ban_time'];
+        $userId  = $row['user_id'];
 
         return $pass == $passCrypt && $username != "";
     }

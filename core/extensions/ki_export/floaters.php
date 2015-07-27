@@ -21,13 +21,13 @@
 $isCoreProcessor = 0;
 $dir_templates = "templates";
 require("../../includes/kspi.php");
-
+global $database, $kga, $view;
 switch ($axAction) {
 
     case "PDF":
       $defaults = array('print_comments'=>1, 'print_summary'=>1, 'create_bookmarks'=>1, 'download_pdf'=>1,
            'customer_new_page'=>0, 'reverse_order'=>0, 'pdf_format'=>'export_pdf');
-      $prefs = $database->user_get_preferences_by_prefix('ki_export.pdf.');
+      $prefs = $database->pref_get_by_prefix('ki_export.pdf.');
       $view->prefs = array_merge($defaults,$prefs);
       
       echo $view->render("floaters/export_PDF.php"); 
@@ -35,7 +35,7 @@ switch ($axAction) {
 
     case "XLS":  
       $defaults = array('reverse_order'=>0);
-      $prefs = $database->user_get_preferences_by_prefix('ki_export.xls.');
+      $prefs = $database->pref_get_by_prefix('ki_export.xls.');
       $view->prefs = array_merge($defaults,$prefs);
 
       echo $view->render("floaters/export_XLS.php"); 
@@ -43,7 +43,7 @@ switch ($axAction) {
 
     case "CSV":  
       $defaults = array('column_delimiter'=>',','quote_char'=>'"','reverse_order'=>0);
-      $prefs = $database->user_get_preferences_by_prefix('ki_export.csv.');
+      $prefs = $database->pref_get_by_prefix('ki_export.csv.');
       $view->prefs = array_merge($defaults,$prefs);
 
       echo $view->render("floaters/export_CSV.php"); 
@@ -51,7 +51,7 @@ switch ($axAction) {
 
     case "print":  
       $defaults = array('print_summary'=>1,'reverse_order'=>0);
-      $prefs = $database->user_get_preferences_by_prefix('ki_export.print.');
+      $prefs = $database->pref_get_by_prefix('ki_export.print.');
       $view->prefs = array_merge($defaults,$prefs);
 
       echo $view->render("floaters/print.php"); 
@@ -65,4 +65,3 @@ switch ($axAction) {
 
 ?>
 
-    

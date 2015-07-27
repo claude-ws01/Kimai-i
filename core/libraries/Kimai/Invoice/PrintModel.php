@@ -26,13 +26,13 @@ class Kimai_Invoice_PrintModel
 {
 
     /**
-     * @var array
+     * @var array   timesheet or expense
      */
-    private $entries = array();
+    private $details = array();
     /**
      * @var int
      */
-    private $amount = 0;
+    private $netTotal = 0;
     /**
      * @var array
      */
@@ -40,7 +40,7 @@ class Kimai_Invoice_PrintModel
     /**
      * @var int
      */
-    private $vat = 0;
+    private $vatTotal = 0;
     /**
      * @var int
      */
@@ -48,7 +48,7 @@ class Kimai_Invoice_PrintModel
     /**
      * @var int
      */
-    private $total = 0;
+    private $gTotal = 0;
     /**
      * @var array
      */
@@ -94,21 +94,21 @@ class Kimai_Invoice_PrintModel
     public function toArray()
     {
         return array(
-            'entries'       => $this->getEntries(),     // array
-            'amount'        => $this->getAmount(),
-            'customer'      => $this->getCustomer(),    // array
-            'vat'           => $this->getVat(),
-            'vatRate'       => $this->getVatRate(),
-            'total'         => $this->getTotal(),
-            'projects'      => $this->getProjects(),    // array
-            'invoiceId'     => $this->getInvoiceId(),
-            'beginDate'     => $this->getBeginDate(),
-            'endDate'       => $this->getEndDate(),
-            'invoiceDate'   => $this->getInvoiceDate(),
-            'dateFormat'    => $this->getDateFormat(),
-            'dueDate'       => $this->getDueDate(),
-            'currencySign'  => $this->getCurrencySign(),
-            'currencyName'  => $this->getCurrencyName()
+            'details'      => $this->getDetails(),     // array
+            'netTotal'     => $this->getNetTotal(),
+            'customer'     => $this->getCustomer(),    // array
+            'vatTotal'     => $this->getVatTotal(),
+            'vatRate'      => $this->getVatRate(),
+            'gTotal'       => $this->getGTotal(),
+            'projects'     => $this->getProjects(),    // array
+            'invoiceId'    => $this->getInvoiceId(),
+            'beginDate'    => $this->getBeginDate(),
+            'endDate'      => $this->getEndDate(),
+            'invoiceDate'  => $this->getInvoiceDate(),
+            'dateFormat'   => $this->getDateFormat(),
+            'dueDate'      => $this->getDueDate(),
+            'currencySign' => $this->getCurrencySign(),
+            'currencyName' => $this->getCurrencyName(),
         );
     }
 
@@ -241,35 +241,35 @@ class Kimai_Invoice_PrintModel
     }
 
     /**
-     * @param array $entries
+     * @param array $details
      */
-    public function setEntries(array $entries)
+    public function setDetails(array $details)
     {
-        $this->entries = $entries;
+        $this->details = $details;
     }
 
     /**
      * @return array
      */
-    public function getEntries()
+    public function getDetails()
     {
-        return $this->entries;
+        return $this->details;
     }
 
     /**
      * @param int $amount
      */
-    public function setAmount($amount)
+    public function setNetTotal($amount)
     {
-        $this->amount = $amount;
+        $this->netTotal = $amount;
     }
 
     /**
      * @return int
      */
-    public function getAmount()
+    public function getNetTotal()
     {
-        return $this->amount;
+        return $this->netTotal;
     }
 
     /**
@@ -291,17 +291,17 @@ class Kimai_Invoice_PrintModel
     /**
      * @param int $vat
      */
-    public function setVat($vat)
+    public function setVatTotal($vat)
     {
-        $this->vat = $vat;
+        $this->vatTotal = $vat;
     }
 
     /**
      * @return int
      */
-    public function getVat()
+    public function getVatTotal()
     {
-        return $this->vat;
+        return $this->vatTotal;
     }
 
     /**
@@ -323,17 +323,17 @@ class Kimai_Invoice_PrintModel
     /**
      * @param int $total
      */
-    public function setTotal($total)
+    public function setGTotal($total)
     {
-        $this->total = $total;
+        $this->gTotal = $total;
     }
 
     /**
      * @return int
      */
-    public function getTotal()
+    public function getGTotal()
     {
-        return $this->total;
+        return $this->gTotal;
     }
 
     /**

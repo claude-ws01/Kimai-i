@@ -1,4 +1,5 @@
 <?php
+/** @var $database MySQL */
 
 /**
  * Copyright (C) 2011 by Skaldrom Y. Sarg of oncode.info
@@ -18,7 +19,6 @@
  * @author Andreas Heigl<andras@heigl.org>
  * @since  15.08.2014
  */
-
 class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
 {
 
@@ -52,7 +52,7 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
      *
      * @var string $searchBase
      */
-    protected  $searchBase = 'dc=example,c=org';
+    protected $searchBase = 'dc=example,c=org';
 
     /**
      * The filter to use when searching for a user
@@ -111,7 +111,7 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
      * @var array $allowedGroupIds
      */
     protected $allowedGroupIds = array(
-        'kimai-access',
+        'kimai_access',
     );
 
     /**
@@ -129,7 +129,7 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
      * @var array $nonLdapAccounts
      */
     protected $nonLdapAcounts = array(
-        'admin'
+        'admin',
     );
 
     /**
@@ -160,31 +160,35 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
      */
     private $kimaiAuth;
 
-    /**
+    /*
      * {@inherit}
      */
     public function __construct($database = null, $kga = null)
     {
-        if (! function_exists('ldap_bind')) {
+        if (!function_exists('ldap_bind')) {
             throw new InvalidArgumentException('LDAP-Extension is not installed');
         }
         parent::__construct($database, $kga);
         $this->kimaiAuth = new Kimai_Auth_Kimai($database, $kga);
     }
 
-    /**
+    /*
      * {@inherit}
      */
     public function authenticate($username, $password, &$userId)
     {
+        global $database, $kga;
+
+
         // Check if username should be authenticated locally
         if (in_array($username, $this->nonLdapAcounts)) {
             return $this->kimaiAuth->authenticate($username, $password, $userId);
         }
 
 
-        if (! $username || ! $password) {
+        if (!$username || !$password) {
             $userId = false;
+
             return false;
         }
 
@@ -194,6 +198,7 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
         if (!$connect_result) {
             echo "Cannot connect to ", $this->host;
             $userId = false;
+
             return false;
         }
 
@@ -202,16 +207,18 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
         // Bind to the ldap and query for the given userinformation.
         if ($this->bindDN && $this->bindPW) {
             $bindResult = ldap_bind($connect_result, $this->bindDN, $this->bindPW);
-        } else {
+        }
+        else {
             $bindResult = ldap_bind($connect_result);
         }
 
-        if (! $bindResult) {
+        if (!$bindResult) {
             echo sprintf(
                 "Can't bind to the LDAP with DN %s",
                 $this->bindDN
             );
             $userId = false;
+
             return false;
         }
 
@@ -230,16 +237,19 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
             0,
             10
         );
-        if (! $_ldapresults) {
+
+        if (!$_ldapresults) {
             // The server returned no result-set at all.
             echo "No user with that information found";
             $userId = false;
+
             return false;
         }
         if (1 > ldap_count_entries($connect_result, $_ldapresults)) {
             // The returned result set contains no data.
             echo "No user with that information found";
             $userId = false;
+
             return false;
         }
         if (1 < ldap_count_entries($connect_result, $_ldapresults)) {
@@ -247,6 +257,7 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
             // can not be sure, that the user is unique.
             echo "More than one user found with that information";
             $userId = false;
+
             return false;
         }
 
@@ -255,11 +266,12 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
             // The returned result-set could not be retrieved.
             echo 'no result set found';
             $userId = false;
+
             return false;
         }
         // Empty the result set. We have the results in a variable so don't
         // bother the server any more.
-        ldap_free_result ($_ldapresults);
+        ldap_free_result($_ldapresults);
         $distinguishedName = $_results[0]['dn'];
         $uidAttribute      = $_results[0][$this->usernameAttribute][0];
         $emailAddress      = '';
@@ -277,11 +289,12 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
         if (false === $link_id) {
             echo 'Password and/or Username mismatch';
             $userId = false;
+
             return false;
         }
 
         // Check whether the user is member of one of the required LDAP-groups
-        $filter = sprintf($this->groupFilter, $uidAttribute, $distinguishedName);
+        $filter       = sprintf($this->groupFilter, $uidAttribute, $distinguishedName);
         $_ldapresults = ldap_search(
             $connect_result,
             $this->searchBase,
@@ -291,16 +304,18 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
             0,
             10
         );
-        if (! $_ldapresults) {
+        if (!$_ldapresults) {
             // The server returned no result-set at all.
             echo "No group for the user found";
             $userId = false;
+
             return false;
         }
         if (1 > ldap_count_entries($connect_result, $_ldapresults)) {
             // The returned result set contains no data.
             echo "No group for that user found";
             $userId = false;
+
             return false;
         }
         $_results = ldap_get_entries($connect_result, $_ldapresults);
@@ -308,9 +323,10 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
             // The returned result-set could not be retrieved.
             echo 'no result set for groups found';
             $userId = false;
+
             return false;
         }
-        ldap_free_result ( $_ldapresults );
+        ldap_free_result($_ldapresults);
 
         $groups = array();
         foreach ($_results as $result) {
@@ -321,40 +337,43 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
             $groups = array_merge($groups, $resultGroups);
         }
 
-        if (! array_intersect($groups, $this->allowedGroupIds)) {
+        if (!array_intersect($groups, $this->allowedGroupIds)) {
             // The returned result-set could not be retrieved.
             echo 'no valid groups found';
             $userId = false;
+
             return false;
         }
 
         // User is authenticated. Does it exist in Kimai yet?
         $check_username = $this->forceLowercase ? strtolower($uidAttribute) : $uidAttribute;
 
-        $userId = $this->database->user_name2id($check_username);
-        if ($userId === false)  {
+        $userId = $database->user_name2id($check_username);
+        if ($userId === false) {
             // User does not exist (yet)
             if ($this->autocreateUsers) {
                 // Create it!
-                $userId = $this->database->user_create(array(
-                    'name'         => $check_username,
-                    'globalRoleID' => $this->getDefaultGlobalRole(),
-                    'active'       => 1
-                ));
+                $userId = $database->user_create(array(
+                                                           'name'           => $check_username,
+                                                           'global_role_id' => $this->getDefaultGlobalRole(),
+                                                           'active'         => 1,
+                                                       ));
 
-                $this->database->setGroupMemberships($userId, $this->getDefaultGroups());
+                $database->setGroupMemberships($userId, $this->getDefaultGroups());
 
                 // Set a password, to calm kimai down
-                $usr_data = array('password' => md5($this->kga['password_salt'] . md5(uniqid(rand(), true)) . $this->kga['password_salt']));
+                $usr_data = array('password' => md5($kga['password_salt'] . md5(uniqid(rand(), true)) . $kga['password_salt']));
                 if ($emailAddress) {
                     $usr_data['mail'] = $emailAddress;
                 }
                 if ($commonName) {
                     $usr_data['alias'] = $commonName;
                 }
-                $this->database->user_edit($userId, $usr_data);
-            } else {
+                $database->user_edit($userId, $usr_data);
+            }
+            else {
                 $userId = false;
+
                 return false;
             }
         }
@@ -369,14 +388,15 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
      */
     public function getDefaultGlobalRole()
     {
+        global $database;
+
         if ($this->defaultGlobalRoleName) {
-            $database = $this->getDatabase();
 
             $roles = $database->global_roles();
 
             foreach ($roles as $role) {
                 if ($role['name'] == $this->defaultGlobalRoleName) {
-                    return $role['globalRoleID'];
+                    return $role['global_role_id'];
                 }
             }
         }
@@ -391,24 +411,26 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
      */
     public function getDefaultGroups()
     {
+        global $database;
+
         $groups = array();
         $roles  = array();
         $map    = array();
 
-        $database = $this->getDatabase();
+
         foreach ($database->membership_roles() as $role) {
-            $roles[$role['name']] = $role['membershipRoleID'];
+            $roles[$role['name']] = $role['membership_role_id'];
         }
 
         foreach ($database->get_groups() as $group) {
-            $groups[$group['name']] = $group['groupID'];
+            $groups[$group['name']] = $group['group_id'];
         }
 
         foreach ($this->defaultGroupMemberships as $group => $role) {
-            if (! isset($groups[$group])) {
+            if (!isset($groups[$group])) {
                 continue;
             }
-            if (! isset($roles[$role])) {
+            if (!isset($roles[$role])) {
                 continue;
             }
 

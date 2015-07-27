@@ -48,7 +48,7 @@ var lists_customer_annotations = {};
 var lists_project_annotations = {};
 var lists_activity_annotations = {};
 var buzzer;
-var Jetzt;
+var cur_date;
 var subtableWidth, subtableCount;
 
 $(document).ready(function () {
@@ -87,19 +87,15 @@ $(document).ready(function () {
     else {
         //find what's the first tab
 
-        changeTab(0, 'ki_timesheets/init.php');
+        changeTab(0, 'ki_timesheet/init.php');
     }
 
-    $("#main_tools_button").hoverIntent({
-        sensitivity: 7, interval: 300, over: showTools, timeout: 3000, out: hideTools
-    });
-
-    $('#main_credits_button').click(function () {
+    $('#main_about_btn').click(function () {
         this.blur();
         floaterShow("floaters.php", "credits", 0, 0, 650);
     });
 
-    $('#main_prefs_button').click(function () {
+    $('#main_prefs_btn').click(function () {
         this.blur();
         floaterShow("floaters.php", "prefs", 0, 0, 450);
     });
@@ -113,7 +109,7 @@ $(document).ready(function () {
         buzzer.removeClass('disabled');
     }
 
-    n_uhr();
+    n_hour();
 
     if (currentRecording > -1) {
         show_stopwatch();

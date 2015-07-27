@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of
  * Kimai - Open Source Time Tracking // http://www.kimai.org
@@ -17,9 +18,8 @@
  * along with Kimai; If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 if (!defined('WEBROOT')) {
-    define('WEBROOT', dirname(__FILE__) . DIRECTORY_SEPARATOR);
+    define('WEBROOT', $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR);
 }
 
 set_include_path(
@@ -46,8 +46,8 @@ switch ($_REQUEST['err']) {
 
   // TODO - can we make sure $kga exists?
   case 'db':
-      $headline = $kga['lang']['errors'][0]['hdl'];
-      $message  = $kga['lang']['errors'][0]['txt'];
+      $headline = $GLOBALS['kga']['lang']['errors'][0]['hdl'];
+      $message  = $GLOBALS['kga']['lang']['errors'][0]['txt'];
   break;
     
   default:

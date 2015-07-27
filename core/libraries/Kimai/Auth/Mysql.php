@@ -30,7 +30,7 @@ class Kimai_Auth_Mysql extends Kimai_Auth_Abstract
      */
     public function authenticate($username, $password, &$userId)
     {
-        global $kga, $database;
+        global $database;
 
         $userId = $database->user_name2id($username);
 
@@ -38,11 +38,16 @@ class Kimai_Auth_Mysql extends Kimai_Auth_Abstract
             return false;
         }
 
-        $passCrypt = md5($kga['password_salt'] . $password . $kga['password_salt']);
+        $passCrypt = password_encrypt($password);
         $userData  = $database->user_get_data($userId);
         $pass      = $userData['password'];
 
-        return $pass == $passCrypt && !empty($username);
+        if ($pass !== $passCrypt) {
+            //CN..use to set password in database for admin, if something went wrong (update).
+            Logger::logfile('login failed: passCrypt = ' . $passCrypt);
+        }
+
+        return $pass === $passCrypt && !empty($username);
     }
 
     public function forgotPassword($name)
@@ -82,7 +87,7 @@ class Kimai_Auth_Mysql extends Kimai_Auth_Abstract
         }
 
         $data                        = array();
-        $data['password']            = md5($kga['password_salt'] . $password . $kga['password_salt']);
+        $data['password']            = password_encrypt($password);
         $data['password_reset_hash'] = null;
         $database->user_edit($id, $data);
 

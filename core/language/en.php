@@ -90,14 +90,15 @@ return array(
     'comment'                        => 'Comment',
     'comment_type'                   => 'Comment type',
     'company'                        => 'Company',
-    'confirmations'                  => array(
-        'ownGlobalRoleChange' => 'Are you sure you want to change your own global role from "%OLD%" to "%NEW%"?\nThis can lead to less permissions!',
-    ),
+    'ownGlobalRoleChange'            => 'Are you sure you want to change your own global role from "%OLD%" to "%NEW%"?\nThis can lead to less permissions!',
 
     'construction'                   => 'under construction...',
     'contact'                        => 'Contact',
     'contactPerson'                  => 'Contact person',
     'cookiewarning'                  => 'Turn Cookies on before you proceed.',
+    'copyr_origin'                   => 'Original Kimai - &copy; 2006-15 - <a href="http://www.kimai.org" target="_blank">Kimai Team</a>',
+    'copyr_poweredby'                => 'Powered by',
+    'copyr_provided'                 => 'Software provided under the terms and conditions<br/>of the <a href="COPYING" target="_blank"> General Public License Version 3</a>',
     'countryCode'                    => 'en-EN',
     'ctype0'                         => 'Comment',
     'ctype1'                         => 'Notice',
@@ -136,13 +137,13 @@ return array(
     'editGlobalRole'                 => 'edit global role',
     'editGroup'                      => 'Edit group',
     'editLimitError'                 => 'The end date is further in the past than it was allowed to be.',
-    'editLimitPart1'                 => 'No entries can be added or edited which end more than',
+    'editLimitPart1'                 => 'Timesheet/expenses: Can not edit after ',
     'editLimitPart2'                 => 'day(s) and',
-    'editLimitPart3'                 => 'hour(s) in the past.',
+    'editLimitPart3'                 => 'hour(s) from last date.',
     'editMembershipRole'             => 'edit membership role',
     'editstatus'                     => 'Edit status',
     'editUser'                       => 'Edit user',
-    'effort'                         => 'Effort',
+    'effort'                         => 'Costs',
     'erase'                          => 'Erase Entry',
     'error'                          => 'An error occured!',
     'exact_sums'                     => 'Use exact sums instead of adding the displayed rounded values.',
@@ -185,7 +186,7 @@ return array(
     'mail'                           => 'E-Mail',
     'mailUser'                       => 'Send email to this user',
     'members'                        => 'Members',
-    'membershipRole'                 => 'membership role',
+    'membershipRole'                 => 'Membership role',
     'membershipRoles'                => 'Membership roles',
     'minLength'                      => 'min. 5 characters!',
     'mins'                           => 'minutes',
@@ -266,6 +267,7 @@ return array(
     'refundable_long'                => 'Refundable (to employee)',
     'rename_caution_after_username'  => 'you have to re-login under your new username immediately!',
     'rename_caution_before_username' => 'If you change the user-name of',
+    'reset_password'                 => 'reset password',
     'retypePassword'                 => 'retype password',
     'rolename'                       => 'role name',
     'round_time'                     => 'Round time to ',
@@ -398,44 +400,22 @@ return array(
         'vat_rate' => 'VAT % rate. Used as default globally and for customers.',
     ),
 
-    'credits'                        => '        Torsten H&ouml;ltge, Severin Leonhardt, Kevin Papst, Oleg Britvin, Martin Klemkow and others...<br />
-
+    'credits'                        => '<br />
         <br />
-
+        If you find bugs or have ideas for features, feel free to create a <a href="https://github.com/cloudeasy/Kimai-i/issues">ticket</a>
+        on <a href=\'https://github.com/cloudeasy/Kimai-i\' target=\'_blank\'>GitHub</a>
+        <br />
+        <br />
+        <br/>Original Kimai - &copy; 2006-15 - by <a href="http://www.kimai.org" target="_blank">Kimai Team</a>
+        <br/>Torsten H&ouml;ltge, Severin Leonhardt, Kevin Papst, Oleg Britvin, Martin Klemkow and others...
+        <br/>
+        <br/>
+        The invoice extension uses the PclZip Library, which can be found at <a href="http://www.phpconcept.net" rel="nofollow">http://www.phpconcept.net</a>.
+        <br/>
+        <br/>
         <strong>This program is free software and published \'AS IS\' without any kind of warranty</strong> under the terms of the
-        <a href="../COPYING">GPL Version 3</a>.
-
-        <br /><br />
-
-        <a href=\'http://www.kimai.org\' target=\'_blank\'>Official Website</a> |
-        <a href=\'http://forum.kimai.org/\' target=\'_blank\'>Forum</a> |
-        <a href=\'https://github.com/kimai/kimai\' target=\'_blank\'>GitHub</a> |
-        <a href=\'http://sourceforge.net/projects/kimai/\' target=\'_blank\'>Sourceforge</a> |
-        <a href=\'http://www.kimai.org/en/download.html\' target=\'_blank\'>Download</a>
-
-        <br /><br />
-
-        If you do any alternations we would appreciate a posting on the <a href="http://forum.kimai.org" title="Kimai Forum">forum</a>.
-        You\'ll find a special board "<a href="http://forum.kimai.org/index.php?board=10.0" title="Extensions / Friendly Hacks">Friendly Hacks</a>" there.
-        Latest Developer Version can be downloaded <a href="https://github.com/kimai/kimai/archive/master.zip">here</a> (download for testing purposes only!).
-
-        <br /><br />
-
-        Please support further development of Kimai with a <a href="http://www.kimai.org/en/donate.html">donation</a> or
-        by extending its <a href="https://github.com/kimai/kimai/tree/master/core/language">language library</a>.
-
-        If you find bugs or have ideas for features, feel free to contact us through the forum.
-        Or even better: create a <a href="https://github.com/kimai/kimai/issues">ticket</a>!<br /><br />
-
-        <strong>Further thanks for support to:</strong> Vasilis van Gemert, Maximilian Kern, Enrico Ties, Thomas Wensing, John Resig, Kelvin Luck, Urs Gerig, Willem van Gemert,
-        Torben Boe and HamBug Studios, Klaus Franken, Chris (Urban Willi), Andreas Berndt, Niels Hoffmann, G&uuml;nter Hengsbach, Paul Brand, Joaqu&iacute;n G. de la Zerda,
-        Allesandro Bertoldo, Jos&eacute; Ricardo Cardoso.<br /><br />
-
-        <strong>Special thanks</strong> to all beta testers, which are way to many to mention them all - you know who you are! ;)<br /><br />
-
-        The invoice extension uses the PclZip Library, which can be found at <a href="http://www.phpconcept.net" rel="nofollow">http://www.phpconcept.net</a>.<br/><br/>
-
-        Version 0.8 was emerged with the kind support of RRZE (Regionales Rechenzentrum Erlangen).',
+        <a href="../COPYING">GNU GENERAL PUBLIC LICENSE v3</a>.
+        <br/>',
     'dateAndTimeHelp'                => '<strong>Times and dates have to be entered in the following form:</strong><br />Dates: DD.MM.YYYY<br />Times: HH:MM:SS or HH:MM or just HH. Ommitted parts will be set to 0.',
     'errorMessages'                  => array(
         'customerWithSameName'   => 'A user name can not be the same as a customer name.',
@@ -534,12 +514,11 @@ Choose another table prefix or delete existing tables with this prefix in order 
 
     'extensions'                     => array(
         'ki_admin'     => 'Admin Panel',
-        'ap_ext'       => 'Preference',
         'core'         => 'Permissions',
-        'deb_ext'      => 'Debug',
+        'ki_debug'     => 'Debug',
         'demo_ext'     => 'Demo',
         'ki_budget'    => 'Budget',
-        'ki_expense'   => 'Expenses',
+        'ki_expense'   => 'Expense',
         'ki_export'    => 'Export',
         'ki_invoice'   => 'Invoice',
         'ki_timesheet' => 'Timesheet',

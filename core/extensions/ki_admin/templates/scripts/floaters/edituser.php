@@ -6,7 +6,7 @@
                 var oldGlobalRoleID = '',
                     password = $('#password'),
                     retypePassword = $('#retypePassword'),
-                    message = "<?php echo $this->pureJsEscape($GLOBALS['kga']['lang']['confirmations']['ownGlobalRoleChange']); ?>",
+                    message = "<?php echo $this->pureJsEscape($GLOBALS['kga']['lang']['ownGlobalRoleChange']); ?>",
                     form = $('#adm_ext_form_editUser');
 
                 oldGlobalRoleID = <?php echo $this->user_details['global_role_id']; ?>;
@@ -179,7 +179,7 @@
 
     <div class="floater_content">
 
-        <form id="adm_ext_form_editUser" action="../extensions/ki_adminpanel/processor.php" method="post">
+        <form id="adm_ext_form_editUser" action="../extensions/ki_admin/processor.php" method="post">
             <fieldset id="general">
 
                 <ul>
@@ -202,7 +202,7 @@
                         <label for="password"><?php echo $GLOBALS['kga']['lang']['newPassword'] ?>:</label>
                         <input class="formfield" type="text" id="password" name="password" size="9"
                                value=""/> <?php echo $GLOBALS['kga']['lang']['minLength'] ?>
-                        <?php if ($this->user_details['password'] == ""): ?>
+                        <?php if ($this->user_details['password'] === ''): ?>
 
                             <br/><img
                                 src="../skins/<?php echo $this->escape($GLOBALS['kga']['pref']['skin']) ?>/grfx/caution_mini.png"
@@ -242,8 +242,8 @@
 
                 <table class="groupsTable">
                     <tr>
-                        <td><label><?php echo $GLOBALS['kga']['lang']['groups'] ?>:</label></td>
-                        <td><label><?php echo $GLOBALS['kga']['lang']['membershipRole'] ?>:</label></td>
+                        <td><label style="text-align:left;"><?php echo $GLOBALS['kga']['lang']['groups'] ?>:</label></td>
+                        <td><label style="text-align:left;"><?php echo $GLOBALS['kga']['lang']['membershipRole'] ?>:</label></td>
                     </tr><?php
 
                     $selectArray    = array(-1 => '');

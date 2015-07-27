@@ -36,7 +36,7 @@ class Kimai_Invoice_OdtRenderer extends Kimai_Invoice_AbstractRenderer
         include_once('TinyButStrong/tinyButStrong.class.php');
         include_once('TinyButStrong/tinyDoc.class.php');
 
-        $doc   = new tinyDoc();
+        $doc = new tinyDoc();
 
         // use zip extension if available
         if (class_exists('ZipArchive')) {
@@ -47,8 +47,7 @@ class Kimai_Invoice_OdtRenderer extends Kimai_Invoice_AbstractRenderer
             try {
                 $doc->setZipBinary('zip');
                 $doc->setUnzipBinary('unzip');
-            }
-            catch (tinyDocException $e) {
+            } catch (tinyDocException $e) {
                 $doc->setZipMethod('pclzip');
             }
         }
@@ -63,27 +62,31 @@ class Kimai_Invoice_OdtRenderer extends Kimai_Invoice_AbstractRenderer
         $doc->loadXml('content.xml');
 
         // fetch variables from model to get values
-        $customer   = $this->getModel()->getCustomer();
-        $projects   = $this->getModel()->getProjects();
-        $entries    = $this->getModel()->getEntries();
+        $customer = $this->getModel()->getCustomer();
+        $projects = $this->getModel()->getProjects();
+        $details  = $this->getModel()->getDetails();
 
         // assign all available variables (which are not arrays as they do not work in tinyButStrong)
-        foreach($this->getModel()->toArray() as $k => $v) {
-            if (is_array($v)) continue;
+        foreach ($this->getModel()->toArray() as $k => $v) {
+            if (is_array($v)) {
+                continue;
+            }
             $GLOBALS[$k] = $v;
         }
 
         // ugly but neccessary for tinyButStrong
         // set globals variables, so they can be used in invoice templates
         $allCustomer = $this->prepareCustomerArray($customer);
-        foreach($allCustomer as $k => $v) {
+        foreach ($allCustomer as $k => $v) {
             $GLOBALS[$k] = $v;
         }
 
         $GLOBALS['projects'] = $projects;
-        $GLOBALS['project'] = implode(', ', array_map(function($project) { return $project['name']; }, $projects));
+        $GLOBALS['project']  = implode(', ', array_map(function ($project) {
+            return $project['name'];
+        }, $projects));
 
-        $doc->mergeXmlBlock('row', $entries);
+        $doc->mergeXmlBlock('row', $details);
 
         $doc->saveXml();
         $doc->close();

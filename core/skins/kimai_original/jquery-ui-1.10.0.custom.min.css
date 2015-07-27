@@ -30,7 +30,7 @@
 }
 
 .ui-helper-clearfix:before, .ui-helper-clearfix:after {
-    content: "";
+    content: '';
     display: table
 }
 

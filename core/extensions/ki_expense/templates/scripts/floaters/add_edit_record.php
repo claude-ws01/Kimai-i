@@ -8,14 +8,15 @@
 
         $('#xpe_ext_form_add_edit_record').ajaxForm({
             'beforeSubmit': function () {
+                var editRecord = $('#xpe_ext_form_add_edit_record');
                 clearFloaterErrorMessages();
 
-                if ($('#xpe_ext_form_add_edit_record').attr('submitting')) {
+                if (editRecord.attr('submitting')) {
                     return false;
                 }
                 else {
                     $("#ajax_wait").show();
-                    $('#xpe_ext_form_add_edit_record').attr('submitting', true);
+                    editRecord.attr('submitting', true);
                     return true;
                 }
             },
@@ -81,7 +82,7 @@
         </ul>
     </div>
 
-    <form id="xpe_ext_form_add_edit_record" action="../extensions/ki_expenses/processor.php" method="post">
+    <form id="xpe_ext_form_add_edit_record" action="../extensions/ki_expense/processor.php" method="post">
         <input name="id" type="hidden" value="<?php echo $this->id ?>"/>
         <input name="axAction" type="hidden" value="add_edit_record"/>
 

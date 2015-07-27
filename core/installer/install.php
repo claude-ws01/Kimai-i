@@ -26,398 +26,451 @@
  * Execute an sql query in the database. The correct database connection
  * will be chosen and the query will be logged with the success status.
  *
- * @param $query query to execute as string
+ * @param string $query query to execute as string
  */
-function exec_query($query) {
-    global $database, $errors;
+function exec_query($query)
+{
+    global $database;
 
-    $conn = $database->getConnectionHandler();
-    $success = $conn->Query($query);
+    $success = $database->query($query);
 
     //Logger::logfile($query);
     if (!$success) {
-        $errorInfo = serialize($conn->Error());
-        Logger::logfile('[ERROR] in ['.$query.'] => ' . $errorInfo);
-        $errors=true;
+        $errorInfo = serialize($database->error());
+        Logger::logfile('[ERROR] in [' . $query . '] => ' . $errorInfo);
     }
 }
 
-function quoteForSql($input) {
-  global $kga, $database;
+function quoteForSql($input)
+{
+    global $database;
 
-    return "'" . mysqli_real_escape_string( $database->MySQL->mysql_link, $input ) . "'";
+    return '\'' . mysqli_real_escape_string($database->link, $input) . '\'';
 }
 
 
-
-// MAIN //
+//        MAIN        MAIN        MAIN        MAIN        MAIN        MAIN        //
+//        MAIN        MAIN        MAIN        MAIN        MAIN        MAIN        //
 if (!isset($_REQUEST['accept'])) {
-    header("Location: ../index.php?disagreedGPL=1");
+    header('Location: ../index.php?disagreedGPL=1');
     exit;
 }
-
+global $database, $kga, $view;
 include('../includes/basics.php');
-$db_layer = $kga['server_conn'];
-if ($db_layer == '') $db_layer = $_REQUEST['db_layer'];
 
-date_default_timezone_set($_REQUEST['timezone']);
 
-$randomAdminID = random_number(9);
-
-Logger::logfile("-- begin install ----------------------------------");
+Logger::logfile('-- begin install ----------------------------------');
 
 // if any of the queries fails, this will be true
-$errors=false;
+$errors = false;
+$p      = $kga['server_prefix'];
 
-$p = $kga['server_prefix'];
+
+//     STRUCTURE          STRUCTURE          STRUCTURE          STRUCTURE     //
+$query =
+    "CREATE TABLE IF NOT EXISTS `${p}user` (
+        `user_id` int(10) unsigned NOT NULL PRIMARY KEY,
+        `trash` TINYINT(1) unsigned NOT NULL default '0',
+        `active` TINYINT(1) unsigned NOT NULL default '1',
+        `ban` int(1) unsigned NOT NULL default '0',
+        `ban_time` int(10) unsigned NOT NULL default '0',
+        `last_project` int(10) unsigned NOT NULL default '1',
+        `last_activity` int(10) unsigned NOT NULL default '1',
+        `last_record` int(10) unsigned NOT NULL default '0',
+        `global_role_id` int(10) unsigned NOT NULL,
+        `password_reset_hash` char(32) NULL DEFAULT NULL,
+        `name` varchar(160) NOT NULL,
+        `alias` varchar(160),
+        `mail` varchar(80) NOT NULL DEFAULT '',
+        `password` varchar(64) NULL DEFAULT NULL,
+        `secure` varchar(60) NOT NULL default '0',
+        `timeframe_begin` varchar(60) NOT NULL default '0',
+        `timeframe_end` varchar(60) NOT NULL default '0',
+        `apikey` varchar(30) NULL DEFAULT NULL,
+        UNIQUE KEY `name` (`name`),
+        UNIQUE KEY `apikey` (`apikey`)
+    ) ENGINE=InnoDB;";
+exec_query($query);
 
 $query =
-"CREATE TABLE `${p}users` (
-  `userID` int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `name` varchar(160) NOT NULL,
-  `alias` varchar(160),
-  `trash` tinyint(1) NOT NULL default '0',
-  `active` tinyint(1) NOT NULL default '1',
-  `mail` varchar(160) NOT NULL DEFAULT '',
-  `password` varchar(254) NULL DEFAULT NULL,
-  `passwordResetHash` char(32) NULL DEFAULT NULL,
-  `ban` int(1) NOT NULL default '0',
-  `banTime` int(10) NOT NULL default '0',
-  `secure` varchar(60) NOT NULL default '0',
-  `lastProject` int(10) NOT NULL default '1',
-  `lastActivity` int(10) NOT NULL default '1',
-  `lastRecord` int(10) NOT NULL default '0',
-  `timeframeBegin` varchar(60) NOT NULL default '0',
-  `timeframeEnd` varchar(60) NOT NULL default '0',
-  `apikey` varchar(30) NULL DEFAULT NULL,
-  `globalRoleID` int(10) NOT NULL,
-  UNIQUE KEY `name` (`name`),
-  UNIQUE KEY `apikey` (`apikey`)
-);";
+    "CREATE TABLE IF NOT EXISTS `${p}preference` (
+        `user_id` int(10) unsigned NOT NULL,
+        `option` varchar(255) NOT NULL,
+        `value` varchar(255) NOT NULL,
+        PRIMARY KEY (`user_id`,`option`)
+    ) ENGINE=InnoDB;";
 exec_query($query);
 
-$query = "CREATE TABLE `${p}preferences` (
-  `userID` int(10) NOT NULL,
-  `option` varchar(255) NOT NULL,
-  `value` varchar(255) NOT NULL,
-  PRIMARY KEY (`userID`,`option`)
-);";
+$query =
+    "CREATE TABLE IF NOT EXISTS `${p}activity` (
+        `activity_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        `visible` TINYINT(1) unsigned NOT NULL DEFAULT '1',
+        `filter` TINYINT(1) unsigned NOT NULL DEFAULT '0',
+        `trash` TINYINT(1) unsigned NOT NULL DEFAULT '0',
+        `name` varchar(255) NOT NULL,
+        `comment` TEXT NOT NULL
+    ) ENGINE=InnoDB AUTO_INCREMENT=1;";
 exec_query($query);
 
-$query=
-"CREATE TABLE `${p}activities` (
-  `activityID` int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `name` varchar(255) NOT NULL,
-  `comment` TEXT NOT NULL,
-  `visible` TINYINT(1) NOT NULL DEFAULT '1',
-  `filter` TINYINT(1) NOT NULL DEFAULT '0',
-  `trash` TINYINT(1) NOT NULL DEFAULT '0'
-) AUTO_INCREMENT=1;";
+$query =
+    "CREATE TABLE IF NOT EXISTS `${p}group` (
+        `group_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        `trash` TINYINT(1) unsigned NOT NULL DEFAULT '0',
+        `name` varchar(160) NOT NULL
+    ) ENGINE=InnoDB AUTO_INCREMENT=1;";
 exec_query($query);
 
-$query=
-"CREATE TABLE `${p}groups` (
-  `groupID` int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `name` varchar(160) NOT NULL,
-  `trash` TINYINT(1) NOT NULL DEFAULT '0'
-) AUTO_INCREMENT=1;";
-exec_query($query);
-
-$query=
-"CREATE TABLE `${p}groups_users` (
-  `groupID` int(10) NOT NULL,
-  `userID` int(10) NOT NULL,
-  `membershipRoleID` int(10) NOT NULL,
-  PRIMARY KEY (`groupID`,`userID`)
-) AUTO_INCREMENT=1;";
+$query =
+    "CREATE TABLE IF NOT EXISTS `${p}group_user` (
+        `group_id` int(10) unsigned NOT NULL,
+        `user_id` int(10) unsigned NOT NULL,
+        `membership_role_id` int(10) unsigned NOT NULL,
+        PRIMARY KEY (`group_id`,`user_id`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=1;";
 exec_query($query);
 
 // group/customer cross-table (groups n:m customers)
-$query="CREATE TABLE `${p}groups_customers` (
-  `groupID` INT NOT NULL,
-  `customerID` INT NOT NULL,
-  UNIQUE (`groupID` ,`customerID`));";
+$query =
+    "CREATE TABLE IF NOT EXISTS `${p}group_customer` (
+        `group_id` int(10) unsigned NOT NULL,
+        `customer_id` int(10) unsigned NOT NULL,
+        UNIQUE (`group_id` ,`customer_id`)
+    ) ENGINE=InnoDB;";
 exec_query($query);
 
 // group/project cross-table (groups n:m projects)
-$query="CREATE TABLE `${p}groups_projects` (
-  `groupID` INT NOT NULL,
-  `projectID` INT NOT NULL,
-  UNIQUE (`groupID` ,`projectID`));";
+$query =
+    "CREATE TABLE IF NOT EXISTS `${p}group_project` (
+        `group_id` int(10) unsigned NOT NULL,
+        `project_id` int(10) unsigned NOT NULL,
+        UNIQUE (`group_id` ,`project_id`)
+    ) ENGINE=InnoDB;";
 exec_query($query);
 
 // group/event cross-table (groups n:m events)
-$query="CREATE TABLE `${p}groups_activities` (
-  `groupID` INT NOT NULL,
-  `activityID` INT NOT NULL,
-  UNIQUE (`groupID` ,`activityID`)) ;";
+$query =
+    "CREATE TABLE IF NOT EXISTS `${p}group_activity` (
+        `group_id` int(10) unsigned NOT NULL,
+        `activity_id` int(10) unsigned NOT NULL,
+        UNIQUE (`group_id` ,`activity_id`)
+    ) ENGINE=InnoDB;";
 exec_query($query);
 
 // project/event cross-table (projects n:m events)
-$query="CREATE TABLE `${p}projects_activities` (
-  `projectID` INT NOT NULL,
-  `activityID` INT NOT NULL,
-  `budget` DECIMAL( 10, 2 ) NULL DEFAULT '0.00',
-  `effort` DECIMAL( 10, 2 ) NULL ,
-  `approved` DECIMAL( 10, 2 ) NULL,
-  UNIQUE (`projectID` ,`activityID`)) ;";
+$query =
+    "CREATE TABLE IF NOT EXISTS `${p}project_activity` (
+        `project_id` int(10) unsigned NOT NULL,
+        `activity_id` int(10) unsigned NOT NULL,
+        `budget` DECIMAL( 10, 2 ) NULL DEFAULT '0.00',
+        `effort` DECIMAL( 10, 2 ) NULL ,
+        `approved` DECIMAL( 10, 2 ) NULL,
+        UNIQUE (`project_id` ,`activity_id`)
+    ) ENGINE=InnoDB;";
 exec_query($query);
 
-$query=
-"CREATE TABLE `${p}customers` (
-  `customerID` int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `name` varchar(255) NOT NULL,
-  `password` varchar(255),
-  `passwordResetHash` char(32) NULL DEFAULT NULL,
-  `secure` varchar(60) NOT NULL default '0',
-  `comment` TEXT NOT NULL,
-  `visible` TINYINT(1) NOT NULL DEFAULT '1',
-  `filter` TINYINT(1) NOT NULL DEFAULT '0',
-  `company` varchar(255) NOT NULL,
-  `vat` varchar(255) NOT NULL,
-  `contact` varchar(255) NOT NULL,
-  `street` varchar(255) NOT NULL,
-  `zipcode` varchar(255) NOT NULL,
-  `city` varchar(255) NOT NULL,
-  `phone` varchar(255) NOT NULL,
-  `fax` varchar(255) NOT NULL,
-  `mobile` varchar(255) NOT NULL,
-  `mail` varchar(255) NOT NULL,
-  `homepage` varchar(255) NOT NULL,
-  `timezone` varchar(255) NOT NULL,
-  `trash` TINYINT(1) NOT NULL DEFAULT '0'
-) AUTO_INCREMENT=1;";
+$query =
+    "CREATE TABLE IF NOT EXISTS `${p}customer` (
+        `customer_id` int(10) unsigned NOT NULL PRIMARY KEY,
+        `visible` TINYINT(1) unsigned NOT NULL DEFAULT '1',
+        `filter` TINYINT(1) unsigned NOT NULL DEFAULT '0',
+        `trash` TINYINT(1) unsigned NOT NULL DEFAULT '0',
+        `password_reset_hash` char(32) NULL DEFAULT NULL,
+        `name` varchar(80) NOT NULL,
+        `password` varchar(64),
+        `secure` varchar(60) NOT NULL default '0',
+        `comment` TEXT NOT NULL,
+        `company` varchar(80) NOT NULL,
+        `vat_rate` varchar(10) DEFAULT '0',
+        `contact` varchar(80) NOT NULL,
+        `street` varchar(120) NOT NULL,
+        `zipcode` varchar(16) NOT NULL,
+        `city` varchar(80) NOT NULL,
+        `phone` varchar(16) NOT NULL,
+        `fax` varchar(16) NOT NULL,
+        `mobile` varchar(16) NOT NULL,
+        `mail` varchar(80) NOT NULL,
+        `homepage` varchar(255) NOT NULL,
+        `timezone` varchar(32) NOT NULL
+    ) ENGINE=InnoDB AUTO_INCREMENT=1;";
 exec_query($query);
 
-$query=
-"CREATE TABLE `${p}projects` (
-  `projectID` int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `customerID` int(3) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `comment` TEXT NOT NULL,
-  `visible` TINYINT(1) NOT NULL DEFAULT '1',
-  `filter` TINYINT(1) NOT NULL DEFAULT '0',
-  `trash` TINYINT(1) NOT NULL DEFAULT '0',
-  `budget` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `effort` DECIMAL( 10, 2 ) NULL,
-  `approved` DECIMAL( 10, 2 ) NULL,
-  `internal` TINYINT( 1 ) NOT NULL DEFAULT 0,
-  INDEX ( `customerID` )
-) AUTO_INCREMENT=1;";
+$query =
+    "CREATE TABLE IF NOT EXISTS `${p}project` (
+        `project_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        `customer_id` int(3) NOT NULL,
+        `visible` TINYINT(1) unsigned NOT NULL DEFAULT '1',
+        `filter` TINYINT(1) unsigned NOT NULL DEFAULT '0',
+        `trash` TINYINT(1) unsigned NOT NULL DEFAULT '0',
+        `internal` TINYINT( 1 ) NOT NULL DEFAULT 0,
+        `budget` decimal(10,2) NOT NULL DEFAULT '0.00',
+        `effort` DECIMAL( 10, 2 ) NULL,
+        `approved` DECIMAL( 10, 2 ) NULL,
+        `name` varchar(80) NOT NULL,
+        `comment` TEXT NOT NULL,
+        INDEX ( `customer_id` )
+    ) ENGINE=InnoDB AUTO_INCREMENT=1;";
 exec_query($query);
 
-$query=
-"CREATE TABLE `${p}timeSheet` (
-  `timeEntryID` int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `start` int(10) NOT NULL default '0',
-  `end` int(10) NOT NULL default '0',
-  `duration` int(6) NOT NULL default '0',
-  `userID` int(10) NOT NULL,
-  `projectID` int(10) NOT NULL,
-  `activityID` int(10) NOT NULL,
-  `description` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
-  `comment` TEXT NULL DEFAULT NULL,
-  `commentType` TINYINT(1) NOT NULL DEFAULT '0',
-  `cleared` TINYINT(1) NOT NULL DEFAULT '0',
-  `location` VARCHAR(50),
-  `trackingNumber` varchar(30),
-  `rate` DECIMAL( 10, 2 ) NOT NULL DEFAULT '0',
-  `fixedRate` DECIMAL( 10, 2 ) NOT NULL DEFAULT '0',
-  `budget` DECIMAL( 10, 2 ) NULL,
-  `approved` DECIMAL( 10, 2 ) NULL,
-  `statusID` SMALLINT NOT NULL,
-  `billable` TINYINT NULL,
-  INDEX ( `userID` ),
-  INDEX ( `projectID` ),
-  INDEX ( `activityID` )
-) AUTO_INCREMENT=1;";
+$query =
+    "CREATE TABLE IF NOT EXISTS `${p}timesheet` (
+        `time_entry_id` int(10) unsigned unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        `start` int(10) unsigned NOT NULL default '0',
+        `end` int(10) unsigned NOT NULL default '0',
+        `duration` int(6) NOT NULL default '0',
+        `user_id` int(10) unsigned NOT NULL,
+        `project_id` int(10) unsigned NOT NULL,
+        `activity_id` int(10) unsigned NOT NULL,
+        `comment_type` TINYINT(1) unsigned NOT NULL DEFAULT '0',
+        `cleared` TINYINT(1) unsigned NOT NULL DEFAULT '0',
+        `billable` TINYINT(1) unsigned  NULL,
+        `status_id` SMALLINT NOT NULL,
+        `rate` DECIMAL( 10, 2 ) NOT NULL DEFAULT '0',
+        `fixed_rate` DECIMAL( 10, 2 ) NOT NULL DEFAULT '0',
+        `budget` DECIMAL( 10, 2 ) NULL,
+        `approved` DECIMAL( 10, 2 ) NULL,
+        `description` TEXT NULL,
+        `location` VARCHAR(50),
+        `ref_code` varchar(30),
+        `comment` TEXT NULL DEFAULT NULL,
+        INDEX ( `user_id` ),
+        INDEX ( `project_id` ),
+        INDEX ( `activity_id` )
+    ) ENGINE=InnoDB AUTO_INCREMENT=1;";
 exec_query($query);
 
-$query=
-"CREATE TABLE `${p}configuration` (
-  `option` varchar(255) NOT NULL,
-  `value` varchar(255) NOT NULL,
-  PRIMARY KEY  (`option`)
-);";
+$query =
+    "CREATE TABLE IF NOT EXISTS `${p}configuration` (
+        `option` varchar(255) NOT NULL,
+        `value` varchar(255) NOT NULL,
+        PRIMARY KEY  (`option`)
+    ) ENGINE=InnoDB;";
 exec_query($query);
 
-$query=
-"CREATE TABLE `${p}rates` (
-  `userID` int(10) DEFAULT NULL,
-  `projectID` int(10) DEFAULT NULL,
-  `activityID` int(10) DEFAULT NULL,
-  `rate` decimal(10,2) NOT NULL,
-  UNIQUE KEY(`userID`, `projectID`, `activityID`)
-);";
+$query =
+    "CREATE TABLE IF NOT EXISTS `${p}rate` (
+        `user_id` int(10) unsigned DEFAULT NULL,
+        `project_id` int(10) unsigned DEFAULT NULL,
+        `activity_id` int(10) unsigned DEFAULT NULL,
+        `rate` decimal(10,2) NOT NULL,
+        UNIQUE KEY(`user_id`, `project_id`, `activity_id`)
+    ) ENGINE=InnoDB;";
 exec_query($query);
 
-$query=
-"CREATE TABLE `${p}fixedRates` (
-  `projectID` int(10) DEFAULT NULL,
-  `activityID` int(10) DEFAULT NULL,
-  `rate` decimal(10,2) NOT NULL,
-  UNIQUE KEY(`projectID`, `activityID`)
-);";
+$query =
+    "CREATE TABLE IF NOT EXISTS `${p}fixed_rate` (
+        `project_id` int(10) unsigned DEFAULT NULL,
+        `activity_id` int(10) unsigned DEFAULT NULL,
+        `rate` decimal(10,2) NOT NULL,
+        UNIQUE KEY(`project_id`, `activity_id`)
+    ) ENGINE=InnoDB;";
 exec_query($query);
 
-$query=
-"CREATE TABLE `${p}expenses` (
-  `expenseID` int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `timestamp` int(10) NOT NULL DEFAULT '0',
-  `userID` int(10) NOT NULL,
-  `projectID` int(10) NOT NULL,
-  `designation` text NOT NULL,
-  `comment` text NOT NULL,
-  `commentType` tinyint(1) NOT NULL DEFAULT '0',
-  `refundable` tinyint(1) unsigned NOT NULL default '0' COMMENT 'expense refundable to employee (0 = no, 1 = yes)',
-  `cleared` tinyint(1) NOT NULL DEFAULT '0',
-  `multiplier` decimal(10,2) NOT NULL DEFAULT '1.00',
-  `value` decimal(10,2) NOT NULL DEFAULT '0.00',
-  INDEX ( `userID` ),
-  INDEX ( `projectID` )
-) AUTO_INCREMENT=1;";
+$query =
+    "CREATE TABLE IF NOT EXISTS `${p}expense` (
+        `expense_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        `timestamp` int(10) unsigned NOT NULL DEFAULT '0',
+        `user_id` int(10) unsigned NOT NULL,
+        `project_id` int(10) unsigned NOT NULL,
+        `comment_type` TINYINT(1) unsigned NOT NULL DEFAULT '0',
+        `refundable` tinyint(1) unsigned NOT NULL default '0' COMMENT 'expense refundable to employee (0 = no, 1 = yes)',
+        `cleared` TINYINT(1) unsigned NOT NULL DEFAULT '0',
+        `multiplier` decimal(10,2) NOT NULL DEFAULT '1.00',
+        `value` decimal(10,2) NOT NULL DEFAULT '0.00',
+        `description` text NOT NULL,
+        `comment` text NOT NULL,
+        INDEX ( `user_id` ),
+        INDEX ( `project_id` )
+    ) ENGINE=InnoDB AUTO_INCREMENT=1;";
 exec_query($query);
 
-$query = 
-"CREATE TABLE `${p}statuses` (
-`statusID` TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-`status` VARCHAR( 200 ) NOT NULL
-) ENGINE = InnoDB ";
+$query =
+    "CREATE TABLE IF NOT EXISTS `${p}status` (
+        `status_id` TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        `status` VARCHAR( 200 ) NOT NULL
+    ) ENGINE = InnoDB;";
 exec_query($query);
+
+
+//     DB DATA         DB DATA         DB DATA         DB DATA         DB DATA         DB DATA    //
 
 // The included script only sets up the initial permissions.
 // Permissions that were later added follow below.
-require("installPermissions.php");
+require('installPermissions.php');
 
 foreach (array('customer', 'project', 'activity', 'group', 'user') as $object) {
-  exec_query("ALTER TABLE `${p}globalRoles` ADD `core-$object-otherGroup-view` tinyint DEFAULT 0;");
-  exec_query("UPDATE `${p}globalRoles` SET `core-$object-otherGroup-view` = 1 WHERE `name` = 'Admin';");
+    exec_query("ALTER TABLE `${p}global_role` ADD `core__${object}__other_group__view` tinyint unsigned DEFAULT 0;");
+    exec_query("UPDATE `${p}global_role` SET `core__${object}__other_group__view` = 1 WHERE `name` = 'Admin';");
 }
 
-exec_query("INSERT INTO `${p}statuses` (`statusID` ,`status`) VALUES ('1', 'open'), ('2', 'review'), ('3', 'closed');");
+exec_query("INSERT INTO `${p}status` (`status_id` ,`status`) VALUES ('1', 'open'), ('2', 'review'), ('3', 'closed');");
 
-// GROUPS
-$defaultGroup=$kga['lang']['defaultGroup'];
-$query="INSERT INTO `${p}groups` (`name`) VALUES ('admin');";
+// GROUPS   //
+$defaultGroup = $kga['lang']['defaultGroup'];
+$query        = "INSERT INTO `${p}group` (`name`) VALUES ('admin');";
 exec_query($query);
 
 
-
-// MISC
-$query="INSERT INTO `${p}activities` (`activityID`, `name`, `comment`) VALUES (1, '".$kga['lang']['testActivity']."', '');";
+// ACTIVITY //
+$query = "INSERT INTO `${p}activity` (`activity_id`, `name`, `comment`) VALUES (1, '" . $kga['lang']['testActivity'] . "', '');";
 exec_query($query);
 
-$query="INSERT INTO `${p}customers` (`customerID`, `name`, `comment`, `company`, `vat`, `contact`, `street`, `zipcode`, `city`, `phone`, `fax`, `mobile`, `mail`, `homepage`, `timezone`) VALUES (1, '".$kga['lang']['testCustomer']."', '', '', '', '', '', '', '', '', '', '', '','',".quoteForSql($_REQUEST['timezone']).");";
+//  CUSTOMER  //
+$query = "INSERT INTO `${p}customer`
+(`customer_id`, `name`, `comment`, `company`, `vat_rate`, `contact`, `street`, `zipcode`, `city`, `phone`, `fax`, `mobile`, `mail`, `homepage`, `timezone`) VALUES
+(1, '" . $kga['lang']['testCustomer'] . "', '', '', '', '', '', '', '', '', '', '', '',''," . quoteForSql($_REQUEST['timezone']) . ');';
+exec_query($query);
+//  CUSTOMER - PREFERENCES  //
+$query = "INSERT INTO `${p}preference` (`user_id`,`option`,`value`) VALUES
+            ('1','ui.autoselection','1'),
+            ('1','ui.flip_project_display','0'),
+            ('1','ui.hide_cleared_entries','0'),
+            ('1','ui.hide_overlap_lines','1'),
+            ('1','ui.language','" . $kga['pref']['language'] . "'),
+            ('1','ui.no_fading','0'),
+            ('1','ui.open_after_recorded','0'),
+            ('1','ui.project_comment_flag','0'),
+            ('1','ui.quickdelete','0'),
+            ('1','ui.rowlimit','100'),
+            ('1','ui.show_comments_by_default','0'),
+            ('1','ui.show_ids','0'),
+            ('1','ui.show_ref_code','1'),
+            ('1','ui.skin','standard'),
+            ('1','ui.sublist_annotations','2'),
+            ('1','ui.timezone'," . quoteForSql($_REQUEST['timezone']) . "),
+            ('1','ui.user_list_hidden','100')
+            ;";
+
+
+//  PROJET  //
+$query = "INSERT INTO `${p}project` (`project_id`, `customer_id`, `name`, `comment`) VALUES (1, 1, '" . $kga['lang']['testProject'] . "', '');";
 exec_query($query);
 
-$query="INSERT INTO `${p}projects` (`projectID`, `customerID`, `name`, `comment`) VALUES (1, 1, '".$kga['lang']['testProject']."', '');";
+
+//  USER - ADMIN  //
+$adminPassword = password_encrypt('changeme');
+$randomAdminID = random_number(9);
+$query         = "INSERT INTO `${p}user` (`user_id`,`name`,`mail`,`password`, `global_role_id` ) VALUES ('$randomAdminID','admin','admin@example.com','$adminPassword',1);";
 exec_query($query);
 
 
-// ADMIN USER
-$adminPassword =  md5($kga['password_salt'].'changeme'.$kga['password_salt']);
-$query="INSERT INTO `${p}users` (`userID`,`name`,`mail`,`password`, `globalRoleID` ) VALUES ('$randomAdminID','admin','admin@example.com','$adminPassword',1);";
-exec_query($query);
-
-$query="INSERT INTO `${p}preferences` (`userID`,`option`,`value`) VALUES
-('$randomAdminID','ui.rowlimit','100'),
-('$randomAdminID','ui.skin','standard'),
-('$randomAdminID','ui.showCommentsByDefault','0'),
-('$randomAdminID','ui.hideOverlapLines','1'),
-('$randomAdminID','ui.showTrackingNumber','1'),
-('$randomAdminID','timezone',".quoteForSql($_REQUEST['timezone']).");";
+//  PREFERENCES - ADMIN  //
+$query = "INSERT INTO `${p}preference` (`user_id`,`option`,`value`) VALUES
+            ('$randomAdminID','ui.autoselection','1'),
+            ('$randomAdminID','ui.flip_project_display','0'),
+            ('$randomAdminID','ui.hide_cleared_entries','0'),
+            ('$randomAdminID','ui.hide_overlap_lines','1'),
+            ('$randomAdminID','ui.language','" . $kga['pref']['language'] . "'),
+            ('$randomAdminID','ui.no_fading','0'),
+            ('$randomAdminID','ui.open_after_recorded','0'),
+            ('$randomAdminID','ui.project_comment_flag','0'),
+            ('$randomAdminID','ui.quickdelete','0'),
+            ('$randomAdminID','ui.rowlimit','100'),
+            ('$randomAdminID','ui.show_comments_by_default','0'),
+            ('$randomAdminID','ui.show_ids','0'),
+            ('$randomAdminID','ui.show_ref_code','1'),
+            ('$randomAdminID','ui.skin','standard'),
+            ('$randomAdminID','ui.sublist_annotations','2'),
+            ('$randomAdminID','ui.timezone'," . quoteForSql($_REQUEST['timezone']) . "),
+            ('$randomAdminID','ui.user_list_hidden','0')
+            ;";
 exec_query($query);
 
 
 // CROSS TABLES
-$query="INSERT INTO `${p}groups_users` (`groupID`,`userID`, `membershipRoleID`) VALUES ('1','$randomAdminID','1');";
+$query = "INSERT INTO `${p}group_user` (`group_id`,`user_id`, `membership_role_id`) VALUES ('1','$randomAdminID','1');";
 exec_query($query);
 
-$query="INSERT INTO `${p}groups_activities` (`groupID`, `activityID`) VALUES (1, 1);";
+$query = "INSERT INTO `${p}group_activity` (`group_id`, `activity_id`) VALUES (1, 1);";
 exec_query($query);
 
-$query="INSERT INTO `${p}groups_customers` (`groupID`, `customerID`) VALUES (1, 1);";
+$query = "INSERT INTO `${p}group_customer` (`group_id`, `customer_id`) VALUES (1, 1);";
 exec_query($query);
 
-$query="INSERT INTO `${p}groups_projects` (`groupID`, `projectID`) VALUES (1, 1);";
+$query = "INSERT INTO `${p}group_project` (`group_id`, `project_id`) VALUES (1, 1);";
 exec_query($query);
 
 
+// ADVANCED CONFIGURATION  //
+$query = "INSERT INTO `${p}configuration` (`option`, `value`) VALUES 
+            ('core.revision', '" . $kga['core.revision'] . "'),
+            ('core.version', '" . $kga['core.version'] . "'),
+            ('core.status', '" . $kga['core.status'] . "'),
+            ('core.ident', '" . $kga['core.ident'] . "'),
+            ('admin_mail', 'admin@example.com'),
+            ('allow_round_down', '0'),
+            ('bill_pct','0,25,50,75,100'),
+            ('check_at_startup','0'),
+            ('currency_first','0'),
+            ('currency_name','Euro'),
+            ('currency_sign','€'),
+            ('date_format_0','%d.%m.%Y'),
+            ('date_format_1','%d.%m.'),
+            ('date_format_2','%d.%m.%Y'),
+            ('decimal_separator',','),
+            ('default_status_id', '4'),
+            ('duration_with_seconds','0'),
+            ('edit_limit','-'),
+            ('exact_sums','0'),
+            ('lastdbbackup', '0'),
+            ('login', '1'),
+            ('login_ban_time', '900'),
+            ('login_tries', '3'),
+            ('round_minutes', '0'),
+            ('round_precision','0'),
+            ('round_seconds', '0'),
+            ('round_timesheet_entries', '0' ),
+            ('show_day_separator_lines','1'),
+            ('show_gab_breaks','0'),
+            ('show_record_again','1'),
+            ('show_sensible_data','0'),
+            ('show_update_warn','1'),
+            ('ref_num_editable','1'),
+            ('vat_rate','0'),
 
-// VARS
-$query="INSERT INTO `${p}configuration` (`option`, `value`) VALUES ('version', '" . $kga['version'] . "');";
+            ('ud.autoselection','1'),
+            ('ud.flip_project_display','0'),
+            ('ud.hide_cleared_entries','0'),
+            ('ud.hide_overlap_lines','1'),
+            ('ud.language','" . $kga['pref']['language'] . "'),
+            ('ud.no_fading','0'),
+            ('ud.open_after_recorded','0'),
+            ('ud.project_comment_flag','0'),
+            ('ud.quickdelete','0'),
+            ('ud.rowlimit','100'),
+            ('ud.show_comments_by_default','0'),
+            ('ud.show_ids','0'),
+            ('ud.show_ref_code','0'),
+            ('ud.skin','standard'),
+            ('ud.sublist_annotations','2'),
+            ('ud.timezone'," . quoteForSql($_REQUEST['timezone']) . "),
+            ('ud.user_list_hidden','0')
+            ;";
+// 17 x ud.preferences
 exec_query($query);
-
-$query="INSERT INTO `${p}configuration` (`option`, `value`) VALUES ('login', '1');";
-exec_query($query);
-
-$query="INSERT INTO `${p}configuration` (`option`, `value`) VALUES ('kimail', 'kimai@example.com');";
-exec_query($query);
-
-$query="INSERT INTO `${p}configuration` (`option`, `value`) VALUES ('adminmail', 'admin@example.com');";
-exec_query($query);
-
-$query="INSERT INTO `${p}configuration` (`option`, `value`) VALUES ('loginTries', '3');";
-exec_query($query);
-
-$query="INSERT INTO `${p}configuration` (`option`, `value`) VALUES ('loginBanTime', '900');";
-exec_query($query);
-
-$query="INSERT INTO `${p}configuration` (`option`, `value`) VALUES ('lastdbbackup', '0');";
-exec_query($query);
-
-$query="INSERT INTO `${p}configuration` (`option`, `value`) VALUES ('revision', '" . $kga['revision'] . "');";
-exec_query($query);
-
-exec_query("INSERT INTO `${p}configuration` (`option`,`value`) VALUES('currency_name','Euro')");
-exec_query("INSERT INTO `${p}configuration` (`option`,`value`) VALUES('currency_sign','€')");
-exec_query("INSERT INTO `${p}configuration` (`option`,`value`) VALUES('currency_first','0')");
-exec_query("INSERT INTO `${p}configuration` (`option`,`value`) VALUES('show_sensible_data','0')");
-exec_query("INSERT INTO `${p}configuration` (`option`,`value`) VALUES('show_update_warn','1')");
-exec_query("INSERT INTO `${p}configuration` (`option`,`value`) VALUES('check_at_startup','0')");
-exec_query("INSERT INTO `${p}configuration` (`option`,`value`) VALUES('show_daySeperatorLines','1')");
-exec_query("INSERT INTO `${p}configuration` (`option`,`value`) VALUES('show_gabBreaks','0')");
-exec_query("INSERT INTO `${p}configuration` (`option`,`value`) VALUES('show_RecordAgain','1')");
-exec_query("INSERT INTO `${p}configuration` (`option`,`value`) VALUES('show_TrackingNr','1')");
-exec_query("INSERT INTO `${p}configuration` (`option`,`value`) VALUES('date_format_0','%d.%m.%Y')");
-exec_query("INSERT INTO `${p}configuration` (`option`,`value`) VALUES('date_format_1','%d.%m.')");
-exec_query("INSERT INTO `${p}configuration` (`option`,`value`) VALUES('date_format_2','%d.%m.%Y')");
-exec_query("INSERT INTO `${p}configuration` (`option`,`value`) VALUES('language','$kga[language]')");
-exec_query("INSERT INTO `${p}configuration` (`option`,`value`) VALUES('roundPrecision','0')");
-exec_query("INSERT INTO `${p}configuration` (`option`,`value`) VALUES('decimalSeparator',',')");
-exec_query("INSERT INTO `${p}configuration` (`option`,`value`) VALUES('durationWithSeconds','0')");
-exec_query("INSERT INTO `${p}configuration` (`option`,`value`) VALUES('exactSums','0')");
-exec_query("INSERT INTO `${p}configuration` (`option`,`value`) VALUES('defaultVat','0')");
-exec_query("INSERT INTO `${p}configuration` (`option`,`value`) VALUES('editLimit','-')");
-exec_query("INSERT INTO `${p}configuration` (`option` ,`value`) VALUES ('roundTimesheetEntries', '0' );");
-exec_query("INSERT INTO `${p}configuration` (`option` ,`value`) VALUES ('roundMinutes', '0');");
-exec_query("INSERT INTO `${p}configuration` (`option` ,`value`) VALUES ('roundSeconds', '0');");
-exec_query("INSERT INTO `${p}configuration` (`option` ,`value`) VALUES ('allowRoundDown', '0');");
-exec_query("INSERT INTO `${p}configuration` (`option` ,`value`) VALUES ('defaultStatusID', '1');");
 
 if ($errors) {
 
-set_include_path(
-    implode(
-        PATH_SEPARATOR,
-        array(
-            realpath(WEBROOT . '/libraries/'),
+    set_include_path(
+        implode(
+            PATH_SEPARATOR,
+            array(
+                realpath(WEBROOT . '/libraries/'),
+            )
         )
-    )
-);
+    );
 
-require_once 'Zend/Loader/Autoloader.php';
-Zend_Loader_Autoloader::getInstance();
+    require_once 'Zend/Loader/Autoloader.php';
+    Zend_Loader_Autoloader::getInstance();
 
-$view = new Zend_View();
-$view->setBasePath(WEBROOT . '/templates');
+    $view = new Zend_View();
+    $view->setBasePath(WEBROOT . '/templates');
 
     $view->headline = $kga['lang']['errors'][1]['hdl'];
-    $view->message = $kga['lang']['errors'][1]['txt'];
+    $view->message  = $kga['lang']['errors'][1]['txt'];
     echo $view->render('misc/error.php');
-    Logger::logfile("-- showing install error --------------------------");
-} else {
-    Logger::logfile("-- installation finished without error ------------");
-    header("Location: ../index.php");
+    Logger::logfile('-- showing install error --------------------------');
 }
-?>
+else {
+    Logger::logfile('-- installation finished without error ------------');
+    header('Location: ../index.php');
+}

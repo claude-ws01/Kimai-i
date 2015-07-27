@@ -1,4 +1,4 @@
-Kimai Time Tracking - mysqli version
+Kimai-i Time Tracking
 ====================================
 
 This is NOT the repository of Kimai.
@@ -7,17 +7,14 @@ It is a branch from original Kimai v0.9.3rc1.
 It includes
  - Implementation of mysqli
  - Revision of rendering of Timesheet, Export, Expenses, Invoice (header & content alignments)
- - New skin (almost like the original but less flashy)
- - Few bug corrections
+ - New standard skin (almost like the original but less flashy)
+ - Many bug corrections
  - Revised & cleaned language files (only EN and FR)
- - corrected all "strict standards" PHP 5.5 warnings I have encountered.
+ - Corrected all encountered "strict standards" PHP 5.5 warnings.
+ - Code revision & optimisation... now closer to PSR1.
+ - ... and many more improvements.
 
-I did not pull requested into the original version because I did too many reformatting of the PHP & Js files and it would be a bit too much. (by reformatting understand, layout to PSR standards, sorting of
-functions (methods) in some of the biggest PHP files. But the Naming is still original)
-
-Still I want to make it available to the Kimai Team (or anybody else) that may be interested in using it.
-
-Kind regards,
+Enjoy
 
 Claude.
 
@@ -28,12 +25,6 @@ What you can do here
 - download it
 - ask questions
 - post bug & solution you find
-- no request (go to the original Kimai site)
 
 
-You can get more information about the original time-tracking software:
-
-* at [website](http://www.kimai.org)
-* at [forum](http://forum.kimai.org)
-* in [documentation](http://www.kimai.org/documentation/)
 

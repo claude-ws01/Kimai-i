@@ -90,15 +90,15 @@ return array(
     'comment'                        => 'Commentaire',
     'comment_type'                   => 'Type de commentaire',
     'company'                        => 'Societé',
-    'confirmations'                  => array(
-        'ownGlobalRoleChange' => 'Etes vous certain de vouloir changer votre propre rôle globale de \'%OLD%\' à \'%NEW%\'?
- Ceci pourrait conduire à des permissions moindres!',
-    ),
+    'ownGlobalRoleChange'            => 'Etes vous certain de vouloir changer votre propre rôle globale de "%OLD%" à "%NEW%"?\nCeci pourrait conduire à des permissions moindres!',
 
     'construction'                   => 'en construction...',
     'contact'                        => 'Contact',
     'contactPerson'                  => 'Personne contact',
     'cookiewarning'                  => 'Les cookies doivent être acceptés! Autoriser les cookies avant de continuer.',
+    'copyr_origin'                   => 'Kimai original - &copy; 2006-15 - <a href="http://www.kimai.org" target="_blank">Kimai Team</a>',
+    'copyr_poweredby'                => 'Propulsé par',
+    'copyr_provided'                 => 'Logiciel proportioné sous les termes et conditions<br/>de la <a href="COPYING" target="_blank"> Licence publique générale GNU v3</a>',
     'countryCode'                    => 'fr-FR',
     'ctype0'                         => 'Commentaire',
     'ctype1'                         => 'Note',
@@ -137,13 +137,13 @@ return array(
     'editGlobalRole'                 => 'éditer rôle globale',
     'editGroup'                      => 'Editer le groupe',
     'editLimitError'                 => 'La date de fin est plus loin dans le passé qu\'il est permit.',
-    'editLimitPart1'                 => 'Aucune entrée ne peut être ajoutée ou éditée qui se termine plus tard que',
+    'editLimitPart1'                 => 'Feuille de temps/dépense: Ne peut être éditée après ',
     'editLimitPart2'                 => 'jour(s) et',
     'editLimitPart3'                 => 'heure(s) dans le passé.',
     'editMembershipRole'             => 'Éditer rôle de membre',
     'editstatus'                     => 'Éditer le statut',
     'editUser'                       => 'Éditer l\'utilisateur',
-    'effort'                         => 'Effort',
+    'effort'                         => 'Frais',
     'erase'                          => 'Effacer l\'entrée',
     'error'                          => 'Une erreur est survenu!',
     'exact_sums'                     => 'Utiliser les sommes exactes au lieu d\'additionner les valeurs arrondies indiquées.',
@@ -186,7 +186,7 @@ return array(
     'mail'                           => 'Courriel',
     'mailUser'                       => 'Envoyer un courriel à cet utilisateur',
     'members'                        => 'Membres',
-    'membershipRole'                 => 'rôle de membre',
+    'membershipRole'                 => 'Rôle de membre',
     'membershipRoles'                => 'Rôles membre',
     'minLength'                      => 'min. 5 caractères!',
     'mins'                           => 'minutes',
@@ -232,7 +232,7 @@ return array(
     'new_project'                    => 'Ajouter projet',
     'new_status'                     => 'Ajouter statut',
     'new_user_defaults'              => 'PRÉFÉRENCES PAR DÉFAUT - NOUVEL UTILISATEUR',
-    'newPassword'                    => 'Nouveau mot de passe',
+    'newPassword'                    => 'Mot de passe ...',
     'no'                             => 'non',
     'no_fading'                      => 'Pas d\'effet fondu',
     'no_web_access'                  => 'Accès web bloqué',
@@ -267,7 +267,8 @@ return array(
     'refundable_long'                => 'Remboursable (à l\'employé)',
     'rename_caution_after_username'  => 'vous devrez vous reconnecter immédiatement avec le nouvel utilisateur!',
     'rename_caution_before_username' => 'Si vous modifiez le nom d\'utilisateur de',
-    'retypePassword'                 => 'réécrire le mot de passe',
+    'reset_password'                 => 'RAZ mot de passe',
+    'retypePassword'                 => '... de nouveau',
     'rolename'                       => 'nom du rôle',
     'round_time'                     => 'Arrondir le temps à ',
     'round_time_minute'              => ' minute(s).',
@@ -399,43 +400,22 @@ return array(
         'vat_rate' => 'Taux VAT par defaut globallement et pour les nouveaux clients.',
     ),
 
-    'credits'                        => '        Torsten H&ouml;ltge, Severin Leonhardt, Kevin Papst, Oleg Britvin, Martin Klemkow et autres...<br />
-
+    'credits'                        => '<br />
         <br />
-
-        <strong>Ce logiciel est un logiciel libre et publié \'EN L\'ETAT\' sans aucune espèce de garantie</strong> sous les conditions de la
-        <a href=\'../COPYING\'>Version GPL 3</a>.
-
-        <br /><br />
-
-        <a href=\'http://www.kimai.org\' target=\'_blank\'>Site Officiel</a> |
-        <a href=\'http://forum.kimai.org/\' target=\'_blank\'>Forum</a> |
-        <a href=\'https://github.com/kimai/kimai\' target=\'_blank\'>GitHub</a> |
-        <a href=\'http://sourceforge.net/projects/kimai/\' target=\'_blank\'>Sourceforge</a> |
-        <a href=\'http://www.kimai.org/en/download.html\' target=\'_blank\'>Telechargement</a>
-
-        <br /><br />
-
-        Si vous faites des modifications, nous aprécierions que vous postiez sur <a href=\'http://forum.kimai.org\' title=\'Forum Kimai\'>forum</a>. Vous y trouverez une rubrique spéciale \'<a href=\'http://forum.kimai.org/index.php?board=10.0\' title=\'Extensions / Friendly Hacks\'>Friendly Hacks</a>\' .
-        La dernière version peut être téléchargée <a href=\'https://github.com/kimai/kimai/archive/master.zip\'>Ici</a> (Pour les test seulement!).
-
-        <br /><br />
-
-        SVP supportez les futurs développements de Kimai avec une <a href=\'http://www.kimai.org/en/donate.html\'>donation</a>
-        ou en étendant sa <a href=\'https://github.com/kimai/kimai/tree/master/core/language\'>bibliothèque de langues</a>.
-
-        Si vous trouvez des bugs ou avez des idées de fonctionnalités, n\'\hésitez pas à nous contacter sur le forum.
-        Ou encore mieux: créer un <a href=\'https://github.com/kimai/kimai/issues\'>ticket</a>!<br /><br />
-
-        <strong>Des remerciement aussi pour le support à:</strong> Vasilis van Gemert, Maximilian Kern, Enrico Ties, Thomas Wensing, John Resig, Kelvin Luck, Urs Gerig, Willem van Gemert,
-        Torben Boe et HamBug Studios, Klaus Franken, Chris (Urban Willi), Andreas Berndt, Niels Hoffmann, G&uuml;nter Hengsbach, Paul Brand, Joaqu&iacute;n G. de la Zerda,
-        Allesandro Bertoldo, Jos&eacute; Ricardo Cardoso.<br /><br />
-
-        <strong>Remerciement spéciaux</strong> à tous les beta-testeurs, qui sont trop nombreux pour les citer tous - Vous savez de qui on parle! ;)<br /><br />
-
-        L\'extension Invoice utilise la bibliothèque PclZip , qui peût être trouvée à <a href=\'http://www.phpconcept.net\' rel=\'nofollow\'>http://www.phpconcept.net</a>.<br/><br/>
-
-        La Version 0.8 a été créée avec le support aimable de RRZE (Regionales Rechenzentrum Erlangen).',
+        Si vous trouvez des bogues ou avez des idées de fonctionnalités, n\'hésitez pas à créer un <a href="https://github.com/cloudeasy/Kimai-i/issues">ticket</a>
+        sur <a href="https://github.com/cloudeasy/Kimai-i" target="_blank">GitHub</a>
+        <br />
+        <br />
+        <br/>Original Kimai - &copy; 2006-15 - par <a href="http://www.kimai.org" target="_blank">L\'équipe Kimai</a>
+        <br/>Torsten H&ouml;ltge, Severin Leonhardt, Kevin Papst, Oleg Britvin, Martin Klemkow and others...
+        <br/>
+        <br/>
+        L\'extension *facture* utilise la bibliothèque PclZip , qui peût être trouvée à <a href=\'http://www.phpconcept.net\' rel=\'nofollow\'>http://www.phpconcept.net</a>.
+        <br/>
+        <br/>
+        <strong>Ce logiciel est libre et publié \'TEL QUEL\' sans aucune garantie</strong> sous les conditions de la
+        <a href=\'../COPYING\'>License Publique Générale GNU v3</a>.
+        <br/>',
     'dateAndTimeHelp'                => '<strong>Les heures et dates peuvent être entrés en courte notation:</strong><br />
             Dates: 5 &rarr; le 5 du mois courant &nbsp;&nbsp;
             1004 &rarr; le 10.04. de l\'année en cours &nbsp;&nbsp;
@@ -540,16 +520,15 @@ Choisissez un autre préfixe de table ou supprimez les tables existantes avec ce
     ),
 
     'extensions'                     => array(
-        'ki_admin'     => 'Panneau Admin',
-        'ap_ext'       => 'Préférences',
+        'ki_admin'     => 'Admin',
         'core'         => 'noyau',
-        'deb_ext'      => 'Débogage',
-        'demo_ext'     => 'Extension de démonstration',
+        'ki_debug'     => 'Débogage',
+        'demo_ext'     => 'Démo',
         'ki_budget'    => 'Budget',
-        'ki_expense'   => 'Dépenses',
-        'ki_export'    => 'Exporter',
-        'ki_invoice'   => 'Facturation',
-        'ki_timesheet' => 'Feuille de temps',
+        'ki_expense'   => 'Dépense',
+        'ki_export'    => 'Export',
+        'ki_invoice'   => 'Facture',
+        'ki_timesheet' => 'Temps',
     ),
 
     'passwordReset'                  => array(

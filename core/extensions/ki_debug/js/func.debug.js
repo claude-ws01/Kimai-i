@@ -20,7 +20,7 @@
 function deb_ext_onload() {
     var that = this;
 
-    set_lists_visibility(false, $('#gui').find('div.ext.deb_ext').attr('id'));
+    set_lists_visibility(false, $('#gui').find('div.ext.ki_debug').attr('id'));
 
     // thx to joern zaefferer! ;) - www.bassistance.de -
     $("#deb_ext_shoutbox_field").focus(function () {
@@ -96,8 +96,14 @@ function deb_ext_reloadLogfileLoop() {
 function deb_ext_reloadLogfileOnce() {
 
     $('a').blur();
-    $.post(deb_ext_path + "processor.php", {axAction: "reloadLogfile", axValue: 0, id: 0},
+    $('#ajax_wait').show();
+    $.post(deb_ext_path + "processor.php", {
+            axAction: "reloadLogfile",
+            axValue: 0,
+            id: 0},
+
         function (data) {
+            $('#ajax_wait').hide();
             $("#deb_ext_logfile").html(data);
         });
 }
@@ -105,8 +111,14 @@ function deb_ext_reloadLogfileOnce() {
 function deb_ext_reloadKGA() {
 
     $('a').blur();
-    $.post(deb_ext_path + "processor.php", {axAction: "reloadKGA", axValue: 0, id: 0},
+    $('#ajax_wait').show();
+    $.post(deb_ext_path + "processor.php", {
+            axAction: "reloadKGA",
+            axValue: 0,
+            id: 0},
+
         function (data) {
+            $('#ajax_wait').hide();
             $("#deb_ext_kga").html(data);
         });
 }
@@ -119,8 +131,14 @@ function deb_ext_clearTimeout() {
 function deb_ext_clearLogfile() {
 
     $('a').blur();
-    $.post(deb_ext_path + "processor.php", {axAction: "clearLogfile", axValue: 0, id: 0},
+    $('#ajax_wait').show();
+    $.post(deb_ext_path + "processor.php", {
+            axAction: "clearLogfile",
+            axValue: 0,
+            id: 0},
+
         function (data) {
+            $('#ajax_wait').hide();
             $("#deb_ext_logfile").html(data);
         });
 }

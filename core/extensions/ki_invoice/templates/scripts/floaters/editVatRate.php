@@ -1,9 +1,9 @@
     <script type="text/javascript"> 
        
         $(document).ready(function() {
-            var editVat = $('#inv_ext_editVat');
+            var editVatRate = $('#inv_ext_editVatRate');
 
-            editVat.ajaxForm(function() {
+            editVatRate.ajaxForm(function() {
                 floaterClose();
             });
 
@@ -15,14 +15,14 @@
                 success:    function(response) {
                     $('#ajax_wait').hide();
                     if (response == 1) {
-                      $('#defaultVat').html($('#vat').val());
+                      $('#defaultVat').html($('#vat_rate').val());
                     }
                     floaterClose();
                 } 
             }; 
             
             // pass options to ajaxForm 
-            editVat.ajaxForm(options);
+            editVatRate.ajaxForm(options);
 
         });
         
@@ -40,7 +40,7 @@
     <div class="floater_content">
 
         
-        <form id="inv_ext_editVat" action="../extensions/ki_invoice/processor.php" method="post">
+        <form id="inv_ext_editVatRate" action="../extensions/ki_invoice/processor.php" method="post">
         <input name="id" type="hidden" value="0" />
         <input name="axAction" type="hidden" value="editVatRate" />
             <fieldset>   

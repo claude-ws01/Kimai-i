@@ -29,7 +29,7 @@ global $kga, $extensions;
 <?php endif; ?>
     <strong>DEBUG LOGFILE</strong> <?php echo $this->limitText ?>
     
-    <form id="deb_ext_shoutbox" action="../extensions/ext_debug/processor.php" method="post">
+    <form id="deb_ext_shoutbox" action="../extensions/ki_debug/processor.php" method="post">
         <input type="text" id="deb_ext_shoutbox_field" name="axValue" value="shoutbox"/>
         <input name="id" type="hidden" value="0" />
         <input name="axAction" type="hidden" value="shoutbox" />

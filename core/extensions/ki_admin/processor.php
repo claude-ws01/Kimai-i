@@ -21,21 +21,22 @@
 // ================
 // insert KSPI
 $isCoreProcessor = 0;
-$dir_templates   = "templates/";
+$dir_templates   = 'templates/';
 global $database, $kga, $view;
-require("../../includes/kspi.php");
+require('../../includes/kspi.php');
 
 
 switch ($axAction) {
 
-    case "banUser" :
+    case 'banUser' :
         // Ban a user from login
         $sts['active'] = 0;
         $database->user_edit($id, $sts);
-        echo sprintf("<img border='0' title='%s' alt='%s' src='../skins/%s/grfx/lock.png' width='16' height='16' />", $kga['lang']['banneduser'], $kga['lang']['banneduser'], $kga['pref']['skin']);
+        echo sprintf('<img border="0" title="%s" alt="%s" src="../skins/%s/grfx/lock.png" width="16" height="16" />',
+                     $kga['lang']['banneduser'], $kga['lang']['banneduser'], $kga['pref']['skin']);
         break;
 
-    case "createUser" :
+    case 'createUser' :
         // create new user account
         $userData['name']           = trim($axValue);
         $userData['global_role_id'] = any_get_global_role_id();
@@ -68,18 +69,18 @@ switch ($axAction) {
 
         header('Content-Type: application/json;charset=utf-8');
         echo json_encode(array(
-                             'errors' => $errors,
+                             'errors'  => $errors,
                              'user_id' => $userId));
 
         break;
 
-    case "createStatus" :
+    case 'createStatus' :
         $status_data['status'] = trim($axValue);
 
         // validate data
         $errors = array();
 
-        if (isset($kga['customer']) || !$database->global_role_allows(any_get_global_role_id(), 'core__status__add')) {
+        if (array_key_exists('customer', $kga) || !$database->global_role_allows(any_get_global_role_id(), 'core__status__add')) {
             $errors[''] = $kga['lang']['errorMessages']['permissionDenied'];
         }
 
@@ -92,13 +93,13 @@ switch ($axAction) {
                              'statusId' => $new_status_id));
         break;
 
-    case "createGroup" :
+    case 'createGroup' :
         $group['name'] = trim($axValue);
 
         // validate data
         $errors = array();
 
-        if (isset($kga['customer']) || !$database->global_role_allows(any_get_global_role_id(), 'core__group__add')) {
+        if (array_key_exists('customer', $kga) || !$database->global_role_allows(any_get_global_role_id(), 'core__group__add')) {
             $errors[''] = $kga['lang']['errorMessages']['permissionDenied'];
         }
 
@@ -111,12 +112,12 @@ switch ($axAction) {
                              'groupId' => $newGroupID));
         break;
 
-    case "createGlobalRole":
+    case 'createGlobalRole':
         $role_data['name'] = trim($axValue);
 
         $errors = array();
 
-        if (isset($kga['customer'])) {
+        if (array_key_exists('customer', $kga)) {
             $errors[] = $kga['lang']['errorMessages']['permissionDenied'];
         }
 
@@ -136,12 +137,12 @@ switch ($axAction) {
                              'errors' => $errors));
         break;
 
-    case "createMembershipRole":
+    case 'createMembershipRole':
         $role_data['name'] = trim($axValue);
 
         $errors = array();
 
-        if (isset($kga['customer'])) {
+        if (array_key_exists('customer', $kga)) {
             $errors[] = $kga['lang']['errorMessages']['permissionDenied'];
         }
 
@@ -159,11 +160,11 @@ switch ($axAction) {
                              'errors' => $errors));
         break;
 
-    case "deleteActivity" :
+    case 'deleteActivity' :
         $errors    = array();
         $oldGroups = $database->activity_get_groupIDs($id);
 
-        if (!checkGroupedObjectPermission('activity', 'delete', $oldGroups, $oldGroups)) {
+        if (!checkGroupedObjectPermission('activity', 'delete', $oldGroups)) {
             $errors[''] = $kga['lang']['errorMessages']['permissionDenied'];
         }
 
@@ -177,10 +178,10 @@ switch ($axAction) {
                              'errors' => $errors));
         break;
 
-    case "deleteGlobalRole":
+    case 'deleteGlobalRole':
         $errors = array();
 
-        if (isset($kga['customer'])) {
+        if (array_key_exists('customer', $kga)) {
             $errors[''] = $kga['lang']['errorMessages']['permissionDenied'];
         }
 
@@ -193,10 +194,10 @@ switch ($axAction) {
                              'errors' => $errors));
         break;
 
-    case "deleteMembershipRole":
+    case 'deleteMembershipRole':
         $errors = array();
 
-        if (isset($kga['customer'])) {
+        if (array_key_exists('customer', $kga)) {
             $errors[''] = $kga['lang']['errorMessages']['permissionDenied'];
         }
 
@@ -209,10 +210,10 @@ switch ($axAction) {
                              'errors' => $errors));
         break;
 
-    case "deleteGroup" :
+    case 'deleteGroup' :
         $errors = array();
 
-        if (!checkGroupedObjectPermission('group', 'delete', array($id), array($id))) {
+        if (!checkGroupedObjectPermission('group', 'delete', array($id))) {
             $errors[''] = $kga['lang']['errorMessages']['permissionDenied'];
         }
 
@@ -226,11 +227,11 @@ switch ($axAction) {
                              'errors' => $errors));
         break;
 
-    case "deleteProject" :
+    case 'deleteProject' :
         $errors    = array();
         $oldGroups = $database->project_get_groupIDs($id);
 
-        if (!checkGroupedObjectPermission('project', 'delete', $oldGroups, $oldGroups)) {
+        if (!checkGroupedObjectPermission('project', 'delete', $oldGroups)) {
             $errors[''] = $kga['lang']['errorMessages']['permissionDenied'];
         }
 
@@ -245,11 +246,11 @@ switch ($axAction) {
                              'errors' => $errors));
         break;
 
-    case "deleteCustomer" :
+    case 'deleteCustomer' :
         $errors    = array();
         $oldGroups = $database->customer_get_group_ids($id);
 
-        if (!checkGroupedObjectPermission('project', 'delete', $oldGroups, $oldGroups)) {
+        if (!checkGroupedObjectPermission('project', 'delete', $oldGroups)) {
             $errors[''] = $kga['lang']['errorMessages']['permissionDenied'];
         }
 
@@ -263,11 +264,11 @@ switch ($axAction) {
                              'errors' => $errors));
         break;
 
-    case "deleteUser":
-        $oldGroups = $database->user_get_group_ids($id);
+    case 'deleteUser':
+        $oldGroups = $database->user_get_group_ids($id, false);
         $errors    = array();
 
-        if (!checkGroupedObjectPermission('user', 'delete', $oldGroups, $oldGroups)) {
+        if (!checkGroupedObjectPermission('user', 'delete', $oldGroups)) {
             $errors[''] = $kga['lang']['errorMessages']['permissionDenied'];
         }
 
@@ -289,9 +290,9 @@ switch ($axAction) {
                              'errors' => $errors));
         break;
 
-    case "deleteStatus" :
+    case 'deleteStatus' :
         $errors = array();
-        if (isset($kga['customer']) || !$database->global_role_allows(any_get_global_role_id(), 'core__status__delete')) {
+        if (array_key_exists('customer', $kga) || !$database->global_role_allows(any_get_global_role_id(), 'core__status__delete')) {
             $errors[''] = $kga['lang']['errorMessages']['permissionDenied'];
         }
 
@@ -305,7 +306,7 @@ switch ($axAction) {
                              'errors' => $errors));
         break;
 
-    case "editGlobalRole":
+    case 'editGlobalRole':
         $id      = $_REQUEST['id'];
         $newData = $_REQUEST;
         unset($newData['id']);
@@ -318,7 +319,7 @@ switch ($axAction) {
                 $value = $newData[$key];
             }
             else {
-                if ($key != "global_role_id" && $key != "name") {
+                if ($key != 'global_role_id' && $key != 'name') {
                     $value = 0;
                 }
             }
@@ -326,7 +327,7 @@ switch ($axAction) {
 
         $errors = array();
 
-        if (isset($kga['customer'])) {
+        if (array_key_exists('customer', $kga)) {
             $errors[''] = $kga['lang']['errorMessages']['permissionDenied'];
         }
 
@@ -339,11 +340,10 @@ switch ($axAction) {
                              'errors' => $errors));
         break;
 
-    case "editMembershipRole":
+    case 'editMembershipRole':
         $id      = $_REQUEST['id'];
         $newData = $_REQUEST;
-        unset($newData['id']);
-        unset($newData['axAction']);
+        unset($newData['id'], $newData['axAction']);
 
         $roleData = $database->membershipRole_get_data($id);
 
@@ -352,15 +352,16 @@ switch ($axAction) {
                 $value = $newData[$key];
             }
             else {
-                if ($key != "membership_role_id" && $key != "name") {
+                if ($key !== 'membership_role_id' && $key !== 'name') {
                     $value = 0;
                 }
             }
         }
+        unset($value);
 
         $errors = array();
 
-        if (isset($kga['customer'])) {
+        if (array_key_exists('customer', $kga)) {
             $errors[''] = $kga['lang']['errorMessages']['permissionDenied'];
         }
 
@@ -373,7 +374,7 @@ switch ($axAction) {
                              'errors' => $errors));
         break;
 
-    case "refreshSubtab" :
+    case 'refreshSubtab' :
         // builds either user/group/advanced/DB subtab
         $view->curr_user        = $kga['user']['name'];
         $groups                 = $database->get_groups(get_cookie('adm_ext_show_deleted_groups', 0));
@@ -383,9 +384,7 @@ switch ($axAction) {
         }
         else {
             $view->groups = array_filter($groups, function ($group) {
-                global $kga;
-
-                return array_search($group['group_id'], any_get_group_ids()) !== false;
+                return in_array($group['group_id'], any_get_group_ids(),true) !== false;
             });
         }
 
@@ -396,14 +395,14 @@ switch ($axAction) {
             $users = $database->get_users(get_cookie('adm_ext_show_deleted_users', 0), any_get_group_ids());
         }
 
-        // get group names
+        // get group names for user list
         foreach ($users as &$user) {
             $user['groups'] = array();
 
-            $groups = $database->user_get_group_ids($user['user_id']);
+            $groups = $database->user_get_group_ids($user['user_id'], false);
             if (is_array($groups)) {
                 foreach ($groups as $group) {
-                    if (!$viewOtherGroupsAllowed && array_search($group, any_get_group_ids()) === false) {
+                    if (!$viewOtherGroupsAllowed && in_array($group, any_get_group_ids(), true) === false) {
                         continue;
                     }
                     $groupData        = $database->group_get_data($group);
@@ -411,6 +410,8 @@ switch ($axAction) {
                 }
             }
         }
+        unset($user);
+
         $arr_status              = $database->get_statuses();
         $view->users             = $users;
         $view->arr_status        = $arr_status;
@@ -418,19 +419,19 @@ switch ($axAction) {
         $view->showDeletedUsers  = get_cookie('adm_ext_show_deleted_users', 0);
 
         switch ($axValue) {
-            case "users" :
+            case 'users' :
                 echo $view->render('users.php');
                 break;
 
-            case "groups" :
+            case 'groups' :
                 echo $view->render('groups.php');
                 break;
 
-            case "status" :
+            case 'status' :
                 echo $view->render('status.php');
                 break;
 
-            case "advanced" :
+            case 'advanced' :
                 if ($kga['conf']['edit_limit'] != '-') {
                     $view->edit_limit_enabled = true;
                     $editLimit                = $kga['conf']['edit_limit'] / (60 * 60); // convert to hours
@@ -446,7 +447,7 @@ switch ($axAction) {
                 $skins = array();
                 $langs = array();
 
-                $allSkins = glob(__DIR__ . "/../skins/*", GLOB_ONLYDIR);
+                $allSkins = glob(__DIR__ . '/../skins/*', GLOB_ONLYDIR);
                 foreach ($allSkins as $skin) {
                     $name         = basename($skin);
                     $skins[$name] = $name;
@@ -462,11 +463,11 @@ switch ($axAction) {
                 echo $view->render('advanced.php');
                 break;
 
-            case "database" :
+            case 'database' :
                 echo $view->render('database.php');
                 break;
 
-            case "customers" :
+            case 'customers' :
                 $viewOtherGroupsAllowed = $database->global_role_allows(any_get_global_role_id(), 'core__group__other_group__view');
                 if ($database->global_role_allows(any_get_global_role_id(), 'core__customer__other_group__view')) {
                     $customers = $database->get_customers();
@@ -486,7 +487,7 @@ switch ($axAction) {
                             $data         = $database->group_get_data($groupID);
                             $groupNames[] = $data['name'];
                         }
-                        $customers[$row]['groups'] = implode(", ", $groupNames);
+                        $customers[$row]['groups'] = implode(', ', $groupNames);
                     }
                 }
                 if (count($customers) > 0) {
@@ -498,7 +499,7 @@ switch ($axAction) {
                 echo $view->render('customers.php');
                 break;
 
-            case "projects" :
+            case 'projects' :
                 $viewOtherGroupsAllowed = $database->global_role_allows(any_get_global_role_id(), 'core__group__other_group__view');
                 if ($database->global_role_allows(any_get_global_role_id(), 'core__project__other_group__view')) {
                     $projects = $database->get_projects();
@@ -522,7 +523,7 @@ switch ($axAction) {
                             }
                         }
 
-                        $projects[$row]['groups'] = implode(", ", $groupNames);
+                        $projects[$row]['groups'] = implode(', ', $groupNames);
                     }
 
                     $view->projects = $projects;
@@ -531,7 +532,7 @@ switch ($axAction) {
                 echo $view->render('projects.php');
                 break;
 
-            case "activities" :
+            case 'activities' :
                 $viewOtherGroupsAllowed = $database->global_role_allows(any_get_global_role_id(), 'core__group__other_group__view');
                 $groups                 = null;
                 if (!$database->global_role_allows(any_get_global_role_id(), 'core__activity__other_group__view')) {
@@ -568,7 +569,7 @@ switch ($axAction) {
                         }
                     }
 
-                    $activities[$row]['groups'] = implode(", ", $groupNames);
+                    $activities[$row]['groups'] = implode(', ', $groupNames);
                 }
 
                 if (count($activities) > 0) {
@@ -585,19 +586,19 @@ switch ($axAction) {
                 echo $view->render('activities.php');
                 break;
 
-            case "globalRoles":
+            case 'globalRoles':
                 $view->globalRoles = $database->global_roles();
                 echo $view->render('globalRoles.php');
                 break;
 
-            case "membershipRoles":
+            case 'membershipRoles':
                 $view->membershipRoles = $database->membership_roles();
                 echo $view->render('membershipRoles.php');
                 break;
         }
         break;
 
-    case "sendEditUser" :
+    case 'sendEditUser' :
 
         // process editUser form
         $userData['name']           = trim($_REQUEST['name']);
@@ -605,12 +606,12 @@ switch ($axAction) {
         $userData['alias']          = $_REQUEST['alias'];
         $userData['global_role_id'] = $_REQUEST['global_role_id'];
         $userData['rate']           = str_replace($kga['conf']['decimal_separator'], '.', $_REQUEST['rate']);
-        // if password field is empty => password unchanged (not overwritten with "")
-        if ($_REQUEST['password'] != "") {
-            $userData['password'] = md5($kga['password_salt'] . $_REQUEST['password'] . $kga['password_salt']);
+        // if password field is empty => password unchanged (not overwritten with '')
+        if ($_REQUEST['password'] != '') {
+            $userData['password'] = password_encrypt($_REQUEST['password']);
         }
 
-        $oldGroups = $database->user_get_group_ids($id);
+        $oldGroups = $database->user_get_group_ids($id, false);
 
         // validate data
         $errorMessages = array();
@@ -638,13 +639,13 @@ switch ($axAction) {
                              'errors' => $errorMessages));
         break;
 
-    case "sendEditGroup" :
+    case 'sendEditGroup' :
         // process editGroup form
         $group['name'] = trim($_REQUEST['name']);
 
         $errors = array();
 
-        if (!checkGroupedObjectPermission('group', 'edit', array($id), array($id))) {
+        if (!checkGroupedObjectPermission('group', 'edit', array($id))) {
             $errors[''] = $kga['lang']['errorMessages']['permissionDenied'];
         }
 
@@ -657,13 +658,13 @@ switch ($axAction) {
                              'errors' => $errors));
         break;
 
-    case "sendEditStatus" :
+    case 'sendEditStatus' :
         // process editStatus form
         $status_data['status'] = trim($_REQUEST['status']);
 
         $errors = array();
 
-        if (isset($kga['customer'])
+        if (array_key_exists('customer', $kga)
             || !$database->global_role_allows(any_get_global_role_id(), 'core__status__edit')
         ) {
             $errors[''] = $kga['lang']['errorMessages']['permissionDenied'];
@@ -671,7 +672,7 @@ switch ($axAction) {
 
         if (count($errors) == 0) {
             $database->status_edit($id, $status_data);
-            config_set('defaultStatusID', $id, 'int');
+            config_set('default_status_id', $id, 'int');
             $database->config_replace();
         }
 
@@ -680,10 +681,10 @@ switch ($axAction) {
                              'errors' => $errors));
         break;
 
-    case "sendEditAdvanced" :
+    case 'sendEditAdvanced' :
         $errors = array();
-        if (isset($kga['customer'])
-            || !$database->global_role_allows(any_get_global_role_id(), 'admin_panel_extension__edit_advanced')
+        if (array_key_exists('customer', $kga)
+            || !$database->global_role_allows(any_get_global_role_id(), 'ki_admin__edit_advanced')
         ) {
             $errors[''] = $kga['lang']['errorMessages']['permissionDenied'];
         }
@@ -691,32 +692,32 @@ switch ($axAction) {
         if (count($errors) == 0) {
             // process AdvancedOptions form
             // @formatter:off
-            if (isset($_REQUEST['admin_mail']))              config_set('admin_mail',                $_REQUEST['admin_mail']);
-            if (isset($_REQUEST['login_tries']))             config_set('login_tries',               $_REQUEST['login_tries']);
-            if (isset($_REQUEST['login_ban_time']))          config_set('login_ban_time',            $_REQUEST['login_ban_time']);
-            if (isset($_REQUEST['show_sensible_data']))      config_set('show_sensible_data',        $_REQUEST['show_sensible_data'],true,'bool');
-            if (isset($_REQUEST['show_update_warn']))        config_set('show_update_warn',          $_REQUEST['show_update_warn'],true,'bool');
-            if (isset($_REQUEST['check_at_startup']))        config_set('check_at_startup',          $_REQUEST['check_at_startup'],true,'bool');
-            if (isset($_REQUEST['check_at_startup']))        config_set('check_at_startup',          $_REQUEST['check_at_startup'],true,'bool');
-            if (isset($_REQUEST['show_day_separator_lines']))config_set('show_day_separator_lines',  $_REQUEST['show_day_separator_lines'],true,'bool');
-            if (isset($_REQUEST['show_gab_breaks']))         config_set('show_gab_breaks',           $_REQUEST['show_gab_breaks'],true,'bool');
-            if (isset($_REQUEST['show_record_again']))       config_set('show_record_again',         $_REQUEST['show_record_again'],true,'bool');
-            if (isset($_REQUEST['track_num_editable']))      config_set('track_num_editable',        $_REQUEST['track_num_editable'],true,'bool');
-            if (isset($_REQUEST['currency_name']))           config_set('currency_name',             $_REQUEST['currency_name']);
-            if (isset($_REQUEST['currency_sign']))           config_set('currency_sign',             $_REQUEST['currency_sign']);
-            if (isset($_REQUEST['currency_first']))          config_set('currency_first',            $_REQUEST['currency_first'],true,'bool');
-            if (isset($_REQUEST['date_format_0']))           config_set('date_format_0',             $_REQUEST['date_format_0']);
-            if (isset($_REQUEST['date_format_1']))           config_set('date_format_1',             $_REQUEST['date_format_1']);
-            if (isset($_REQUEST['date_format_2']))           config_set('date_format_2',             $_REQUEST['date_format_2']);
-            if (isset($_REQUEST['round_precision']))         config_set('round_precision',           $_REQUEST['round_precision']);
-            if (isset($_REQUEST['allow_round_down']))        config_set('allow_round_down',          $_REQUEST['allow_round_down'],true,'bool');
-            if (isset($_REQUEST['round_minutes']))           config_set('round_minutes',             $_REQUEST['round_minutes'],true,'int');
-            if (isset($_REQUEST['round_seconds']))           config_set('round_seconds',             $_REQUEST['round_seconds'],true,'int');
-            if (isset($_REQUEST['round_timesheet_entries'])) config_set('round_timesheet_entries',   $_REQUEST['round_timesheet_entries'],true,'bool');
-            if (isset($_REQUEST['decimal_separator']))       config_set('decimal_separator',         $_REQUEST['decimal_separator'],true,'str');
-            if (isset($_REQUEST['duration_with_seconds']))   config_set('duration_with_seconds',     $_REQUEST['duration_with_seconds'],true,'bool');
-            if (isset($_REQUEST['exact_sums']))              config_set('exact_sums',                $_REQUEST['exact_sums'],true,'bool');
-            if (isset($_REQUEST['vat_rate']))                config_set('vat_rate',                  $_REQUEST['vat_rate'],true);
+            if (isset($_REQUEST['admin_mail']))               {config_set('admin_mail',                $_REQUEST['admin_mail']);                          }
+            if (isset($_REQUEST['login_tries']))              {config_set('login_tries',               $_REQUEST['login_tries']);                         }
+            if (isset($_REQUEST['login_ban_time']))           {config_set('login_ban_time',            $_REQUEST['login_ban_time']);                      }
+            if (isset($_REQUEST['show_sensible_data']))       {config_set('show_sensible_data',        $_REQUEST['show_sensible_data'],true,'bool');      }
+            if (isset($_REQUEST['show_update_warn']))         {config_set('show_update_warn',          $_REQUEST['show_update_warn'],true,'bool');        }
+            if (isset($_REQUEST['check_at_startup']))         {config_set('check_at_startup',          $_REQUEST['check_at_startup'],true,'bool');        }
+            if (isset($_REQUEST['check_at_startup']))         {config_set('check_at_startup',          $_REQUEST['check_at_startup'],true,'bool');        }
+            if (isset($_REQUEST['show_day_separator_lines'])) {config_set('show_day_separator_lines',  $_REQUEST['show_day_separator_lines'],true,'bool');}
+            if (isset($_REQUEST['show_gab_breaks']))          {config_set('show_gab_breaks',           $_REQUEST['show_gab_breaks'],true,'bool');         }
+            if (isset($_REQUEST['show_record_again']))        {config_set('show_record_again',         $_REQUEST['show_record_again'],true,'bool');       }
+            if (isset($_REQUEST['ref_num_editable']))         {config_set('ref_num_editable',          $_REQUEST['ref_num_editable'],true,'bool');        }
+            if (isset($_REQUEST['currency_name']))            {config_set('currency_name',             $_REQUEST['currency_name']);                       }
+            if (isset($_REQUEST['currency_sign']))            {config_set('currency_sign',             $_REQUEST['currency_sign']);                       }
+            if (isset($_REQUEST['currency_first']))           {config_set('currency_first',            $_REQUEST['currency_first'],true,'bool');          }
+            if (isset($_REQUEST['date_format_0']))            {config_set('date_format_0',             $_REQUEST['date_format_0']);                       }
+            if (isset($_REQUEST['date_format_1']))            {config_set('date_format_1',             $_REQUEST['date_format_1']);                       }
+            if (isset($_REQUEST['date_format_2']))            {config_set('date_format_2',             $_REQUEST['date_format_2']);                       }
+            if (isset($_REQUEST['round_precision']))          {config_set('round_precision',           $_REQUEST['round_precision']);                     }
+            if (isset($_REQUEST['allow_round_down']))         {config_set('allow_round_down',          $_REQUEST['allow_round_down'],true,'bool');        }
+            if (isset($_REQUEST['round_minutes']))            {config_set('round_minutes',             $_REQUEST['round_minutes'],true,'int');            }
+            if (isset($_REQUEST['round_seconds']))            {config_set('round_seconds',             $_REQUEST['round_seconds'],true,'int');            }
+            if (isset($_REQUEST['round_timesheet_entries']))  {config_set('round_timesheet_entries',   $_REQUEST['round_timesheet_entries'],true,'bool'); }
+            if (isset($_REQUEST['decimal_separator']))        {config_set('decimal_separator',         $_REQUEST['decimal_separator'],true,'str');        }
+            if (isset($_REQUEST['duration_with_seconds']))    {config_set('duration_with_seconds',     $_REQUEST['duration_with_seconds'],true,'bool');   }
+            if (isset($_REQUEST['exact_sums']))               {config_set('exact_sums',                $_REQUEST['exact_sums'],true,'bool');              }
+            if (isset($_REQUEST['vat_rate']))                 {config_set('vat_rate',                  $_REQUEST['vat_rate'],true);                       }
             // @formatter:on
 
             $editLimit = false;
@@ -747,7 +748,7 @@ switch ($axAction) {
             config_set('ud.rowlimit',                   @$_REQUEST['ud_rowlimit'], false, 'int');
             config_set('ud.show_comments_by_default',   @$_REQUEST['ud_show_comments_by_default'], true, 'bool');
             config_set('ud.show_ids',                   @$_REQUEST['ud_show_ids'], true, 'bool');
-            config_set('ud.show_tracking_number',       @$_REQUEST['ud_show_tracking_number'], true, 'bool');
+            config_set('ud.show_ref_code',              @$_REQUEST['ud_show_ref_code'], true, 'bool');
             config_set('ud.skin',                       @$_REQUEST['ud_skin']);
             config_set('ud.sublist_annotations',        @$_REQUEST['ud_sublist_annotations']);
             config_set('ud.timezone',                   @$_REQUEST['ud_timezone']);
@@ -779,14 +780,15 @@ switch ($axAction) {
         echo json_encode(array('errors' => $errors));
         break;
 
-    case "toggleDeletedUsers" :
-        setcookie("adm_ext_show_deleted_users", $axValue);
+    case 'toggleDeletedUsers' :
+        setcookie('adm_ext_show_deleted_users', $axValue);
         break;
 
-    case "unbanUser" :
+    case 'unbanUser' :
         // Unban a user from login
         $sts['active'] = 1;
         $database->user_edit($id, $sts);
-        echo sprintf("<img border='0' title='%s' alt='%s' src='../skins/%s/grfx/jipp.gif' width='16' height='16' />", $kga['lang']['activeAccount'], $kga['lang']['activeAccount'], $kga['pref']['skin']);
+        echo sprintf('<img border="0" title="%s" alt="%s" src="../skins/%s/grfx/jipp.gif" width="16" height="16" />', 
+                     $kga['lang']['activeAccount'], $kga['lang']['activeAccount'], $kga['pref']['skin']);
         break;
 }

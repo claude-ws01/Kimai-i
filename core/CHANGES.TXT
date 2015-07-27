@@ -1,16 +1,20 @@
-- removed all references to 'server_conn', and 'pdo', as there are NO pdo processing in Kimai.
-- removed 'server_type', unused.
-- removed abstract mysql class, simply unnecessary with no real gain.
-- added all default preferences for new users in global config.
-- removed one unnecessary database locks ( no need when not multi table updates, even less when only select)
-- upgraded the db transaction handling method
-- preferences is now unified, for customer or user. Methods, Variables & db. User/Customer's prefs are both in
+=== v0.10.0 ======= 2015-07-25  ========================================================================================
+Notes: This jump to v0.10.0 db revision 2000, is my major overhaul of original Kimia v0.9.3rc1. There is still work to
+do, but from what I have revised, the core is functionnal.  Here a short and incomplete list of what I have done.
+
+- improvement: removed all references to 'server_conn', and 'pdo', as there are NO pdo processing in Kimai.
+- improvement: removed 'server_type', unused.
+- improvement: removed abstract mysql class, simply unnecessary with no real gain.
+- improvement: added all default preferences for new users in global config.
+- improvement: removed one unnecessary database locks ( no need when not multi table updates, even less when only select)
+- improvement: upgraded the db transaction handling method
+- feature: preferences is now unified, for customer or user. Methods, Variables & db. User/Customer's prefs are both in
     the preference table.
-- user_id & customer_id are now both checked for uniqness against preference table.
-- customer can now set their own preferences.
-- massive revision of global variables (some people should learn about why and how to use global/protected/private
-    variables/method, and abstract)
-    ~ GLOBALS: kga, database, view, translation
+- improvement: user_id & customer_id are now both checked for uniqness against preference table.
+- features: customer can now set their own preferences.
+- improvement: massive revision of global variables (some people should learn about why and how to use
+    global/protected/private variables/method, and abstract)
+    ~ GLOBALS: kga, database, view (zend framework), translation.
     ~ important $kga arrays:
         * any       (id, type, common to user & customer)
         * conf      (copy of configuration table)
@@ -19,4 +23,44 @@
         * pref      (preferences of both user/customer)
         * status    (copy of status table)
         * user      (when logged-in, user's data)
-    ~ $database
+- improvement: handling of grid header in timesheet,expenses,export...
+- improvement: PSR standardizing of all namings of tables and rows (excluding role related)
+- improvement: PSR standardizing of "role" related row names in db-tables. no more "-", instead "_".
+- improvement: status table now loaded in translation array, what ever translation exist will
+    override status name from db... Simply put, change language and status names
+    will follow. If no translation exist (because it's new status) then the status
+    name from the db will be shown.
+- improvement: debug panel: deactivate log updates while panel not active (avoid useless http requests)
+- feature: extention's css & grfx folders can now be included in a skin folder, then modified to change the appearance
+    and it will override the extensions default.
+- bugfix: bottom filters not always displaying when navigating from one tab to another.
+- feature: new *root* privilege gives access to everything, no matter if user has privileges or
+    not. Glogal role "edit admin panel advanced settings" is *root*.
+- improvement: page generators for timesheet, expense & export are now shorter by half, code efficient
+    and easier to read.
+- improvement: lots more popup 'tips' on most action links (icons, headers...), improving understanding of
+    what things do.
+- bugfix: multiple table update without transaction (in project)... added.
+- bugfix: transaction now support multiple level. A method starts a db-transaction and calls another method that also
+    starts a db-transaction while already inside the previous transaction. Now ok.
+- improvement: force closing database at end of php process, giving a chance to check if there were incompleted
+    db-transaction (ie. commit was not called, or some issue prevented the end of the transaction) and log a
+    correponding warning.
+- improvement: floating windows now always centered.
+- improvement: added money symbol besides money field labels, clarifying what's suppose to go in there.
+- improvement: added "processing" visual feedback, to let know the user his request is being processed. Not very
+    noticable on fast server, but on slower local server.
+- improvement: corrected some ambiguous German traductions (tracking_number -> order/ref code, effort -> (still
+    figuring out this one)(I guess it is close to expenditure, costs, additional expenses...)
+- change: minimum width down from 970px to 900px.
+- optimization: removed many db-get-user-groups of current user, as groups is already loaded in $kga.
+- improvement: top page displays better and resize flows better
+- bugfix: added missing message var initialization for adding user, project, customers... in admin.
+- improvement: on page load, now shows the user as filtered. Before you would be wondering why all the timesheets were
+    not shown.
+- optimization: - reduction of the number of http request from 100~110 to 50~60.
+                - reduction of transfers from 428KB to 277KB (on the first fetch)
+                - reduction of transfers on subsequent fetch as well, by a minimal 10KB
+
+=== v0.9.3-rc1 ======= 2015-07-01  ========================================================================================
+Branch from Kimai v0.9.3-rc1, db revision 1394

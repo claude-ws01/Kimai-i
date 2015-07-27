@@ -35,11 +35,11 @@
  * - Ensure library/ is on include_path
  * - Register Autoloader
  */
-defined('WEBROOT') ||
-    define('WEBROOT', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
+defined('WEBROOT')
+|| define('WEBROOT', $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR);
 
 defined('APPLICATION_PATH')
-    || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../'));
+|| define('APPLICATION_PATH', realpath(__DIR__ . '/../'));
 
 set_include_path(
     implode(
@@ -50,7 +50,7 @@ set_include_path(
     )
 );
 //DEBUG// error_log('<<<========== JSON ==========>>>');
-require_once WEBROOT.'libraries/Zend/Loader/Autoloader.php';
+require_once WEBROOT . 'libraries/Zend/Loader/Autoloader.php';
 $autoloader = Zend_Loader_Autoloader::getInstance();
 
 /**
@@ -59,16 +59,16 @@ $autoloader = Zend_Loader_Autoloader::getInstance();
  * ==================================================================
  */
 
-require(APPLICATION_PATH.'/includes/classes/remote.class.php');
+require(APPLICATION_PATH . '/includes/classes/remote.class.php');
 header('Access-Control-Allow-Origin: *');
 
 $server = new Zend_Json_Server();
 $server->setClass('Kimai_Remote_Api');
 
-if ('GET' == $_SERVER['REQUEST_METHOD']) {
+if ('GET' === $_SERVER['REQUEST_METHOD']) {
     // Indicate the URL endpoint, and the JSON-RPC version used:
     $server->setTarget('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'])
-           ->setEnvelope(Zend_Json_Server_Smd::ENV_JSONRPC_2);
+        ->setEnvelope(Zend_Json_Server_Smd::ENV_JSONRPC_2);
 
     // Grab the SMD
     $smd = $server->getServiceMap();
@@ -76,15 +76,17 @@ if ('GET' == $_SERVER['REQUEST_METHOD']) {
     // Return the SMD to the client
     header('Content-Type: application/json');
     echo $smd;
+
     return;
 }
 
 /**
- * http request will 
- *  - parse php://input 
+ * http request will
+ *  - parse php://input
  *  - json_decode it
  *  - auto setOptions
- * therefore request should be a string e.g. {jsonrpc : '2.0', method: '<actionString>', params : [param1, param2], id : '<anyId>' } 
+ * therefore request should be a string e.g. {jsonrpc : '2.0', method: '<actionString>', params : [param1, param2], id
+ * : '<anyId>' }
  */
 $request = new Zend_Json_Server_Request_Http();
 $server->setRequest($request);

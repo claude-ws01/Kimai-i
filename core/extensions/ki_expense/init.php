@@ -24,7 +24,6 @@ global $kga, $database, $view;
 include('../../includes/basics.php');
 include('private_db_layer_mysql.php');
 
-//PREV// $kga['user'] = checkUser();
 checkUser();
 
 $dir_templates = "templates/";
@@ -51,7 +50,7 @@ header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
-if (isset($kga['user'])) // user logged in
+if (array_key_exists('user', $kga)) // user logged in
 {
     $view->expenses = get_expenses($in, $out, array($kga['user']['user_id']), null, null, 1);
 }
@@ -65,7 +64,7 @@ $view->total = Format::formatCurrency(array_reduce($view->expenses, function ($s
 }, 0));
 
 
-if (isset($kga['user'])) // user logged in
+if (array_key_exists('user', $kga)) // user logged in
 {
     $ann = expenses_by_user($in, $out, array($kga['user']['user_id']));
 }
@@ -77,7 +76,7 @@ $ann                    = Format::formatCurrency($ann);
 $view->user_annotations = $ann;
 
 // TODO: function for loops or convert it in template with new function
-if (isset($kga['user'])) // user logged in
+if (array_key_exists('user', $kga)) // user logged in
 {
     $ann = expenses_by_customer($in, $out, array($kga['user']['user_id']));
 }
@@ -88,7 +87,7 @@ else // customer logged in
 $ann                        = Format::formatCurrency($ann);
 $view->customer_annotations = $ann;
 
-if (isset($kga['user'])) // user logged in
+if (array_key_exists('user', $kga)) // user logged in
 {
     $ann = expenses_by_project($in, $out, array($kga['user']['user_id']));
 }
@@ -99,7 +98,7 @@ else // customer logged in
 $ann                       = Format::formatCurrency($ann);
 $view->project_annotations = $ann;
 
-if (isset($kga['user'])) {
+if (array_key_exists('user', $kga)) {
     $view->hideComments = $kga['pref']['show_comments_by_default'] != 1;
 }
 else {

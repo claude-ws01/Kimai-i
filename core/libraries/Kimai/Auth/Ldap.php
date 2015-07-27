@@ -2,11 +2,11 @@
 
 /**
  * Copyright (C) 2011 by Skaldrom Y. Sarg of oncode.info
- *  
+ *
  * This is free software. Use it however you want.
  */
-
-class Kimai_Auth_Ldap extends Kimai_Auth_Abstract {
+class Kimai_Auth_Ldap extends Kimai_Auth_Abstract
+{
 
     /** Your LDAP-Server */
     private $LADP_SERVER = 'ldap://localhost';
@@ -25,12 +25,17 @@ class Kimai_Auth_Ldap extends Kimai_Auth_Abstract {
      */
     private $kimaiAuth = null;
 
-    public function __construct($database = null, $kga = null) {
+    public function __construct($database = null, $kga = null)
+    {
+
         parent::__construct($database, $kga);
         $this->kimaiAuth = new Kimai_Auth_Kimai($database, $kga);
     }
 
-    public function authenticate($username, $password, &$userId) {
+    public function authenticate($username, $password, &$userId)
+    {
+        global $database, $kga;
+        
         // Check if username should be authenticated locally
         if (in_array($username, $this->LDAP_LOCAL_ACCOUNTS)) {
             return $this->kimaiAuth->authenticate($username, $password, $userId);
@@ -40,6 +45,7 @@ class Kimai_Auth_Ldap extends Kimai_Auth_Abstract {
         if (!function_exists('ldap_bind')) {
             echo 'ldap is not installed!';
             $userId = false;
+
             return false;
         }
 
@@ -48,6 +54,7 @@ class Kimai_Auth_Ldap extends Kimai_Auth_Abstract {
 
         if (!$check_username || !trim($password) || ($this->LDAP_FORCE_USERNAME_LOWERCASE && strtolower($check_username) !== $check_username)) {
             $userId = false;
+
             return false;
         }
 
@@ -56,6 +63,7 @@ class Kimai_Auth_Ldap extends Kimai_Auth_Abstract {
         if (!$connect_result) {
             echo "Cannot connect to ", $this->LADP_SERVER;
             $userId = false;
+
             return false;
         }
 
@@ -67,6 +75,7 @@ class Kimai_Auth_Ldap extends Kimai_Auth_Abstract {
         if (!$bind_result) {
             // Nope!
             $userId = false;
+
             return false;
         }
         ldap_unbind($connect_result);
@@ -74,22 +83,24 @@ class Kimai_Auth_Ldap extends Kimai_Auth_Abstract {
         // User is authenticated. Does it exist in Kimai yet?
         $check_username = $this->LDAP_FORCE_USERNAME_LOWERCASE ? strtolower($check_username) : $check_username;
 
-        $userId = $this->database->user_name2id($check_username);
-        if ($userId === false)  {
+        $userId = $database->user_name2id($check_username);
+        if ($userId === false) {
             // User does not exist (yet)
             if ($this->LDAP_USER_AUTOCREATE) { // Create it!
-		$userId   = $this->database->user_create(array(
-			'name' => $check_username,
-			'globalRoleID' => $this->getDefaultGlobalRole(),
-			'active' => 1
-		));
-                $this->database->setGroupMemberships($userId,array($this->getDefaultGroups()));
+                $userId = $database->user_create(array(
+                                                           'name'         => $check_username,
+                                                           'globalRoleID' => $this->getDefaultGlobalRole(),
+                                                           'active'       => 1,
+                                                       ));
+                $database->setGroupMemberships($userId, array($this->getDefaultGroups()));
 
                 // Set a password, to calm kimai down
-                $usr_data = array('password' => md5($this->kga['password_salt'] . md5(uniqid(rand(), true)) . $this->kga['password_salt']));
-                $this->database->user_edit($userId, $usr_data);
-            } else {
+                $usr_data = array('password' => md5($kga['password_salt'] . md5(uniqid(rand(), true)) . $kga['password_salt']));
+                $database->user_edit($userId, $usr_data);
+            }
+            else {
                 $userId = false;
+
                 return false;
             }
         }
@@ -99,5 +110,3 @@ class Kimai_Auth_Ldap extends Kimai_Auth_Abstract {
 
 }
 
-// There should be NO trailing whitespaces.
-?>

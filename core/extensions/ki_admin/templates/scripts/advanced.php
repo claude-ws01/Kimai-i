@@ -29,7 +29,13 @@ global $kga;
             }
         });
 
-        $('#adm_ext_form_editadv').ajaxForm({target: '#adm_ext_output', success: cb});
+        $('#adm_ext_form_editadv').ajaxForm({
+            beforeSubmit: function () {
+                $('#ajax_wait').show();
+            },
+            target: '#adm_ext_output',
+            success: cb
+        });
     });
 </script>
 
@@ -37,7 +43,7 @@ global $kga;
 
     <div id="adm_ext_output"></div>
 
-    <form id="adm_ext_form_editadv" action="../extensions/ki_adminpanel/processor.php" method="post">
+    <form id="adm_ext_form_editadv" action="../extensions/ki_admin/processor.php" method="post">
 
         <fieldset class="adm_ext_advanced" style="padding-top:0;margin-top:0;">
             <div>
@@ -90,8 +96,8 @@ global $kga;
             </div>
             <div>
                 <input type="checkbox"
-                       name="track_num_editable" <?php if ($kga['conf']['track_num_editable']): ?> checked="checked" <?php endif; ?>
-                       value="1" class="formfield"> <?php echo $kga['lang']['track_num_editable'] ?>
+                       name="ref_num_editable" <?php if ($kga['conf']['ref_num_editable']): ?> checked="checked" <?php endif; ?>
+                       value="1" class="formfield"> <?php echo $kga['lang']['ref_num_editable'] ?>
             </div>
             <div>
                 <input type="text" name="bill_pct" size="20"
@@ -143,31 +149,31 @@ global $kga;
             <div>
                 <?php echo $kga['lang']['round_time'] ?> <select name="round_precision" class="formfield">
                     <option
-                        value="0" <?php if ($kga['conf']['round_precision'] == 0): ?> selected="selected" <?php endif; ?>>
+                        value="0" <?php if ((int)$kga['conf']['round_precision'] === 0): ?> selected="selected" <?php endif; ?>>
                         -
                     </option>
                     <option
-                        value="1" <?php if ($kga['conf']['round_precision'] == 1): ?> selected="selected" <?php endif; ?>>
+                        value="1" <?php if ((int)$kga['conf']['round_precision'] === 1): ?> selected="selected" <?php endif; ?>>
                         1
                     </option>
                     <option
-                        value="5" <?php if ($kga['conf']['round_precision'] == 5): ?> selected="selected" <?php endif; ?>>
+                        value="5" <?php if ((int)$kga['conf']['round_precision'] === 5): ?> selected="selected" <?php endif; ?>>
                         5
                     </option>
                     <option
-                        value="10" <?php if ($kga['conf']['round_precision'] == 10): ?> selected="selected" <?php endif; ?>>
+                        value="10" <?php if ((int)$kga['conf']['round_precision'] === 10): ?> selected="selected" <?php endif; ?>>
                         10
                     </option>
                     <option
-                        value="15" <?php if ($kga['conf']['round_precision'] == 15): ?> selected="selected" <?php endif; ?>>
+                        value="15" <?php if ((int)$kga['conf']['round_precision'] === 15): ?> selected="selected" <?php endif; ?>>
                         15
                     </option>
                     <option
-                        value="15" <?php if ($kga['conf']['round_precision'] == 20): ?> selected="selected" <?php endif; ?>>
+                        value="15" <?php if ((int)$kga['conf']['round_precision'] === 20): ?> selected="selected" <?php endif; ?>>
                         20
                     </option>
                     <option
-                        value="30" <?php if ($kga['conf']['round_precision'] == 30): ?> selected="selected" <?php endif; ?>>
+                        value="30" <?php if ((int)$kga['conf']['round_precision'] === 30): ?> selected="selected" <?php endif; ?>>
                         30
                     </option>
                 </select> <?php echo $kga['lang']['round_time_minute'] ?>
@@ -289,9 +295,9 @@ global $kga;
                 <div>
                     <?php
                     echo $this->formCheckbox(
-                        'ud_show_tracking_number', '1',
-                        array('checked' =>$kga['conf']['ud.show_tracking_number']));
-                    echo $kga['lang']['show_tracking_number']; ?>
+                        'ud_show_ref_code', '1',
+                        array('checked' =>$kga['conf']['ud.show_ref_code']));
+                    echo $kga['lang']['show_ref_code']; ?>
                 </div>
 
                 <div style="border-bottom:2px solid #666;" >

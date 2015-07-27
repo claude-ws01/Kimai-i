@@ -252,7 +252,7 @@ function ts_ext_reload_activities(project, noUpdateRate, activity, timeSheetEntr
             if (noUpdateRate == undefined)
                 ts_ext_getBestRates();
             if (activity > 0) {
-                $.getJSON("../extensions/ki_timesheets/processor.php", {
+                $.getJSON("../extensions/ki_timesheet/processor.php", {
                         axAction: "budgets",
                         project_id: project,
                         activity_id: activity,

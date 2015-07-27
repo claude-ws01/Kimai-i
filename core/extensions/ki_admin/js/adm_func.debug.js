@@ -176,8 +176,13 @@ function adm_ext_newUser() {
         alert(lang_checkUsername);
         return false;
     }
-    $.post(adm_ext_path + "processor.php", {axAction: "createUser", axValue: newuser, id: 0},
+    $('#ajax_wait').show();
+    $.post(adm_ext_path + "processor.php", {
+            axAction: "createUser",
+            axValue: newuser, id: 0},
+
         function (data) {
+            $('#ajax_wait').hide();
             if (data.user_id === false) {
                 alert(data.errors.join("\n"));
                 return;
@@ -190,16 +195,28 @@ function adm_ext_newUser() {
 
 function adm_ext_showDeletedUsers() {
 
-    $.post(adm_ext_path + "processor.php", {axAction: "toggleDeletedUsers", axValue: 1, id: 0},
+    $('#ajax_wait').show();
+    $.post(adm_ext_path + "processor.php", {
+            axAction: "toggleDeletedUsers",
+            axValue: 1,
+            id: 0},
+
         function (data) {
+            $('#ajax_wait').hide();
             adm_ext_refreshSubtab('users');
         });
 }
 
 function adm_ext_hideDeletedUsers() {
 
-    $.post(adm_ext_path + "processor.php", {axAction: "toggleDeletedUsers", axValue: 0, id: 0},
+    $('#ajax_wait').show();
+    $.post(adm_ext_path + "processor.php", {
+            axAction: "toggleDeletedUsers",
+            axValue: 0,
+            id: 0},
+
         function (data) {
+            $('#ajax_wait').hide();
             adm_ext_refreshSubtab('users');
         });
 }
@@ -216,8 +233,14 @@ function adm_ext_newGroup() {
         alert(lang_checkGroupname);
         return false;
     }
-    $.post(adm_ext_path + "processor.php", {axAction: "createGroup", axValue: newgroup, id: 0},
+    $('#ajax_wait').show();
+    $.post(adm_ext_path + "processor.php", {
+            axAction: "createGroup",
+            axValue: newgroup,
+            id: 0},
+
         function (data) {
+            $('#ajax_wait').hide();
             adm_ext_refreshSubtab('groups');
         });
 }
@@ -234,8 +257,15 @@ function adm_ext_newStatus() {
         alert(lang_checkStatusname);
         return false;
     }
-    $.post(adm_ext_path + "processor.php", {axAction: "createStatus", axValue: newstatus, id: 0},
+
+    $('#ajax_wait').show();
+    $.post(adm_ext_path + "processor.php", {
+            axAction: "createStatus",
+            axValue: newstatus,
+            id: 0},
+
         function (data) {
+            $('#ajax_wait').hide();
             adm_ext_refreshSubtab('status');
         });
 }
@@ -252,12 +282,20 @@ function adm_ext_newGlobalRole() {
         alert(lang_checkGlobalRoleName);
         return false;
     }
-    $.post(adm_ext_path + "processor.php", {axAction: "createGlobalRole", axValue: newGlobalRole, id: 0},
+    $('#ajax_wait').show();
+    $.post(adm_ext_path + "processor.php", {
+            axAction: "createGlobalRole",
+            axValue: newGlobalRole,
+            id: 0},
+
         function (data) {
-            if (data.errors.length > 0)
+            if (data.errors.length > 0) {
+                $('#ajax_wait').hide();
                 alert(data.errors.join("\n"));
-            else
+            }
+            else {
                 adm_ext_refreshSubtab('globalRoles');
+            }
         });
 }
 
@@ -273,16 +311,20 @@ function adm_ext_newMembershipRole() {
         alert(lang_checkMembershipRoleName);
         return false;
     }
+    $('#ajax_wait').show();
     $.post(adm_ext_path + "processor.php", {
             axAction: "createMembershipRole",
             axValue: newMembershipRole,
             id: 0
         },
         function (data) {
-            if (data.errors.length > 0)
+            if (data.errors.length > 0) {
+                $('#ajax_wait').hide();
                 alert(data.errors.join("\n"));
-            else
+            }
+            else {
                 adm_ext_refreshSubtab('membershipRoles');
+            }
         });
 }
 
@@ -341,8 +383,11 @@ function adm_ext_refreshSubtab(tab) {
     if (tab == 'activities') {
         options.activity_filter = $('#activity_project_filter').val();
     }
+    $('#ajax_wait').show();
     $.post(adm_ext_path + "processor.php", options,
+
         function (data) {
+            $('#ajax_wait').hide();
             switch (tab) {
             case "users":
                 target = "#adm_ext_s1";
@@ -387,8 +432,15 @@ function adm_ext_deleteUser(id, trash) {
     if (!confirm(lang_sure)) return;
 
     var axData = (trash ? 1 : 2);
-    $.post(adm_ext_path + "processor.php", {axAction: "deleteUser", axValue: axData, id: id},
+
+    $('#ajax_wait').show();
+    $.post(adm_ext_path + "processor.php", {
+            axAction: "deleteUser",
+            axValue: axData,
+            id: id},
+
         function () {
+            $('#ajax_wait').hide();
             adm_ext_refreshSubtab('users');
             adm_ext_refreshSubtab('groups');
             hook_users_changed();
@@ -403,8 +455,13 @@ function adm_ext_deleteGroup(id) {
 
     if (!confirm(lang_sure)) return;
 
-    $.post(adm_ext_path + "processor.php", {axAction: "deleteGroup", id: id},
+    $('#ajax_wait').show();
+    $.post(adm_ext_path + "processor.php", {
+            axAction: "deleteGroup",
+            id: id},
+
         function (result) {
+            $('#ajax_wait').hide();
             var error = result['errors'][""];
 
             if (error)
@@ -423,8 +480,13 @@ function adm_ext_deleteStatus(id) {
 
     if (!confirm(lang_sure)) return;
 
-    $.post(adm_ext_path + "processor.php", {axAction: "deleteStatus", id: id},
+    $('#ajax_wait').show();
+    $.post(adm_ext_path + "processor.php", {
+            axAction: "deleteStatus",
+            id: id},
+
         function () {
+            $('#ajax_wait').hide();
             adm_ext_refreshSubtab('status');
         }
     );
@@ -443,8 +505,13 @@ function adm_ext_deleteProject(id) {
         $("#sel_project").html('');
     }
 
-    $.post(adm_ext_path + "processor.php", {axAction: "deleteProject", id: id},
+    $('#ajax_wait').show();
+    $.post(adm_ext_path + "processor.php", {
+            axAction: "deleteProject",
+            id: id},
+
         function () {
+            $('#ajax_wait').hide();
             adm_ext_refreshSubtab('projects');
             hook_projects_changed();
         }
@@ -464,8 +531,13 @@ function adm_ext_deleteCustomer(id) {
         $("#sel_customer").html('');
     }
 
-    $.post(adm_ext_path + "processor.php", {axAction: "deleteCustomer", id: id},
+    $('#ajax_wait').show();
+    $.post(adm_ext_path + "processor.php", {
+            axAction: "deleteCustomer",
+            id: id},
+
         function () {
+            $('#ajax_wait').hide();
             adm_ext_refreshSubtab('customers');
             hook_customers_changed();
         }
@@ -485,8 +557,13 @@ function adm_ext_deleteActivity(id) {
         $("#selected_activity").html('');
     }
 
-    $.post(adm_ext_path + "processor.php", {axAction: "deleteActivity", id: id},
+    $('#ajax_wait').show();
+    $.post(adm_ext_path + "processor.php", {
+            axAction: "deleteActivity",
+            id: id},
+
         function () {
+            $('#ajax_wait').hide();
             adm_ext_refreshSubtab('activities');
             hook_activities_changed();
         }
@@ -500,8 +577,13 @@ function adm_ext_deleteGlobalRole(id) {
 
     if (!confirm(lang_sure)) return;
 
-    $.post(adm_ext_path + "processor.php", {axAction: "deleteGlobalRole", id: id},
+    $('#ajax_wait').show();
+    $.post(adm_ext_path + "processor.php", {
+            axAction: "deleteGlobalRole",
+            id: id},
+
         function () {
+            $('#ajax_wait').hide();
             adm_ext_refreshSubtab('globalRoles');
         }
     );
@@ -514,8 +596,13 @@ function adm_ext_deleteMembershipRole(id) {
 
     if (!confirm(lang_sure)) return;
 
-    $.post(adm_ext_path + "processor.php", {axAction: "deleteMembershipRole", id: id},
+    $('#ajax_wait').show();
+    $.post(adm_ext_path + "processor.php", {
+            axAction: "deleteMembershipRole",
+            id: id},
+
         function () {
+            $('#ajax_wait').hide();
             adm_ext_refreshSubtab('membershipRoles');
         }
     );
@@ -530,8 +617,15 @@ function adm_ext_unbanUser(id) {
 
     ban.blur();
     ban.html("<img border='0' width='16' height='16' src='../skins/" + skin + "/grfx/loading13.gif'/>");
-    $.post(adm_ext_path + "processor.php", {axAction: "unbanUser", axValue: 0, id: id},
+
+    $('#ajax_wait').show();
+    $.post(adm_ext_path + "processor.php", {
+            axAction: "unbanUser",
+            axValue: 0,
+            id: id},
+
         function (data) {
+            $('#ajax_wait').hide();
             ban.html(data);
             ban.attr({"ONCLICK": "adm_ext_banUser('" + id + "'); return false;"});
         }
@@ -547,8 +641,15 @@ function adm_ext_banUser(id) {
 
     ban.blur();
     ban.html("<img border='0' width='16' height='16' src='../skins/" + skin + "/grfx/loading13.gif'/>");
-    $.post(adm_ext_path + "processor.php", {axAction: "banUser", axValue: 0, id: id},
+
+    $('#ajax_wait').show();
+    $.post(adm_ext_path + "processor.php", {
+            axAction: "banUser",
+            axValue: 0,
+            id: id},
+
         function (data) {
+            $('#ajax_wait').hide();
             ban.html(data);
             ban.attr({"ONCLICK": "adm_ext_unbanUser('" + id + "'); return false;"});
         }
@@ -557,8 +658,11 @@ function adm_ext_banUser(id) {
 
 function adm_ext_checkupdate() {
 
+    $('#ajax_wait').show();
     $.post("checkupdate.php",
+
         function (data) {
+            $('#ajax_wait').hide();
             $('#adm_ext_checkupdate').html(data);
         }
     );

@@ -1,74 +1,74 @@
-
-<script type="text/javascript" charset="utf-8">current=28;</script> 
-
+<script type="text/javascript" charset="utf-8">current = 28;</script>
 
 <?php
-if ($_REQUEST['lang']=="en") {
-?>
+if ($_REQUEST['language'] === "en") {
+    ?>
 
+    <h2>Timezone</h2>
 
-<h2>Timezone</h2>
+    Select your timezone. This will be used as the default for new users and customers.
+    <br/>Users can change their timezone through their preferences, customers can't. This setting can be changed using the
+    <i>Admin Panel</i>.
 
-Select your timezone. This will be used as the default for new users and customers.<br/>
-Users can change their timezone through their preferences, customers can't. This setting can be changed using the <i>Admin Panel</i>.
+    <br/><br/>
 
-<br/><br/>
+    <select id="timezone">><?php
+        require("../../includes/func.php");
 
-<select id="timezone">>
-<?php
-require("../../includes/func.php");
+        $serverZone = @date_default_timezone_get();
+        //DEBUG//
+        error_log('<<== SERVER ZONE ==>>'.$serverZone . '<<=>>');
+        foreach (timezoneList() as $name) {
+            if ($name === $serverZone) {
+                echo "<option selected=\"selected\">$name</option>";
+            }
+            else {
+                echo "<option>$name</option>";
+            }
+        }
+        ?>
+    </select>
 
-$serverZone = @date_default_timezone_get();
+    <br/><br/>
 
-foreach (timezoneList() as $name) {
-  if ($name == $serverZone)
-    echo "<option selected=\"selected\">$name</option>";
-  else
-    echo "<option>$name</option>";
-}
-?>
-</select>
+    <button onClick="step_back(); return false;">Back</button>
+    <button onClick="timezone_proceed(); return false;" class="proceed">Proceed</button>
 
-<br/><br/>
-
-<button onClick="step_back(); return false;">Back</button>
-<button onClick="timezone_proceed(); return false;" class="proceed">Proceed</button>
-
-
-<?php
+    <?php
 }
 else {
-?>
+    ?>
 
+    <h2>Zeitzone</h2>
 
-<h2>Zeitzone</h2>
+    Wählen Sie ihre Zeitzone aus. Diese wird als Standard für neue Benutzer und Kunden verwendet.
+    <br/>Benutzer können später ihre eigene Zeitzone auswählen, Kunden jedoch nicht. Die Einstellung kann später im <i>Admin
+                                                                                                                       Panel</i> geändert werden.
 
-Wählen Sie ihre Zeitzone aus. Diese wird als Standard für neue Benutzer und Kunden verwendet.<br/>
-Benutzer können später ihre eigene Zeitzone auswählen, Kunden jedoch nicht. Die Einstellung kann später im <i>Admin Panel</i> geändert werden.
+    <br/><br/>
 
-<br/><br/>
+    <select id="timezone">
+        <?php
+        require("../../includes/func.php");
 
-<select id="timezone">
-<?php
-require("../../includes/func.php");
+        $serverZone = @date_default_timezone_get();
 
-$serverZone = @date_default_timezone_get();
+        foreach (timezoneList() as $name) {
+            if ($name == $serverZone) {
+                echo "<option selected=\"selected\">$name</option>";
+            }
+            else {
+                echo "<option>$name</option>";
+            }
+        }
+        ?>
+    </select>
 
-foreach (timezoneList() as $name) {
-  if ($name == $serverZone)
-    echo "<option selected=\"selected\">$name</option>";
-  else
-    echo "<option>$name</option>";
-}
-?>
-</select>
+    <br/><br/>
 
-<br/><br/>
+    <button onClick="step_back(); return false;">Zurück</button>
+    <button onClick="timezone_proceed(); return false;" class="proceed">Fortfahren</button>
 
-<button onClick="step_back(); return false;">Zurück</button>
-<button onClick="timezone_proceed(); return false;" class="proceed">Fortfahren</button>
-
-
-<?php
+    <?php
 }
 ?>

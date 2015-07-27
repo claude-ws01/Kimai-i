@@ -2,19 +2,18 @@
 echo '<script type="text/javascript" charset="utf-8">current=60;</script>';
 
 $hostname        = isset($_REQUEST['hostname']) ? $_REQUEST['hostname'] : 'localhost';
+$db_name        = isset($_REQUEST['database']) ? $_REQUEST['database'] : '';
 $username        = isset($_REQUEST['username']) ? $_REQUEST['username'] : '???';
 $password        = isset($_REQUEST['password']) ? $_REQUEST['password'] : '';
-$lang            = isset($_REQUEST['lang']) ? $_REQUEST['lang'] : 'en';
-$database        = isset($_REQUEST['database']) ? $_REQUEST['database'] : '';
-$create_database = isset($_REQUEST['create_database']) ? $_REQUEST['create_database'] : '';
-$server_type     = isset($_REQUEST['db_type']) ? $_REQUEST['db_type'] : null;
 $prefix          = isset($_REQUEST['prefix']) ? $_REQUEST['prefix'] : "kimai_";
+$language        = isset($_REQUEST['language']) ? $_REQUEST['language'] : 'en';
+$create_database = isset($_REQUEST['create_database']) ? $_REQUEST['create_database'] : '';
 
-$con = @mysqli_connect($hostname, $username, $password);
+$con = @mysqli_connect($hostname, $username, $password, $db_name);
 
 // we could not connect to the database, show error and leave the script
 if (!$con) {
-    if ($lang == "de") {
+    if ($language == "de") {
         echo "Datenbank hat Zugriff verweigert. Gehen Sie bitte zurück.<br /><button onClick=\"step_back(); return false;\">Zurück</button>";
     }
     else {
@@ -51,18 +50,18 @@ while ($row = mysqli_fetch_row($result)) {
 }
 
 if (!$showDatabasesAllowed) {
-    if ($lang == "de") {
+    if ($language == "de") {
         echo "Kein Berechtigung um Datenbanken aufzulisten. Name der zu verwendenden Datenbank:<br/>";
     }
     else {
         echo "No permission to list databases. Name of the database to use:<br/>";
     }
 
-    echo '<input type="text" id="db_names" value="' . $database . '"/>';
+    echo '<input type="text" id="db_names" value="' . $db_name . '"/>';
 
-    if (($database !== '' && $create_database === '') && !mysqli_select_db($con, $database)) {
+    if (($db_name !== '' && $create_database === '') && !mysqli_select_db($con, $db_name)) {
         $errors = true;
-        if ($lang == "de") {
+        if ($language == "de") {
             echo '<strong id="db_select_label" class="arrow">Diese Datenbank konnte nicht geöffnet werden.</strong>';
         }
         else {
@@ -88,7 +87,7 @@ else {
     }
 
     if (!is_array($db_connection) || count($db_connection) == 0) {
-        if ($lang == "de") {
+        if ($language == "de") {
             echo "Keine Datenbank(en) vorhanden.<br/><br/>";
         }
         else {
@@ -98,7 +97,7 @@ else {
     else {
         // if there are databases build selectbox
 
-        if ($lang == "de") {
+        if ($language == "de") {
             echo "Bitte wählen Sie eine Datenbank:";
         }
         else {
@@ -108,12 +107,12 @@ else {
         echo "<br/><select id='db_names'>";
         echo "<option value=''></option>";
 
-        foreach ($db_connection as $db_name) {
-            if ($database == $db_name) {
-                echo "<option selected='selected' value='$db_name'>$db_name</option>";
+        foreach ($db_connection as $dbname) {
+            if ($db_name == $dbname) {
+                echo "<option selected='selected' value='$dbname'>$dbname</option>";
             }
             else {
-                echo "<option value='$db_name'>$db_name</option>";
+                echo "<option value='$dbname'>$dbname</option>";
             }
         }
 
@@ -123,20 +122,20 @@ else {
 
 if ($createDatabaseAllowed) {
 
-    if ($database === '' && $create_database !== '') {
+    if ($db_name === '' && $create_database !== '') {
         if (!preg_match('/^[a-zA-Z0-9_]+$/', $create_database)) {
-            $databaseErrorMessage = ($lang == "de") ? "Nur Buchstaben, Zahlen und Unterstriche."
+            $databaseErrorMessage = ($language == "de") ? "Nur Buchstaben, Zahlen und Unterstriche."
                 : "Only letters, numbers and underscores.";
         }
         elseif (strlen($create_database) > 64) {
-            $databaseErrorMessage = ($lang == "de") ? "Maximal 64 Zeichen." : "At most 64 characters.";
+            $databaseErrorMessage = ($language == "de") ? "Maximal 64 Zeichen." : "At most 64 characters.";
         }
         elseif (mysqli_select_db($con, $create_database)) {
-            $databaseErrorMessage = ($lang == "de") ? "Datenbank existiert bereits." : "Database already exists.";
+            $databaseErrorMessage = ($language == "de") ? "Datenbank existiert bereits." : "Database already exists.";
         }
     }
 
-    if ($lang == "de") {
+    if ($language == "de") {
         echo "Neue Datenbank anlegen: (der angegebene DB-Nutzer muss die entspr. Rechte besitzen!)<br/><input id='db_create' type='text' value='$create_database'/>";
     }
     else {
@@ -157,9 +156,9 @@ else {
     echo "<input id='db_create' type='hidden' value=''/>";
 }
 
-if ($database !== '' && $create_database !== '') {
+if ($db_name !== '' && $create_database !== '') {
     $errors = true;
-    if ($lang == 'de') {
+    if ($language == 'de') {
         echo '<strong class="fail">Wählen sie entweder eine Datenbank aus oder geben sie eine Neue an, aber nicht beides.</strong><br/><br/>';
     }
     else {
@@ -170,15 +169,15 @@ if ($database !== '' && $create_database !== '') {
 // Table prefix
 if ($prefix != 'kimai' && strlen($prefix) > 0 && !preg_match('/^[a-zA-Z0-9_]+$/', $prefix)) {
     $errors             = true;
-    $prefixErrorMessage = ($lang == "de") ? "Nur Buchstaben, Zahlen und Unterstriche."
+    $prefixErrorMessage = ($language == "de") ? "Nur Buchstaben, Zahlen und Unterstriche."
         : "Only letters, numbers and underscores.";
 }
 if ($prefix != 'kimai' && strlen($prefix) > 64) {
     $errors             = true;
-    $prefixErrorMessage = ($lang == "de") ? "Maximal 64 Zeichen." : "At most 64 characters.";
+    $prefixErrorMessage = ($language == "de") ? "Maximal 64 Zeichen." : "At most 64 characters.";
 }
 
-if ($lang == "de") {
+if ($language == "de") {
     echo "Möchten Sie einen Tabellen-Prefix vergeben?<br/>(Wenn Sie nicht wissen was das ist, lassen Sie einfach 'kimai_' stehen...)<br/><input id='prefix' type='text' value='$prefix'/>";
 }
 else {
@@ -194,14 +193,14 @@ else {
 
 echo "<br/><br/>";
 
-if ($lang == "de") {
+if ($language == "de") {
     echo "<button onClick=\"step_back(); return false;\">Zurück</button> <button onClick='db_check(); return false;' class='proceed'>Fortfahren</button>";
 }
 else {
     echo "<button onClick=\"step_back(); return false;\">Back</button> <button onClick='db_check(); return false;' class='proceed'>Proceed</button>";
 }
 
-if (($database === '' && $create_database === '') || $errors || !isset($_REQUEST['redirect'])) {
+if (($db_name === '' && $create_database === '') || $errors || !isset($_REQUEST['redirect'])) {
     echo ob_get_clean();
 }
 else {

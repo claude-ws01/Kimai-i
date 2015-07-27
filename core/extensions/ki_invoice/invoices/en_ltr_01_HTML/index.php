@@ -26,11 +26,11 @@
 
 global $kga;
 
-$timesheets     = $this->timesheets;
-$amount      = $this->amount;
-$vat         = $this->vat_rate;
+$details     = $this->details;
+$netTotal    = $this->netTotal;
+$vatTotal    = $this->vatTotal;
 $vatRate     = $this->vatRate;
-$total       = $this->total;
+$gTotal      = $this->gTotal;
 $projects    = $this->projects;
 $customer    = $this->customer;
 $invoiceId   = $this->invoiceId;
@@ -46,12 +46,12 @@ $invoiceDate = $this->invoiceDate;
 <head>
     <meta charset="utf-8">
     <title>Invoice</title>
-    <link rel="stylesheet" href="invoices/invoice_en_HTML/style.css">
+    <link rel="stylesheet" href="invoices/en_ltr_01_HTML/style.css">
 </head>
 <body>
 <header>
     <h1>Invoice</h1>
-    <span><img alt="" src="invoices/invoice_en_HTML/logo.png"></span>
+    <span><img alt="" src="invoices/en_ltr_01_HTML/logo.png"></span>
     <address>
         <p>
             Compagny
@@ -66,6 +66,7 @@ $invoiceDate = $this->invoiceDate;
 <article>
     <address>
         <h2>Client</h2>
+
         <p>
             <?php echo $customer['company']; ?><br><?php echo $customer['contact']; ?>
             <br><?php echo $customer['street']; ?><br><?php echo $customer['zipcode']; ?>
@@ -86,59 +87,67 @@ $invoiceDate = $this->invoiceDate;
             <td><span><?php echo $invoiceId; ?></span></td>
         </tr>
     </table>
-    <table class="timesheets">
+    <table class="details">
         <thead>
         <tr>
+            <th class="c_project"><span>Project</span></th>
             <th><span>Description</span></th>
-            <th class="rate"><span>Rate</span></th>
-            <th class="qty"><span>Qty</span></th>
-            <th class="amount"><span>Total</span></th>
+            <th class="c_rate"><span>Rate</span></th>
+            <th class="c_qty"><span>Qty</span></th>
+            <th class="c_amount"><span>Total</span></th>
         </tr>
         </thead>
         <tbody>
-        <?php foreach ($timesheets as $row) {
+        <?php foreach ($details as $row) {
             if ($row['type'] === 'timesheet') {
                 ?>
                 <tr>
-                    <td><span><?php echo $row['description']; ?></span></td>
-                    <td class="rate">
+                    <td class="c_project"><span><?php echo $row['project_name']; ?></span></td>
+                    <td class="c_description"><span><?php echo $row['description']; ?></span></td>
+                    <td class="c_rate">
                         <span><?php echo $currency; ?></span>
                         <span><?php echo number_format($row['rate'], 2); ?></span>
                     </td>
-                    <td class="qty"><span><?php echo number_format($row['hour'], 2); ?></span></td>
-                    <td class="amount"><span><?php echo $currency; ?></span> <span><?php echo $row['amount']; ?></span></td>
+                    <td class="c_qty"><span><?php echo number_format($row['hour'], 2); ?></span></td>
+                    <td class="c_amount"><span><?php echo $currency; ?></span> <span><?php echo $row['amount']; ?></span>
+                    </td>
                 </tr>
             <?php }
             else { ?>
                 <tr>
-                    <td><span><?php echo $row['description']; ?></span></td>
-                    <td class="rate">
-                        <span><?php echo $currency; ?></span>
-                        <span><?php echo number_format($row['value'], 2); ?></span>
-                    </td>
-                    <td class="qty"><span><?php echo number_format($row['multiplier'], 2); ?></span></td>
-                    <td class="amount"><span><?php echo $currency; ?></span> <span><?php echo $row['amount']; ?></span></td>
+                <td class="c_project"><span><?php echo $row['project_name']; ?></span></td>
+                <td class="c_description"><span><?php echo $row['description']; ?></span></td>
+                <td class="c_rate">
+                    <span><?php echo $currency; ?></span>
+                    <span><?php echo number_format($row['value'], 2); ?></span>
+                </td>
+                <td class="c_qty"><span><?php echo number_format($row['multiplier'], 2); ?></span></td>
+                <td class="c_amount"><span><?php echo $currency; ?></span> <span><?php echo $row['amount']; ?></span></td>
                 </tr><?php }
         } ?>
         </tbody>
     </table>
     <table class="totals">
+        <colgroup>
+            <col class="t_label">
+            <col class="c_amount">
+        </colgroup>
         <tr>
-            <th><span>Net</span></th>
-            <td class="amount">
-                <span><?php echo $currency; ?></span> <span><?php echo number_format($amount, 2); ?></span>
+            <td class="t_label"><span>Net</span></td>
+            <td class="c_amount">
+                <span><?php echo $currency; ?></span> <span><?php echo number_format($netTotal, 2); ?></span>
             </td>
         </tr>
         <tr>
-            <th><span><?php echo $kga['lang']['vat'], ' ', $vatRate; ?>%</span></th>
-            <td class="amount">
-                <span><?php echo $currency; ?></span> <span><?php echo number_format($vat, 2); ?></span>
+            <td class="t_label"><span><?php echo $kga['lang']['vat'], ' ', $vatRate; ?>%</span></td>
+            <td class="c_amount">
+                <span><?php echo $currency; ?></span> <span><?php echo number_format($vatTotal, 2); ?></span>
             </td>
         </tr>
         <tr>
-            <th><span>Invoice Amount</span></th>
-            <td class="amount">
-                <span><?php echo $currency; ?></span> <span><?php echo number_format($total, 2); ?></span>
+            <td class="t_label"><span>Invoice Amount</span></td>
+            <td class="c_amount">
+                <span><?php echo $currency; ?></span> <span><?php echo number_format($gTotal, 2); ?></span>
             </td>
         </tr>
     </table>

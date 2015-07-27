@@ -1,7 +1,7 @@
 <?php 
 
 
-if ($_REQUEST['lang']=="en") {
+if ($_REQUEST['language']=="en") {
 
 echo<<<EOD
                 <h2>License</h2>

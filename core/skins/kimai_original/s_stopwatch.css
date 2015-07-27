@@ -18,7 +18,7 @@
 
 }
 
-#stopwatch .watch {
+#stopwatch .sw_counter {
     position: relative;
     color: red;
     top: 11px;
@@ -31,7 +31,7 @@
     line-height: 13px;
 }
 
-#stopwatch_ticker {
+#sw_ticker {
     position: absolute;
     font-size: 11px;
     right: 97px;
@@ -40,11 +40,11 @@
     z-index: 60;
 }
 
-#stopwatch_ticker ul {
+#sw_ticker ul {
     list-style-type: none;
 }
 
-#stopwatch_ticker ul li {
+#sw_ticker ul li {
     text-align: center;
     width: 220px;
     height: 15px;
@@ -54,6 +54,6 @@
     overflow: hidden;
 }
 
-* + html #stopwatch_ticker ul li {
+* + html #sw_ticker ul li {
     margin-top: -3px;
 }

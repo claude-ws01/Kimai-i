@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Registry to fetch several global Kimai objects.
  *
@@ -26,40 +27,22 @@ class Kimai_Registry extends Zend_Registry
         return self::get('Zend_Config');
     }
 
-    /**
-     * Returns the database layer to use.
-     *
-     * @return Kimai_Database_Abstract
-     */
     public static function getDatabase()
     {
         return self::get('database');
     }
 
-    /**
-     * Sets the global database layer.
-     *
-     * @param Kimai_Database_Abstract $database
-     */
-    public static function setDatabase(Kimai_Database_Abstract $database)
+    public static function setDatabase($database)
     {
         self::set('database', $database);
     }
 
-    /**
-     * Sets the current active user.
-     *
-     * @param Kimai_User $user
-     */
     public static function setUser(Kimai_User $user)
     {
         self::set('Kimai_User', $user);
     }
 
-    /**
-     * @return Kimai_User
-     */
-    public static function getUser()
+    public static function getUser_x()
     {
         return self::get('Kimai_User');
     }

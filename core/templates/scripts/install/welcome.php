@@ -1,3 +1,4 @@
+<?php global $kga ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
@@ -5,7 +6,7 @@
     <link rel="SHORTCUT ICON" href="favicon.ico">
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <meta name="robots" content="noindex,nofollow" />
-    <title>Kimai Installer</title>
+    <title>Kimai-i Installer</title>
     <link rel="stylesheet" type="text/css" media="screen" href="css/login.css" />
 </head>
 <body>
@@ -25,7 +26,7 @@
                     <button type="submit">Install</button>
                 </fieldset>
             </form>
-            <?php echo $this->partial('misc/copyrightnotes.php', array('kga' => $this->kga, 'devtimespan' => $this->devtimespan)); ?>
+            <?php echo $this->partial('misc/copyrightnotes.php', array('kga' => &$kga, 'devtimespan' => devTimeSpan())); ?>
     </div>
 </body>
 </html>

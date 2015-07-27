@@ -36,13 +36,10 @@ abstract class Kimai_Auth_Abstract
      * @var array
      */
     protected $kga = null;
-    /**
-     * @var Kimai_Database_Abstract
-     */
     protected $database = null;
 
-    /**
-     * @param Kimai_Database_Abstract $database
+    /*
+     * @param  $database
      * @param array $kga
      */
     public function __construct($database = null, $kga = null)
@@ -72,17 +69,14 @@ abstract class Kimai_Auth_Abstract
         return $this->kga;
     }
 
-    /**
-     * @param Kimai_Database_Abstract $database
+    /*
+     * @param  $database
      */
-    public function setDatabase(Kimai_Database_Abstract $database)
+    public function setDatabase($database)
     {
         $this->database = $database;
     }
 
-    /**
-     * @return Kimai_Database_Abstract
-     */
     protected function getDatabase()
     {
         return $this->database;
@@ -137,18 +131,18 @@ abstract class Kimai_Auth_Abstract
 
         $group = 0;
         if (count($groups) > 1) {
-            $group = $groups[1]['groupID'];
+            $group = $groups[1]['group_id'];
         }
 
         if (count($groups) === 1) {
-            $group = $groups[0]['groupID'];
+            $group = $groups[0]['group_id'];
         }
 
         $memberships = $database->membership_roles();
-        $membership = $memberships[0]['membershipRoleID'];
+        $membership = $memberships[0]['membership_role_id'];
         foreach ($memberships as $membership)
           if ($membership['name'] == 'User')
-            $membership = $membership['membershipRoleID'];
+            $membership = $membership['membership_role_id'];
 
         return array($group => $membership);
     }
@@ -164,10 +158,10 @@ abstract class Kimai_Auth_Abstract
 
         $roles = $database->global_roles();
 
-        $globalRoleID = $roles[0]['globalRoleID'];
+        $globalRoleID = $roles[0]['global_role_id'];
         foreach ($roles as $role)
           if ($role['name'] == 'User')
-            $globalRoleID = $role['globalRoleID'];
+            $globalRoleID = $role['global_role_id'];
 
         return $globalRoleID;
     }

@@ -50,8 +50,12 @@ function inv_ext_tab_changed() {
 
 function inv_ext_timeframe_changed() {
 
-    $.post(inv_ext_path + "processor.php", {axAction: "reload_timespan"},
+    $('#ajax_wait').show();
+    $.post(inv_ext_path + "processor.php", {
+            axAction: "reload_timespan"},
+
         function (data) {
+            $('#ajax_wait').hide();
             $("#invoice_timespan").html(data);
         }
     );
