@@ -42,8 +42,4 @@ class Kimai_Registry extends Zend_Registry
         self::set('Kimai_User', $user);
     }
 
-    public static function getUser_x()
-    {
-        return self::get('Kimai_User');
-    }
 }
