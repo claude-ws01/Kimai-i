@@ -75,7 +75,9 @@ switch ($axAction) {
         $pref['no_fading']            = getRequestBool('no_fading');
         $pref['open_after_recorded']  = getRequestBool('open_after_recorded');
         $pref['project_comment_flag'] = getRequestBool('project_comment_flag');
-        if (isset($_REQUEST['quickdelete'])) $pref['quickdelete'] = $_REQUEST['quickdelete'];
+        if (isset($_REQUEST['quickdelete'])) {
+            $pref['quickdelete'] = $_REQUEST['quickdelete'];
+        }
         $pref['rowlimit']                 = $_REQUEST['rowlimit'];
         $pref['show_comments_by_default'] = getRequestBool('show_comments_by_default');
         $pref['show_ids']                 = getRequestBool('show_ids');
@@ -149,10 +151,8 @@ switch ($axAction) {
         }
 
         $IDs   = explode('|', $axValue);
-        $newID = $database->startRecorder($IDs[0], $IDs[1], $id, $_REQUEST['startTime']);
-        echo json_encode(array(
-                             'id' => $newID,
-                         ));
+        $newID = $database->startRecorder($IDs[0], $IDs[1], $id);
+        echo json_encode(array('id' => $newID));
         break;
 
     /**
@@ -380,7 +380,9 @@ switch ($axAction) {
 
                             foreach ($_REQUEST['assignedActivities'] as $index => $activityID) {
 
-                                if ($activityID <= 0) continue;
+                                if ($activityID <= 0) {
+                                    continue;
+                                }
 
                                 $data = array();
                                 foreach (array('budget', 'effort', 'approved') as $key) {

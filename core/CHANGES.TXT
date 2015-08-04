@@ -1,3 +1,15 @@
+*************** REMINDER ... UPDATE /includes/version.php ******************************
+
+=== v0.10.0-b5 ======= 2015-08-04 ============ db revision 2000 ========================================================
+
+- start and stop recording time are now both taken from the server.  And it will show in local time as define in the
+    user's preferences.
+- minor corrections
+- correction in delete_user
+
+
+
+
 === v0.10.0-b4 ======= 2015-07-27 ============ db revision 2000 ========================================================
 
 - strengthen even more the choosing of update/install process with cleaner/safer redirection.
@@ -5,9 +17,11 @@
 - revised internal version check. Now, if no db revision, then only update core.version number. No need to run updater.
 
 
+
 === v0.10.0-b3 ======= 2015-07-27 ============ db revision 2000 ========================================================
 
 - grrr. having some difficulties with git...
+
 
 
 === v0.10.0-b2 ======= 2015-07-27 ============ db revision 2000 ========================================================
@@ -16,6 +30,7 @@
 - bugfix: iconv_set_encoding deprecated WARNINGS with PHP v5.6: Made new function ki_iconv_set_encoding to replace
     iconv_set_encoding. Function checks PHP version. This affects only zend framework 1.
 - bugfix: java validation of time in timesheet edit. We do not care about seconds!!
+
 
 
 === v0.10.0-b1 ======= 2015-07-25  ============ db revision 2000 =======================================================

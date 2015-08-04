@@ -39,8 +39,8 @@ class Kimai_Remote_Api
     public function __construct()
     {
         // Bootstrap Kimai the old fashioned way ;-)
-        require(__DIR__ . "/../basics.php");
-        require(__DIR__ . "/database/ApiDatabase.php");
+        require(__DIR__ . '/../basics.php');
+        require(__DIR__ . '/database/ApiDatabase.php');
 
         $this->ApiDatabase = new ApiDatabase;
     }
@@ -68,9 +68,10 @@ class Kimai_Remote_Api
 
         $database->checkUserInternal($uName, false);
 
-        //if ($permission !== null) {
-        // if we ever want to check permissions!
-        //}
+        if ($permission !== null) {
+         // if we ever want to check permissions!
+            $dummy = true;
+        }
 
         // do not let customers access the SOAP API
 
@@ -218,7 +219,7 @@ class Kimai_Remote_Api
      *
      * @return array
      */
-    public function start_record($apiKey, $projectId, $activityId)
+    public function startRecord($apiKey, $projectId, $activityId)
     {
         global $database, $kga;
 
@@ -230,7 +231,7 @@ class Kimai_Remote_Api
         if (!$database->is_valid_project_id($projectId) ||
             !$database->is_valid_activity_id($activityId)
         ) {
-            return $this->getErrorResult("Invalid project or task");
+            return $this->getErrorResult('Invalid project or task');
         }
 
         $uid = $kga['user']['user_id'];
@@ -241,12 +242,12 @@ class Kimai_Remote_Api
         }
         */
 
-        $result = $database->startRecorder($projectId, $activityId, $uid, time());
+        $result = $database->startRecorder($projectId, $activityId, $uid);
         if ($result) {
             return $this->getSuccessResult(array());
         }
 
-        return $this->getErrorResult("Unable to start, invalid params?");
+        return $this->getErrorResult('Unable to start, invalid params?');
     }
 
     /**
@@ -257,7 +258,7 @@ class Kimai_Remote_Api
      *
      * @return boolean
      */
-    public function stop_record($apiKey, $entryId)
+    public function stopRecord($apiKey, $entryId)
     {
         global $database;
 
@@ -270,7 +271,7 @@ class Kimai_Remote_Api
             return $this->getSuccessResult(array());
         }
 
-        return $this->getErrorResult("Unable to stop, not recording?");
+        return $this->getErrorResult('Unable to stop, not recording?');
     }
 
 
@@ -396,7 +397,6 @@ class Kimai_Remote_Api
             return $this->getAuthErrorResult();
         }
 
-        // @FIXME
         if (array_key_exists('customer', $kga)) {
             $tasks = $database->get_activities_by_customer($kga['customer']['customer_id']);
         }
@@ -449,8 +449,8 @@ class Kimai_Remote_Api
 
         $result = $database->get_current_recordings($kga['user']['user_id']);
 
-        // no "last" activity existing
-        if (!is_array($result) || count($result) == 0) {
+        // no 'last' activity existing
+        if (!is_array($result) || count($result) === 0) {
             return $this->getErrorResult('No active recording.');
         }
 
@@ -460,9 +460,12 @@ class Kimai_Remote_Api
         // do not expose all values, but only the public visible ones
         $keys    = array('time_entry_id', 'activity_id', 'project_id', 'start', 'end', 'duration');
         $current = array();
-        foreach ($keys as $key) {
-            if (array_key_exists($key, $result)) {
-                $current[$key] = $result[$key];
+
+        if (is_array($result)) {
+            foreach ($keys as $key) {
+                if (array_key_exists($key, $result)) {
+                    $current[$key] = $result[$key];
+                }
             }
         }
 
@@ -793,8 +796,6 @@ class Kimai_Remote_Api
      */
     public function setExpenseRecord($apiKey, Array $record, $doUpdate)
     {
-        global $kga;
-
         if (!$this->init($apiKey, 'setTimesheetRecord', true)) {
             return $this->getAuthErrorResult();
         }
