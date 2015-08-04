@@ -382,8 +382,7 @@ function startRecord(projectID, activityID, userID) {
     $.post("processor.php", {
             axAction: "start_record",
             axValue: value,
-            id: userID,
-            startTime: now},
+            id: userID},
 
         function (response) {
             $('#ajax_wait').hide();

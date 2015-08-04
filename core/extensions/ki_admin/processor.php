@@ -272,7 +272,7 @@ switch ($axAction) {
             $errors[''] = $kga['lang']['errorMessages']['permissionDenied'];
         }
 
-        if (count($errors) == 0) {
+        if (count($errors) === 0) {
             switch ($axValue) {
                 case 1 :
                     // If the confirmation is returned the user gets the trash-flag.
@@ -782,6 +782,7 @@ switch ($axAction) {
 
     case 'toggleDeletedUsers' :
         setcookie('adm_ext_show_deleted_users', $axValue);
+        echo 'ok';
         break;
 
     case 'unbanUser' :

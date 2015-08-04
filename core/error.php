@@ -44,7 +44,7 @@ if (!isset($_REQUEST['err'])) {
 
 switch ($_REQUEST['err']) {
 
-  // TODO - can we make sure $kga exists?
+  //TODO - can we make sure $kga exists?
   case 'db':
       $headline = $GLOBALS['kga']['lang']['errors'][0]['hdl'];
       $message  = $GLOBALS['kga']['lang']['errors'][0]['txt'];
