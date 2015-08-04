@@ -1,14 +1,15 @@
 /*! ki_invoice */
 /**
  * This file is part of
- * Kimai - Open Source Time Tracking // http://www.kimai.org
- * (c) 2006-2009 Kimai-Development-Team
+ * Kimai-i Open Source Time Tracking // https://github.com/cloudeasy/Kimai-i
+ * (c) 2015 Claude Nadon
+ * (c) 2006-2009 Kimai-Development-Team // http://www.kimai.org
  *
- * Kimai is free software; you can redistribute it and/or modify
+ * Kimai-i is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; Version 3, 29 June 2007
  *
- * Kimai is distributed in the hope that it will be useful,
+ * Kimai-i is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.

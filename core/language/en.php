@@ -4,11 +4,11 @@
  * Kimai - Open Source Time Tracking - http://www.kimai.org
  * (c) 2006-2009 Kimai-Development-Team
  *
- * Kimai is free software; you can redistribute it and/or modify
+ * Kimai-i is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; Version 3, 29 June 2007
  *
- * Kimai is distributed in the hope that it will be useful,
+ * Kimai-i is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -437,7 +437,7 @@ return array(
 
         1 => array(
             'hdl' => 'Error during installation!',
-            'txt' => 'Kimai is unable to create necessary tables because tables with the name name already exist.<br/>
+            'txt' => 'Kimai-i is unable to create necessary tables because tables with the name name already exist.<br/>
 To update your existing installation please click <a href="../index.php">here</a>.<br/>
 Choose another table prefix or delete existing tables with this prefix in order to allow Kimai to perform a clean installation.',
         ),
