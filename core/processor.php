@@ -70,28 +70,28 @@ switch ($_REQUEST['a']) {
             $id = $database->customer_nameToID($name);
 
             $customer          = $database->customer_get_data($id);
-            $passwordResetHash = str_shuffle(MD5(microtime()));
+            $passwordResetHash = str_shuffle(md5(microtime()));
 
             $database->customer_edit($id, array('password_reset_hash' => $passwordResetHash));
 
-            $ssl = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off';
+            $ssl = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on';
             $url = ($ssl ? 'https://' : 'http://') . $_SERVER['SERVER_NAME'] . dirname($_SERVER['SCRIPT_NAME']) . '/forgotPassword.php?name=' . urlencode($name) . '&key=' . $passwordResetHash;
 
-            $message = $kga['lang']['passwordReset']['mailMessage'];
+            $message = $kga['dict']['passwordReset']['mailMessage'];
             $message = str_replace('%{URL}', $url, $message);
             mail($customer['mail'],
-                 $kga['lang']['passwordReset']['mailSubject'],
+                 $kga['dict']['passwordReset']['mailSubject'],
                  $message);
 
             echo json_encode(array(
-                                 'message' => $kga['lang']['passwordReset']['mailConfirmation'],
+                                 'message' => $kga['dict']['passwordReset']['mailConfirmation'],
                              ));
 
         }
         else {
             if (!method_exists($authPlugin, 'forgotPassword')) {
                 echo json_encode(array(
-                                     'message' => $kga['lang']['passwordReset']['notSupported'],
+                                     'message' => $kga['dict']['passwordReset']['notSupported'],
                                  ));
             }
             else {
@@ -115,7 +115,7 @@ switch ($_REQUEST['a']) {
             $customer = $database->customer_get_data($id);
             if ($key != $customer['password_reset_hash']) {
                 echo json_encode(array(
-                                     'message' => $kga['lang']['passwordReset']['invalidKey'],
+                                     'message' => $kga['dict']['passwordReset']['invalidKey'],
                                  ));
                 break;
             }
@@ -125,7 +125,7 @@ switch ($_REQUEST['a']) {
             $data['password_reset_hash'] = null;
             $database->customer_edit($id, $data);
             echo json_encode(array(
-                                 'message'       => $kga['lang']['passwordReset']['success'],
+                                 'message'       => $kga['dict']['passwordReset']['success'],
                                  'showLoginLink' => true,
                              ));
         }

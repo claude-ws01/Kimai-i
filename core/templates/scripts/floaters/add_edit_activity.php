@@ -37,12 +37,12 @@ $(document).ready(function() {
     <div id="floater_handle">
         <span id="floater_title">
             <?php if (isset($this->id) && $this->id > 0)
-                echo $GLOBALS['kga']['lang']['edit'], ' ', $this->name;
-            else echo $GLOBALS['kga']['lang']['new_activity'];
+                echo $GLOBALS['kga']['dict']['edit'], ' ', $this->name;
+            else echo $GLOBALS['kga']['dict']['new_activity'];
             ?>
         </span>
         <div class="right">
-            <a href="#" class="close" onclick="floaterClose();"><?php echo $GLOBALS['kga']['lang']['close']?></a>
+            <a href="#" class="close" onclick="floaterClose();"><?php echo $GLOBALS['kga']['dict']['close']?></a>
         </div>       
     </div>
     
@@ -51,22 +51,22 @@ $(document).ready(function() {
       <ul class="menu tabSelection">
           <li class="tab norm"><a href="#general">
                       <span class="aa">&nbsp;</span>
-                      <span class="bb"><?php echo $GLOBALS['kga']['lang']['general']?></span>
+                      <span class="bb"><?php echo $GLOBALS['kga']['dict']['general']?></span>
                       <span class="cc">&nbsp;</span>
                       </a></li>
           <li class="tab norm"><a href="#projectstab">
                       <span class="aa">&nbsp;</span>
-                      <span class="bb"><?php echo $GLOBALS['kga']['lang']['projects']?></span>
+                      <span class="bb"><?php echo $GLOBALS['kga']['dict']['projects']?></span>
                       <span class="cc">&nbsp;</span>
                       </a></li>
           <li class="tab norm"><a href="#groups">
                       <span class="aa">&nbsp;</span>
-                      <span class="bb"><?php echo $GLOBALS['kga']['lang']['groups']?></span>
+                      <span class="bb"><?php echo $GLOBALS['kga']['dict']['groups']?></span>
                       <span class="cc">&nbsp;</span>
                       </a></li>
           <li class="tab norm"><a href="#commenttab">
                       <span class="aa">&nbsp;</span>
-                      <span class="bb"><?php echo $GLOBALS['kga']['lang']['comment']?></span>
+                      <span class="bb"><?php echo $GLOBALS['kga']['dict']['comment']?></span>
                       <span class="cc">&nbsp;</span>
                       </a></li>
       </ul>
@@ -85,23 +85,23 @@ $(document).ready(function() {
             <fieldset id="general">
                 <ul>
                     <li>
-                        <label for="name" ><?php echo $GLOBALS['kga']['lang']['activity']?>:</label>
+                        <label for="name" ><?php echo $GLOBALS['kga']['dict']['activity']?>:</label>
                         <?php echo $this->formText('name', $this->name);?>
                     </li>
                     <li>
-                        <label for="default_rate" ><?php echo $GLOBALS['kga']['lang']['default_rate']?>:</label>
+                        <label for="default_rate" ><?php echo $GLOBALS['kga']['dict']['default_rate']?>:</label>
                         <?php echo $this->formText('default_rate', str_replace('.',$GLOBALS['kga']['conf']['decimal_separator'],$this->default_rate)); ?>
                     </li>
                     <li>
-                        <label for="my_rate" ><?php echo $GLOBALS['kga']['lang']['my_rate']?>:</label>
+                        <label for="my_rate" ><?php echo $GLOBALS['kga']['dict']['my_rate']?>:</label>
                         <?php echo $this->formText('my_rate', str_replace('.',$GLOBALS['kga']['conf']['decimal_separator'],$this->my_rate)); ?>
                     </li>
                     <li>
-                        <label for="fixed_rate" ><?php echo $GLOBALS['kga']['lang']['fixed_rate']?>:</label>
+                        <label for="fixed_rate" ><?php echo $GLOBALS['kga']['dict']['fixed_rate']?>:</label>
                         <?php echo $this->formText('fixed_rate', str_replace('.',$GLOBALS['kga']['conf']['decimal_separator'],$this->fixed_rate)); ?>
                     </li>
                     <li>
-                         <label for="visible"><?php echo $GLOBALS['kga']['lang']['visibility']?>:</label>
+                         <label for="visible"><?php echo $GLOBALS['kga']['dict']['visibility']?>:</label>
                         <?php echo $this->formCheckbox('visible', '1',array('checked' => $this->visible || !$this->id));?>
                     </li>
                  </ul>
@@ -110,7 +110,7 @@ $(document).ready(function() {
             <fieldset id="commenttab">
                 <ul>
                     <li>
-                         <label for="comment"><?php echo $GLOBALS['kga']['lang']['comment']?>:</label>
+                         <label for="comment"><?php echo $GLOBALS['kga']['dict']['comment']?>:</label>
                          <?php echo $this->formTextarea('comment', $this->comment,array(
                             'cols' => 30,
                             'rows' => 5,
@@ -124,7 +124,7 @@ $(document).ready(function() {
             <fieldset id="groups">
                 <ul>
                     <li>
-                        <label for="activityGroups"><?php echo $GLOBALS['kga']['lang']['groups']?>:</label>
+                        <label for="activityGroups"><?php echo $GLOBALS['kga']['dict']['groups']?>:</label>
                         <?php echo $this->formSelect('activityGroups[]', $this->selectedGroups, array(
                             'class' => 'formfield',
                             'id' => 'activityGroups',
@@ -138,7 +138,7 @@ $(document).ready(function() {
             <fieldset id="projectstab">
                 <ul>
                     <li>
-                        <label for="activityProjects"><?php echo $GLOBALS['kga']['lang']['projects']?>:</label>
+                        <label for="activityProjects"><?php echo $GLOBALS['kga']['dict']['projects']?>:</label>
                         <?php echo $this->formSelect('projects[]', $this->selectedProjects, array(
                             'class' => 'formfield',
                             'id' => 'activityProjects',
@@ -152,8 +152,8 @@ $(document).ready(function() {
         </div>
 
         <div id="formbuttons">
-            <input class='btn_norm' type='button' value='<?php echo $GLOBALS['kga']['lang']['cancel']?>' onclick='floaterClose(); return false;' />
-            <input class='btn_ok' type='submit' value='<?php echo $GLOBALS['kga']['lang']['submit']?>'/>
+            <input class='btn_norm' type='button' value='<?php echo $GLOBALS['kga']['dict']['cancel']?>' onclick='floaterClose(); return false;' />
+            <input class='btn_ok' type='submit' value='<?php echo $GLOBALS['kga']['dict']['submit']?>'/>
         </div>
     </form>
 </div>

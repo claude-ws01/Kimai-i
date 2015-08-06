@@ -128,6 +128,9 @@ return array(
     'deleteGlobalRole'               => 'Supprimer rôle global',
     'deleteMembershipRole'           => 'Supprimer rôle de membre',
     'deleteUser'                     => 'Supprimer cet utilisateur',
+    'demo_mode'                      => 'MODE DÉMO',
+    'demo_login'                     => '*** MODE DÉMO ***</br> utilisateur: \'admin\'</br> TOUS les mots-de-passe fixés à: \'demo\'',
+    'demo_reset_in'                  => 'Raz des données dans: ',
     'description'                    => 'Description',
     'display_currentDate_format'     => 'Format de la date pour le champ sous la plage de temps (<a href="http://php.net/manual/en/function.strftime.php" target="_blank">pour la fonction strftime()</a>)',
     'display_date_format'            => 'Format de la date pour la notation de la plage de temps (<a href="http://php.net/manual/en/function.strftime.php" target="_blank"> pour la fonction strftime()</a>)',
@@ -393,6 +396,8 @@ return array(
         9  => 'Ces sauvegardes sont des instantanés! Ceci signifie qu\'ils continuent de vivre dans la base de données actuelle dans laquelle Kimai stocke ces données. Les sauvegardes via cet utilitaire ne remplacent pas les sauvegardes sur un media physique séparé. Il y a plein d\'outils de sauvegarde de base de données sur le web ;)',
         10 => 'Identification requise',
         11 => 'Pour empêcher les personnes non-autorisées de créer, effacer ou restaurer une sauvegarde vous devez donner le code d\'injection du mote de passe inscrite dans include/autoconf.php. Il est constitué de lettre et de chiffres.',
+        12 => 'Une erreur est survenu lors de la restauration. Svp, voir le fichier de registre (log file).',
+        13 => 'Retour à la page de connection',
     ),
 
     'cf'                             => array(
@@ -523,7 +528,7 @@ Choisissez un autre préfixe de table ou supprimez les tables existantes avec ce
         'ki_admin'     => 'Admin',
         'core'         => 'noyau',
         'ki_debug'     => 'Débogage',
-        'demo_ext'     => 'Démo',
+        'ki_demo'      => 'Démo',
         'ki_budget'    => 'Budget',
         'ki_expense'   => 'Dépense',
         'ki_export'    => 'Export',

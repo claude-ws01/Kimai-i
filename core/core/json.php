@@ -40,7 +40,7 @@ defined('WEBROOT')
 || define('WEBROOT', $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR);
 
 defined('APPLICATION_PATH')
-|| define('APPLICATION_PATH', realpath(__DIR__ . '/../'));
+|| define('APPLICATION_PATH', $_SERVER['DOCUMENT_ROOT']);
 
 set_include_path(
     implode(

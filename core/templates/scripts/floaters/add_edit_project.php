@@ -134,13 +134,13 @@
 
     <div id="floater_handle">
         <span id="floater_title">
-            <?php if (isset($this->id) && (int)$this->id > 0) echo $kga['lang']['edit'], ' ', $this->name;
-            else echo $kga['lang']['new_project'];
+            <?php if (isset($this->id) && (int)$this->id > 0) echo $kga['dict']['edit'], ' ', $this->name;
+            else echo $kga['dict']['new_project'];
             ?>
         </span>
 
         <div class="right"><a href="#" class="close"
-                              onclick="floaterClose();"><?php echo $kga['lang']['close'] ?></a>
+                              onclick="floaterClose();"><?php echo $kga['dict']['close'] ?></a>
         </div>
     </div>
 
@@ -148,21 +148,21 @@
 
         <ul class="menu tabSelection">
             <li class="tab norm"><a href="#general"> <span class="aa">&nbsp;</span>
-                    <span class="bb"><?php echo $kga['lang']['general'] ?></span> <span
+                    <span class="bb"><?php echo $kga['dict']['general'] ?></span> <span
                         class="cc">&nbsp;</span>
                 </a></li>
             <li class="tab norm"><a href="#money"> <span class="aa">&nbsp;</span> <span
-                        class="bb"><?php echo $kga['lang']['budget'] ?></span> <span class="cc">&nbsp;</span>
+                        class="bb"><?php echo $kga['dict']['budget'] ?></span> <span class="cc">&nbsp;</span>
                 </a></li>
             <li class="tab norm"><a href="#activitiestab"> <span class="aa">&nbsp;</span> <span
-                        class="bb"><?php echo $kga['lang']['activities'] ?></span> <span
+                        class="bb"><?php echo $kga['dict']['activities'] ?></span> <span
                         class="cc">&nbsp;</span> </a></li>
             <li class="tab norm"><a href="#groups"> <span class="aa">&nbsp;</span>
-                    <span class="bb"><?php echo $kga['lang']['groups'] ?></span> <span
+                    <span class="bb"><?php echo $kga['dict']['groups'] ?></span> <span
                         class="cc">&nbsp;</span>
                 </a></li>
             <li class="tab norm"><a href="#comment"> <span class="aa">&nbsp;</span>
-                    <span class="bb"><?php echo $kga['lang']['comment'] ?></span> <span
+                    <span class="bb"><?php echo $kga['dict']['comment'] ?></span> <span
                         class="cc">&nbsp;</span>
                 </a></li>
         </ul>
@@ -181,23 +181,23 @@
 
                 <ul>
 
-                    <li><label for="name"><?php echo $kga['lang']['project'] ?>:</label><?php
+                    <li><label for="name"><?php echo $kga['dict']['project'] ?>:</label><?php
                         echo $this->formText('name', $this->name, array('style'=>'width:250px;',)); ?> </li>
 
-                    <li><label for="customer_id"><?php echo $kga['lang']['customer'] ?>:</label> <?php
+                    <li><label for="customer_id"><?php echo $kga['dict']['customer'] ?>:</label> <?php
                         echo $this->formSelect('customer_id', $this->selectedCustomer, array('class' => 'formfield'), $this->customers); ?>
                     </li>
 
-                    <li><label for="visible" title="<?php echo $kga['lang']['tip']['pe_visibility'] ?>">
-                            <?php echo $kga['lang']['visibility'] ?>:</label><?php
+                    <li><label for="visible" title="<?php echo $kga['dict']['tip']['pe_visibility'] ?>">
+                            <?php echo $kga['dict']['visibility'] ?>:</label><?php
                         echo $this->formCheckbox('visible', '1', array('checked' => $this->visible || !$this->id,
-                            'title' => $kga['lang']['tip']['pe_visibility'])); ?>
+                            'title' => $kga['dict']['tip']['pe_visibility'])); ?>
                     </li>
 
-                    <li><label for="internal" title="<?php echo $kga['lang']['tip']['pe_internal'] ?>">
-                            <?php echo $kga['lang']['internalProject'] ?>:</label><?php
+                    <li><label for="internal" title="<?php echo $kga['dict']['tip']['pe_internal'] ?>">
+                            <?php echo $kga['dict']['internalProject'] ?>:</label><?php
                         echo $this->formCheckbox('internal', '1', array('checked' => $this->internal,
-                                                    'title' => $kga['lang']['tip']['pe_internal'])); ?>
+                                                    'title' => $kga['dict']['tip']['pe_internal'])); ?>
                     </li>
                 </ul>
             </fieldset>
@@ -205,32 +205,32 @@
             <fieldset id="money">
 
                 <ul>
-                    <li><label for="default_rate"><?php echo $kga['lang']['default_rate']?>:</label><?php
+                    <li><label for="default_rate"><?php echo $kga['dict']['default_rate']?>:</label><?php
                         echo $this->formText('default_rate', str_replace('.', $kga['conf']['decimal_separator'], $this->default_rate));
                         echo ' ',$kga['conf']['currency_sign']?>
                     </li>
 
-                    <li><label for="my_rate"><?php echo $kga['lang']['my_rate'] ?>:</label><?php
+                    <li><label for="my_rate"><?php echo $kga['dict']['my_rate'] ?>:</label><?php
                         echo $this->formText('my_rate', str_replace('.', $kga['conf']['decimal_separator'], $this->my_rate));
                         echo ' ',$kga['conf']['currency_sign']?>
                     </li>
 
-                    <li><label for="fixed_rate"><?php echo $kga['lang']['fixed_rate'] ?>:</label><?php
+                    <li><label for="fixed_rate"><?php echo $kga['dict']['fixed_rate'] ?>:</label><?php
                         echo $this->formText('fixed_rate', str_replace('.', $kga['conf']['decimal_separator'], $this->fixed_rate));
                         echo ' ',$kga['conf']['currency_sign']?>
                     </li>
 
-                    <li><label for="project_budget"><?php echo $kga['lang']['budget'] ?>:</label><?php
+                    <li><label for="project_budget"><?php echo $kga['dict']['budget'] ?>:</label><?php
                         echo $this->formText('project_budget', str_replace('.', $kga['conf']['decimal_separator'], $this->budget));
                         echo ' ',$kga['conf']['currency_sign']?>
                     </li>
 
-                    <li><label for="project_effort"><?php echo $kga['lang']['effort'] ?>:</label><?php
+                    <li><label for="project_effort"><?php echo $kga['dict']['effort'] ?>:</label><?php
                         echo $this->formText('project_effort', str_replace('.', $kga['conf']['decimal_separator'], $this->effort));
                         echo ' ',$kga['conf']['currency_sign']?>
                     </li>
 
-                    <li><label for="project_approved"><?php echo $kga['lang']['approved'] ?>:</label><?php
+                    <li><label for="project_approved"><?php echo $kga['dict']['approved'] ?>:</label><?php
                         echo $this->formText('project_approved', str_replace('.', $kga['conf']['decimal_separator'], $this->approved));
                         echo ' ',$kga['conf']['currency_sign']?>
                     </li>
@@ -241,13 +241,13 @@
                 <table class="activitiesTable">
                     <tr>
                         <td><label for="assignedActivities"
-                                   style="text-align: left; float:left; margin:0;"><?php echo $kga['lang']['activities'] ?></label>
+                                   style="text-align: left; float:left; margin:0;"><?php echo $kga['dict']['activities'] ?></label>
                         </td>
-                        <td><label for="budget"><?php echo $kga['lang']['budget'], ' ',$kga['conf']['currency_sign'] ?></label>
+                        <td><label for="budget"><?php echo $kga['dict']['budget'], ' ',$kga['conf']['currency_sign'] ?></label>
                         </td>
-                        <td><label for="effort"><?php echo $kga['lang']['effort'], ' ',$kga['conf']['currency_sign'] ?></label>
+                        <td><label for="effort"><?php echo $kga['dict']['effort'], ' ',$kga['conf']['currency_sign'] ?></label>
                         </td>
-                        <td><label for="approved"><?php echo $kga['lang']['approved'], ' ',$kga['conf']['currency_sign'] ?></label>
+                        <td><label for="approved"><?php echo $kga['dict']['approved'], ' ',$kga['conf']['currency_sign'] ?></label>
                         </td>
                     </tr><?php
                     $assignedActivities = array();
@@ -296,7 +296,7 @@
             <fieldset id="groups">
                 <ul>
                     <li>
-                        <label for="projectGroups"><?php echo $kga['lang']['groups'] ?>:</label>
+                        <label for="projectGroups"><?php echo $kga['dict']['groups'] ?>:</label>
                         <?php echo $this->formSelect('projectGroups[]', $this->selectedGroups, array(
                             'class'    => 'formfield',
                             'id'       => 'projectGroups',
@@ -310,7 +310,7 @@
             <fieldset id="comment">
                 <ul>
                     <li>
-                        <label for="project_comment"><?php echo $kga['lang']['comment'] ?>:</label>
+                        <label for="project_comment"><?php echo $kga['dict']['comment'] ?>:</label>
                         <?php echo $this->formTextarea('project_comment', $this->comment, array(
                             'cols'  => 30,
                             'rows'  => 5,
@@ -323,9 +323,9 @@
         </div>
 
         <div id="formbuttons"><input class='btn_norm' type='button'
-                                     value='<?php echo $kga['lang']['cancel'] ?>'
+                                     value='<?php echo $kga['dict']['cancel'] ?>'
                                      onclick='floaterClose(); return false;'/> <input class='btn_ok' type='submit'
-                                                                                      value='<?php echo $kga['lang']['submit'] ?>'/>
+                                                                                      value='<?php echo $kga['dict']['submit'] ?>'/>
         </div>
     </form>
 </div>

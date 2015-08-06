@@ -129,6 +129,9 @@ return array(
     'deleteMembershipRole'           => 'delete membership role',
     'deleteUser'                     => 'Delete this user',
     'description'                    => 'Description',
+    'demo_mode'                      => 'DEMO MODE',
+    'demo_login'                     => '*** DEMO MODE ***</br> username: \'admin\'</br> ANY passwords fixed to: \'demo\'',
+    'demo_reset_in'                  => 'Data reset in: ',
     'display_currentDate_format'     => 'Date format for the field below the timespan (<a href="http://php.net/manual/en/function.strftime.php" target="_blank">notation for strftime()</a>)',
     'display_date_format'            => 'Date format of the timespan (<a href="http://php.net/manual/en/function.strftime.php" target="_blank">notation for strftime()</a>)',
     'duration_with_seconds'          => 'Show duration exact to the second.',
@@ -393,6 +396,8 @@ return array(
         9  => 'These backups are actually snapshots! Meaning they still live within the very same database as your actual Kimai-i work data. Backups via this utility are NO substitution for real backups on a physically different data medium. There are plenty of tools for database backups available on the web ;)',
         10 => 'Authentication required',
         11 => 'To prevent unauthorized persons from creating, deleting or restoring backups, you need to give the password salt stored in include/autoconf.php. It only consists of letters and numbers.',
+        12 => 'There was an error while doing the restore. Please see the log for more details.',
+        13 => 'Back to login page.',
     ),
 
     'cf'                             => array(
@@ -516,7 +521,7 @@ Choose another table prefix or delete existing tables with this prefix in order 
         'ki_admin'     => 'Admin Panel',
         'core'         => 'Permissions',
         'ki_debug'     => 'Debug',
-        'demo_ext'     => 'Demo',
+        'ki_demo'      => 'Demo',
         'ki_budget'    => 'Budget',
         'ki_expense'   => 'Expense',
         'ki_export'    => 'Export',

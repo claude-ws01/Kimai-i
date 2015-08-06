@@ -1,16 +1,16 @@
 <?php global $kga ?>
 <a href="#" onClick="floaterShow('floaters.php','add_edit_project',0,0,450); $(this).blur(); return false;"><img
         src="../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/add.png" width="22" height="16"
-        alt="<?php echo $kga['lang']['new_project'] ?>"></a><?php echo $kga['lang']['new_project'] ?>
+        alt="<?php echo $kga['dict']['new_project'] ?>"></a><?php echo $kga['dict']['new_project'] ?>
 <br/><br/>
 
 <table>
 
     <thead>
     <tr class="headerrow">
-        <th><?php echo $kga['lang']['options'] ?></th>
-        <th><?php echo $kga['lang']['projects'] ?></th>
-        <th><?php echo $kga['lang']['groups'] ?></th>
+        <th><?php echo $kga['dict']['options'] ?></th>
+        <th><?php echo $kga['dict']['projects'] ?></th>
+        <th><?php echo $kga['dict']['groups'] ?></th>
     </tr>
     </thead>
 
@@ -33,14 +33,14 @@
                     <a href="#"
                        onClick="editSubject('project',<?php echo $row['project_id'] ?>); $(this).blur(); return false;"><img
                             src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/edit2.gif'
-                            width='13' height='13' alt='<?php echo $kga['lang']['tip']['g_edit'] ?>'
-                            title='<?php echo $kga['lang']['tip']['g_edit'] ?>' border='0'/></a>
+                            width='13' height='13' alt='<?php echo $kga['dict']['tip']['g_edit'] ?>'
+                            title='<?php echo $kga['dict']['tip']['g_edit'] ?>' border='0'/></a>
                     &nbsp;
                     <a href="#" id="delete_project<?php echo $row['project_id'] ?>"
                        onClick="adm_ext_deleteProject(<?php echo $row['project_id'] ?>)"><img
                             src="../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/button_trashcan.png"
-                            title="<?php echo $kga['lang']['delete_project'] ?>" width="13" height="13"
-                            alt="<?php echo $kga['lang']['delete_project'] ?>" border="0"></a>
+                            title="<?php echo $kga['dict']['delete_project'] ?>" width="13" height="13"
+                            alt="<?php echo $kga['dict']['delete_project'] ?>" border="0"></a>
                 </td>
 
                 <td class="projects">

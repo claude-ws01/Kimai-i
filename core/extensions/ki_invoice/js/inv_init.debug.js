@@ -24,3 +24,12 @@
 
 // set path of extension
 var inv_ext_path = "../extensions/ki_invoice/";
+
+$(document).ready(function(){
+
+    var invoice_resizeTimer = null;
+    $(window).bind('resize', function() {
+       if (invoice_resizeTimer) clearTimeout(invoice_resizeTimer);
+        invoice_resizeTimer = setTimeout(inv_ext_resize, 500);
+    });
+});

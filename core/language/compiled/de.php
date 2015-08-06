@@ -127,6 +127,8 @@ return array(
     'deleteGlobalRole'               => 'Globale Rolle löschen',
     'deleteMembershipRole'           => 'Gruppenbezogene Rolle löschen',
     'deleteUser'                     => 'Account löschen',
+    'demo_mode'                    => 'DEMO MODE',
+    'demo_login'                     => '*** DEMO MODE ***</br> username: \'admin\'</br> ANY passwords fixed to: \'demo\'',
     'description'                    => 'Verwendung',
     'display_currentDate_format'     => 'Format des Datums in dem Feld unterhalb der Zeitspanne (<a href="http://php.net/manual/de/function.strftime.php" target="_blank">Notation für strftime()</a>)',
     'display_date_format'            => 'Format des Datums der Zeitspanne (<a href="http://php.net/manual/de/function.strftime.php" target="_blank">Notation für strftime()</a>)',
@@ -391,6 +393,8 @@ return array(
         9  => 'Diese Backups sind genaugenommen Snapshots! D.h. sie liegen in genau der gleichen Datenbank wie Ihre Live-Daten. Das Backup über dieses Utility ersetzt NICHT ein echtes Backup Ihrer Datanbank auf einem anderen Datanträger. Tools zum Sichern von Datenbanken gibt es reichlich im Internet ;)',
         10 => 'Autorisierung erforderlich',
         11 => 'Um nicht autorisierte Personen daran zu hindern Backups zu erstellen, zu löschen oder widerherzustellen müssen sie den Passwort Salt ($password_salt) aus include/autoconf.php eingeben. Dieser besteht nur aus Buchstaben und Zahlen.',
+        12 => 'There was an error while doing the restore. Please see the log for more details.',
+        13 => 'Back to login page.',
     ),
 
     'cf'                             => array(

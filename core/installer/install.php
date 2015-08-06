@@ -49,9 +49,19 @@ function quoteForSql($input)
     return '\'' . mysqli_real_escape_string($database->link, $input) . '\'';
 }
 
+/*
+ *         MAIN        MAIN        MAIN        MAIN        MAIN        MAIN
+ *         MAIN        MAIN        MAIN        MAIN        MAIN        MAIN
+ *         MAIN        MAIN        MAIN        MAIN        MAIN        MAIN
+ *
+*/
 
-//        MAIN        MAIN        MAIN        MAIN        MAIN        MAIN        //
-//        MAIN        MAIN        MAIN        MAIN        MAIN        MAIN        //
+//if (file_exists(WEBROOT . 'includes/autoconf.php')) {
+//    //CN safety from re-installing
+//    header("location:http://${_SERVER['SERVER_NAME']}/index.php");
+//    exit;
+//}
+
 if (!isset($_REQUEST['accept'])) {
     header("Location: http://${_SERVER['SERVER_NAME']}/installer/index.php?disagreedGPL=1");
     exit;
@@ -306,19 +316,19 @@ foreach (array('customer', 'project', 'activity', 'group', 'user') as $object) {
 exec_query("INSERT INTO `${p}status` (`status_id` ,`status`) VALUES ('1', 'open'), ('2', 'review'), ('3', 'closed');");
 
 // GROUPS   //
-$defaultGroup = $kga['lang']['defaultGroup'];
+$defaultGroup = $kga['dict']['defaultGroup'];
 $query        = "INSERT INTO `${p}group` (`name`) VALUES ('admin');";
 exec_query($query);
 
 
 // ACTIVITY //
-$query = "INSERT INTO `${p}activity` (`activity_id`, `name`, `comment`) VALUES (1, '" . $kga['lang']['testActivity'] . "', '');";
+$query = "INSERT INTO `${p}activity` (`activity_id`, `name`, `comment`) VALUES (1, '" . $kga['dict']['testActivity'] . "', '');";
 exec_query($query);
 
 //  CUSTOMER  //
 $query = "INSERT INTO `${p}customer`
 (`customer_id`, `name`, `comment`, `company`, `vat_rate`, `contact`, `street`, `zipcode`, `city`, `phone`, `fax`, `mobile`, `mail`, `homepage`, `timezone`) VALUES
-(1, '" . $kga['lang']['testCustomer'] . "', '', '', '', '', '', '', '', '', '', '', '',''," . quoteForSql($_REQUEST['timezone']) . ');';
+(1, '{$kga['dict']['testCustomer']}', '', '', '', '', '', '', '', '', '', '', '',''," . quoteForSql($_REQUEST['timezone']) . ');';
 exec_query($query);
 //  CUSTOMER - PREFERENCES  //
 $query = "INSERT INTO `${p}preference` (`user_id`,`option`,`value`) VALUES
@@ -326,7 +336,7 @@ $query = "INSERT INTO `${p}preference` (`user_id`,`option`,`value`) VALUES
             ('1','ui.flip_project_display','0'),
             ('1','ui.hide_cleared_entries','0'),
             ('1','ui.hide_overlap_lines','1'),
-            ('1','ui.language','" . $kga['pref']['language'] . "'),
+            ('1','ui.language','{$kga['pref']['language']}'),
             ('1','ui.no_fading','0'),
             ('1','ui.open_after_recorded','0'),
             ('1','ui.project_comment_flag','0'),
@@ -343,7 +353,7 @@ $query = "INSERT INTO `${p}preference` (`user_id`,`option`,`value`) VALUES
 
 
 //  PROJET  //
-$query = "INSERT INTO `${p}project` (`project_id`, `customer_id`, `name`, `comment`) VALUES (1, 1, '" . $kga['lang']['testProject'] . "', '');";
+$query = "INSERT INTO `${p}project` (`project_id`, `customer_id`, `name`, `comment`) VALUES (1, 1, '" . $kga['dict']['testProject'] . "', '');";
 exec_query($query);
 
 
@@ -360,7 +370,7 @@ $query = "INSERT INTO `${p}preference` (`user_id`,`option`,`value`) VALUES
             ('$randomAdminID','ui.flip_project_display','0'),
             ('$randomAdminID','ui.hide_cleared_entries','0'),
             ('$randomAdminID','ui.hide_overlap_lines','1'),
-            ('$randomAdminID','ui.language','" . $kga['pref']['language'] . "'),
+            ('$randomAdminID','ui.language','{$kga['pref']['language']}'),
             ('$randomAdminID','ui.no_fading','0'),
             ('$randomAdminID','ui.open_after_recorded','0'),
             ('$randomAdminID','ui.project_comment_flag','0'),
@@ -393,10 +403,10 @@ exec_query($query);
 
 // ADVANCED CONFIGURATION  //
 $query = "INSERT INTO `${p}configuration` (`option`, `value`) VALUES 
-            ('core.revision', '" . $kga['core.revision'] . "'),
-            ('core.version', '" . $kga['core.version'] . "'),
-            ('core.status', '" . $kga['core.status'] . "'),
-            ('core.ident', '" . $kga['core.ident'] . "'),
+            ('core.revision', '{$kga['core.revision']}'),
+            ('core.version', '{$kga['core.version']}'),
+            ('core.status', '{$kga['core.status']}'),
+            ('core.ident', '{$kga['core.ident']}'),
             ('admin_mail', 'admin@example.com'),
             ('allow_round_down', '0'),
             ('bill_pct','0,25,50,75,100'),
@@ -432,7 +442,7 @@ $query = "INSERT INTO `${p}configuration` (`option`, `value`) VALUES
             ('ud.flip_project_display','0'),
             ('ud.hide_cleared_entries','0'),
             ('ud.hide_overlap_lines','1'),
-            ('ud.language','" . $kga['pref']['language'] . "'),
+            ('ud.language','{$kga['pref']['language']}'),
             ('ud.no_fading','0'),
             ('ud.open_after_recorded','0'),
             ('ud.project_comment_flag','0'),
@@ -466,8 +476,8 @@ if ($errors) {
     $view = new Zend_View();
     $view->setBasePath(WEBROOT . '/templates');
 
-    $view->headline = $kga['lang']['errors'][1]['hdl'];
-    $view->message  = $kga['lang']['errors'][1]['txt'];
+    $view->headline = $kga['dict']['errors'][1]['hdl'];
+    $view->message  = $kga['dict']['errors'][1]['txt'];
     echo $view->render('misc/error.php');
     Logger::logfile('-- showing install error --------------------------');
 }

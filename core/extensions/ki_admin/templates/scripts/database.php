@@ -1,4 +1,4 @@
-<?php echo $GLOBALS['kga']['lang']['DBname']?>: <?php echo $this->escape($GLOBALS['kga']['server_database']);?>
+<?php echo $GLOBALS['kga']['dict']['DBname']?>: <?php echo $this->escape($GLOBALS['kga']['server_database']);?>
 <br />
 <br />
 <a href="../db_restore.php">Database Backup Utility</a>
@@ -6,7 +6,7 @@
 <?php /*
 <br /><br />
 
-<?php echo $GLOBALS['kga']['lang']['lastdbbackup']?>:
+<?php echo $GLOBALS['kga']['dict']['lastdbbackup']?>:
 
 <?php if ($GLOBALS['kga']['conf']['lastdbbackup']): ?>
     <?php echo strftime("%c", $GLOBALS['kga']['conf']['lastdbbackup']); ?>
@@ -16,6 +16,6 @@
 
 <br />
 
-<input class='btn_ok' type='submit' value='<?php echo $GLOBALS['kga']['lang']['runbackup']?>' onClick='backupAll(); return false;' />
+<input class='btn_ok' type='submit' value='<?php echo $GLOBALS['kga']['dict']['runbackup']?>' onClick='backupAll(); return false;' />
 
 */ ?>

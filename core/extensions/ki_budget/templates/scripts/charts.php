@@ -23,7 +23,7 @@
 <span class="approved">Billable: <?php echo sprintf("%.2f", $this->arr_plotdata[$temp]['billable_total']) ?></span><br/>
 <span class="approved">Approved: <?php echo sprintf("%.2f", $this->arr_plotdata[$temp]['approved']) ?></span>
 <?php if ($this->arr_plotdata[$temp]['budget']-$this->arr_plotdata[$temp]['budget'] < 0): ?>
-<br><span style="text-color: red;" class="budgetminus"><?php echo $GLOBALS['kga']['lang']['budget_minus']?>: <?php
+<br><span style="text-color: red;" class="budgetminus"><?php echo $GLOBALS['kga']['dict']['budget_minus']?>: <?php
 $budget = $this->arr_plotdata[$temp]['budget'];
 $total = $this->arr_plotdata[$temp]['total'];
 $makePlus = 1;
@@ -43,7 +43,7 @@ $this->escape($activity['name'])?>
 <span class="budget">Budget: <?php echo sprintf("%.2f", $activity['budget_total'])?></span> <br>
 <span class="approved">Approved: <?php sprintf("%.2f", $activity['approved_total'])?></span>
 <?php if ($activity['budget'] <= 0): ?>
-<br><span style="text-color: red;" class="budgetminus"><?php echo $GLOBALS['kga']['lang']['budget_minus']?>: <?php
+<br><span style="text-color: red;" class="budgetminus"><?php echo $GLOBALS['kga']['dict']['budget_minus']?>: <?php
 $budget = $activity['budget_total'];
 $total = $activity['total'];
 $makePlus = 1;

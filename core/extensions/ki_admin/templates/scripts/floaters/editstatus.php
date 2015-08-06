@@ -36,10 +36,10 @@
 <div id="floater_innerwrap">
 
     <div id="floater_handle">
-        <span id="floater_title"><?php echo $GLOBALS['kga']['lang']['editstatus'] ?></span>
+        <span id="floater_title"><?php echo $GLOBALS['kga']['dict']['editstatus'] ?></span>
 
         <div class="right">
-            <a href="#" class="close" onClick="floaterClose();"><?php echo $GLOBALS['kga']['lang']['close'] ?></a>
+            <a href="#" class="close" onClick="floaterClose();"><?php echo $GLOBALS['kga']['dict']['close'] ?></a>
         </div>
     </div>
 
@@ -48,7 +48,7 @@
             <fieldset>
                 <ul>
                     <li>
-                        <label for="status"><?php echo $GLOBALS['kga']['lang']['status'] ?>:</label>
+                        <label for="status"><?php echo $GLOBALS['kga']['dict']['status'] ?>:</label>
                         <input class="formfield"
                                type="text"
                                name="status"
@@ -56,7 +56,7 @@
                                size=35/>
                     </li>
                     <li>
-                        <label for="default"><?php echo $GLOBALS['kga']['lang']['default'] ?>:</label>
+                        <label for="default"><?php echo $GLOBALS['kga']['dict']['default'] ?>:</label>
                         <input class="formfield"
                                type="checkbox"
                                name="default"
@@ -70,9 +70,9 @@
                 <div id="formbuttons">
                     <input class='btn_norm'
                            type='button'
-                           value='<?php echo $GLOBALS['kga']['lang']['cancel'] ?>'
+                           value='<?php echo $GLOBALS['kga']['dict']['cancel'] ?>'
                            onClick='floaterClose(); return false;'/>
-                    <input class='btn_ok' type='submit' value='<?php echo $GLOBALS['kga']['lang']['submit'] ?>'/>
+                    <input class='btn_ok' type='submit' value='<?php echo $GLOBALS['kga']['dict']['submit'] ?>'/>
                 </div>
             </fieldset>
         </form>

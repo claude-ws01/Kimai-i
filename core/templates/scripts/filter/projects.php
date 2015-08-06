@@ -24,33 +24,33 @@ $projects = $this->filterListEntries($this->projects);
                     <?php if ($this->show_project_edit_button) {?>
                     <a href="#" onclick="editSubject('project',<?php echo $project['project_id'] ?>); $(this).blur(); return false;">
                         <img src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/edit2.gif'
-                             width='13' height='13' alt='<?php echo $kga['lang']['edit'] ?>'
-                             title='<?php echo $kga['lang']['edit'] ?> (ID:<?php echo $project['project_id'] ?>)'
+                             width='13' height='13' alt='<?php echo $kga['dict']['edit'] ?>'
+                             title='<?php echo $kga['dict']['edit'] ?> (ID:<?php echo $project['project_id'] ?>)'
                              border='0'/>
                     </a>
                     <?php } ?>
 
                     <a href="#" onclick="lists_update_filter('project',<?php echo $project['project_id'] ?>); $(this).blur(); return false;">
                         <img src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/filter.png'
-                             width='13' height='13' alt='<?php echo $kga['lang']['filter'] ?>'
-                             title='<?php echo $kga['lang']['filter'] ?>' border='0'/>
+                             width='13' height='13' alt='<?php echo $kga['dict']['filter'] ?>'
+                             title='<?php echo $kga['dict']['filter'] ?>' border='0'/>
                     </a>
 
                     <?php if (array_key_exists('user', $kga)) { ?>
-                    <a href="#" class="preselect" title="<?php echo $kga['lang']['tip']['g_select_for_recording']; ?>"
+                    <a href="#" class="preselect" title="<?php echo $kga['dict']['tip']['g_select_for_recording']; ?>"
                        onclick="buzzer_preselect_project(<?php
                             echo ($project['project_id'] . ", '" . $this->jsEscape($project['name']). "',"
                                 . $project['customer_id'] . ", '" . $this->jsEscape($project['customer_name']) . "'"); ?>); return false;"
                        id="ps<?php echo $project['project_id'] ?>">
                         <img src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/preselect_off.png'
-                            width='13' height='13' alt='<?php echo $kga['lang']['tip']['g_select_for_recording'] ?>'
-                            title='<?php echo $kga['lang']['tip']['g_select_for_recording'] ?> (ID:<?php echo $project['project_id'] ?>)'
+                            width='13' height='13' alt='<?php echo $kga['dict']['tip']['g_select_for_recording'] ?>'
+                            title='<?php echo $kga['dict']['tip']['g_select_for_recording'] ?> (ID:<?php echo $project['project_id'] ?>)'
                             border='0'/>
                     </a>
                     <?php } ?>
                 </td>
                 <td style="width:100%;" class="projects" onmouseover="lists_change_color(this,true);"
-                    title="<?php echo $kga['lang']['tip']['g_select_for_recording']; ?>"
+                    title="<?php echo $kga['dict']['tip']['g_select_for_recording']; ?>"
                     onmouseout="lists_change_color(this,false);"
                     onclick="buzzer_preselect_project(<?php
                         echo ($project['project_id'] . ", '" . $this->jsEscape($project['name']). "',"

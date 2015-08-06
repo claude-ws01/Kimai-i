@@ -48,26 +48,26 @@ mso-number-format:Fixed;
 <thead><tr> 
 <!-- column headers -->
     <?php global $kga ?>
-<?php if (isset($this->columns['date'])):         ?> <td><?php echo $kga['lang']['datum']?></td>       <?php endif; ?>
-<?php if (isset($this->columns['from'])):         ?> <td><?php echo $kga['lang']['in']?></td>          <?php endif; ?>
-<?php if (isset($this->columns['to'])):           ?> <td><?php echo $kga['lang']['out']?></td>         <?php endif; ?>
-<?php if (isset($this->columns['time'])):         ?> <td><?php echo $kga['lang']['time']?></td>        <?php endif; ?>
-<?php if (isset($this->columns['dec_time'])):     ?> <td><?php echo $kga['lang']['timelabel']?></td>   <?php endif; ?>
-<?php if (isset($this->columns['rate'])):         ?> <td><?php echo $kga['lang']['rate']?></td>        <?php endif; ?>
-<?php if (isset($this->columns['wage'])):         ?> <td><?php echo $kga['lang']['wage']?>}</td>      <?php endif; ?>
-<?php if (isset($this->columns['budget'])):       ?> <td><?php echo $kga['lang']['budget']?></td>      <?php endif; ?>
-<?php if (isset($this->columns['approved'])):     ?> <td><?php echo $kga['lang']['approved']?></td>    <?php endif; ?>
-<?php if (isset($this->columns['status'])):       ?> <td><?php echo $kga['lang']['status']?></td>      <?php endif; ?>
-<?php if (isset($this->columns['billable'])):     ?> <td><?php echo $kga['lang']['billable']?></td>    <?php endif; ?>
-<?php if (isset($this->columns['customer'])):     ?> <td><?php echo $kga['lang']['customer']?></td>    <?php endif; ?>
-<?php if (isset($this->columns['project'])):      ?> <td><?php echo $kga['lang']['project']?></td>     <?php endif; ?>
-<?php if (isset($this->columns['activity'])):     ?> <td><?php echo $kga['lang']['activity']?></td>    <?php endif; ?>
-<?php if (isset($this->columns['description'])):  ?> <td><?php echo $kga['lang']['description']?></td> <?php endif; ?>
-<?php if (isset($this->columns['comment'])):      ?> <td><?php echo $kga['lang']['comment']?></td>     <?php endif; ?>
-<?php if (isset($this->columns['location'])):     ?> <td><?php echo $kga['lang']['location']?></td>   <?php endif; ?>
-<?php if (isset($this->columns['ref_code'])): ?> <td><?php echo $kga['lang']['xpe_ref_code']?></td>  <?php endif; ?>
-<?php if (isset($this->columns['user'])):         ?> <td><?php echo $kga['lang']['username']?></td>    <?php endif; ?>
-<?php if (isset($this->columns['cleared'])):      ?> <td><?php echo $kga['lang']['cleared']?></td>     <?php endif; ?>
+<?php if (isset($this->columns['date'])):         ?> <td><?php echo $kga['dict']['datum']?></td>       <?php endif; ?>
+<?php if (isset($this->columns['from'])):         ?> <td><?php echo $kga['dict']['in']?></td>          <?php endif; ?>
+<?php if (isset($this->columns['to'])):           ?> <td><?php echo $kga['dict']['out']?></td>         <?php endif; ?>
+<?php if (isset($this->columns['time'])):         ?> <td><?php echo $kga['dict']['time']?></td>        <?php endif; ?>
+<?php if (isset($this->columns['dec_time'])):     ?> <td><?php echo $kga['dict']['timelabel']?></td>   <?php endif; ?>
+<?php if (isset($this->columns['rate'])):         ?> <td><?php echo $kga['dict']['rate']?></td>        <?php endif; ?>
+<?php if (isset($this->columns['wage'])):         ?> <td><?php echo $kga['dict']['wage']?>}</td>      <?php endif; ?>
+<?php if (isset($this->columns['budget'])):       ?> <td><?php echo $kga['dict']['budget']?></td>      <?php endif; ?>
+<?php if (isset($this->columns['approved'])):     ?> <td><?php echo $kga['dict']['approved']?></td>    <?php endif; ?>
+<?php if (isset($this->columns['status'])):       ?> <td><?php echo $kga['dict']['status']?></td>      <?php endif; ?>
+<?php if (isset($this->columns['billable'])):     ?> <td><?php echo $kga['dict']['billable']?></td>    <?php endif; ?>
+<?php if (isset($this->columns['customer'])):     ?> <td><?php echo $kga['dict']['customer']?></td>    <?php endif; ?>
+<?php if (isset($this->columns['project'])):      ?> <td><?php echo $kga['dict']['project']?></td>     <?php endif; ?>
+<?php if (isset($this->columns['activity'])):     ?> <td><?php echo $kga['dict']['activity']?></td>    <?php endif; ?>
+<?php if (isset($this->columns['description'])):  ?> <td><?php echo $kga['dict']['description']?></td> <?php endif; ?>
+<?php if (isset($this->columns['comment'])):      ?> <td><?php echo $kga['dict']['comment']?></td>     <?php endif; ?>
+<?php if (isset($this->columns['location'])):     ?> <td><?php echo $kga['dict']['location']?></td>   <?php endif; ?>
+<?php if (isset($this->columns['ref_code'])): ?> <td><?php echo $kga['dict']['xpe_ref_code']?></td>  <?php endif; ?>
+<?php if (isset($this->columns['user'])):         ?> <td><?php echo $kga['dict']['username']?></td>    <?php endif; ?>
+<?php if (isset($this->columns['cleared'])):      ?> <td><?php echo $kga['dict']['cleared']?></td>     <?php endif; ?>
 </tr> 
 </thead> 
 <?php foreach($this->exportData as $row): ?>

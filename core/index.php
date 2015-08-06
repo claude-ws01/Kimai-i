@@ -53,7 +53,6 @@ global $database, $kga, $translations, $view;
 require('includes/basics.php');
 
 
-
 $view = new Zend_View();
 $view->setBasePath(WEBROOT . '/templates');
 
@@ -91,23 +90,22 @@ if (count($users) === 0) {
 // =========================
 $justLoggedOut = false;
 if ($_REQUEST['a'] === 'logout') {
-    setcookie('kimai_key', '0');
-    setcookie('kimai_user', '0');
+    cookie_set('ki_key', '0');
+    cookie_set('ki_user', '0');
     $justLoggedOut = true;
 }
 
 // ===========================
 // = User already logged in? =
 // ===========================
-if (isset($_COOKIE['kimai_user'],$_COOKIE['kimai_key'])
-    && $_COOKIE['kimai_user'] != '0'
-    && $_COOKIE['kimai_key'] != '0'
+if (isset($_COOKIE['ki_user'], $_COOKIE['ki_key'])
+    && $_COOKIE['ki_user'] !== '0'
+    && $_COOKIE['ki_key'] !== '0'
     && !$_REQUEST['a'] === 'logout'
+    && $database->get_seq($_COOKIE['ki_user']) === $_COOKIE['ki_key']
 ) {
-    if ($database->get_seq($_COOKIE['kimai_user']) == $_COOKIE['kimai_key']) {
-        header('Location: core/kimai.php');
-        exit;
-    }
+    header('Location: core/kimai.php');
+    exit;
 }
 
 // ======================================
@@ -128,8 +126,8 @@ if (!$justLoggedOut
     $userData = $database->user_get_data($userId);
 
     $keymai = random_code(30);
-    setcookie('kimai_key', $keymai);
-    setcookie('kimai_user', $userData['name']);
+    cookie_set('ki_key', $keymai);
+    cookie_set('ki_user', $userData['name']);
 
     $database->user_loginSetKey($userId, $keymai);
 
@@ -141,6 +139,14 @@ if (!$justLoggedOut
 // =================================================================
 
 switch ($_REQUEST['a']) {
+
+    case 'chg_lang':
+        if (isset($_REQUEST['language'])) {
+            cookie_set('ki_language', $_REQUEST['language']);
+            header("location:http://${_SERVER['SERVER_NAME']}/index.php");
+
+        }
+        break;
 
     case 'checklogin':
         $name = htmlspecialchars(trim($name));
@@ -156,25 +162,24 @@ switch ($_REQUEST['a']) {
             $data      = $database->customer_get_data($id);
 
             // TODO: add BAN support
-            if ($data['password'] == $passCrypt && $name != '' && $passCrypt != '') {
+            if ($data['password'] === $passCrypt && $name !== '' && $passCrypt !== '') {
                 Logger::logfile('login OK: ' . $name . ($is_customer ? ' as customer' : ' as user'));
                 $keymai = random_code(30);
-                setcookie('kimai_key', $keymai);
-                setcookie('kimai_user', 'customer_' . $name);
+                cookie_set('ki_key', $keymai);
+                cookie_set('ki_user', 'customer_' . $name);
                 $database->customer_loginSetKey($id, $keymai);
                 header('Location: core/kimai.php');
             }
             else {
                 Logger::logfile('login failed: ' . $name . ($is_customer ? ' as customer' : ' as user'));
-                setcookie('kimai_key', '0');
-                setcookie('kimai_user', '0');
-                $view->headline = $kga['lang']['accessDenied'];
-                $view->message  = $kga['lang']['wrongPass'];
+                cookie_set('ki_key', '0');
+                cookie_set('ki_user', '0');
+                $view->headline = $kga['dict']['accessDenied'];
+                $view->message  = $kga['dict']['wrongPass'];
                 $view->refresh  = '<meta http-equiv="refresh" content="5;URL=index.php">';
                 echo $view->render('misc/error.php');
             }
         }
-
 
 
         elseif ($authPlugin->authenticate($name, $password, $userId)) {
@@ -188,8 +193,8 @@ switch ($_REQUEST['a']) {
             ) {
                 Logger::logfile('login OK: ' . $name . ($is_customer ? ' as customer' : ' as user'));
                 $keymai = random_code(30);
-                setcookie('kimai_key', $keymai);
-                setcookie('kimai_user', $userData['name']);
+                cookie_set('ki_key', $keymai);
+                cookie_set('ki_user', $userData['name']);
                 $database->user_loginSetKey($userId, $keymai);
                 header('Location: core/kimai.php');
             }
@@ -197,12 +202,12 @@ switch ($_REQUEST['a']) {
             else {
                 // login attempt even though login_tries are used up and bantime is not over => deny
                 Logger::logfile('login Failed: ' . $name . ($is_customer ? ' as customer' : ' as user'));
-                setcookie('kimai_key', '0');
-                setcookie('kimai_user', '0');
+                cookie_set('ki_key', '0');
+                cookie_set('ki_user', '0');
                 $database->login_update_ban($userId);
 
-                $view->headline = $kga['lang']['banned'];
-                $view->message  = $kga['lang']['tooManyLogins'];
+                $view->headline = $kga['dict']['banned'];
+                $view->message  = $kga['dict']['tooManyLogins'];
                 $view->refresh  = '<meta http-equiv="refresh" content="5;URL=index.php">';
                 echo $view->render('misc/error.php');
             }
@@ -212,15 +217,14 @@ switch ($_REQUEST['a']) {
         else {
             // wrong username/password => deny
             Logger::logfile('login banned: ' . $name . ($is_customer ? ' as customer' : ' as user'));
-            setcookie('kimai_key', '0');
-            setcookie('kimai_user', '0');
-            setcookie('kimai_user', '0');
+            cookie_set('ki_key', '0');
+            cookie_set('ki_user', '0');
             if ($userId !== false) {
                 $database->login_update_ban($userId, true);
             }
 
-            $view->headline = $kga['lang']['accessDenied'];
-            $view->message  = $kga['lang']['wrongPass'];
+            $view->headline = $kga['dict']['accessDenied'];
+            $view->message  = $kga['dict']['wrongPass'];
             $view->refresh  = '<meta http-equiv="refresh" content="5;URL=index.php">';
             echo $view->render('misc/error.php');
         }

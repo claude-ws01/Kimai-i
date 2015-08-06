@@ -65,11 +65,11 @@ class Zend_View_Helper_EchoHierarchy extends Zend_View_Helper_Abstract
                 }
 
                 $name = $parentKeys[$i];
-                if (isset($GLOBALS['kga']['lang']['permissions'][$name])) {
-                    $name = $GLOBALS['kga']['lang']['permissions'][$name];
+                if (isset($GLOBALS['kga']['dict']['permissions'][$name])) {
+                    $name = $GLOBALS['kga']['dict']['permissions'][$name];
                 }
-                if (isset($GLOBALS['kga']['lang'][$name])) {
-                    $name = $GLOBALS['kga']['lang'][$name];
+                if (isset($GLOBALS['kga']['dict'][$name])) {
+                    $name = $GLOBALS['kga']['dict'][$name];
                 }
                 $names[] = $name;
             }
@@ -90,11 +90,11 @@ class Zend_View_Helper_EchoHierarchy extends Zend_View_Helper_Abstract
             }
             $name = $key;
 
-            if (isset($GLOBALS['kga']['lang']['permissions'][$name])) {
-                $name = $GLOBALS['kga']['lang']['permissions'][$name];
+            if (isset($GLOBALS['kga']['dict']['permissions'][$name])) {
+                $name = $GLOBALS['kga']['dict']['permissions'][$name];
             }
-            if (isset($GLOBALS['kga']['lang'][$name])) {
-                $name = $GLOBALS['kga']['lang'][$name];
+            if (isset($GLOBALS['kga']['dict'][$name])) {
+                $name = $GLOBALS['kga']['dict'][$name];
             }
 
             $checkedAttribute = '';

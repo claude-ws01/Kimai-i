@@ -139,29 +139,29 @@
 </head>
 <body>
 
-<h2> <?php echo $kga['lang']['export_extension']['time_period'] ?>
+<h2> <?php echo $kga['dict']['export_extension']['time_period'] ?>
     : <?php echo $this->escape($this->timespan) ?></h2>
 
 <?php if ($this->customersFilter != ""): ?><br/>
-    <b><?php echo $kga['lang']['customers'] ?></b>: <?php echo $this->escape($this->customersFilter) ?><?php endif;
+    <b><?php echo $kga['dict']['customers'] ?></b>: <?php echo $this->escape($this->customersFilter) ?><?php endif;
 if ($this->projectsFilter != ""): ?><br/>
-    <b><?php echo $kga['lang']['projects'] ?></b>: <?php echo $this->escape($this->projectsFilter) ?><?php endif; ?>
+    <b><?php echo $kga['dict']['projects'] ?></b>: <?php echo $this->escape($this->projectsFilter) ?><?php endif; ?>
 <br/>
 
-<?php if ($this->summary != 0): ?><h2><?php echo $kga['lang']['export_extension']['summary'] ?></h2>
+<?php if ($this->summary != 0): ?><h2><?php echo $kga['dict']['export_extension']['summary'] ?></h2>
 
 
     <table border="1">
         <tbody>
         <tr>
-            <th><?php echo $kga['lang']['activity'] ?></th><?php if (isset($this->columns['dec_time'])): ?>
-                <th><?php echo $kga['lang']['export_extension']['duration'] ?></th><?php endif; ?>
+            <th><?php echo $kga['dict']['activity'] ?></th><?php if (isset($this->columns['dec_time'])): ?>
+                <th><?php echo $kga['dict']['export_extension']['duration'] ?></th><?php endif; ?>
             <?php if (isset($this->columns['wage'])): ?>
-                <th><?php echo $kga['lang']['export_extension']['costs'] ?></th><?php endif; ?>
+                <th><?php echo $kga['dict']['export_extension']['costs'] ?></th><?php endif; ?>
             <?php if (isset($this->columns['budget'])): ?>
-                <th><?php echo $kga['lang']['budget'] ?></th><?php endif; ?>
+                <th><?php echo $kga['dict']['budget'] ?></th><?php endif; ?>
             <?php if (isset($this->columns['approved'])): ?>
-                <th><?php echo $kga['lang']['approved'] ?></th><?php endif; ?>
+                <th><?php echo $kga['dict']['approved'] ?></th><?php endif; ?>
         </tr>
 
         <?php foreach ($this->summary as $row): ?>
@@ -178,7 +178,7 @@ if ($this->projectsFilter != ""): ?><br/>
 
         <tr>
             <td>
-                <i><?php echo $kga['lang']['export_extension']['finalamount'] ?></i>
+                <i><?php echo $kga['dict']['export_extension']['finalamount'] ?></i>
             </td><?php if (isset($this->columns['dec_time'])): ?>
                 <td><?php echo $this->escape(number_format($this->timeSum, 2, $kga['conf']['decimal_separator'], "")) ?></td><?php endif; ?>
             <?php if (isset($this->columns['wage'])): ?>
@@ -192,51 +192,51 @@ if ($this->projectsFilter != ""): ?><br/>
         </tbody>
     </table><?php endif; ?>
 
-<h2><?php echo $kga['lang']['export_extension']['full_list'] ?></h2>
+<h2><?php echo $kga['dict']['export_extension']['full_list'] ?></h2>
 
 <table border="1">
     <tbody>
     <tr>
         <?php if (isset($this->columns['date'])): ?>
-            <th><?php echo $kga['lang']['datum'] ?></th>       <?php endif; ?>
+            <th><?php echo $kga['dict']['datum'] ?></th>       <?php endif; ?>
         <?php if (isset($this->columns['from'])): ?>
-            <th><?php echo $kga['lang']['in'] ?></th>          <?php endif; ?>
+            <th><?php echo $kga['dict']['in'] ?></th>          <?php endif; ?>
         <?php if (isset($this->columns['to'])): ?>
-            <th><?php echo $kga['lang']['out'] ?></th>         <?php endif; ?>
+            <th><?php echo $kga['dict']['out'] ?></th>         <?php endif; ?>
         <?php if (isset($this->columns['time'])): ?>
-            <th><?php echo $kga['lang']['time'] ?></th>        <?php endif; ?>
+            <th><?php echo $kga['dict']['time'] ?></th>        <?php endif; ?>
         <?php if (isset($this->columns['dec_time'])): ?>
-            <th><?php echo $kga['lang']['timelabel'] ?></th>   <?php endif; ?>
+            <th><?php echo $kga['dict']['timelabel'] ?></th>   <?php endif; ?>
         <?php if (isset($this->columns['rate'])): ?>
-            <th><?php echo $kga['lang']['rate'] ?></th>        <?php endif; ?>
+            <th><?php echo $kga['dict']['rate'] ?></th>        <?php endif; ?>
         <?php if (isset($this->columns['wage'])): ?>
-            <th><?php echo $kga['lang']['wage'] ?></th>       <?php endif; ?>
+            <th><?php echo $kga['dict']['wage'] ?></th>       <?php endif; ?>
         <?php if (isset($this->columns['budget'])): ?>
-            <th><?php echo $kga['lang']['budget'] ?></th>      <?php endif; ?>
+            <th><?php echo $kga['dict']['budget'] ?></th>      <?php endif; ?>
         <?php if (isset($this->columns['approved'])): ?>
-            <th><?php echo $kga['lang']['approved'] ?></th>    <?php endif; ?>
+            <th><?php echo $kga['dict']['approved'] ?></th>    <?php endif; ?>
         <?php if (isset($this->columns['status'])): ?>
-            <th><?php echo $kga['lang']['status'] ?></th>      <?php endif; ?>
+            <th><?php echo $kga['dict']['status'] ?></th>      <?php endif; ?>
         <?php if (isset($this->columns['billable'])): ?>
-            <th><?php echo $kga['lang']['billable'] ?></th>    <?php endif; ?>
+            <th><?php echo $kga['dict']['billable'] ?></th>    <?php endif; ?>
         <?php if (isset($this->columns['customer'])): ?>
-            <th><?php echo $kga['lang']['customer'] ?></th>    <?php endif; ?>
+            <th><?php echo $kga['dict']['customer'] ?></th>    <?php endif; ?>
         <?php if (isset($this->columns['project'])): ?>
-            <th><?php echo $kga['lang']['project'] ?></th>     <?php endif; ?>
+            <th><?php echo $kga['dict']['project'] ?></th>     <?php endif; ?>
         <?php if (isset($this->columns['activity'])): ?>
-            <th><?php echo $kga['lang']['activity'] ?></th>    <?php endif; ?>
+            <th><?php echo $kga['dict']['activity'] ?></th>    <?php endif; ?>
         <?php if (isset($this->columns['description'])): ?>
-            <th><?php echo $kga['lang']['description'] ?></th> <?php endif; ?>
+            <th><?php echo $kga['dict']['description'] ?></th> <?php endif; ?>
         <?php if (isset($this->columns['comment'])): ?>
-            <th><?php echo $kga['lang']['comment'] ?></th>     <?php endif; ?>
+            <th><?php echo $kga['dict']['comment'] ?></th>     <?php endif; ?>
         <?php if (isset($this->columns['location'])): ?>
-            <th><?php echo $kga['lang']['location'] ?></th>   <?php endif; ?>
+            <th><?php echo $kga['dict']['location'] ?></th>   <?php endif; ?>
         <?php if (isset($this->columns['ref_code'])): ?>
-            <th><?php echo $kga['lang']['xpe_ref_code'] ?></th>  <?php endif; ?>
+            <th><?php echo $kga['dict']['xpe_ref_code'] ?></th>  <?php endif; ?>
         <?php if (isset($this->columns['user'])): ?>
-            <th><?php echo $kga['lang']['username'] ?></th>    <?php endif; ?>
+            <th><?php echo $kga['dict']['username'] ?></th>    <?php endif; ?>
         <?php if (isset($this->columns['cleared'])): ?>
-            <th><?php echo $kga['lang']['cleared'] ?></th>     <?php endif; ?>
+            <th><?php echo $kga['dict']['cleared'] ?></th>     <?php endif; ?>
 
     </tr>
 
@@ -380,7 +380,7 @@ if ($this->projectsFilter != ""): ?><br/>
 
             <?php if (isset($this->columns['cleared'])): ?>
                 <td>
-                    <?php if ($row['cleared']) echo $kga['lang']['cleared'] ?>
+                    <?php if ($row['cleared']) echo $kga['dict']['cleared'] ?>
                 </td><?php endif; ?>
 
 
@@ -391,7 +391,7 @@ if ($this->projectsFilter != ""): ?><br/>
     <?php if ($this->timeSum > 0 || $this->wageSum > 0): ?>
         <tr>
             <td class="total_header" colspan="<?php echo count($this->columns) ?>">
-                <?php echo $kga['lang']['export_extension']['finalamount'] ?>
+                <?php echo $kga['dict']['export_extension']['finalamount'] ?>
             </td>
         </tr>
         <tr>

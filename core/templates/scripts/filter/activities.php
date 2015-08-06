@@ -26,8 +26,8 @@ $activities = $this->filterListEntries($this->activities);
                         <a href="#"
                            onclick="editSubject('activity',<?php echo $activity['activity_id'] ?>); $(this).blur(); return false;">
                             <img src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/edit2.gif'
-                                 width='13' height='13' alt='<?php echo $kga['lang']['edit'] ?>'
-                                 title='<?php echo $kga['lang']['edit'] ?> (ID:<?php echo $activity['activity_id'] ?>)'
+                                 width='13' height='13' alt='<?php echo $kga['dict']['edit'] ?>'
+                                 title='<?php echo $kga['dict']['edit'] ?> (ID:<?php echo $activity['activity_id'] ?>)'
                                  border='0'/>
                         </a>
                     <?php endif; ?>
@@ -35,23 +35,23 @@ $activities = $this->filterListEntries($this->activities);
                     <a href="#"
                        onclick="lists_update_filter('activity',<?php echo $activity['activity_id'] ?>); $(this).blur(); return false;">
                         <img src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/filter.png'
-                             width='13' height='13' alt='<?php echo $kga['lang']['filter'] ?>'
-                             title='<?php echo $kga['lang']['filter'] ?>' border='0'/>
+                             width='13' height='13' alt='<?php echo $kga['dict']['filter'] ?>'
+                             title='<?php echo $kga['dict']['filter'] ?>' border='0'/>
                     </a>
                     <?php if (array_key_exists('user', $kga)) { ?>
-                        <a href="#" class="preselect" title="<?php echo $kga['lang']['tip']['g_select_for_recording']; ?>"
+                        <a href="#" class="preselect" title="<?php echo $kga['dict']['tip']['g_select_for_recording']; ?>"
                            onclick="buzzer_preselect_activity(<?php echo $activity['activity_id'] ?>,'<?php echo $this->jsEscape($activity['name']) ?>'); return false;"
                            id="ps<?php echo $activity['activity_id'] ?>">
                             <img
                                 src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/preselect_off.png'
-                                width='13' height='13' alt='<?php echo $kga['lang']['tip']['g_select_for_recording'] ?>'
-                                title='<?php echo $kga['lang']['tip']['g_select_for_recording'] ?> (ID:<?php echo $activity['activity_id'] ?>)'
+                                width='13' height='13' alt='<?php echo $kga['dict']['tip']['g_select_for_recording'] ?>'
+                                title='<?php echo $kga['dict']['tip']['g_select_for_recording'] ?> (ID:<?php echo $activity['activity_id'] ?>)'
                                 border='0'/>
                         </a>
                     <?php } ?>
                 </td>
 
-                <td style="width:100%;" class="activities"  title="<?php echo $kga['lang']['tip']['g_select_for_recording']; ?>"
+                <td style="width:100%;" class="activities"  title="<?php echo $kga['dict']['tip']['g_select_for_recording']; ?>"
                     onclick="buzzer_preselect_activity(<?php echo $activity['activity_id'] ?>,'<?php echo $this->jsEscape($activity['name']) ?>'); return false;"
                     onmouseover="lists_change_color(this,true);" onmouseout="lists_change_color(this,false);">
                     <?php if ($activity['visible'] != 1): ?><span style="color:#bbb"><?php endif; ?>

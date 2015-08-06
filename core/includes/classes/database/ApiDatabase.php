@@ -72,7 +72,7 @@ class ApiDatabase
 
         $database->query($query);
 
-        return $database->rowArray(0, MYSQL_ASSOC);
+        return $database->rowArray(0, MYSQLI_ASSOC);
     }
 
     /*
@@ -101,7 +101,7 @@ class ApiDatabase
             return false;
         }
 
-            return $database->rowArray(0, MYSQL_ASSOC);
+            return $database->rowArray(0, MYSQLI_ASSOC);
     }
 
     /*

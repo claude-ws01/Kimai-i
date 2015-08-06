@@ -6,7 +6,7 @@
                 var oldGlobalRoleID = '',
                     password = $('#password'),
                     retypePassword = $('#retypePassword'),
-                    message = "<?php echo $this->pureJsEscape($GLOBALS['kga']['lang']['ownGlobalRoleChange']); ?>",
+                    message = "<?php echo $this->pureJsEscape($GLOBALS['kga']['dict']['ownGlobalRoleChange']); ?>",
                     form = $('#adm_ext_form_editUser');
 
                 oldGlobalRoleID = <?php echo $this->user_details['global_role_id']; ?>;
@@ -154,10 +154,10 @@
 <div id="floater_innerwrap">
 
     <div id="floater_handle">
-        <span id="floater_title"><?php echo $GLOBALS['kga']['lang']['editUser'] ?></span>
+        <span id="floater_title"><?php echo $GLOBALS['kga']['dict']['editUser'] ?></span>
 
         <div class="right">
-            <a href="#" class="close" onClick="floaterClose();"><?php echo $GLOBALS['kga']['lang']['close'] ?></a>
+            <a href="#" class="close" onClick="floaterClose();"><?php echo $GLOBALS['kga']['dict']['close'] ?></a>
         </div>
     </div>
 
@@ -166,12 +166,12 @@
         <ul class="menu tabSelection">
             <li class="tab norm"><a href="#general">
                     <span class="aa">&nbsp;</span>
-                    <span class="bb"><?php echo $GLOBALS['kga']['lang']['general'] ?></span>
+                    <span class="bb"><?php echo $GLOBALS['kga']['dict']['general'] ?></span>
                     <span class="cc">&nbsp;</span>
                 </a></li>
             <li class="tab norm"><a href="#groupstab">
                     <span class="aa">&nbsp;</span>
-                    <span class="bb"><?php echo $GLOBALS['kga']['lang']['groups'] ?></span>
+                    <span class="bb"><?php echo $GLOBALS['kga']['dict']['groups'] ?></span>
                     <span class="cc">&nbsp;</span>
                 </a></li>
         </ul>
@@ -185,53 +185,53 @@
                 <ul>
 
                     <li>
-                        <label for="name"><?php echo $GLOBALS['kga']['lang']['username'] ?>:</label>
+                        <label for="name"><?php echo $GLOBALS['kga']['dict']['username'] ?>:</label>
                         <input class="formfield" type="text" id="name" name="name"
                                value="<?php echo $this->escape($this->user_details['name']) ?>" maxlength=20 size=20/>
                     </li>
 
 
                     <li>
-                        <label for="global_role_id"><?php echo $GLOBALS['kga']['lang']['globalRole'] ?>
+                        <label for="global_role_id"><?php echo $GLOBALS['kga']['dict']['globalRole'] ?>
                             :</label><?php echo $this->formSelect('global_role_id', $this->user_details['global_role_id'], array(
                             'class' => 'formfield'), $this->globalRoles); ?>
                     </li>
 
 
                     <li>
-                        <label for="password"><?php echo $GLOBALS['kga']['lang']['newPassword'] ?>:</label>
+                        <label for="password"><?php echo $GLOBALS['kga']['dict']['newPassword'] ?>:</label>
                         <input class="formfield" type="text" id="password" name="password" size="9"
-                               value=""/> <?php echo $GLOBALS['kga']['lang']['minLength'] ?>
+                               value=""/> <?php echo $GLOBALS['kga']['dict']['minLength'] ?>
                         <?php if ($this->user_details['password'] === ''): ?>
 
                             <br/><img
                                 src="../skins/<?php echo $this->escape($GLOBALS['kga']['pref']['skin']) ?>/grfx/caution_mini.png"
                                 alt="Caution" style="vertical-align:middle;"/><strong
-                                style="color:red"><?php echo $GLOBALS['kga']['lang']['nopasswordset'] ?></strong><?php endif; ?>
+                                style="color:red"><?php echo $GLOBALS['kga']['dict']['nopasswordset'] ?></strong><?php endif; ?>
                     </li>
 
 
                     <li>
-                        <label for="retypePassword"><?php echo $GLOBALS['kga']['lang']['retypePassword'] ?>:</label>
+                        <label for="retypePassword"><?php echo $GLOBALS['kga']['dict']['retypePassword'] ?>:</label>
                         <input class="formfield" type="text" id="retypePassword" name="retypePassword" size="9"/>
                     </li>
 
 
                     <li>
-                        <label for="rate"><?php echo $GLOBALS['kga']['lang']['rate_hourly'] ?>:</label>
+                        <label for="rate"><?php echo $GLOBALS['kga']['dict']['rate_hourly'] ?>:</label>
                         <input class="formfield" type="text" id="rate" name="rate"
                                value="<?php echo $this->escape(str_replace('.', $GLOBALS['kga']['conf']['decimal_separator'], $this->user_details['rate'])); ?>"/>
                     </li>
 
 
                     <li>
-                        <label for="mail"><?php echo $GLOBALS['kga']['lang']['mail'] ?>:</label>
+                        <label for="mail"><?php echo $GLOBALS['kga']['dict']['mail'] ?>:</label>
                         <input class="formfield" type="text" id="mail" name="mail"
                                value="<?php echo $this->escape($this->user_details['mail']) ?>"/>
                     </li>
 
                     <li>
-                        <label for="alias"><?php echo $GLOBALS['kga']['lang']['alias'] ?>:</label>
+                        <label for="alias"><?php echo $GLOBALS['kga']['dict']['alias'] ?>:</label>
                         <input class="formfield" type="text" id="alias" name="alias"
                                value="<?php echo $this->escape($this->user_details['alias']) ?>"/>
                     </li>
@@ -242,8 +242,8 @@
 
                 <table class="groupsTable">
                     <tr>
-                        <td><label style="text-align:left;"><?php echo $GLOBALS['kga']['lang']['groups'] ?>:</label></td>
-                        <td><label style="text-align:left;"><?php echo $GLOBALS['kga']['lang']['membershipRole'] ?>:</label></td>
+                        <td><label style="text-align:left;"><?php echo $GLOBALS['kga']['dict']['groups'] ?>:</label></td>
+                        <td><label style="text-align:left;"><?php echo $GLOBALS['kga']['dict']['membershipRole'] ?>:</label></td>
                     </tr><?php
 
                     $selectArray    = array(-1 => '');
@@ -288,9 +288,9 @@
             <input name="axAction" type="hidden" value="sendEditUser"/>
 
             <div id="formbuttons">
-                <input class='btn_norm' type='button' value='<?php echo $GLOBALS['kga']['lang']['cancel'] ?>'
+                <input class='btn_norm' type='button' value='<?php echo $GLOBALS['kga']['dict']['cancel'] ?>'
                        onClick='floaterClose(); return false;'/>
-                <input class='btn_ok' type='submit' value='<?php echo $GLOBALS['kga']['lang']['submit'] ?>'/>
+                <input class='btn_ok' type='submit' value='<?php echo $GLOBALS['kga']['dict']['submit'] ?>'/>
             </div>
         </form>
     </div>

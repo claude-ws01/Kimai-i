@@ -194,8 +194,8 @@ function changeTab(target, path) {
     }
 
     if (user_id) {
-        $.cookie('ki_active_tab_target_' + user_id, target);
-        $.cookie('ki_active_tab_path_' + user_id, path);
+        $.cookie('ki_active_tab_target_' + user_id, target,";path=/");
+        $.cookie('ki_active_tab_path_' + user_id, path,";path=/");
     }
 }
 
@@ -247,7 +247,48 @@ function checkupdate(path) {
     );
 }
 
+function demoCountDown() {
+    //demoNextReset
+    var n_separator = ':',
+        hours,
+        minutes,
+        seconds,
+        hourString = "";
 
+    hours = Math.floor(demoNextReset / (60 * 60));
+    minutes = Math.floor((demoNextReset - (hours * 3600)) / (60));
+    seconds = demoNextReset - (minutes * 60) - (hours * 3600);
+    demoNextReset--;
+
+
+    if (hours < 10) {
+        hourString += "0" + hours;
+    }
+    else {
+        hourString += hours;
+    }
+
+    hourString += n_separator;
+
+    if (minutes < 10) {
+        hourString += "0" + minutes;
+    } else {
+        hourString += minutes;
+    }
+
+    hourString += n_separator;
+
+
+    if (seconds < 10) {
+        hourString += "0" + seconds;
+    } else {
+        hourString += seconds;
+    }
+
+    $('#demo_countdown').html(hourString);
+    setTimeout("demoCountDown()", 1000);
+
+}
 function n_hour() {
 
     var n_seperator = "<span style=\"color:#EAEAD7;\">:</span>",

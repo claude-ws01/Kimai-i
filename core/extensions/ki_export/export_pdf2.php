@@ -85,7 +85,7 @@ class MYPDF extends BasePDF
 
         // Page number
         $this->SetFont('helvetica', 'I', 8); // Set font
-        $this->Cell(30, 10, $kga['lang']['export_extension']['page'] . ' ' . $this->getAliasNumPage() . '/' . $this->getAliasNbPages(), 0, 0, 'C');
+        $this->Cell(30, 10, $kga['dict']['export_extension']['page'] . ' ' . $this->getAliasNumPage() . '/' . $this->getAliasNbPages(), 0, 0, 'C');
 
         //Datum
         $this->SetFont('helvetica', '', 8); // Set font
@@ -140,9 +140,9 @@ class MYPDF extends BasePDF
         }
 
 
-        $activity_string = (isset($this->columns['activity']) && !empty($row['activity_name'])) ? $kga['lang']['export_extension']['expense'] . ': <i>' . $row['activity_name'] . '</i>' : '';
-        $user_string     = (isset($this->columns['user']) && !empty($row['username'])) ? $kga['lang']['export_extension']['by'] . ': <i>' . $row['username'] . '</i>' : '';
-        $comment_string  = (isset($this->columns['comment']) && !empty($row['comment'])) ? $kga['lang']['comment'] . ': <i>' . nl2br($row['comment']) . '</i>' : '';
+        $activity_string = (isset($this->columns['activity']) && !empty($row['activity_name'])) ? $kga['dict']['export_extension']['expense'] . ': <i>' . $row['activity_name'] . '</i>' : '';
+        $user_string     = (isset($this->columns['user']) && !empty($row['username'])) ? $kga['dict']['export_extension']['by'] . ': <i>' . $row['username'] . '</i>' : '';
+        $comment_string  = (isset($this->columns['comment']) && !empty($row['comment'])) ? $kga['dict']['comment'] . ': <i>' . nl2br($row['comment']) . '</i>' : '';
         $wage_string     = '<b>' . $this->money($row['wage']) . '</b>';
 
         $activity_fills_row = empty($user_string) || ($this->GetStringWidth($activity_string) + $this->GetStringWidth($user_string) > $w[1]);
@@ -167,19 +167,19 @@ class MYPDF extends BasePDF
                 $this->ln();
                 $this->WriteHtmlCell($w[0] + $w[1] + $w[2], 6, $this->getX(), $this->getY(), $this->timespan($this->timeSum), '', 0, 0, true, 'R');
                 $this->ln();
-                $this->WriteHtmlCell($w[0] + $w[1], 6, $this->getX(), $this->getY(), $kga['lang']['export_extension']['subtotal'] . ':', '', 0, 0, true, 'R');
+                $this->WriteHtmlCell($w[0] + $w[1], 6, $this->getX(), $this->getY(), $kga['dict']['export_extension']['subtotal'] . ':', '', 0, 0, true, 'R');
                 $this->WriteHtmlCell($w[2], 6, $this->getX(), $this->getY(), $this->money($this->moneySum), '', 0, 0, true, 'R');
             }
             else {
                 if (isset($this->columns['wage'])) {
                     $this->ln();
-                    $this->WriteHtmlCell($w[0] + $w[1], 6, $this->getX(), $this->getY(), $kga['lang']['export_extension']['subtotal'] . ':', '', 0, 0, true, 'R');
+                    $this->WriteHtmlCell($w[0] + $w[1], 6, $this->getX(), $this->getY(), $kga['dict']['export_extension']['subtotal'] . ':', '', 0, 0, true, 'R');
                     $this->WriteHtmlCell($w[2], 6, $this->getX(), $this->getY(), $this->money($this->moneySum), '', 0, 0, true, 'R');
                 }
                 else {
                     if (isset($this->columns['dec_time'])) {
                         $this->ln();
-                        $this->WriteHtmlCell($w[0] + $w[1], 6, $this->getX(), $this->getY(), $kga['lang']['export_extension']['subtotal'] . ':', '', 0, 0, true, 'R');
+                        $this->WriteHtmlCell($w[0] + $w[1], 6, $this->getX(), $this->getY(), $kga['dict']['export_extension']['subtotal'] . ':', '', 0, 0, true, 'R');
                         $this->WriteHtmlCell($w[2], 6, $this->getX(), $this->getY(), $this->timespan($this->timeSum), '', 0, 0, true, 'R');
                     }
                 }
@@ -284,49 +284,49 @@ class MYPDF extends BasePDF
 
 
         if (!empty($row['activity_name'])) {
-            $activity_string = $kga['lang']['activity'] . ': <i>' . $row['activity_name'] . '</i>';
+            $activity_string = $kga['dict']['activity'] . ': <i>' . $row['activity_name'] . '</i>';
         }
         else {
             $activity_string = '';
         }
 
         if (!empty($row['username'])) {
-            $user_string = $kga['lang']['export_extension']['done_by'] . ': <i>' . $row['username'] . '</i>';
+            $user_string = $kga['dict']['export_extension']['done_by'] . ': <i>' . $row['username'] . '</i>';
         }
         else {
             $user_string = '';
         }
 
         if (!empty($row['location'])) {
-            $location_string = $kga['lang']['location'] . ': <i>' . $row['location'] . '</i>';
+            $location_string = $kga['dict']['location'] . ': <i>' . $row['location'] . '</i>';
         }
         else {
             $location_string = '';
         }
 
         if (!empty($row['ref_code'])) {
-            $ref_code_string = $kga['lang']['xpe_ref_code'] . ': <i>' . $row['ref_code'] . '</i>';
+            $ref_code_string = $kga['dict']['xpe_ref_code'] . ': <i>' . $row['ref_code'] . '</i>';
         }
         else {
             $ref_code_string = '';
         }
 
         if (isset($this->columns['comment']) && !empty($row['comment'])) {
-            $comment_string = $kga['lang']['comment'] . ': <i>' . nl2br($row['comment']) . '</i>';
+            $comment_string = $kga['dict']['comment'] . ': <i>' . nl2br($row['comment']) . '</i>';
         }
         else {
             $comment_string = '';
         }
 
         if (isset($this->columns['time']) && !empty($row['formatted_duration'])) {
-            $time_string = $kga['lang']['export_extension']['duration'] . ': <i>' . $row['formatted_duration'] . ' ' . $kga['lang']['export_extension']['duration_unit'] . '</i>';
+            $time_string = $kga['dict']['export_extension']['duration'] . ': <i>' . $row['formatted_duration'] . ' ' . $kga['dict']['export_extension']['duration_unit'] . '</i>';
         }
         else {
             $time_string = '';
         }
 
         if (!empty($row['rate'])) {
-            $rate_string = $kga['lang']['rate'] . ': <i>' . $row['rate'] . '</i>';
+            $rate_string = $kga['dict']['rate'] . ': <i>' . $row['rate'] . '</i>';
         }
         else {
             $rate_string = '';
@@ -371,19 +371,19 @@ class MYPDF extends BasePDF
                 $this->ln();
                 $this->WriteHtmlCell($w[0] + $w[1] + $w[2], 6, $this->getX(), $this->getY(), $this->timespan($this->timeSum), '', 0, 0, true, 'R');
                 $this->ln();
-                $this->WriteHtmlCell($w[0] + $w[1], 6, $this->getX(), $this->getY(), $kga['lang']['export_extension']['subtotal'] . ':', '', 0, 0, true, 'R');
+                $this->WriteHtmlCell($w[0] + $w[1], 6, $this->getX(), $this->getY(), $kga['dict']['export_extension']['subtotal'] . ':', '', 0, 0, true, 'R');
                 $this->WriteHtmlCell($w[2], 6, $this->getX(), $this->getY(), $this->money($this->moneySum), '', 0, 0, true, 'R');
             }
             else {
                 if (isset($this->columns['wage'])) {
                     $this->ln();
-                    $this->WriteHtmlCell($w[0] + $w[1], 6, $this->getX(), $this->getY(), $kga['lang']['export_extension']['subtotal'] . ':', '', 0, 0, true, 'R');
+                    $this->WriteHtmlCell($w[0] + $w[1], 6, $this->getX(), $this->getY(), $kga['dict']['export_extension']['subtotal'] . ':', '', 0, 0, true, 'R');
                     $this->WriteHtmlCell($w[2], 6, $this->getX(), $this->getY(), $this->money($this->moneySum), '', 0, 0, true, 'R');
                 }
                 else {
                     if (isset($this->columns['dec_time'])) {
                         $this->ln();
-                        $this->WriteHtmlCell($w[0] + $w[1], 6, $this->getX(), $this->getY(), $kga['lang']['export_extension']['subtotal'] . ':', '', 0, 0, true, 'R');
+                        $this->WriteHtmlCell($w[0] + $w[1], 6, $this->getX(), $this->getY(), $kga['dict']['export_extension']['subtotal'] . ':', '', 0, 0, true, 'R');
                         $this->WriteHtmlCell($w[2], 6, $this->getX(), $this->getY(), $this->timespan($this->timeSum), '', 0, 0, true, 'R');
                     }
                 }
@@ -513,31 +513,31 @@ $pdf->SetDisplayMode('default', 'continuous'); //PDF-Seitenanzeige fortlaufend
 // determine page title
 switch ($filter_type) {
     case 0:
-        $pdf_title = $kga['lang']['export_extension']['pdf_headline_only_times'];
+        $pdf_title = $kga['dict']['export_extension']['pdf_headline_only_times'];
         break;
     case 1:
-        $pdf_title = $kga['lang']['export_extension']['pdf_headline_only_expenses'];
+        $pdf_title = $kga['dict']['export_extension']['pdf_headline_only_expenses'];
         break;
     case -1:
     default:
-        $pdf_title = $kga['lang']['export_extension']['pdf_headline'];
+        $pdf_title = $kga['dict']['export_extension']['pdf_headline'];
 }
 // determine filter values
 switch ($filter_cleared) {
     case 0:
-        $pdf_filter[] = $kga['lang']['export_extension']['cleared_open'];
+        $pdf_filter[] = $kga['dict']['export_extension']['cleared_open'];
         break;
     case 1:
-        $pdf_filter[] = $kga['lang']['export_extension']['cleared_cleared'];
+        $pdf_filter[] = $kga['dict']['export_extension']['cleared_cleared'];
         break;
 }
 
 switch ($filter_refundable) {
     case 0:
-        $pdf_filter[] = $kga['lang']['export_extension']['refundable_refundable'];
+        $pdf_filter[] = $kga['dict']['export_extension']['refundable_refundable'];
         break;
     case 1:
-        $pdf_filter[] = $kga['lang']['export_extension']['refundable_not_refundable'];
+        $pdf_filter[] = $kga['dict']['export_extension']['refundable_not_refundable'];
         break;
 }
 
@@ -558,12 +558,12 @@ if (isset($_REQUEST['create_bookmarks'])) {
 $pdf->WriteHtml('<h1>' . $pdf_title . '</h1>');
 $pdf->ln();
 
-$pdf->WriteHtml('<b>' . $kga['lang']['export_extension']['time_period'] . ':</b> ' .
+$pdf->WriteHtml('<b>' . $kga['dict']['export_extension']['time_period'] . ':</b> ' .
                 strftime($kga['conf']['date_format_2'], $in) . ' - ' . strftime($kga['conf']['date_format_2'], $out));
 
 if (isset($pdf_filter)) {
     $pdf->ln();
-    $pdf->WriteHtml('<b>' . $kga['lang']['export_extension']['tab_filter'] . ':</b> ' . implode(' | ', $pdf_filter));
+    $pdf->WriteHtml('<b>' . $kga['dict']['export_extension']['tab_filter'] . ':</b> ' . implode(' | ', $pdf_filter));
 }
 
 if (!empty($_REQUEST['document_comment'])) {
@@ -577,18 +577,18 @@ $pdf->ln();
 if (isset($_REQUEST['print_summary'])) {
 
     if (isset($_REQUEST['create_bookmarks'])) {
-        $pdf->Bookmark($kga['lang']['export_extension']['summary'], 0, 0);
+        $pdf->Bookmark($kga['dict']['export_extension']['summary'], 0, 0);
     }
 
-    $pdf->WriteHtml('<h4>' . $kga['lang']['export_extension']['summary'] . '</h4>');
+    $pdf->WriteHtml('<h4>' . $kga['dict']['export_extension']['summary'] . '</h4>');
     $pdf->ln();
-    $pdf->printSummary(array($kga['lang']['activity'], $kga['lang']['export_extension']['duration'], $kga['lang']['export_extension']['costs']), $orderedExportData);
+    $pdf->printSummary(array($kga['dict']['activity'], $kga['dict']['export_extension']['duration'], $kga['dict']['export_extension']['costs']), $orderedExportData);
 
     $pdf->AddPage();
 
 }
 
-$pdf->WriteHtml('<h4>' . $kga['lang']['export_extension']['full_list'] . '</h4>');
+$pdf->WriteHtml('<h4>' . $kga['dict']['export_extension']['full_list'] . '</h4>');
 $pdf->ln();
 
 
@@ -664,19 +664,19 @@ foreach ($orderedExportData as $customer) {
             $pdf->ln();
             $pdf->WriteHtmlCell($widths[0] + $widths[1] + $widths[2], 6, $pdf->getX(), $pdf->getY(), $pdf->timespan($pdf->timeSum), '', 0, 0, true, 'R');
             $pdf->ln();
-            $pdf->WriteHtmlCell($widths[0] + $widths[1], 6, $pdf->getX(), $pdf->getY(), $kga['lang']['export_extension']['finalamount'] . ':', '', 0, 0, true, 'R');
+            $pdf->WriteHtmlCell($widths[0] + $widths[1], 6, $pdf->getX(), $pdf->getY(), $kga['dict']['export_extension']['finalamount'] . ':', '', 0, 0, true, 'R');
             $pdf->WriteHtmlCell($widths[2], 6, $pdf->getX(), $pdf->getY(), $pdf->money($pdf->moneySum), '', 0, 0, true, 'R');
         }
         else {
             if (isset($columns['wage'])) {
                 $pdf->ln();
-                $pdf->WriteHtmlCell($widths[0] + $widths[1], 6, $pdf->getX(), $pdf->getY(), $kga['lang']['export_extension']['finalamount'] . ':', '', 0, 0, true, 'R');
+                $pdf->WriteHtmlCell($widths[0] + $widths[1], 6, $pdf->getX(), $pdf->getY(), $kga['dict']['export_extension']['finalamount'] . ':', '', 0, 0, true, 'R');
                 $pdf->WriteHtmlCell($widths[2], 6, $pdf->getX(), $pdf->getY(), $pdf->money($pdf->moneySum), '', 0, 0, true, 'R');
             }
             else {
                 if (isset($columns['dec_time'])) {
                     $pdf->ln();
-                    $pdf->WriteHtmlCell($widths[0] + $widths[1], 6, $pdf->getX(), $pdf->getY(), $kga['lang']['export_extension']['finalamount'] . ':', '', 0, 0, true, 'R');
+                    $pdf->WriteHtmlCell($widths[0] + $widths[1], 6, $pdf->getX(), $pdf->getY(), $kga['dict']['export_extension']['finalamount'] . ':', '', 0, 0, true, 'R');
                     $pdf->WriteHtmlCell($widths[2], 6, $pdf->getX(), $pdf->getY(), $pdf->timespan($pdf->timeSum), '', 0, 0, true, 'R');
                 }
             }

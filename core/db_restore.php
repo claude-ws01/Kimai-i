@@ -23,11 +23,11 @@
  * Execute an sql query in the database. The correct database connection
  * will be chosen and the query will be logged with the success status.
  *
- * @param $query query to execute as string
+ * @param string $query query to execute as string
  */
 function exec_query($query)
 {
-    global $database, $errors;
+    global $database;
 
     $success   = $database->query($query);
     $errorInfo = serialize($database->error());
@@ -35,8 +35,11 @@ function exec_query($query)
     Logger::logfile($query);
     if (!$success) {
         Logger::logfile($errorInfo);
-        $errors = true;
+
+        return false;
     }
+
+    return true;
 }
 
 /**
@@ -45,27 +48,40 @@ function exec_query($query)
  * snapshots.
  */
 
-global $database, $kga, $errors, $executed_queries, $translations;
+global $database, $kga, $executed_queries, $translations;
 
 require('includes/basics.php');
 
+
+if (file_exists(WEBROOT . '_demo')) {
+    define('DEMO_MODE', true);
+    include WEBROOT . '_demo';
+}
+else {define('DEMO_MODE', false);}
+//CN..blocked feature in demo mode.
+if (DEMO_MODE) {
+    header("Location: http://${_SERVER['SERVER_NAME']}/index.php");
+}
+
+
 if (isset($_REQUEST['submit'], $_REQUEST['salt'])
-    && $_REQUEST['submit'] == $kga['lang']['login']
-    && $_REQUEST['salt'] == $kga['password_salt']
+    && $_REQUEST['submit'] === $kga['dict']['login']
+    && $_REQUEST['salt'] === $kga['password_salt']
 ) {
     $cookieValue = sha1($kga['password_salt']);
-    setcookie('db_restore_authCode', $cookieValue);
+    cookie_set('db_restore_authCode', $cookieValue);
     $_COOKIE['db_restore_authCode'] = $cookieValue;
 }
-$authenticated = (isset($_COOKIE['db_restore_authCode']) && $_COOKIE['db_restore_authCode'] == sha1($kga['password_salt']));
 
-if (isset($_REQUEST['submit']) && $authenticated) {
+$authenticated = (isset($_COOKIE['db_restore_authCode']) && $_COOKIE['db_restore_authCode'] === sha1($kga['password_salt']));
+
+if ($authenticated && isset($_REQUEST['submit'])) {
     $version_temp = $database->get_DBversion();
     $versionDB    = $version_temp[0];
     $revisionDB   = $version_temp[1];
     $p            = $kga['server_prefix'];
 
-    if ($_REQUEST['submit'] == $kga['lang']['backup'][8]) {
+    if ($_REQUEST['submit'] === $kga['dict']['backup'][8]) {
         /**
          * Create a backup.
          */
@@ -81,26 +97,40 @@ if (isset($_REQUEST['submit']) && $authenticated) {
             $prefix_length = strlen($p);
 
             if (is_array($tables)) {
-                foreach ($tables as $row) {
-                    if ((substr($row[0], 0, $prefix_length) == $p) && (substr($row[0], 0, 10) != 'kimai_bak_')) {
-                        $backupTable = 'kimai_bak_' . $backup_stamp . '_' . $row[0];
-                        $query       = 'CREATE TABLE ' . $backupTable . ' LIKE ' . $row[0];
-                        exec_query($query);
+                foreach ((array)$tables as $row) {
 
-                        $query = 'INSERT INTO ' . $backupTable . ' SELECT * FROM ' . $row[0];
-                        exec_query($query);
+                    if (substr($row[0], 0, $prefix_length) === $p
+                        && substr($row[0], 0, 10) !== 'kimai_bak_'
+                    ) {
 
-                        if ($errors) {
-                            die($kga['lang']['updater'][60]);
+                        $backupTable = "kimai_bak_${backup_stamp}_${row[0]}";
+
+                        $query       = "CREATE TABLE $backupTable LIKE $row[0]";
+                        $ok = exec_query($query);
+
+                        if (!$ok) {
+                            Logger::logfile('-- backup error - ' . $query);
+                        }
+                        else {
+                            $query = "INSERT INTO $backupTable SELECT * FROM $row[0]";
+                            $ok    = exec_query($query);
+                        }
+
+                        if (!$ok) {
+                            Logger::logfile('-- restore error - ' . $query);
+                            die($kga['dict']['updater'][60]);
                         }
                     }
                 }
+
                 Logger::logfile('-- backup finished -----------------------------------');
             }
+
             else {
                 Logger::logfile('-- backup - no tables found --------------------------');
             }
         }
+
         else {
             Logger::logfile('-- backup failed - no DB connection -----------------------------------');
         }
@@ -108,41 +138,49 @@ if (isset($_REQUEST['submit']) && $authenticated) {
         header('location: db_restore.php');
     }
 
-    if ($_REQUEST['submit'] == $kga['lang']['backup'][3]) {
+    if ($_REQUEST['submit'] === $kga['dict']['backup'][3]) {
         /**
          * Delete backups.
          */
         $dates = $_REQUEST['dates'];
 
         $query = ('SHOW TABLES;');
-
+        $tables = array();
         if (is_object($database)) {
             $success = $database->query($query);
             $tables  = $database->recordsArray();
         }
 
-        foreach ($tables as $row) {
-            if ((substr($row[0], 0, 10) == 'kimai_bak_')) {
-                if (in_array(substr($row[0], 10, 10), $dates)) {
-                    $arr2[] = 'DROP TABLE `' . $row[0] . '`;';
+        if (!$ok = count($tables) > 0) {
+            Logger::logfile('-- delete backup - no tables found --------------------------');
+        }
+        else {
+            foreach ((array)$tables as $row) {
+                if ((substr($row[0], 0, 10) === 'kimai_bak_')
+                    && in_array(substr($row[0], 10, 10), $dates, true)
+                ) {
+                    $arr2[] = "drop table `${row[0]}`;";
                 }
             }
-        }
 
-        if (is_object($database)) {
-            foreach ($arr2 AS $row) {
-                $success = $database->query($row);
-                if (!$success) {
-                    break;
+            if (!is_object($database)) {
+                Logger::logfile('-- delete backup error - no database connection --------------------------');
+            }
+            else {
+                foreach ($arr2 AS $row) {
+                    $success = $database->query($row);
+                    if (!$success) {
+                        Logger::logfile('-- delete backup error - ' . $row);
+                        break;
+                    }
                 }
             }
+            header('location: db_restore.php');
         }
-        header('location: db_restore.php');
     }
 }
 
-?><!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN'
-    'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+?><!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
@@ -155,14 +193,17 @@ if (isset($_REQUEST['submit']) && $authenticated) {
         }
 
         a {
-            color: grey;
+            color: #ccc700;
         }
+
         a:hover {
             color: white;
         }
+
         h1 {
-            margin:0
+            margin: 0;
         }
+
         div.main {
             position: absolute;
             top: 50%;
@@ -226,71 +267,100 @@ if (isset($_REQUEST['submit']) && $authenticated) {
 </head>
 <body>
 
-<?php if (!empty($kga['lang']['backup'][0])) { ?>
-    <div class="warn"><?php echo $kga['lang']['backup'][0] ?></div><?php } ?>
+<?php if (!empty($kga['dict']['backup'][0])) { ?>
+    <div class="warn"><?php echo $kga['dict']['backup'][0] ?></div><?php } ?>
 <div class="main">
     <?php
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // restore
 
-    if ($authenticated && isset($_REQUEST['submit'])) {
-        if (($_REQUEST['submit'] == $kga['lang']['backup'][2]) && (isset($_REQUEST['dates']))) {
+    if ($authenticated
+        && isset($_REQUEST['submit'], $_REQUEST['dates'])
+        && $_REQUEST['submit'] === $kga['dict']['backup'][2]
+    ) {
 
-            if (count($_REQUEST['dates']) > 1) {
-                echo '<h1 class="fail">' . $kga['lang']['backup'][5] . '</h1>';
+        if (count($_REQUEST['dates']) > 1) {
+            echo '<h1 class="fail">' . $kga['dict']['backup'][5] . '</h1>';
+        }
+        else {
+            $restoreDate = (int)$_REQUEST['dates'][0];
+            $query       = ('SHOW TABLES;');
+
+
+            $tables = array();
+            $ok     = true;
+
+            if (is_object($database)) {
+                $success = $database->query($query);
+                $tables  = $database->recordsArray();
+            }
+
+            $arr  = array();
+            $arr2 = array();
+
+            if (!$ok = count($tables) > 0) {
+                Logger::logfile('-- restore error - no tables found --------------------------');
             }
             else {
-                $restoreDate = intval($_REQUEST['dates'][0]);
-                $query       = ('SHOW TABLES;');
-
-
-                $tables = array();
-                if (is_object($database)) {
-                    $success = $database->query($query);
-                    $tables  = $database->recordsArray();
-                }
-
-                $arr  = array();
-                $arr2 = array();
-
                 foreach ($tables as $row) {
-                    if ((substr($row[0], 0, 10) == 'kimai_bak_')) {
-                        if (substr($row[0], 10, 10) === $restoreDate) {
-                            $table  = $row[0];
-                            $arr[]  = $table;
-                            $arr2[] = substr($row[0], 21, 100);
-                        }
+                    if ((substr($row[0], 0, 10) === 'kimai_bak_')
+                        && substr($row[0], 10, 10) === $restoreDate
+                    ) {
+                        $table  = $row[0];
+                        $arr[]  = $table;
+                        $arr2[] = substr($row[0], 21, 100);
                     }
                 }
 
                 $i = 0;
                 foreach ($arr2 AS $newTable) {
-                    $query = 'DROP TABLE ' . $arr2[$i];
-                    exec_query($query, 1);
+                    $query = "DROP TABLE $arr2[$i]";
+                    $ok    = exec_query($query);
 
-                    $query = 'CREATE TABLE ' . $newTable . ' LIKE ' . $arr[$i];
-                    exec_query($query, 1);
-                    $query = 'INSERT INTO ' . $newTable . ' SELECT * FROM ' . $arr[$i];
-                    exec_query($query, 1);
+                    if (!$ok) {
+                        Logger::logfile('-- restore error - ' . $query);
+                    }
+                    else {
+                        $query = "CREATE TABLE $newTable LIKE $arr[$i]";
+                        $ok    = exec_query($query);
+                    }
+
+                    if (!$ok) {
+                        Logger::logfile('-- restore error - ' . $query);
+                    }
+                    else {
+                        $query = "INSERT INTO $newTable SELECT * FROM $arr[$i]";
+                        $ok    = exec_query($query);
+                    }
+
+                    if (!$ok) {
+                        Logger::logfile('-- restore error - ' . $query);
+                        break;
+                    }
                     $i++;
                 }
+            }
 
+            if (!$ok) {
+                echo '<h1 class="message">' . $kga['dict']['backup'][12] . '</h1>';
+            }
+            else {
                 $date = @date('d. M Y, H:i:s', $restoreDate);
-                echo '<h1 class="message">' . $kga['lang']['backup'][6] . ' ' . $date . '<br>' . $kga['lang']['backup'][7] . '</h1>';
+                echo '<h1 class="message">' . $kga['dict']['backup'][6] . ' ' . $date . '<br>' . $kga['dict']['backup'][7] . '</h1>';
             }
         }
     }
     ?>
-    <form method="post" accept-charset="utf-8"><?php
+    <form method="post" accept-charset="utf-8" action=""><?php
 
         if (!$authenticated) {
-            echo '<h1>' . $kga['lang']['backup'][10] . '</h1>',
-            '<p class="caution">', $kga['lang']['backup'][11], '</p>'; ?>
-            <input type="text" name="salt"/>
-            <input type="submit" name="submit" value="<?php echo $kga['lang']['login'] ?>"/>
+            echo '<h1>' . $kga['dict']['backup'][10] . '</h1>',
+            '<p class="caution">', $kga['dict']['backup'][11], '</p>'; ?>
+            <input type="text" name="salt" placeholder="salt password"/>
+            <input type="submit" name="submit" style="cursor:pointer;" value="<?php echo $kga['dict']['login'] ?>"/>
         <?php }
         else {
-            echo '<h1>' . $kga['lang']['backup'][1] . '</h1>';
+            echo '<h1>' . $kga['dict']['backup'][1] . '</h1>';
 
             $query = ('SHOW TABLES;');
 
@@ -300,7 +370,7 @@ if (isset($_REQUEST['submit']) && $authenticated) {
             $arr2 = array();
 
             foreach ($result_backup as $row) {
-                if ((substr($row[0], 0, 10) == 'kimai_bak_')) {
+                if ((substr($row[0], 0, 10) === 'kimai_bak_')) {
                     $time  = substr($row[0], 10, 10);
                     $arr[] = $time;
                 }
@@ -312,12 +382,11 @@ if (isset($_REQUEST['submit']) && $authenticated) {
             foreach ($neues_array AS $date) {
                 $value = @date('d. M Y - H:i:s', $date);
 
-                if (@date('dMY', $date) == @date('dMY', time())) {
-                    $label = $kga['lang']['today'] . @date(' - H:i:s', $date);
+                $label = $value;
+                if (@date('dMY', $date) === @date('dMY', time())) {
+                    $label = $kga['dict']['today'] . @date(' - H:i:s', $date);
                 }
-                else {
-                    $label = $value;
-                }
+
                 echo <<<EOD
         <p class="label_checkbox">
         <input type="checkbox" id="$value " name="dates[]" value="$date">
@@ -327,18 +396,18 @@ EOD;
             }
 
             ?><p class="submit">
-            <input type="submit" name="submit" value="<?php echo $kga['lang']['backup'][2]; ?>"> <!-- restore -->
-            <input type="submit" name="submit" value="<?php echo $kga['lang']['backup'][3]; ?>"> <!-- delete -->
-            <input type="submit" name="submit" value="<?php echo $kga['lang']['backup'][8]; ?>"> <!-- backup -->
+            <input type="submit" name="submit" value="<?php echo $kga['dict']['backup'][2]; ?>"> <!-- restore -->
+            <input type="submit" name="submit" value="<?php echo $kga['dict']['backup'][3]; ?>"> <!-- delete -->
+            <input type="submit" name="submit" value="<?php echo $kga['dict']['backup'][8]; ?>"> <!-- backup -->
             </p><?php
         }
         ?>
 
     </form>
     <br/>
-    <a href="index.php">Login</a>
+    <a href="index.php"><?php echo $kga['dict']['backup'][13]; ?></a>
 
-    <p class="caution"><?php echo $kga['lang']['backup'][9]; ?></p>
+    <p class="caution"><?php echo $kga['dict']['backup'][9]; ?></p>
 </div>
 </body>
 </html>

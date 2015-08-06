@@ -24,27 +24,26 @@
 
 // insert KSPI
 $isCoreProcessor = 0;
-$dir_templates = "templates/";
-require("../../includes/kspi.php");
+$dir_templates   = 'templates/';
+require('../../includes/kspi.php');
 global $database, $kga, $view;
 
 
-
 switch ($axAction) {
-    
+
     /**
      * Return the logfile in reverse order, so the last entries are shown first.
      */
-    case "reloadLogfile":    
-        $logdatei=WEBROOT."temporary/logfile.txt";
-        $fh = fopen($logdatei, 'r');
-        
-        $theData = "";
-        $i = 0;
-        
-        $lines = $kga['logfile_lines'];
-        $filearray ="";
-        
+    case 'reloadLogfile':
+        $logdatei = WEBROOT . 'temporary/logfile.txt';
+        $fh       = fopen($logdatei, 'r');
+
+        $theData = '';
+        $i       = 0;
+
+        $lines     = $kga['logfile_lines'];
+        $filearray = '';
+
         while (!feof($fh)) {
             $filearray[$i] = fgets($fh);
             $i++;
@@ -52,69 +51,74 @@ switch ($axAction) {
 
         fclose($fh);
 
-        if ($kga['logfile_lines'] !="@") {
+        if ($kga['logfile_lines'] !== '@') {
             $start = count($filearray);
-            $goal = $start-$lines;
-            for ($line=$start-1; ($line>$goal && $line>0); $line--) {
-                if ( $filearray[$line] != "" ) {
-                    $theData .= $filearray[$line] . "<br/>";
-            }
-            }
-        } else {
-            foreach ($filearray as $line) {
-                if ( $line != "" ) {
-                    $theData .= $line . "<br/>";
+            $goal  = $start - $lines;
+            for ($line = $start - 1; ($line > $goal && $line > 0); $line--) {
+                if ($filearray[$line] !== '') {
+                    $theData .= $filearray[$line] . '<br/>';
                 }
             }
         }
-        
+        else {
+            foreach ((array)$filearray as $line) {
+                if ($line !== '') {
+                    $theData .= $line . '<br/>';
+                }
+            }
+        }
+
         echo $theData;
-    break;
-    
+        break;
+
     /**
      * Empty the logfile.
      */
-    case "clearLogfile":
+    case 'clearLogfile':
         if ($kga['delete_logfile']) {
-            $logdatei=fopen(WEBROOT."temporary/logfile.txt","w");
-            fwrite($logdatei,"");
+            $logdatei = fopen(WEBROOT . 'temporary/logfile.txt', 'w');
+            fwrite($logdatei, '');
             fclose($logdatei);
-            echo $kga['lang']['log_delete'];
-        } else {
+            echo $kga['dict']['log_delete'];
+        }
+        else {
             die();
         }
-    break;
+        break;
 
     /**
      * Write some message to the logfile.
      */
-    case "shoutbox":
-        Logger::logfile("text: " .$axValue);
-    break;
+    case 'shoutbox':
+        Logger::logfile('text: ' . $axValue);
+        break;
 
     /**
      * Return the $kga variable (Kimai Global Array). Strip out some sensitive
      * information if not configured otherwise.
      */
-    case "reloadKGA":    
-    // read kga --------------------------------------- 
+    case 'reloadKGA':
+        // read kga ---------------------------------------
         $output = $kga;
         // clean out some data that is way too private to be shown in the frontend ...
 
-        if (!$kga['conf']['show_sensible_data']) {
-            $output['server_hostname'] = "xxx";
-            $output['server_database'] = "xxx";
-            $output['server_username'] = "xxx";
-            $output['server_password'] = "xxx";
-            $output['user']['secure']   = "xxx";
-            $output['user']['user_id']   = "xxx";
-            $output['user']['pw']       = "xxx";
+        if (DEMO_MODE
+            || !$kga['conf']['show_sensible_data']
+        ) {
+            $output['server_hostname'] = 'xxx';
+            $output['server_database'] = 'xxx';
+            $output['server_username'] = 'xxx';
+            $output['server_password'] = 'xxx';
+            $output['user']['secure']  = 'xxx';
+            $output['user']['user_id'] = 'xxx';
+            $output['user']['pw']      = 'xxx';
+            $output['password_salt']   = 'xxxxxxxxxxxxx';
+            $output['admin_mail']      = 'xxxxxxxxxxxxx';
         }
-        echo"<pre>";
+        echo '<pre>';
         print_r($output);
-        echo"</pre>";
-    // /read kga --------------------------------------
-    break;
+        echo '</pre>';
+        // /read kga --------------------------------------
+        break;
 }
 
-?>

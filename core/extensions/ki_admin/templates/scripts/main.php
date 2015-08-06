@@ -12,7 +12,7 @@
         <div class="adm_ext_panel_header">
             <a onClick="adm_ext_subtab_expand(6)">
                 <span class="adm_ext_accordeon_triangle"></span>
-                <?php echo $GLOBALS['kga']['lang']['customers']?>
+                <?php echo $GLOBALS['kga']['dict']['customers']?>
             </a>
         </div>
         <div id="adm_ext_s6" class="adm_ext_subtab adm_ext_subject">
@@ -26,7 +26,7 @@
         <div class="adm_ext_panel_header">
             <a onClick="adm_ext_subtab_expand(7)">
                 <span class="adm_ext_accordeon_triangle"></span>
-                <?php echo $GLOBALS['kga']['lang']['projects']?>
+                <?php echo $GLOBALS['kga']['dict']['projects']?>
             </a>
         </div>
         <div id="adm_ext_s7" class="adm_ext_subtab adm_ext_subject">
@@ -40,7 +40,7 @@
     <div class="adm_ext_panel_header">
         <a onClick="adm_ext_subtab_expand(8)">
             <span class="adm_ext_accordeon_triangle"></span>
-            <?php echo $GLOBALS['kga']['lang']['activities']?>
+            <?php echo $GLOBALS['kga']['dict']['activities']?>
         </a>
     </div>
     <div id="adm_ext_s8" class="adm_ext_subtab adm_ext_subject">
@@ -53,7 +53,7 @@
 		<div class="adm_ext_panel_header">
 			<a onClick="adm_ext_subtab_expand(1)">
 			    <span class="adm_ext_accordeon_triangle"></span>
-			    <?php echo $GLOBALS['kga']['lang']['users']?>
+			    <?php echo $GLOBALS['kga']['dict']['users']?>
 			</a>
 		</div>
 		<div id="adm_ext_s1" class="adm_ext_subtab">
@@ -67,7 +67,7 @@
 		<div class="adm_ext_panel_header">
 			<a onClick="adm_ext_subtab_expand(2)">
 			    <span class="adm_ext_accordeon_triangle"></span>
-			    <?php echo $GLOBALS['kga']['lang']['groups']?>
+			    <?php echo $GLOBALS['kga']['dict']['groups']?>
 			</a>
 		</div>
 		<div id="adm_ext_s2" class="adm_ext_subtab">
@@ -81,7 +81,7 @@
                 <div class="adm_ext_panel_header">
                         <a onClick="adm_ext_subtab_expand(9)">
                             <span class="adm_ext_accordeon_triangle"></span>
-                            <?php echo $GLOBALS['kga']['lang']['globalRoles']?>
+                            <?php echo $GLOBALS['kga']['dict']['globalRoles']?>
                         </a>
                 </div>
                 <div id="adm_ext_s9" class="adm_ext_subtab">
@@ -95,7 +95,7 @@
                 <div class="adm_ext_panel_header">
                         <a onClick="adm_ext_subtab_expand(10)">
                             <span class="adm_ext_accordeon_triangle"></span>
-                            <?php echo $GLOBALS['kga']['lang']['membershipRoles']?>
+                            <?php echo $GLOBALS['kga']['dict']['membershipRoles']?>
                         </a>
                 </div>
                 <div id="adm_ext_s10" class="adm_ext_subtab">
@@ -109,7 +109,7 @@
 		<div class="adm_ext_panel_header">
 			<a onClick="adm_ext_subtab_expand(3)">
 			    <span class="adm_ext_accordeon_triangle"></span>
-			    <?php echo $GLOBALS['kga']['lang']['status']?>
+			    <?php echo $GLOBALS['kga']['dict']['status']?>
 			</a>
 		</div>
 		<div id="adm_ext_s3" class="adm_ext_subtab">
@@ -123,7 +123,7 @@
 		<div class="adm_ext_panel_header">
 			<a onClick="adm_ext_subtab_expand(4)">
 			    <span class="adm_ext_accordeon_triangle"></span>
-			    <?php echo $GLOBALS['kga']['lang']['advanced']?>
+			    <?php echo $GLOBALS['kga']['dict']['advanced']?>
 			</a>
 		</div>
 		<div id="adm_ext_s4" class="adm_ext_subtab">
@@ -138,7 +138,7 @@
         <div class="adm_ext_panel_header">
             <a onClick="adm_ext_subtab_expand(5)">
                 <span class="adm_ext_accordeon_triangle"></span>
-                <?php echo $GLOBALS['kga']['lang']['database']?>
+                <?php echo $GLOBALS['kga']['dict']['database']?>
             </a>
         </div>
         <div id="adm_ext_s5" class="adm_ext_subtab">

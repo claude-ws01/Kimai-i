@@ -218,13 +218,13 @@ function checkUser()
 {
     global $database;
 
-    if (array_key_exists('kimai_user', $_COOKIE)
-        && array_key_exists('kimai_key', $_COOKIE)
-        && $_COOKIE['kimai_user'] !== '0'
-        && $_COOKIE['kimai_key'] !== '0'
+    if (array_key_exists('ki_user', $_COOKIE)
+        && array_key_exists('ki_key', $_COOKIE)
+        && $_COOKIE['ki_user'] !== '0'
+        && $_COOKIE['ki_key'] !== '0'
     ) {
-        $kimai_user = addslashes($_COOKIE['kimai_user']);
-        $kimai_key  = addslashes($_COOKIE['kimai_key']);
+        $kimai_user = addslashes($_COOKIE['ki_user']);
+        $kimai_key  = addslashes($_COOKIE['ki_key']);
 
         if ($database->get_seq($kimai_user) !== $kimai_key) {
             Logger::logfile("Kicking user $kimai_user because of authentication key mismatch.");
@@ -259,7 +259,7 @@ function config_init()
 {
     global $kga;
 
-
+    //DEFAULT CONFIG VALUES
     $K['admin_mail']                  = 'admin@example.com';
     $K['allow_round_down']            = '0';
     $K['bill_pct']                    = '0,25,50,75,100';
@@ -317,6 +317,7 @@ function config_init()
         $kga['conf'] = array();
     }
 
+    // $kga overwrites $K
     $kga['conf'] = array_merge($K, $kga['conf']);
 }
 
@@ -411,6 +412,15 @@ function convert_time_strings($in, $out)
     $time['diff'] = (int)$time['out'] - (int)$time['in'];
 
     return $time;
+}
+
+function cookie_set($name, $value, $expire = 0, $secure = false, $httponly = false)
+{
+    error_log('<<== COOKIE == NAME >>'.$name.'<<value>>'.$value.'<<expire>>'.$expire);
+    if (!headers_sent()) {
+        setcookie($name, $value, $expire, '/',
+                  $_SERVER['SERVER_NAME'], $secure, $httponly);
+    }
 }
 
 /*
@@ -724,6 +734,7 @@ function makeSelectBox($subject, $groups, $selection = null, $includeDeleted = f
     return $sel;
 
 }
+
 function ki_iconv_set_encoding($type, $charset = 'UTF-8') {
     // iconv_set_encoding deprecated WARNINGS //
 

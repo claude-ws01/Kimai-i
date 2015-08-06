@@ -1,4 +1,0 @@
-## file: 			dev
-## in production:	rename to devx
-## file-flag: some processes will not occur because we are in dev mode.
-- warnings of installer folder after install

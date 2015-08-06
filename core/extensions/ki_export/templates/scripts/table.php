@@ -2,7 +2,7 @@
 global $kga;
 if (count($this->exportData) < 1): ?>
     <div style='padding:5px;color:#f00'>
-        <strong><?php echo $kga['lang']['noEntries'] ?></strong>
+        <strong><?php echo $kga['dict']['noEntries'] ?></strong>
     </div>
 <?php else: ?>
 
@@ -131,7 +131,7 @@ if (count($this->exportData) < 1): ?>
 
 
         <td class="project <?php echo $td_class, $this->disabled_columns['project'];?>">
-            <a href="#" class="preselect_lnk" title="<?php echo $kga['lang']['tip']['g_select_for_recording']; ?>"
+            <a href="#" class="preselect_lnk" title="<?php echo $kga['dict']['tip']['g_select_for_recording']; ?>"
                onClick="buzzer_preselect_project(<?php echo $row['project_id'] ?>,'<?php echo $this->jsEscape($row['project_name']) ?>',<?php echo $row['customer_id'] ?>,'<?php echo $this->jsEscape($row['customer_name']) ?>');return false;">
                 <?php echo $this->escape($row['project_name']) ?>
                 <?php if ($kga['pref']['project_comment_flag'] == 1): ?>
@@ -146,7 +146,7 @@ if (count($this->exportData) < 1): ?>
         <td class="activity <?php echo $td_class, $this->disabled_columns['activity'];?>">
             <?php
             if (!$isExpense): ?>
-            <a href="#" class="preselect_lnk" title="<?php echo $kga['lang']['tip']['g_select_for_recording']; ?>"
+            <a href="#" class="preselect_lnk" title="<?php echo $kga['dict']['tip']['g_select_for_recording']; ?>"
                onClick="buzzer_preselect_activity(<?php echo $row['activity_id'] ?>,'<?php echo $this->jsEscape($row['activity_name']) ?>',0,0);return false;">
                 <?php echo $this->escape($row['activity_name']);
                 else: echo '&ndash;';
@@ -180,10 +180,10 @@ if (count($this->exportData) < 1): ?>
 
 
         <td class="cleared <?php echo $td_class, $this->disabled_columns['cleared'];?>"
-            title="<?php echo $kga['lang']['tip']['xpo_cleared_all']; ?>">
+            title="<?php echo $kga['dict']['tip']['xpo_cleared_all']; ?>">
             <a class="<?php echo ($row['cleared']) ? 'is_cleared' : 'isnt_cleared' ?>" href="#"
                onClick="xpo_ext_toggle_cleared('<?php echo $row['type'], $row['id'] ?>'); return false;"
-               title="<?php echo $kga['lang']['tip']['xpo_cleared']; ?>"></a>
+               title="<?php echo $kga['dict']['tip']['xpo_cleared']; ?>"></a>
         </td>
 
         </tr>

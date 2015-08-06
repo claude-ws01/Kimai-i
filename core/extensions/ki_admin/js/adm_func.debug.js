@@ -80,7 +80,7 @@ function adm_ext_subtab_expand(id) {
     subtab = "#adm_ext_s" + id;
     $(subtab).css("display", "block");
 
-    $.cookie('adm_ext_activePanel_' + user_id, id);
+    $.cookie('adm_ext_activePanel_' + user_id, id,";path=/");
 }
 
 /**

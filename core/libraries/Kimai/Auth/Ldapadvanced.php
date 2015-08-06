@@ -196,7 +196,7 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
         $connect_result = ldap_connect($this->host);
 
         if (!$connect_result) {
-            echo "Cannot connect to ", $this->host;
+            echo 'Cannot connect to ', $this->host;
             $userId = false;
 
             return false;
@@ -214,7 +214,7 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
 
         if (!$bindResult) {
             echo sprintf(
-                "Can't bind to the LDAP with DN %s",
+                'Can\'t bind to the LDAP with DN %s',
                 $this->bindDN
             );
             $userId = false;
@@ -240,14 +240,14 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
 
         if (!$_ldapresults) {
             // The server returned no result-set at all.
-            echo "No user with that information found";
+            echo 'No user with that information found';
             $userId = false;
 
             return false;
         }
         if (1 > ldap_count_entries($connect_result, $_ldapresults)) {
             // The returned result set contains no data.
-            echo "No user with that information found";
+            echo 'No user with that information found';
             $userId = false;
 
             return false;
@@ -255,7 +255,7 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
         if (1 < ldap_count_entries($connect_result, $_ldapresults)) {
             // The returned result-set contains more than one person. So we
             // can not be sure, that the user is unique.
-            echo "More than one user found with that information";
+            echo 'More than one user found with that information';
             $userId = false;
 
             return false;
@@ -306,14 +306,14 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
         );
         if (!$_ldapresults) {
             // The server returned no result-set at all.
-            echo "No group for the user found";
+            echo 'No group for the user found';
             $userId = false;
 
             return false;
         }
         if (1 > ldap_count_entries($connect_result, $_ldapresults)) {
             // The returned result set contains no data.
-            echo "No group for that user found";
+            echo 'No group for that user found';
             $userId = false;
 
             return false;
@@ -359,17 +359,17 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
                                                            'active'         => 1,
                                                        ));
 
-                $database->setGroupMemberships($userId, $this->getDefaultGroups());
+                $database->setGroupMemberships((string)$userId, $this->getDefaultGroups());
 
                 // Set a password, to calm kimai down
-                $usr_data = array('password' => md5($kga['password_salt'] . md5(uniqid(rand(), true)) . $kga['password_salt']));
+                $usr_data = array('password' => md5($kga['password_salt'] . md5(uniqid(mt_rand(), true)) . $kga['password_salt']));
                 if ($emailAddress) {
                     $usr_data['mail'] = $emailAddress;
                 }
                 if ($commonName) {
                     $usr_data['alias'] = $commonName;
                 }
-                $database->user_edit($userId, $usr_data);
+                $database->user_edit((string)$userId, $usr_data);
             }
             else {
                 $userId = false;
@@ -394,8 +394,8 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
 
             $roles = $database->global_roles();
 
-            foreach ($roles as $role) {
-                if ($role['name'] == $this->defaultGlobalRoleName) {
+            foreach ((array)$roles as $role) {
+                if ($role['name'] === $this->defaultGlobalRoleName) {
                     return $role['global_role_id'];
                 }
             }
@@ -418,11 +418,11 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
         $map    = array();
 
 
-        foreach ($database->membership_roles() as $role) {
+        foreach ((array)$database->membership_roles() as $role) {
             $roles[$role['name']] = $role['membership_role_id'];
         }
 
-        foreach ($database->get_groups() as $group) {
+        foreach ((array)$database->get_groups() as $group) {
             $groups[$group['name']] = $group['group_id'];
         }
 

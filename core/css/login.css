@@ -31,10 +31,50 @@ body {
 
 #box > div {
     position: absolute;
+    padding: 0 30px;
+    display: none;
+    margin-top: 90px;
+    width: 384px;
+}
+
+#warning {
+    position: absolute;
     left: 0;
     right: 0;
-    padding: 110px 30px 10px;
-    display: none;
+    height: 50px;
+    border: 2px solid red;
+}
+
+#warning p#JSwarning {
+    padding: 5px;
+    margin: 0;
+    background: url(../grfx/bg_warning.gif) repeat-x;
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 60px;
+}
+
+#box label,
+#box select,
+#box input,
+#box select {
+    margin: 5px 0;
+}
+
+#box label {
+    color: #999;
+    width: 120px;
+    float: left;
+    text-align: right;
+    padding-right: 10px;
+    line-height: 17px;
+    height: 17px;
+}
+
+#box select {
+    width: 100px;
+    border: 1px solid silver;
 }
 
 #box fieldset {
@@ -42,44 +82,14 @@ body {
     padding: 0;
 }
 
-#login fieldset {
-    display: block;
-    width: 210px;
-    height: 100px;
-    text-align: left;
-    margin: auto;
-    position: relative;
-}
-
-#forgotPassword fieldset {
-    display: block;
-    margin-top: 5px;
-}
-
-#box label {
-    color: #999;
-    height: 25px;
-}
-
-#login label {
-    display: block;
-}
-
-#forgotPassword label {
-    margin-right: 5px;
-}
-
 #box input {
     border: 1px solid #ccc;
     padding: 2px;
     width: 140px;
-    position: relative;
-    margin: 0;
 }
 
-#login input {
-    display: block;
-    top: -2px;
+a#forgotPasswordLink {
+    padding-left: 120px;
 }
 
 #box a {
@@ -87,9 +97,10 @@ body {
     display: block;
     color: #999;
 }
+
 #box a:hover,
 #box a:focus {
-    color:white;
+    color: white;
 }
 
 #box .instructions {
@@ -98,34 +109,57 @@ body {
     width: 140px;
 }
 
+#login fieldset {
+    display: block;
+    width: 100%;
+    /*height: 100px;*/
+    /*text-align: left;*/
+    margin: auto;
+    position: relative;
+}
+
 #loginButton {
     position: absolute;
-    width: 52px;
-    height: 91px;
-    right: 0;
-    bottom: 0;
-    background: url(../grfx/login_button_g3.png) no-repeat;
+    width: 58px;
+    height: 58px;
+    right: 40px;
+    top: 3px;
+    background: url(../grfx/login_button_cu.png) no-repeat;
     border: 0 none;
     cursor: pointer;
     padding: 0;
     margin: 0;
 }
 
-#box select {
-    position: absolute;
-    width: 100px;
-    top: 100px;
-    left: 0;
-    border: 1px solid silver;
+#login span.demo {
+    width: 100%;
+    float: left;
+    padding: 2px;
+    margin: 5px 0;
+    text-align: center;
+    border-radius: 5px;
+    background-color: rgba(255, 121, 0, 1);
+    color: #000;
+    font-weight: bold;
+    line-height: 1.1;
+}
+
+#forgotPassword fieldset {
+    display: block;
 }
 
 #loginButton:hover {
-    background: url(../grfx/login_button_g3.png) no-repeat 0 -91px;
+    background: url(../grfx/login_button_cu.png) no-repeat 0 -58px;
     cursor: pointer;
+}
+
+#forgotPassword label {
+    margin-right: 5px;
 }
 
 #forgotPassword button {
     display: inline-block;
+    float: right;
 }
 
 #content > p,
@@ -135,9 +169,10 @@ body {
     text-align: center;
     line-height: 14px;
 }
+
 #content > p > a:hover,
 #content > p > a:focus {
-    color:white;
+    color: white;
 }
 
 #install {
@@ -203,11 +238,11 @@ body {
 
 #install button {
     position: absolute;
-    width: 52px;
-    height: 91px;
+    width: 58px;
+    height: 58px;
     right: 0;
     bottom: 0;
-    background: url(../grfx/login_button_g3.png) no-repeat;
+    background: url(../grfx/login_button_cu.png) no-repeat;
     text-indent: -1000em;
     border: 0 none;
     cursor: pointer;
@@ -216,7 +251,7 @@ body {
 }
 
 #install button:hover {
-    background: url(../grfx/login_button_g3.png) no-repeat 0 -91px;
+    background: url(../grfx/login_button_cu.png) no-repeat 0 -58px;
     cursor: pointer;
 }
 
@@ -226,23 +261,11 @@ body {
     text-align: center;
 }
 
-#warning {
-    margin: 5px 0 0 38px;
-    width: 434px;
-    border: 2px solid red;
-    padding: 10px 5px 5px 5px;
-    background: url(../grfx/bg_warning.gif) repeat-x;
-}
-
-#warning p {
-    padding: 0;
-    margin: 0;
-}
 /* way the hell off screen */
 .scrollbar-measure {
-	width: 100px;
-	height: 100px;
-	overflow: scroll;
-	position: absolute;
-	top: -9999px;
+    width: 100px;
+    height: 100px;
+    overflow: scroll;
+    position: absolute;
+    top: -9999px;
 }

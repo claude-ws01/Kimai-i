@@ -437,12 +437,12 @@ class MySQL
      *
      * @param string  $sql        The query string should not end with a semicolon
      * @param integer $resultType (Optional) The type of array
-     *                            Values can be: MYSQL_ASSOC, MYSQL_NUM, MYSQL_BOTH
+     *                            Values can be: MYSQLI_ASSOC, MYSQLI_NUM, MYSQLI_BOTH
      *
      * @return array A multi-dimensional array containing all the data
      *               returned from the query or FALSE on all errors
      */
-    protected function queryArray($sql, $resultType = MYSQL_BOTH)
+    protected function queryArray($sql, $resultType = MYSQLI_BOTH)
     {
         $this->query($sql);
         if (!$this->error()) {
@@ -458,11 +458,11 @@ class MySQL
      * or FALSE on error
      *
      * @param integer $resultType (Optional) The type of array
-     *                            Values can be: MYSQL_ASSOC, MYSQL_NUM, MYSQL_BOTH
+     *                            Values can be: MYSQLI_ASSOC, MYSQLI_NUM, MYSQLI_BOTH
      *
      * @return array||boolean   Records in array form
      */
-    public function recordsArray($resultType = MYSQL_BOTH)
+    public function recordsArray($resultType = MYSQLI_BOTH)
     {
         $this->resetError();
         if ($this->last_result !== false && mysqli_num_rows($this->last_result) >= 1) {
@@ -548,11 +548,11 @@ class MySQL
      *
      * @param integer $optional_row_number (Optional) Use to specify a row
      * @param integer $resultType          (Optional) The type of array
-     *                                     Values can be: MYSQL_ASSOC, MYSQL_NUM, MYSQL_BOTH
+     *                                     Values can be: MYSQLI_ASSOC, MYSQLI_NUM, MYSQLI_BOTH
      *
      * @return array Array that corresponds to fetched row or FALSE if no rows
      */
-    public function rowArray($optional_row_number = null, $resultType = MYSQL_BOTH)
+    public function rowArray($optional_row_number = null, $resultType = MYSQLI_BOTH)
     {
         $this->resetError();
         if (!$this->last_result) {
@@ -600,29 +600,6 @@ class MySQL
     public function rowCount()
     {
         return $this->num_rows;
-
-/*        $this->resetError();
-        if (!$this->isConnected()) {
-            $this->setError('No connection', -1);
-
-            return false;
-        }
-        elseif (!$this->last_result) {
-            $this->setError('No query results exist', -1);
-
-            return false;
-        }
-        else {
-            $result = @mysqli_num_rows($this->last_result);
-            if (!$result) {
-                $this->setError();
-
-                return false;
-            }
-            else {
-                return $result;
-            }
-        }*/
     }
 
     /**

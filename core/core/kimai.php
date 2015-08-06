@@ -73,7 +73,7 @@ else {
 // =======================================
 // = Display date and time in the header =
 // =======================================
-$wd = $kga['lang']['weekdays_short'][date('w', time())];
+$wd = $kga['dict']['weekdays_short'][date('w', time())];
 
 $dp_start = 0;
 if ($kga['calender_start'] != '') {
@@ -104,15 +104,15 @@ else {
 $localized_DatePicker = '';
 
 $view->weekdays_array = sprintf("['%s','%s','%s','%s','%s','%s','%s']\n"
-    , $kga['lang']['weekdays'][0], $kga['lang']['weekdays'][1], $kga['lang']['weekdays'][2], $kga['lang']['weekdays'][3], $kga['lang']['weekdays'][4], $kga['lang']['weekdays'][5], $kga['lang']['weekdays'][6]);
+    , $kga['dict']['weekdays'][0], $kga['dict']['weekdays'][1], $kga['dict']['weekdays'][2], $kga['dict']['weekdays'][3], $kga['dict']['weekdays'][4], $kga['dict']['weekdays'][5], $kga['dict']['weekdays'][6]);
 
 $view->weekdays_short_array = sprintf("['%s','%s','%s','%s','%s','%s','%s']\n"
-    , $kga['lang']['weekdays_short'][0], $kga['lang']['weekdays_short'][1], $kga['lang']['weekdays_short'][2], $kga['lang']['weekdays_short'][3], $kga['lang']['weekdays_short'][4], $kga['lang']['weekdays_short'][5], $kga['lang']['weekdays_short'][6]);
+    , $kga['dict']['weekdays_short'][0], $kga['dict']['weekdays_short'][1], $kga['dict']['weekdays_short'][2], $kga['dict']['weekdays_short'][3], $kga['dict']['weekdays_short'][4], $kga['dict']['weekdays_short'][5], $kga['dict']['weekdays_short'][6]);
 
 $view->months_array = sprintf("['%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s']\n",
-                              $kga['lang']['months'][0], $kga['lang']['months'][1], $kga['lang']['months'][2], $kga['lang']['months'][3], $kga['lang']['months'][4], $kga['lang']['months'][5], $kga['lang']['months'][6], $kga['lang']['months'][7], $kga['lang']['months'][8], $kga['lang']['months'][9], $kga['lang']['months'][10], $kga['lang']['months'][11]);
+                              $kga['dict']['months'][0], $kga['dict']['months'][1], $kga['dict']['months'][2], $kga['dict']['months'][3], $kga['dict']['months'][4], $kga['dict']['months'][5], $kga['dict']['months'][6], $kga['dict']['months'][7], $kga['dict']['months'][8], $kga['dict']['months'][9], $kga['dict']['months'][10], $kga['dict']['months'][11]);
 
-$view->months_short_array = sprintf('[\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\']', $kga['lang']['months_short'][0], $kga['lang']['months_short'][1], $kga['lang']['months_short'][2], $kga['lang']['months_short'][3], $kga['lang']['months_short'][4], $kga['lang']['months_short'][5], $kga['lang']['months_short'][6], $kga['lang']['months_short'][7], $kga['lang']['months_short'][8], $kga['lang']['months_short'][9], $kga['lang']['months_short'][10], $kga['lang']['months_short'][11]);
+$view->months_short_array = sprintf('[\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\']', $kga['dict']['months_short'][0], $kga['dict']['months_short'][1], $kga['dict']['months_short'][2], $kga['dict']['months_short'][3], $kga['dict']['months_short'][4], $kga['dict']['months_short'][5], $kga['dict']['months_short'][6], $kga['dict']['months_short'][7], $kga['dict']['months_short'][8], $kga['dict']['months_short'][9], $kga['dict']['months_short'][10], $kga['dict']['months_short'][11]);
 
 
 // ==============================

@@ -42,19 +42,19 @@ if ($this->expenses) {
                                 || time() - $row['timestamp'] <= $kga['conf']['edit_limit'])): ?>
                             <a href='#'
                                onClick="xpe_ext_editRecord(<?php echo $row['expense_id'] ?>); $(this).blur(); return false;"
-                               title='<?php echo $kga['lang']['edit'] ?>'>
+                               title='<?php echo $kga['dict']['edit'] ?>'>
                                 <img
                                     src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/edit2.gif'
-                                    width='13' height='13' alt='<?php echo $kga['lang']['tip']['g_edit'] ?>'
-                                    title='<?php echo $kga['lang']['tip']['g_edit'] ?>' border='0'/></a>
+                                    width='13' height='13' alt='<?php echo $kga['dict']['tip']['g_edit'] ?>'
+                                    title='<?php echo $kga['dict']['tip']['g_edit'] ?>' border='0'/></a>
 
                             <?php if ($kga['pref']['quickdelete'] > 0): ?>
                                 <a href='#' class='quickdelete'
                                    onClick="xpe_ext_quickdelete(<?php echo $row['expense_id'] ?>); return false;">
                                     <img
                                         src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/button_trashcan.png'
-                                        width='13' height='13' alt='<?php echo $kga['lang']['tip']['g_delete'] ?>'
-                                        title='<?php echo $kga['lang']['tip']['g_delete'] ?>' border=0/>
+                                        width='13' height='13' alt='<?php echo $kga['dict']['tip']['g_delete'] ?>'
+                                        title='<?php echo $kga['dict']['tip']['g_delete'] ?>' border=0/>
                                 </a>
                             <?php endif; ?>
                         <?php endif; ?>
@@ -74,7 +74,7 @@ if ($this->expenses) {
                     </td>
 
                     <td class="refundable <?php echo $td_class ?>">
-                        <?php echo $row['refundable'] ? $kga['lang']['yes'] : $kga['lang']['no'] ?>
+                        <?php echo $row['refundable'] ? $kga['dict']['yes'] : $kga['dict']['no'] ?>
                     </td>
 
                     <td class="customer <?php echo $td_class ?>">

@@ -18,24 +18,17 @@
  * along with Kimai; If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Include Basics
-include('../../includes/basics.php');
+// Always include the Kimai Standard Processor Initialization!
+
+// insert KSPI
+$isCoreProcessor = 0;
+$dir_templates = 'templates/';
+require('../../includes/kspi.php');
 global $kga, $database, $view;
 
-$dir_templates = "templates/";
-$datasrc       = "config.ini";
-$settings      = parse_ini_file($datasrc);
-$dir_ext       = $settings['EXTENSION_DIR'];
+switch ($axAction) {
+    case 'test':
+        echo $kga['user']['timeframe_begin'];
+    break;
+}
 
-checkUser();
-// =========================================
-// = Get the currently displayed timeframe =
-// =========================================
-$timeframe = get_timeframe();
-$in        = $timeframe[0];
-$out       = $timeframe[1];
-
-$view = new Zend_View();
-$view->setBasePath(WEBROOT . 'extensions/' . $dir_ext . '/' . $dir_templates);
-
-echo $view->render('index.php');

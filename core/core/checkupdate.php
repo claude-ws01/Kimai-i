@@ -32,11 +32,11 @@ $check  = new Kimai_Update_Check();
 $result = $check->checkForUpdate($kga['core.version'], $kga['core.revision']);
 
 if ($result == Kimai_Update_Check::RELEASE) {
-    echo $kga['lang']['updatecheck']['release'];
+    echo $kga['dict']['updatecheck']['release'];
 }
 elseif ($result == Kimai_Update_Check::BETA) {
-    echo $kga['lang']['updatecheck']['beta'];
+    echo $kga['dict']['updatecheck']['beta'];
 }
 elseif ($result == Kimai_Update_Check::CURRENT) {
-    echo $kga['lang']['updatecheck']['current'];
+    echo $kga['dict']['updatecheck']['current'];
 }

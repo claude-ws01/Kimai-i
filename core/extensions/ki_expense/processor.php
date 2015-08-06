@@ -33,7 +33,7 @@ function expenseAccessAllowed($entry, $action, &$errors)
     global $database, $kga;
 
     if (!array_key_exists('user', $kga)) {
-        $errors[''] = $kga['lang']['errorMessages']['permissionDenied'];
+        $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
 
         return false;
     }
@@ -43,7 +43,7 @@ function expenseAccessAllowed($entry, $action, &$errors)
 
     // check if expense is too far in the past to allow editing (or deleting)
     if (isset($entry['id']) && $kga['conf']['edit_limit'] != '-' && time() - $entry['timestamp'] > $kga['conf']['edit_limit']) {
-        $errors[''] = $kga['lang']['editLimitError'];
+        $errors[''] = $kga['dict']['editLimitError'];
     }
 
 
@@ -54,7 +54,7 @@ function expenseAccessAllowed($entry, $action, &$errors)
         }
         else {
             Logger::logfile("missing global permission $permissionName for user " . $kga['user']['name'] . ' to access expense');
-            $errors[''] = $kga['lang']['errorMessages']['permissionDenied'];
+            $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
 
             return false;
         }
@@ -71,7 +71,7 @@ function expenseAccessAllowed($entry, $action, &$errors)
         }
         else {
             Logger::logfile("missing membership permission $permissionName of own group(s) " . implode(', ', $assignedOwnGroups) . ' for user ' . $kga['user']['name']);
-            $errors[''] = $kga['lang']['errorMessages']['permissionDenied'];
+            $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
 
             return false;
         }
@@ -84,7 +84,7 @@ function expenseAccessAllowed($entry, $action, &$errors)
     }
     else {
         Logger::logfile("missing global permission $permissionName for user " . $kga['user']['name'] . ' to access expense');
-        $errors[''] = $kga['lang']['errorMessages']['permissionDenied'];
+        $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
 
         return false;
     }
@@ -99,7 +99,7 @@ switch ($axAction) {
     // ===========================================
     case 'reload_exp':
         $filters = explode('|', $axValue);
-        if ($filters[0] == '') {
+        if ($filters[0] === '') {
             $filterUsers = array();
         }
         else {
@@ -109,20 +109,20 @@ switch ($axAction) {
         $filterCustomers = array_map(function ($customer) {
             return $customer['customer_id'];
         }, $database->get_customers(any_get_group_ids()));
-        if ($filters[1] != '') {
+        if ($filters[1] !== '') {
             $filterCustomers = array_intersect($filterCustomers, explode(':', $filters[1]));
         }
 
         $filterProjects = array_map(function ($project) {
             return $project['project_id'];
         }, $database->get_projects(any_get_group_ids()));
-        if ($filters[2] != '') {
+        if ($filters[2] !== '') {
             $filterProjects = array_intersect($filterProjects, explode(':', $filters[2]));
         }
 
         // if no userfilter is set, set it to current user
-        if (array_key_exists('user', $kga) && count($filterUsers) == 0) {
-            array_push($filterUsers, $kga['user']['user_id']);
+        if (array_key_exists('user', $kga) && count($filterUsers) === 0) {
+            $filterUsers[] = $kga['user']['user_id'];
         }
 
         if (array_key_exists('customer', $kga)) {
@@ -150,11 +150,9 @@ switch ($axAction) {
 
         $view->activity_annotations = array();
 
+        $view->hideComments = true;
         if (array_key_exists('user', $kga)) {
             $view->hideComments = $kga['pref']['show_comments_by_default'] != 1;
-        }
-        else {
-            $view->hideComments = true;
         }
 
         echo $view->render('expenses.php');
@@ -170,7 +168,7 @@ switch ($axAction) {
 
         expenseAccessAllowed($data, 'delete', $errors);
 
-        if (count($errors) == 0) {
+        if (count($errors) === 0) {
             expense_delete($id);
         }
 
@@ -229,7 +227,7 @@ switch ($axAction) {
         // validate day and time
         $new = "${edit_day}-${edit_time}";
         if (!Format::check_time_format($new)) {
-            $errors[''] = $kga['lang']['TimeDateInputError'];
+            $errors[''] = $kga['dict']['TimeDateInputError'];
             break;
         }
 
@@ -238,11 +236,11 @@ switch ($axAction) {
         $data['timestamp'] = $new_time['in'];
 
         if (!is_numeric($data['project_id'])) {
-            $errors['project_id'] = $kga['lang']['errorMessages']['noProjectSelected'];
+            $errors['project_id'] = $kga['dict']['errorMessages']['noProjectSelected'];
         }
 
         if (!is_numeric($data['multiplier']) || $data['multiplier'] <= 0) {
-            $errors['multiplier'] = $kga['lang']['errorMessages']['multiplierNegative'];
+            $errors['multiplier'] = $kga['dict']['errorMessages']['multiplierNegative'];
         }
 
         expenseAccessAllowed($data, $action, $errors);

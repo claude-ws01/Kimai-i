@@ -51,18 +51,18 @@
 
     <div id="floater_handle">
         <span
-            id="floater_title"><?php echo !isset($this->id) ? $kga['lang']['add'] : $kga['lang']['edit'] ?></span>
+            id="floater_title"><?php echo !isset($this->id) ? $kga['dict']['add'] : $kga['dict']['edit'] ?></span>
 
         <div class="right">
-            <a href="#" class="close" onClick="floaterClose();"><?php echo $kga['lang']['close'] ?></a>
+            <a href="#" class="close" onClick="floaterClose();"><?php echo $kga['dict']['close'] ?></a>
             <a href="#" class="help"
-               onClick="$(this).blur(); $('#help').slideToggle();"><?php echo $kga['lang']['help'] ?></a>
+               onClick="$(this).blur(); $('#help').slideToggle();"><?php echo $kga['dict']['help'] ?></a>
         </div>
     </div>
 
     <div id="help">
         <div class="content">
-            <?php echo $kga['lang']['dateAndTimeHelp'] ?>
+            <?php echo $kga['dict']['dateAndTimeHelp'] ?>
         </div>
     </div>
 
@@ -71,12 +71,12 @@
         <ul class="menu tabSelection">
             <li class="tab norm"><a href="#general">
                     <span class="aa">&nbsp;</span>
-                    <span class="bb"><?php echo $kga['lang']['general'] ?></span>
+                    <span class="bb"><?php echo $kga['dict']['general'] ?></span>
                     <span class="cc">&nbsp;</span>
                 </a></li>
             <li class="tab norm"><a href="#extended">
                     <span class="aa">&nbsp;</span>
-                    <span class="bb"><?php echo $kga['lang']['advanced'] ?></span>
+                    <span class="bb"><?php echo $kga['dict']['advanced'] ?></span>
                     <span class="cc">&nbsp;</span>
                 </a></li>
         </ul>
@@ -90,7 +90,7 @@
             <fieldset id="general">
                 <ul>
                     <li>
-                        <label for="project_id"><?php echo $kga['lang']['project'] ?>:</label>
+                        <label for="project_id"><?php echo $kga['dict']['project'] ?>:</label>
 
                         <div class="multiFields">
                             <?php
@@ -103,43 +103,43 @@
                             ), $this->projects);
                             ?><br/>
                             <input type="text" style="width:395px;margin-top:3px" tabindex="2" size="10" name="filter"
-                                   placeholder="<?php echo $kga['lang']['searchFilter']; ?>"
+                                   placeholder="<?php echo $kga['dict']['searchFilter']; ?>"
                                    id="filter" onkeyup="filter_selects('add_edit_expense_project_ID', this.value);"/>
                         </div>
                     </li>
 
                     <li>
-                        <label for="edit_day"><?php echo $kga['lang']['day'] ?>:</label>
+                        <label for="edit_day"><?php echo $kga['dict']['day'] ?>:</label>
                         <input id='edit_day' type='text' name='edit_day' style="text-align:center;"
                                value='<?php echo $this->escape($this->edit_day) ?>' maxlength='10' size='8'
                                tabindex='5' <?php if ($kga['pref']['autoselection']): ?> onClick="this.select();" <?php endif; ?> />
                     </li>
 
                     <li>
-                        <label for="edit_time"><?php echo $kga['lang']['timelabel'] ?>:</label>
+                        <label for="edit_time"><?php echo $kga['dict']['timelabel'] ?>:</label>
                         <input id='edit_time' type='text' name='edit_time' style="text-align:center;"
                                value='<?php echo $this->escape($this->edit_time) ?>' maxlength='5' size='3'
                                tabindex='7' <?php if ($kga['pref']['autoselection']): ?> onClick="this.select();" <?php endif; ?> />
                         <a href="#"
-                           onClick="xpe_ext_pasteNow(); $(this).blur(); return false;"><?php echo $kga['lang']['now'] ?></a>
+                           onClick="xpe_ext_pasteNow(); $(this).blur(); return false;"><?php echo $kga['dict']['now'] ?></a>
                     </li>
 
                     <li>
-                        <label for="multiplier"><?php echo $kga['lang']['multiplier'] ?>:</label>
+                        <label for="multiplier"><?php echo $kga['dict']['multiplier'] ?>:</label>
                         <input id='multiplier' type='text' name='multiplier' style="text-align:center;"
                                value='<?php echo $this->escape($this->multiplier) ?>' maxlength='5' size='3'
                                tabindex='9' <?php if ($kga['pref']['autoselection']): ?> onClick="this.select();" <?php endif; ?> />
                     </li>
 
                     <li>
-                        <label for="edit_value"><?php echo $kga['lang']['expense'] ?>:</label>
+                        <label for="edit_value"><?php echo $kga['dict']['expense'] ?>:</label>
                         <input id='edit_value' type='text' name='edit_value' style="text-align:right;padding-right:5px;"
                                value='<?php echo $this->escape($this->edit_value) ?>' maxlength='10' size='4'
                                tabindex='10' <?php if ($kga['pref']['autoselection']): ?> onClick="this.select();" <?php endif; ?> />
                     </li>
 
                     <li style="padding-bottom:0;border:none;">
-                        <label for="description"><?php echo $kga['lang']['description'] ?>:</label>
+                        <label for="description"><?php echo $kga['dict']['description'] ?>:</label>
                         <textarea id='description'
                                   style="max-width:420px; width:395px"
                                   class='comment'
@@ -155,14 +155,14 @@
             <fieldset id="extended">
                 <ul>
                     <li>
-                        <label for="erase"><?php echo $kga['lang']['refundable_long'] ?>:</label>
+                        <label for="erase"><?php echo $kga['dict']['refundable_long'] ?>:</label>
                         <input type='checkbox' id='refundable'
                                name='refundable' <?php if ($this->refundable): ?> checked="checked" <?php endif; ?>
                                tabindex='12'/>
                     </li>
 
                     <li>
-                        <label for="comment"><?php echo $kga['lang']['comment'] ?>:</label>
+                        <label for="comment"><?php echo $kga['dict']['comment'] ?>:</label>
                         <textarea id='comment'
                                   style="max-width:420px; width:395px"
                                   class='comment'
@@ -173,7 +173,7 @@
                     </li>
 
                     <li>
-                        <label for="comment_type"><?php echo $kga['lang']['comment_type'] ?>
+                        <label for="comment_type"><?php echo $kga['dict']['comment_type'] ?>
                             :</label><?php echo $this->formSelect('comment_type', $this->comment_type, array(
                             'id'       => 'comment_type',
                             'class'    => 'formfield',
@@ -181,7 +181,7 @@
                     </li>
 
                     <li>
-                        <label for="erase"><?php echo $kga['lang']['erase'] ?>:</label>
+                        <label for="erase"><?php echo $kga['dict']['erase'] ?>:</label>
                         <input type='checkbox' id='erase' name='erase' tabindex='15'/>
                     </li>
 
@@ -189,9 +189,9 @@
             </fieldset>
         </div>
         <div id="formbuttons">
-            <input class='btn_norm' type='button' value='<?php echo $kga['lang']['cancel'] ?>'
+            <input class='btn_norm' type='button' value='<?php echo $kga['dict']['cancel'] ?>'
                    onClick='floaterClose(); return false;'/>
-            <input class='btn_ok' type='submit' value='<?php echo $kga['lang']['submit'] ?>'/>
+            <input class='btn_ok' type='submit' value='<?php echo $kga['dict']['submit'] ?>'/>
         </div>
     </form>
 </div>

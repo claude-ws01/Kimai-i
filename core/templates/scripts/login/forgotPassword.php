@@ -6,7 +6,7 @@
     <link rel="SHORTCUT ICON" href="favicon.ico">
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <meta name="robots" content="noindex,nofollow"/>
-    <title>Kimai-i <?php echo $kga['lang']['login'] ?></title>
+    <title>Kimai-i <?php echo $kga['dict']['login'] ?></title>
     <script type="text/javascript" src="libraries/jQuery/jquery-1.9.1.min.js"></script>
     <script type="text/javascript" src="libraries/jQuery/jquery.cookie.min.js"></script>
     <?php if ($kga['conf']['check_at_startup']) { ?>
@@ -16,11 +16,11 @@
         var requestData = <?php echo json_encode($this->requestData); ?>;
         $(function () {
             //$("#JSwarning").remove();
-            $.cookie('KimaiCookietest', 'jes');
+            $.cookie('KimaiCookietest', 'jes',";path=/");
             KimaiCookietest = $.cookie('KimaiCookietest');
             if (KimaiCookietest == 'jes') {
                 $("#cookiewarning").remove();
-                $.cookie('KimaiCookietest', '', {expires: -1});
+                $.cookie('KimaiCookietest', '', {expires: -1},";path=/");
             }
             if (!$("#warning").find("p").size()) $("#warning").remove();
 
@@ -50,7 +50,7 @@
                 return false;
             });
 
-            $("#kimaiusername").focus();
+            $("#login_name").focus();
         });
     </script><?php if ($kga['conf']['check_at_startup']): ?>
         <script type='text/javascript'>
@@ -71,11 +71,11 @@
             <form action='index.php?a=checklogin' id='form1' method='post'>
                 <fieldset>
                     <label for="password">
-                        <?php echo $kga['lang']['newPassword'] ?>:
+                        <?php echo $kga['dict']['newPassword'] ?>:
                     </label>
                     <input type='password' name="password" id="password"/>
                     <label for="password2">
-                        <?php echo $kga['lang']['retypePassword'] ?>:
+                        <?php echo $kga['dict']['retypePassword'] ?>:
                     </label>
                     <input type='password' name="password2" id="password2"/><?php echo $this->selectbox ?>
                     <button id="loginButton" type='submit'></button>
@@ -84,15 +84,15 @@
         </div>
         <div id="message" <?php if (!$this->keyCorrect): ?>style="display:block" <?php endif; ?>>
             <p>
-                <?php echo $kga['lang']['passwordReset']['invalidKey']; ?>
+                <?php echo $kga['dict']['passwordReset']['invalidKey']; ?>
             </p>
             <a style="display:none"
-               href="index.php"><?php echo $kga['lang']['passwordReset']['returnToLogin'] ?></a>
+               href="index.php"><?php echo $kga['dict']['passwordReset']['returnToLogin'] ?></a>
         </div>
         <div id="warning">
-            <p id="JSwarning"><strong style="color:red"><?php $kga['lang']['JSwarning'] ?></strong></p>
+            <p id="JSwarning"><strong style="color:red"><?php $kga['dict']['JSwarning'] ?></strong></p>
 
-            <p id="cookiewarning"><strong style="color:red"><?php $kga['lang']['cookiewarning'] ?></strong></p>
+            <p id="cookiewarning"><strong style="color:red"><?php $kga['dict']['cookiewarning'] ?></strong></p>
         </div>
     </div><?php echo $this->partial('misc/copyrightnotes.php', array('kga' => &$kga, 'devtimespan' => devTimeSpan())); ?>
 </div>

@@ -260,6 +260,18 @@ table#menu_btns td#last {
     height: 23px;
 }
 
+.menuBackground.demo_mode {
+    background-color: rgba(255, 121, 0, 0.79);
+}
+
+.menuBackground.demo_mode span.demo {
+    color: white;
+    text-shadow: 0 0 3px #000;
+    float: right;
+    padding: 4px 20px;
+    font-family: monospace;
+    font-size: 12px;}
+
 .menu li:not(.ui-state-active) a.tabError span.bb {
     color: #AF0000 !important;
 }
@@ -706,7 +718,7 @@ fieldset#activitiestab input {
 }
 
 .activitiesTable input {
-    width: 100px
+    width: 100px;
 }
 
 #floater_innerwrap .errorMessage {
@@ -747,10 +759,12 @@ fieldset#activitiestab input {
     border: 1px solid black;
     border-bottom: none;
 }
+
 #users_foot, #customers_foot, #projects_foot, #activities_foot {
     border: 1px solid black;
     border-top: none;
 }
+
 #users_head, #customers_head, #projects_head, #activities_head,
 #users_foot, #customers_foot, #projects_foot, #activities_foot {
     background-image: url('../../skins/standard/grfx/g3_table_header.png');

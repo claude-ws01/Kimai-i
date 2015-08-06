@@ -73,7 +73,7 @@ require_once('private_func.php');
 
 
 //if (!is_array($_REQUEST['project_id']) || count($_REQUEST['project_id']) === 0) {
-//    echo '<script language="javascript">alert("' . $kga['lang']['ext_invoice']['noProject'] . '")</script>';
+//    echo '<script language="javascript">alert("' . $kga['dict']['ext_invoice']['noProject'] . '")</script>';
 //
 //    return;
 //}
@@ -90,7 +90,7 @@ $details = invoice_get_details($in, $out, $projects_id, $_REQUEST['filter_cleare
     isset($_REQUEST['short']));
 
 if (!is_array($details) || count($details) === 0) {
-    echo '<script language="javascript">alert("' . $kga['lang']['ext_invoice']['noData'] . '")</script>';
+    echo '<script language="javascript">alert("' . $kga['dict']['ext_invoice']['noData'] . '")</script>';
 
     return;
 }
@@ -98,7 +98,7 @@ if (!is_array($details) || count($details) === 0) {
 // ----------------------- FETCH ALL KIND OF DATA WE NEED WITHIN THE INVOICE TEMPLATES -----------------------
 
 $date           = time();
-$month          = $kga['lang']['months'][date('n', $out) - 1];
+$month          = $kga['dict']['months'][date('n', $out) - 1];
 $year           = date('Y', $out);
 $projectObjects = array();
 foreach ($projects_id as $projectID)

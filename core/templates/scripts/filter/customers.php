@@ -28,15 +28,15 @@ $customers = $this->filterListEntries($this->customers);
                         <a href="#"
                            onclick="editSubject('customer',<?php echo $customer['customer_id'] ?>); $(this).blur(); return false;">
                             <img src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/edit2.gif'
-                                 width='13' height='13' alt='<?php echo $kga['lang']['edit'] ?>'
-                                 title='<?php echo $kga['lang']['edit'] ?>' border='0'/>
+                                 width='13' height='13' alt='<?php echo $kga['dict']['edit'] ?>'
+                                 title='<?php echo $kga['dict']['edit'] ?>' border='0'/>
                         </a>
                     <?php endif; ?>
                     <a href="#"
                        onclick="lists_update_filter('customer',<?php echo $customer['customer_id'] ?>); $(this).blur(); return false;">
                         <img src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/filter.png'
-                             width='13' height='13' alt='<?php echo $kga['lang']['filter'] ?>'
-                             title='<?php echo $kga['lang']['filter'] ?>' border='0'/>
+                             width='13' height='13' alt='<?php echo $kga['dict']['filter'] ?>'
+                             title='<?php echo $kga['dict']['filter'] ?>' border='0'/>
                     </a>
                 </td>
 

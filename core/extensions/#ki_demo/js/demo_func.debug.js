@@ -20,14 +20,19 @@
 
 function demo_ext_onload() {
 
-    set_lists_visibility(true, $('#gui').find('div.ext.ki_demoextension').attr('id'));
+    set_lists_visibility(false, $('#gui').find('div.ext.ki_demo').attr('id'));
+
+    demo_ext_resize();
 
     $("#loader").hide();
 }
 
 
 function demo_ext_resize() {
-    // function must exist, so init can register it as callback
+    var pagew = pageWidth() - 22;
+
+    $("#demo_head,#demo_main").css("width", pagew);
+    $("#demo_main").css("height", pageHeight() - headerHeight() - 64);
 }
 
 
@@ -39,7 +44,6 @@ function demo_ext_tab_changed() {
     var test = $("#testdiv"),
         array_target = Math.round(Math.random() * background.length);
 
-    test.append(" This has been put here on tab change.");
 
 
     test.css("color", text[array_target]);
@@ -52,7 +56,8 @@ function demo_ext_timeframe_changed() {
     $.post(demo_ext_path + "processor.php", {
             axAction: "test",
             axValue: 0,
-            id: 0},
+            id: 0
+        },
 
         function (data) {
             $('#ajax_wait').hide();

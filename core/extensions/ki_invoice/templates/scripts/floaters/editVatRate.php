@@ -31,9 +31,9 @@
 <div id="floater_innerwrap">
 
     <div id="floater_handle">
-        <span id="floater_title"><?php echo $GLOBALS['kga']['lang']['vat']?></span>
+        <span id="floater_title"><?php echo $GLOBALS['kga']['dict']['vat']?></span>
         <div class="right">
-            <a href="#" class="close" onClick="floaterClose();"><?php echo $GLOBALS['kga']['lang']['close']?></a>
+            <a href="#" class="close" onClick="floaterClose();"><?php echo $GLOBALS['kga']['dict']['close']?></a>
         </div>  
     </div>
 
@@ -46,7 +46,7 @@
             <fieldset>   
 
                 
-                <label for="vat_rate"><?php echo $GLOBALS['kga']['lang']['vat']?></label>
+                <label for="vat_rate"><?php echo $GLOBALS['kga']['dict']['vat']?></label>
                 <input size="4" name="vat_rate" id="vat_rate" type="text"
                        value="<?php
                        echo $this->escape(str_replace('.',
@@ -54,8 +54,8 @@
                                                       $GLOBALS['kga']['conf']['vat_rate'])); ?>"/> %
 
                 <div id="formbuttons">
-                    <input class='btn_norm' type='button' value='<?php echo $GLOBALS['kga']['lang']['cancel']?>' onClick='floaterClose(); return false;' />
-                    <input class='btn_ok' type='submit' value='<?php echo $GLOBALS['kga']['lang']['submit'] ?>'/>
+                    <input class='btn_norm' type='button' value='<?php echo $GLOBALS['kga']['dict']['cancel']?>' onClick='floaterClose(); return false;' />
+                    <input class='btn_ok' type='submit' value='<?php echo $GLOBALS['kga']['dict']['submit'] ?>'/>
 
             </fieldset>
 	</form>

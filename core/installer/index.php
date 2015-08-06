@@ -25,6 +25,17 @@ if (file_exists(WEBROOT . 'includes/autoconf.php')) {
     exit;
 }
 
+
+if (file_exists(WEBROOT . '_demo')) {
+    define('DEMO_MODE', true);
+    include WEBROOT . '_demo';
+}
+else {define('DEMO_MODE', false);}
+//CN..blocked feature in demo mode.
+if (DEMO_MODE) {
+    header("Location: http://${_SERVER['SERVER_NAME']}/index.php");
+}
+
 $installsteps = 8;
 $kga = array();
 require('../includes/version.php');

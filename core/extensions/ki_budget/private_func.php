@@ -63,8 +63,8 @@ function budget_plot_data($projects, $projectsFilter, $activitiesFilter, &$expen
     $wages           = array();
     $expensesOccured = false;
 
-    $billableLangString     = $kga['lang']['billable'];
-    $timebillableLangString = $kga['lang']['time_billable'];
+    $billableLangString     = $kga['dict']['billable'];
+    $timebillableLangString = $kga['dict']['time_billable'];
 
     /*
      * sum up expenses

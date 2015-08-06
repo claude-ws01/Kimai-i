@@ -22,8 +22,8 @@
 global $kga, $database, $view;
 include('../../includes/basics.php');
 
-$dir_templates = "templates/";
-$datasrc       = "config.ini";
+$dir_templates = 'templates/';
+$datasrc       = 'config.ini';
 $settings      = parse_ini_file($datasrc);
 $dir_ext       = $settings['EXTENSION_DIR'];
 
@@ -40,28 +40,31 @@ $view->setBasePath(WEBROOT . 'extensions/' . $dir_ext . '/' . $dir_templates);
 
 // read kga ---------------------------------------
 $output = $kga;
-// clean out sone data that is way too private to be shown in the frontend ...
 
-if (!$kga['conf']['show_sensible_data']) {
-    $output['server_hostname'] = "xxx";
-    $output['server_database'] = "xxx";
-    $output['server_username'] = "xxx";
-    $output['server_password'] = "xxx";
-    $output['user']['secure']  = "xxx";
-    $output['user']['user_id'] = "xxx";
-    $output['user']['pw']      = "xxx";
+// clean out sone data that is way too private to be shown in the frontend ...
+if (DEMO_MODE
+    || !$kga['conf']['show_sensible_data']
+) {
+    $output['server_hostname'] = 'xxx';
+    $output['server_database'] = 'xxx';
+    $output['server_username'] = 'xxx';
+    $output['server_password'] = 'xxx';
+    $output['user']['secure']  = 'xxx';
+    $output['user']['user_id'] = 'xxx';
+    $output['user']['pw']      = 'xxx';
+    $output['password_salt']    = 'xxxxxxxxxxxxx';
+    $output['admin_mail']    = 'xxxxxxxxxxxxx';
 }
 
 $view->kga         = $kga;
 $view->kga_display = print_r($output, true);
 // /read kga -------------------------------------- 
 
-if ($kga['logfile_lines'] == "@") {
-    $view->limitText = "(unlimited lines)";
+$view->limitText = "(limited to {$kga['logfile_lines']}  lines)";
+if ($kga['logfile_lines'] === '@') {
+    $view->limitText = '(unlimited lines)';
 }
-else {
-    $view->limitText = "(limited to " . $kga['logfile_lines'] . " lines)";
-}
+
 $view->skinDir = Extensions::skinDir($settings);
 
 echo $view->render('index.php');

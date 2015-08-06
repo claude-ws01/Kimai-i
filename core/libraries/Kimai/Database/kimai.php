@@ -184,7 +184,7 @@ class Kimai_Database_Mysql extends MySQL
         }
 
 
-        $result_array = $this->rowArray(0, MYSQL_ASSOC);
+        $result_array = $this->rowArray(0, MYSQLI_ASSOC);
 
         $result_array['default_rate'] = $this->get_rate(null, null, $result_array['activity_id']);
         $result_array['my_rate']      = $this->get_rate($kga['user']['user_id'], null, $result_array['activity_id']);
@@ -210,7 +210,7 @@ class Kimai_Database_Mysql extends MySQL
         $groupIDs = array();
         $counter  = 0;
 
-        $rows = $this->recordsArray(MYSQL_ASSOC);
+        $rows = $this->recordsArray(MYSQLI_ASSOC);
 
         if ($this->rowCount()) {
             foreach ($rows as $row) {
@@ -242,7 +242,7 @@ class Kimai_Database_Mysql extends MySQL
         $groupIDs = array();
         $counter  = 0;
 
-        $rows = $this->recordsArray(MYSQL_ASSOC);
+        $rows = $this->recordsArray(MYSQLI_ASSOC);
 
         if ($this->rowCount()) {
             foreach ($rows as $row) {
@@ -274,7 +274,7 @@ class Kimai_Database_Mysql extends MySQL
         $groupIDs = array();
         $counter  = 0;
 
-        $rows = $this->recordsArray(MYSQL_ASSOC);
+        $rows = $this->recordsArray(MYSQLI_ASSOC);
 
         if ($this->rowCount()) {
             foreach ($rows as $row) {
@@ -308,7 +308,7 @@ class Kimai_Database_Mysql extends MySQL
             return false;
         }
 
-        return $this->recordsArray(MYSQL_ASSOC);
+        return $this->recordsArray(MYSQLI_ASSOC);
     }
 
     public function allFittingRates($userID, $projectID, $activityID)
@@ -335,7 +335,7 @@ class Kimai_Database_Mysql extends MySQL
             return false;
         }
 
-        return $this->recordsArray(MYSQL_ASSOC);
+        return $this->recordsArray(MYSQLI_ASSOC);
     }
 
     public function assignActivityToProjectsForGroup($activityID, $projectIDs, $group)
@@ -743,7 +743,7 @@ class Kimai_Database_Mysql extends MySQL
             $customerName = $this->sqlValue(substr($user_name, 9));
             $query        = "SELECT customer_id FROM ${p}customer WHERE name = $customerName AND NOT trash = '1';";
             $this->query($query);
-            $row = $this->rowArray(0, MYSQL_ASSOC);
+            $row = $this->rowArray(0, MYSQLI_ASSOC);
 
             $customer_id = $row['customer_id'];
             if ($customer_id < 1) {
@@ -766,7 +766,7 @@ class Kimai_Database_Mysql extends MySQL
             //      USER        //
             $query = "SELECT user_id FROM ${p}user WHERE name = '$user_name' AND active = '1' AND NOT trash = '1';";
             $this->query($query);
-            $row = $this->rowArray(0, MYSQL_ASSOC);
+            $row = $this->rowArray(0, MYSQLI_ASSOC);
 
             $user_id = $row['user_id'];
             $name   = $user_name;
@@ -799,9 +799,13 @@ class Kimai_Database_Mysql extends MySQL
 
 
         //   TRANSLATION LOAD   //
-        if ($kga['pref']['language'] != "") {
-            $translations->load($kga['pref']['language']);
-        }
+        //$language = get_cookie('ki_language', $kga['pref']['language']);
+
+        //if ($language !== '') {
+            //$translations->load($language);
+        //}
+        $translations->load();
+
 
         return $kga['any']['data'];
     }
@@ -898,6 +902,9 @@ class Kimai_Database_Mysql extends MySQL
         } while ($this->pref_exists($values['customer_id']));
         $this->pref_replace(array('is_customer' => '1'), '', $values['customer_id']);
 
+        if (DEMO_MODE) {
+            $data['password'] = password_encrypt('demo');
+        }
 
         $data = $this->clean_data($data);
 
@@ -970,7 +977,7 @@ class Kimai_Database_Mysql extends MySQL
         $columns[] = "timeframe_end";
 
         $this->selectRows(TBL_CUSTOMER, $filter, $columns);
-        $rows = $this->rowArray(0, MYSQL_ASSOC);
+        $rows = $this->rowArray(0, MYSQLI_ASSOC);
         foreach ($rows as $key => $value) {
             $kga['customer'][$key] = $value;
         }
@@ -994,6 +1001,10 @@ class Kimai_Database_Mysql extends MySQL
     public function customer_edit($customerID, $data)
     {
         global $kga;
+
+        if (DEMO_MODE) {
+            $data['password'] = password_encrypt('demo');
+        }
 
         $data = $this->clean_data($data);
 
@@ -1043,7 +1054,7 @@ class Kimai_Database_Mysql extends MySQL
             return false;
         }
         else {
-            return $this->rowArray(0, MYSQL_ASSOC);
+            return $this->rowArray(0, MYSQLI_ASSOC);
         }
     }
 
@@ -1169,7 +1180,7 @@ class Kimai_Database_Mysql extends MySQL
         $columns[] = 'name';
 
         $this->selectRows(TBL_USER, $filter, $columns);
-        $row = $this->rowArray(0, MYSQL_ASSOC);
+        $row = $this->rowArray(0, MYSQLI_ASSOC);
 
         return $row['name'];
     }
@@ -1207,7 +1218,7 @@ class Kimai_Database_Mysql extends MySQL
             $return[] = '0.5.1'; // [0]
         }
         else {
-            $row      = $this->rowArray(0, MYSQL_ASSOC);
+            $row      = $this->rowArray(0, MYSQLI_ASSOC);
             $return[] = $row['value']; // [0]
         }
 
@@ -1240,7 +1251,7 @@ class Kimai_Database_Mysql extends MySQL
         }
 
         if ($this->rowCount() > 0) {
-            $row      = $this->rowArray(0, MYSQL_ASSOC);
+            $row      = $this->rowArray(0, MYSQLI_ASSOC);
             $return[] = $row['value']; // [1]
         }
         else {
@@ -1421,7 +1432,7 @@ class Kimai_Database_Mysql extends MySQL
 
             return false;
         }
-        $data = $this->rowArray(0, MYSQL_ASSOC);
+        $data = $this->rowArray(0, MYSQLI_ASSOC);
         if (!isset($data['budget'])) $data['budget'] = 0;
         if (!isset($data['approved'])) $data['approved'] = 0;
 
@@ -1466,7 +1477,7 @@ class Kimai_Database_Mysql extends MySQL
             return false;
         }
 
-        $data = $this->rowArray(0, MYSQL_ASSOC);
+        $data = $this->rowArray(0, MYSQLI_ASSOC);
 
         return $data['rate'];
     }
@@ -1501,7 +1512,7 @@ class Kimai_Database_Mysql extends MySQL
             return false;
         }
 
-        $data = $this->rowArray(0, MYSQL_ASSOC);
+        $data = $this->rowArray(0, MYSQLI_ASSOC);
 
         return $data['rate'];
     }
@@ -1561,7 +1572,7 @@ class Kimai_Database_Mysql extends MySQL
         }
         else {
 
-            $row = $this->rowArray(0, MYSQL_ASSOC);
+            $row = $this->rowArray(0, MYSQLI_ASSOC);
 
             $start = (int)$row['start'];
 
@@ -1584,7 +1595,7 @@ class Kimai_Database_Mysql extends MySQL
         $query      = "SELECT * FROM ${p}user WHERE trash=0 AND `user_id` IN (SELECT DISTINCT `user_id` FROM `${p}timesheet` WHERE `project_id` IN (SELECT `project_id` FROM `${p}project` WHERE `customer_id` = $customerID)) ORDER BY name";
         $this->query($query);
 
-        return $this->recordsArray(MYSQL_ASSOC);
+        return $this->recordsArray(MYSQLI_ASSOC);
     }
 
     public function get_customers(array $groups = null)
@@ -1723,7 +1734,7 @@ class Kimai_Database_Mysql extends MySQL
             return false;
         }
 
-        $data = $this->rowArray(0, MYSQL_ASSOC);
+        $data = $this->rowArray(0, MYSQLI_ASSOC);
 
         return $data['rate'];
     }
@@ -1746,7 +1757,7 @@ class Kimai_Database_Mysql extends MySQL
         $groups = array();
         $i      = 0;
 
-        $rows = $this->recordsArray(MYSQL_ASSOC);
+        $rows = $this->recordsArray(MYSQLI_ASSOC);
 
         if (is_array($rows)) {
             foreach ($rows as $row) {
@@ -1783,7 +1794,7 @@ class Kimai_Database_Mysql extends MySQL
             return null;
         }
         else {
-            return $this->rowArray(0, MYSQL_ASSOC);
+            return $this->rowArray(0, MYSQLI_ASSOC);
         }
     }
 
@@ -1822,7 +1833,7 @@ class Kimai_Database_Mysql extends MySQL
             return false;
         }
 
-        $rows = $this->recordsArray(MYSQL_ASSOC);
+        $rows = $this->recordsArray(MYSQLI_ASSOC);
 
         if ($rows) {
             $arr = array();
@@ -1932,7 +1943,7 @@ class Kimai_Database_Mysql extends MySQL
             return false;
         }
 
-        $data = $this->rowArray(0, MYSQL_ASSOC);
+        $data = $this->rowArray(0, MYSQLI_ASSOC);
 
         return $data['rate'];
     }
@@ -1961,7 +1972,7 @@ class Kimai_Database_Mysql extends MySQL
             return false;
         }
 
-        $row = $this->rowArray(0, MYSQL_ASSOC);
+        $row = $this->rowArray(0, MYSQLI_ASSOC);
 
         return $row['secure'];
     }
@@ -1981,7 +1992,7 @@ class Kimai_Database_Mysql extends MySQL
         }
 
         $res  = array();
-        $rows = $this->recordsArray(MYSQL_ASSOC);
+        $rows = $this->recordsArray(MYSQLI_ASSOC);
         foreach ($rows as $row) {
             $res[] = $row['status'];
         }
@@ -2003,7 +2014,7 @@ class Kimai_Database_Mysql extends MySQL
         $i   = 0;
 
         $this->moveFirst();
-        $rows = $this->recordsArray(MYSQL_ASSOC);
+        $rows = $this->recordsArray(MYSQLI_ASSOC);
 
         if ($rows === false) {
             return array();
@@ -2050,7 +2061,7 @@ class Kimai_Database_Mysql extends MySQL
 
             return array();
         }
-        $rows = $this->recordsArray(MYSQL_ASSOC);
+        $rows = $this->recordsArray(MYSQLI_ASSOC);
         if (!$rows) return array();
 
         $arr             = array();
@@ -2125,7 +2136,7 @@ class Kimai_Database_Mysql extends MySQL
 
             return array();
         }
-        $rows = $this->recordsArray(MYSQL_ASSOC);
+        $rows = $this->recordsArray(MYSQLI_ASSOC);
         if (!$rows) return array();
 
         $arr             = array();
@@ -2199,7 +2210,7 @@ class Kimai_Database_Mysql extends MySQL
 
             return array();
         }
-        $rows = $this->recordsArray(MYSQL_ASSOC);
+        $rows = $this->recordsArray(MYSQLI_ASSOC);
         if (!$rows) return array();
 
         $arr             = array();
@@ -2276,7 +2287,7 @@ class Kimai_Database_Mysql extends MySQL
             return array();
         }
 
-        $rows = $this->recordsArray(MYSQL_ASSOC);
+        $rows = $this->recordsArray(MYSQLI_ASSOC);
         if (!$rows) return array();
 
         $arr             = array();
@@ -2522,7 +2533,7 @@ class Kimai_Database_Mysql extends MySQL
 
             //DEBUG// error_log('<<== QUERY ==>>'.__FUNCTION__.'====' . PHP_EOL .$query);
 
-            return $this->recordsArray(MYSQL_ASSOC);
+            return $this->recordsArray(MYSQLI_ASSOC);
         }
 
         $allowed_groups = array_filter($user['groups'], function ($groupID) use ($userID, $that) {
@@ -2557,7 +2568,7 @@ class Kimai_Database_Mysql extends MySQL
         }
         $this->query($query);
 
-        $this->rowArray(0, MYSQL_ASSOC);
+        $this->rowArray(0, MYSQLI_ASSOC);
 
         $i   = 0;
         $arr = array();
@@ -2600,7 +2611,7 @@ class Kimai_Database_Mysql extends MySQL
             return false;
         }
 
-        $result_array = $this->rowArray(0, MYSQL_NUM);
+        $result_array = $this->rowArray(0, MYSQLI_NUM);
 
         if ($result_array[0] == 0) {
             return mktime(0, 0, 0, date("n"), date("j"), date("Y"));
@@ -2630,7 +2641,7 @@ class Kimai_Database_Mysql extends MySQL
             return false;
         }
         else {
-            return $this->recordsArray(MYSQL_ASSOC);
+            return $this->recordsArray(MYSQLI_ASSOC);
         }
     }
 
@@ -2647,7 +2658,7 @@ class Kimai_Database_Mysql extends MySQL
             return false;
         }
         else {
-            return $this->rowArray(0, MYSQL_ASSOC);
+            return $this->rowArray(0, MYSQLI_ASSOC);
         }
     }
 
@@ -2762,10 +2773,10 @@ class Kimai_Database_Mysql extends MySQL
         if ($result == false) {
             $this->logLastError('global_roles');
 
-            return false;
+            return array();
         }
 
-        $rows = $this->recordsArray(MYSQL_ASSOC);
+        $rows = $this->recordsArray(MYSQLI_ASSOC);
 
         return $rows;
     }
@@ -2844,7 +2855,7 @@ class Kimai_Database_Mysql extends MySQL
             return false;
         }
         else {
-            return $this->rowArray(0, MYSQL_ASSOC);
+            return $this->rowArray(0, MYSQLI_ASSOC);
         }
     }
 
@@ -2952,7 +2963,7 @@ class Kimai_Database_Mysql extends MySQL
             return false;
         }
         else {
-            return $this->recordsArray(MYSQL_ASSOC);
+            return $this->recordsArray(MYSQLI_ASSOC);
         }
     }
 
@@ -2969,7 +2980,7 @@ class Kimai_Database_Mysql extends MySQL
             return false;
         }
         else {
-            return $this->rowArray(0, MYSQL_ASSOC);
+            return $this->rowArray(0, MYSQLI_ASSOC);
         }
     }
 
@@ -3068,10 +3079,10 @@ class Kimai_Database_Mysql extends MySQL
         if ($result == false) {
             $this->logLastError('membership_roles');
 
-            return false;
+            return array();
         }
 
-        $rows = $this->recordsArray(MYSQL_ASSOC);
+        $rows = $this->recordsArray(MYSQLI_ASSOC);
 
         return $rows;
     }
@@ -3405,7 +3416,7 @@ class Kimai_Database_Mysql extends MySQL
             return false;
         }
 
-        $rows = $this->recordsArray(MYSQL_ASSOC);
+        $rows = $this->recordsArray(MYSQLI_ASSOC);
 
         return $rows;
     }
@@ -3427,7 +3438,7 @@ class Kimai_Database_Mysql extends MySQL
             return false;
         }
 
-        $result_array                = $this->rowArray(0, MYSQL_ASSOC);
+        $result_array                = $this->rowArray(0, MYSQLI_ASSOC);
         $result_array['default_rate'] = $this->get_rate(null, $projectID, null);
         $result_array['my_rate']      = $this->get_rate($kga['user']['user_id'], $projectID, null);
         $result_array['fixed_rate']  = $this->get_fixed_rate($projectID, null);
@@ -3452,7 +3463,7 @@ class Kimai_Database_Mysql extends MySQL
         $groupIDs = array();
         $counter  = 0;
 
-        $rows = $this->recordsArray(MYSQL_ASSOC);
+        $rows = $this->recordsArray(MYSQLI_ASSOC);
 
         if ($this->rowCount()) {
             foreach ($rows as $row) {
@@ -3728,8 +3739,8 @@ class Kimai_Database_Mysql extends MySQL
         $this->moveFirst();
         while (!$this->endOfSeek()) {
             $row                                       = $this->row();
-            $status_name                               = isset($kga['lang']['status_name'][$row->status])
-                ? $kga['lang']['status_name'][$row->status]
+            $status_name                               = isset($kga['dict']['status_name'][$row->status])
+                ? $kga['dict']['status_name'][$row->status]
                 : $row->status;
             $kga['status'][$row->status_id] = $status_name;
         }
@@ -3774,7 +3785,7 @@ class Kimai_Database_Mysql extends MySQL
             return false;
         }
         else {
-            return $this->rowArray(0, MYSQL_ASSOC);
+            return $this->rowArray(0, MYSQLI_ASSOC);
         }
     }
 
@@ -4008,7 +4019,7 @@ class Kimai_Database_Mysql extends MySQL
             return false;
         }
         else {
-            return $this->rowArray(0, MYSQL_ASSOC);
+            return $this->rowArray(0, MYSQLI_ASSOC);
         }
     }
 
@@ -4094,7 +4105,7 @@ class Kimai_Database_Mysql extends MySQL
             return false;
         }
 
-        $row = $this->rowArray(0, MYSQL_ASSOC);
+        $row = $this->rowArray(0, MYSQLI_ASSOC);
 
         return $row['name'];
     }
@@ -4108,6 +4119,10 @@ class Kimai_Database_Mysql extends MySQL
             $data['user_id'] = random_number(9);
         } while ($this->pref_exists($data['user_id']));
         $this->pref_replace(array('is_customer' => '0'), '', $data['user_id']);
+
+        if (DEMO_MODE) {
+            $data['password'] = password_encrypt('demo');
+        }
 
         $data = $this->clean_data($data);
 
@@ -4144,7 +4159,7 @@ class Kimai_Database_Mysql extends MySQL
 
         $this->pref_defaults_to_user($data['user_id']);
 
-        return $data['user_id'];
+        return (string)$data['user_id'];
     }
 
     public function user_data_load($user_id)
@@ -4174,7 +4189,7 @@ class Kimai_Database_Mysql extends MySQL
         $columns[] = "user_id";
 
         $this->selectRows(TBL_USER, $filter, $columns);
-        $rows = $this->rowArray(0, MYSQL_ASSOC);
+        $rows = $this->rowArray(0, MYSQLI_ASSOC);
         foreach ($rows as $key => $value) {
             $kga['user'][$key] = $value;
         }
@@ -4263,6 +4278,10 @@ class Kimai_Database_Mysql extends MySQL
     public function user_edit($userID, $data)
     {
         global $kga;
+
+        if (DEMO_MODE) {
+            $data['password'] = password_encrypt('demo');
+        }
 
         $data    = $this->clean_data($data);
         $values  = array();
@@ -4360,7 +4379,7 @@ class Kimai_Database_Mysql extends MySQL
             return false;
         }
 
-        return $this->rowArray(0, MYSQL_ASSOC);
+        return $this->rowArray(0, MYSQLI_ASSOC);
     }
 
     public function user_get_group_ids($userId, $root_bypass = false)
@@ -4414,7 +4433,7 @@ class Kimai_Database_Mysql extends MySQL
             return false;
         }
 
-        $row = $this->rowArray(0, MYSQL_ASSOC);
+        $row = $this->rowArray(0, MYSQLI_ASSOC);
 
         return $row['membership_role_id'];
     }
@@ -4448,7 +4467,7 @@ class Kimai_Database_Mysql extends MySQL
             return false;
         }
         else {
-            $rowExits = (bool)$this->rowArray(0, MYSQL_ASSOC);
+            $rowExits = (bool)$this->rowArray(0, MYSQLI_ASSOC);
 
             return $rowExits;
         }
@@ -4476,7 +4495,7 @@ class Kimai_Database_Mysql extends MySQL
             return false;
         }
 
-        $row = $this->rowArray(0, MYSQL_ASSOC);
+        $row = $this->rowArray(0, MYSQLI_ASSOC);
 
         if ($row === false) {
             return false;

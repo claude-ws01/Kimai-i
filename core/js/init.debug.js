@@ -111,6 +111,9 @@ $(document).ready(function () {
     }
 
     n_hour();
+    if (demoMode === 1){
+        demoCountDown();
+    }
 
     if (currentRecording > -1) {
         show_stopwatch();

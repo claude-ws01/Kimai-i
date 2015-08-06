@@ -20,8 +20,8 @@
                     <a href="#"
                        onclick="lists_update_filter('user',<?php echo $user['user_id'] ?>); $(this).blur(); return false;"><img
                             src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/filter.png' width='13'
-                            height='13' alt='<?php echo $kga['lang']['filter'] ?>'
-                            title='<?php echo $kga['lang']['filter'] ?>' border='0'/>
+                            height='13' alt='<?php echo $kga['dict']['filter'] ?>'
+                            title='<?php echo $kga['dict']['filter'] ?>' border='0'/>
                     </a>
                 </td>
 

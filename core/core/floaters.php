@@ -62,8 +62,8 @@ switch ($axAction) {
      */
     case 'prefs':
 
-        $skins = array();
-        $langs = array();
+        //$skins = array();
+        //$langs = array();
 
         $allSkins = glob(__DIR__ . '/../skins/*', GLOB_ONLYDIR);
         foreach ($allSkins as $skin) {

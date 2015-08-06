@@ -47,8 +47,8 @@ switch ($_REQUEST['err']) {
 
   //TODO - can we make sure $kga exists?
   case 'db':
-      $headline = $GLOBALS['kga']['lang']['errors'][0]['hdl'];
-      $message  = $GLOBALS['kga']['lang']['errors'][0]['txt'];
+      $headline = $GLOBALS['kga']['dict']['errors'][0]['hdl'];
+      $message  = $GLOBALS['kga']['dict']['errors'][0]['txt'];
   break;
     
   default:

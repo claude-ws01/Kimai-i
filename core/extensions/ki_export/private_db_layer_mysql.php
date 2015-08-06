@@ -114,7 +114,7 @@ function export_get_disabled_headers($userID)
 
     if (!$database->selectRows(TBL_PREFERENCE, $filter)) return 0;
 
-    $result_array = $database->rowArray(0, MYSQL_ASSOC);
+    $result_array = $database->rowArray(0, MYSQLI_ASSOC);
     $code         = $result_array['value'];
 
     $i = 0;

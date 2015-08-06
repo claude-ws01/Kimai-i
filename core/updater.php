@@ -32,6 +32,16 @@ else {
     exit;
 }
 
+if (file_exists(WEBROOT . '_demo')) {
+    define('DEMO_MODE', true);
+    include WEBROOT . '_demo';
+}
+else {define('DEMO_MODE', false);}
+//CN..blocked feature in demo mode.
+if (DEMO_MODE) {
+    header("Location: http://${_SERVER['SERVER_NAME']}/index.php");
+}
+
 //=================== GLOBAL ======================//
 global $database, $kga, $translations;
 
@@ -63,7 +73,6 @@ config_init();
 
 // pre-check. redirect if no need to db-update
 checkDBversion();
-
 
 $translations = new Translations(false);
 
@@ -189,8 +198,8 @@ elseif (version_compare(PHP_VERSION, $min_php_version) < 0) { ?>
     </html>
 <?php }
 
-elseif (!isset($_REQUEST['a']) && $kga['conf']['show_update_warn'] == 1) {
-    $RUsure = $kga['lang']['updater'][0];
+elseif (!isset($_REQUEST['a']) && $kga['conf']['show_update_warn'] === '1') {
+    $RUsure = $kga['dict']['updater'][0];
 
     ?>
     <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -275,15 +284,15 @@ elseif ($revisionDB < 1219 && !isset($_REQUEST['timezone'])) { ?>
     <body>
     <div style="text-align:center">
         <FORM action="" method="post">
-            <h1> <?= $kga['lang']['timezone'] ?></h1>
-            <?= $kga['lang']['updater']['timezone'] ?>
+            <h1> <?= $kga['dict']['timezone'] ?></h1>
+            <?= $kga['dict']['updater']['timezone'] ?>
             <br/><br/>
             <select name="timezone">
                 <?php
                 $serverZone = @date_default_timezone_get();
 
                 foreach (timezoneList() as $name) {
-                    if ($name == $serverZone) {
+                    if ($name === $serverZone) {
                         echo "<option selected=\"selected\">$name</option>";
                     }
                     else {
@@ -309,7 +318,7 @@ else {?>
     <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-        <title>Kimai Update <?php echo $kga['core.version'] . "." . $kga['core.revision']; ?></title>
+        <title>Kimai Update <?php echo $kga['core.version'] . '.' . $kga['core.revision']; ?></title>
         <style type="text/css" media="screen">
             html {
                 font-family: sans-serif;
@@ -432,7 +441,7 @@ else {?>
         <script src="libraries/jQuery/jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
     </head>
     <body>
-    <h1>Kimai-i Auto Updater v<?php echo $kga['core.version'] . "." . $kga['core.revision']; ?></h1>
+    <h1>Kimai-i Auto Updater v<?php echo $kga['core.version'] . '.' . $kga['core.revision']; ?></h1>
 
     <div id="logo">&nbsp;</div>
     <div id="link">&nbsp;</div>
@@ -443,12 +452,12 @@ else {?>
     <table>
         <tr>
             <td colspan='2'>
-                <strong><?php echo $kga['lang']['updater'][10]; ?></strong>
+                <strong><?php echo $kga['dict']['updater'][10]; ?></strong>
             </td>
         </tr>
         <tr>
             <td>
-                <?php echo $kga['lang']['updater'][20]; ?>
+                <?php echo $kga['dict']['updater'][20]; ?>
             </td>
             <td class='green'>
                 &nbsp;&nbsp;
@@ -456,7 +465,7 @@ else {?>
         </tr>
         <tr>
             <td>
-                <?php echo $kga['lang']['updater'][30]; ?>
+                <?php echo $kga['dict']['updater'][30]; ?>
             </td>
             <td class='orange'>
                 &nbsp;&nbsp;
@@ -464,7 +473,7 @@ else {?>
         </tr>
         <tr>
             <td>
-                <?php echo $kga['lang']['updater'][40]; ?>
+                <?php echo $kga['dict']['updater'][40]; ?>
             </td>
             <td class='red'>
                 !
@@ -515,7 +524,7 @@ function exec_query($query, $errorProcessing = true, $displayQuery = null)
         $level = 'orange'; // something went wrong but it's not an error
     }
 
-    printLine($level, ($displayQuery == null ? $query : $displayQuery), $err);
+    printLine($level, ($displayQuery === null ? $query : $displayQuery), $err);
 
     if (!$success) {
         Logger::logfile("An error has occured in query: $query");
@@ -586,12 +595,12 @@ function quoteForSql($input)
 
         echo '</table>';
 
-        echo '<strong>' . $kga['lang']['updater'][50] . '</strong>';
-        echo '<table style="width:100%">';
+        echo '<strong>' . $kga['dict']['updater'][50] . '</strong>';
+        echo '<table style="width:100%;">';
         
 
         foreach ($result_backup as $row) {
-            if ((substr($row[0], 0, $prefix_length) == $p) && (substr($row[0], 0, 10) != 'kimai_bak_')) {
+            if ((substr($row[0], 0, $prefix_length) === $p) && (substr($row[0], 0, 10) !== 'kimai_bak_')) {
                 $backupTable = 'kimai_bak_' . $backup_stamp . '_' . $row[0];
                 $query       = "CREATE TABLE ${backupTable} LIKE " . $row[0];
                 exec_query($query);
@@ -600,7 +609,7 @@ function quoteForSql($input)
                 exec_query($query);
 
                 if ($errors) {
-                    die($kga['lang']['updater'][60]);
+                    die($kga['dict']['updater'][60]);
                 }
             }
         }
@@ -608,15 +617,15 @@ function quoteForSql($input)
         Logger::logfile('-- backup finished -----------------------------------');
 
         echo '</table><br /><br />';
-        echo '<strong>' . $kga['lang']['updater'][70] . '</strong></br>';
-        echo "<table style='width:100%'>";
+        echo '<strong>' . $kga['dict']['updater'][70] . '</strong></br>';
+        echo '<table style="width:100%;">';
     }
     //////// ---------------------------------------------------------------------------------------------------
     //////// ---------------------------------------------------------------------------------------------------
 
-    $versionDB_e = explode(".", $versionDB);
+    $versionDB_e = explode('.', $versionDB);
 
-    if (((int) $versionDB_e[1] == 7 && (int) $versionDB_e[2] < 12)) {
+    if (((int) $versionDB_e[1] === 7 && (int) $versionDB_e[2] < 12)) {
         Logger::logfile('-- update to 0.7.12');
         exec_query("ALTER TABLE `${p}evt` ADD `evt_visible` TINYINT NOT NULL DEFAULT '1'", 1);
         exec_query("ALTER TABLE `${p}knd` ADD `knd_visible` TINYINT NOT NULL DEFAULT '1'", 1);
@@ -691,7 +700,7 @@ function quoteForSql($input)
             $executed_queries++;
 
             $arr  = array();
-            $rows = $database->recordsArray(MYSQL_ASSOC);
+            $rows = $database->recordsArray(MYSQLI_ASSOC);
             foreach ($rows as $row) {
                 echo '<tr>';
                 $query   =
@@ -759,23 +768,23 @@ SQL;
             $executed_queries++;
 
             $arr  = array();
-            $rows = $database->recordsArray(MYSQL_ASSOC);
+            $rows = $database->recordsArray(MYSQLI_ASSOC);
             foreach ($rows as $row) {
-                echo "<tr>";
-                $query   = "INSERT INTO ${p}grp_knd (`grp_ID`, `knd_ID`) VALUES (" . $row['knd_grpID'] . ", " . $row[knd_ID] . ")";
+                echo '<tr>';
+                $query   = "INSERT INTO ${p}grp_knd (`grp_ID`, `knd_ID`) VALUES ({$row['knd_grpID']}, {$row['knd_ID']})";
                 $success = $database->query($query);
                 $executed_queries++;
-                echo "<td>" . $query . "<br/>";
-                echo "<span class='error_info'>" . $database->error() . "</span>";
-                echo "</td>";
+                echo '<td>' . $query . '<br/>';
+                echo '<span class="error_info">' . $database->error() . '</span>';
+                echo '</td>';
 
                 if ($success) {
-                    echo "<td class='green'>&nbsp;&nbsp;</td>";
+                    echo '<td class="green">&nbsp;&nbsp;</td>';
                 }
                 else {
-                    echo "<td class='red'>!</td>";
+                    echo '<td class="red">!</td>';
                 }
-                echo "</tr>";
+                echo '</tr>';
 
                 echo $database->error();
             }
@@ -784,7 +793,7 @@ SQL;
         //////// ---------------------------------------------------------------------------------------------------
 
         // put the existing group-project-relations into the new table
-        exec_query("CREATE TABLE `${p}grp_pct` (`uid` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `grp_ID` INT NOT NULL, `pct_ID` INT NOT NULL)");
+        exec_query("CREATE TABLE ${p}grp_pct (`uid` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `grp_ID` INT NOT NULL, `pct_ID` INT NOT NULL)");
 
         //////// ---------------------------------------------------------------------------------------------------
 
@@ -795,30 +804,30 @@ SQL;
             $executed_queries++;
 
             $arr  = array();
-            $rows = $database->recordsArray(MYSQL_ASSOC);
+            $rows = $database->recordsArray(MYSQLI_ASSOC);
             foreach ($rows as $row) {
-                echo "<tr>";
-                $query   = "INSERT INTO ${p}grp_pct (`grp_ID`, `pct_ID`) VALUES (" . $row['pct_grpID'] . ", " . $row[pct_ID] . ")";
+                echo '<tr>';
+                $query   = "INSERT INTO ${p}grp_pct (`grp_ID`, `pct_ID`) VALUES (" . $row['pct_grpID'] . ', ' . $row['pct_ID'] . ')';
                 $success = $database->query($query);
                 $executed_queries++;
-                echo "<td>" . $query . "<br/>";
-                echo "<span class='error_info'>" . $database->error() . "</span>";
-                echo "</td>";
+                echo '<td>' . $query . '<br/>';
+                echo '<span class="error_info">' . $database->error() . '</span>';
+                echo '</td>';
 
                 if ($success) {
-                    echo "<td class='green'>&nbsp;&nbsp;</td>";
+                    echo '<td class="green">&nbsp;&nbsp;</td>';
                 }
                 else {
-                    echo "<td class='red'>!</td>";
+                    echo '<td class="red">!</td>';
                 }
-                echo "</tr>";
+                echo '</tr>';
             }
         }
 
         //////// ---------------------------------------------------------------------------------------------------
 
         // put the existing group-event-relations into the new table
-        exec_query("CREATE TABLE `${p}grp_evt` (`uid` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `grp_ID` INT NOT NULL, `evt_ID` INT NOT NULL)");
+        exec_query("CREATE TABLE ${p}grp_evt (`uid` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `grp_ID` INT NOT NULL, `evt_ID` INT NOT NULL)");
 
         //////// ---------------------------------------------------------------------------------------------------
 
@@ -830,14 +839,14 @@ SQL;
             $executed_queries++;
 
             $arr  = array();
-            $rows = $database->recordsArray(MYSQL_ASSOC);
+            $rows = $database->recordsArray(MYSQLI_ASSOC);
             foreach ($rows as $row) {
-                echo "<tr>";
-                $query   = "INSERT INTO ${p}grp_evt (`grp_ID`, `evt_ID`) VALUES (" . $row['evt_grpID'] . ", " . $row[evt_ID] . ")";
+                echo '<tr>';
+                $query   = "INSERT INTO ${p}grp_evt (`grp_ID`, `evt_ID`) VALUES (" . $row['evt_grpID'] . ', ' . $row['evt_ID'] . ')';
                 $success = $database->query($query);
                 $executed_queries++;
-                echo "<td>" . $query;
-                echo "</td>";
+                echo '<td>' . $query;
+                echo '</td>';
 
                 if ($success) {
                     echo "<td class='green'>&nbsp;&nbsp;</td>";
@@ -845,7 +854,7 @@ SQL;
                 else {
                     echo "<td class='red'>!</td>";
                 }
-                echo "</tr>";
+                echo '</tr>';
             }
         }
 
@@ -861,7 +870,7 @@ SQL;
 
     if ($revisionDB < 733) {
 
-        Logger::logfile("-- update to 0.8.0a");
+        Logger::logfile('-- update to 0.8.0a');
 
         exec_query("ALTER TABLE `${p}evt` CHANGE `evt_visible` `evt_visible` TINYINT(1) NOT NULL DEFAULT '1';", 0);
         exec_query("ALTER TABLE `${p}knd` CHANGE `knd_visible` `knd_visible` TINYINT(1) NOT NULL DEFAULT '1';", 0);
@@ -881,23 +890,23 @@ SQL;
     }
 
     if ($revisionDB < 817) {
-        Logger::logfile("-- update to r817");
+        Logger::logfile('-- update to r817');
         exec_query("ALTER TABLE `${p}usr` ADD `showIDs` TINYINT(1) NOT NULL DEFAULT '0'", 1);
     }
 
     if ($revisionDB < 837) {
-        Logger::logfile("-- update to r837");
+        Logger::logfile('-- update to r837');
         exec_query("ALTER TABLE `${p}usr` ADD `usr_alias` VARCHAR(10)", 0);
         exec_query("ALTER TABLE `${p}zef` ADD `zef_location` varchar(50)", 1);
     }
 
     if ($revisionDB < 848) {
-        Logger::logfile("-- update to r848");
+        Logger::logfile('-- update to r848');
         exec_query("ALTER TABLE `${p}zef` ADD `zef_trackingnr` int(20)", 1);
     }
 
     if ($revisionDB < 898) {
-        Logger::logfile("-- update to r898");
+        Logger::logfile('-- update to r898');
         exec_query("CREATE TABLE `${p}rates` (
                   `user_id` int(10) DEFAULT NULL,
                   `project_id` int(10) DEFAULT NULL,
@@ -908,13 +917,13 @@ SQL;
     }
 
     if ($revisionDB < 922) {
-        Logger::logfile("-- update to r922");
+        Logger::logfile('-- update to r922');
         exec_query("ALTER TABLE `${p}knd` ADD `knd_password` VARCHAR(255);", 1);
         exec_query("ALTER TABLE `${p}knd` ADD `knd_secure` varchar(60) NOT NULL default '0';", 1);
     }
 
     if ($revisionDB < 935) {
-        Logger::logfile("-- update to r935");
+        Logger::logfile('-- update to r935');
         exec_query("CREATE TABLE `${p}exp` (
                   `exp_ID` int(10) NOT NULL AUTO_INCREMENT,
                   `exp_timestamp` int(10) NOT NULL DEFAULT '0',
@@ -930,7 +939,7 @@ SQL;
     }
 
     if ($revisionDB < 1067) {
-        Logger::logfile("-- update to r1067");
+        Logger::logfile('-- update to r1067');
 
         /*
          *  Write new config file with password salt
@@ -947,10 +956,10 @@ SQL;
             $kga['pref']['language'],
             'Europe/Berlin')
         ) {
-            echo '<tr><td>' . $kga['lang']['updater'][140] . '</td><td class="green">&nbsp;&nbsp;</td></tr>';
+            echo '<tr><td>' . $kga['dict']['updater'][140] . '</td><td class="green">&nbsp;&nbsp;</td></tr>';
         }
         else {
-            die($kga['lang']['updater'][130]);
+            die($kga['dict']['updater'][130]);
         }
 
 
@@ -979,12 +988,12 @@ SQL;
     }
 
     if ($revisionDB < 1068) {
-        Logger::logfile("-- update to r1068");
+        Logger::logfile('-- update to r1068');
         exec_query("ALTER TABLE `${p}usr` CHANGE `autoselection` `autoselection` TINYINT( 1 ) NOT NULL default '0';");
     }
 
     if ($revisionDB < 1077) {
-        Logger::logfile("-- update to r1076");
+        Logger::logfile('-- update to r1076');
         exec_query("ALTER TABLE `${p}usr` CHANGE `usr_mail` `usr_mail` varchar(160) DEFAULT ''");
         exec_query("ALTER TABLE `${p}usr` CHANGE `pw` `pw` varchar(254) NULL DEFAULT NULL");
         exec_query("ALTER TABLE `${p}usr` CHANGE `lang` `lang` varchar(6) DEFAULT ''");
@@ -992,27 +1001,27 @@ SQL;
     }
 
     if ($revisionDB < 1086) {
-        Logger::logfile("-- update to r1086");
+        Logger::logfile('-- update to r1086');
         exec_query("ALTER TABLE `${p}pct` ADD `pct_budget` DECIMAL(10,2) NOT NULL DEFAULT 0.00");
     }
 
     if ($revisionDB < 1088) {
-        Logger::logfile("-- update to r1088");
+        Logger::logfile('-- update to r1088');
         exec_query("ALTER TABLE `${p}usr` ADD `noFading` TINYINT(1) NOT NULL DEFAULT '0'");
     }
 
     if ($revisionDB < 1089) {
-        Logger::logfile("-- update to r1089");
+        Logger::logfile('-- update to r1089');
         exec_query("ALTER TABLE `${p}usr` ADD `export_disabled_columns` INT NOT NULL DEFAULT '0'");
     }
 
     if ($revisionDB < 1103) {
-        Logger::logfile("-- update to r1103");
+        Logger::logfile('-- update to r1103');
         exec_query("ALTER TABLE ${p}usr DROP `allvisible`");
     }
 
 if ($revisionDB < 1112) {
-    Logger::logfile("-- update to r1112");
+    Logger::logfile('-- update to r1112');
     exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('currency_name','Euro')");
     exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('currency_sign','€')");
     exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('show_sensible_data','1')");
@@ -1036,7 +1045,7 @@ if ($revisionDB < 1112) {
     }
 
     if ($revisionDB < 1126) {
-        Logger::logfile("-- update to r1126");
+        Logger::logfile('-- update to r1126');
         exec_query("ALTER TABLE `${p}grp_evt` ADD UNIQUE (`grp_ID` ,`evt_ID`);");
         exec_query("ALTER TABLE `${p}grp_knd` ADD UNIQUE (`grp_ID` ,`knd_ID`);");
         exec_query("ALTER TABLE `${p}grp_pct` ADD UNIQUE (`grp_ID` ,`pct_ID`);");
@@ -1044,28 +1053,28 @@ if ($revisionDB < 1112) {
     }
 
     if ($revisionDB < 1132) {
-        Logger::logfile("-- update to r1132");
+        Logger::logfile('-- update to r1132');
             exec_query("UPDATE ${p}usr, ${p}ldr SET usr_sts = 2 WHERE usr_sts = 1");
             exec_query("UPDATE ${p}usr, ${p}ldr SET usr_sts = 1 WHERE usr_sts = 2 AND grp_leader = usr_ID");
     }
 
     if ($revisionDB < 1139) {
-        Logger::logfile("-- update to r1139");
+        Logger::logfile('-- update to r1139');
         exec_query("ALTER TABLE `${p}usr` ADD `user_list_hidden` INT NOT NULL DEFAULT '0'");
     }
 
     if ($revisionDB < 1142) {
-        Logger::logfile("-- update to r1142");
+        Logger::logfile('-- update to r1142');
         exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('roundPrecision','0')");
     }
 
     if ($revisionDB < 1145) {
-        Logger::logfile("-- update to r1145");
+        Logger::logfile('-- update to r1145');
         exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('currency_first','0')");
     }
 
     if ($revisionDB < 1176) {
-        Logger::logfile("-- update to r1176");
+        Logger::logfile('-- update to r1176');
         exec_query("ALTER TABLE `${p}exp` ADD INDEX ( `exp_usrID` ) ");
         exec_query("ALTER TABLE `${p}exp` ADD INDEX ( `exp_pctID` ) ");
         exec_query("ALTER TABLE `${p}pct` ADD INDEX ( `pct_kndID` ) ");
@@ -1075,54 +1084,54 @@ if ($revisionDB < 1112) {
     }
 
     if ($revisionDB < 1183) {
-        Logger::logfile("-- update to r1183");
+        Logger::logfile('-- update to r1183');
         exec_query("ALTER TABLE `${p}zef` CHANGE `zef_trackingnr` `zef_trackingnr` varchar(30) DEFAULT ''");
     }
 
     if ($revisionDB < 1184) {
-        Logger::logfile("-- update to r1184");
+        Logger::logfile('-- update to r1184');
         exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('decimalSeparator',',')");
     }
 
     if ($revisionDB < 1185) {
-        Logger::logfile("-- update to r1185");
+        Logger::logfile('-- update to r1185');
         exec_query("CREATE TABLE ${p}pct_evt (`uid` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `pct_ID` INT NOT NULL, `evt_ID` INT NOT NULL, UNIQUE (`pct_ID` ,`evt_ID`)) ;");
     }
 
     if ($revisionDB < 1206) {
-        Logger::logfile("-- update to r1206");
+        Logger::logfile('-- update to r1206');
         exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('durationWithSeconds','0')");
     }
 
     if ($revisionDB < 1207) {
-        Logger::logfile("-- update to r1207");
+        Logger::logfile('-- update to r1207');
         exec_query("ALTER TABLE `${p}exp` ADD `exp_multiplier` INT NOT NULL DEFAULT '1'");
 
     }
 
     if ($revisionDB < 1213) {
-        Logger::logfile("-- update to r1213");
+        Logger::logfile('-- update to r1213');
         exec_query("ALTER TABLE ${p}knd DROP `knd_logo`");
         exec_query("ALTER TABLE ${p}pct DROP `pct_logo`");
         exec_query("ALTER TABLE ${p}evt DROP `evt_logo`");
     }
 
     if ($revisionDB < 1216) {
-        Logger::logfile("-- update to r1216");
+        Logger::logfile('-- update to r1216');
         exec_query("ALTER TABLE `${p}exp`
                   ADD `exp_refundable` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'expense refundable to employee (0 = no, 1 = yes)' AFTER `exp_comment_type`;");
     }
 
     if ($revisionDB < 1219) {
         $timezone = quoteForSql($_REQUEST['timezone']);
-        Logger::logfile("-- update to r1219");
+        Logger::logfile('-- update to r1219');
         exec_query("ALTER TABLE `${p}usr` ADD `timezone` VARCHAR( 40 ) NOT NULL DEFAULT ''");
         exec_query("UPDATE `${p}usr` SET `timezone` = $timezone");
         exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('defaultTimezone',$timezone)");
     }
 
     if ($revisionDB < 1225) {
-        Logger::logfile("-- update to r1225");
+        Logger::logfile('-- update to r1225');
         exec_query("CREATE TABLE `${p}preferences` (
                   `userID` int(10) NOT NULL,
                   `var` varchar(255) NOT NULL,
@@ -1148,52 +1157,52 @@ if ($revisionDB < 1112) {
     }
 
     if ($revisionDB < 1227) {
-        Logger::logfile("-- update to r1227");
+        Logger::logfile('-- update to r1227');
         exec_query("ALTER TABLE `${p}knd` ADD `knd_vat` VARCHAR( 255 ) NOT NULL");
         exec_query("ALTER TABLE `${p}knd` ADD `knd_contact` VARCHAR( 255 ) NOT NULL");
     }
 
     if ($revisionDB < 1229) {
-        Logger::logfile("-- update to r1229");
+        Logger::logfile('-- update to r1229');
         exec_query("ALTER TABLE `${p}usr` CHANGE `banTime` `banTime` int(10) NOT NULL DEFAULT 0");
     }
 
     if ($revisionDB < 1236) {
-        Logger::logfile("-- update to r1236");
+        Logger::logfile('-- update to r1236');
         exec_query("ALTER TABLE `${p}pct` ADD `pct_internal` TINYINT( 1 ) NOT NULL DEFAULT 0");
     }
 
     if ($revisionDB < 1240) {
-        Logger::logfile("-- update to r1240");
+        Logger::logfile('-- update to r1240');
         exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('exactSums','0')");
     }
 
     if ($revisionDB < 1256) {
-        Logger::logfile("-- update to r1256");
+        Logger::logfile('-- update to r1256');
         exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('defaultVat','0')");
     }
 
     if ($revisionDB < 1257) {
-        Logger::logfile("-- update to r1257");
+        Logger::logfile('-- update to r1257');
         exec_query("UPDATE ${p}preferences SET var = CONCAT('ui.',var) WHERE var
                     IN ('skin', 'rowlimit', 'lang', 'autoselection', 'quickdelete', 'flip_pct_display',
                     'pct_comment_flag', 'showIDs', 'noFading', 'user_list_hidden', 'hideClearedEntries')");
     }
 
     if ($revisionDB < 1284) {
-        Logger::logfile("-- update to r1284");
+        Logger::logfile('-- update to r1284');
         exec_query("ALTER TABLE `${p}exp` CHANGE `exp_multiplier` `exp_multiplier` decimal(10,2) NOT NULL DEFAULT '1.00'");
     }
 
     if ($revisionDB < 1291) {
-        Logger::logfile("-- update to r1291");
+        Logger::logfile('-- update to r1291');
         $salt  = $kga['password_salt'];
         $query = "UPDATE `${p}usr` SET pw=MD5(CONCAT('${salt}',pw,'${salt}')) WHERE pw REGEXP '^[0-9a-f]{32}$' = 0 AND pw != ''";
         exec_query($query, false, str_replace($salt, 'salt was stripped', $query));
     }
 
     if ($revisionDB < 1305) {
-        Logger::logfile("-- update to r1305");
+        Logger::logfile('-- update to r1305');
 
         // update knd_name
         $result = $database->queryAll("SELECT knd_ID,knd_name FROM ${p}knd");
@@ -1273,12 +1282,12 @@ if ($revisionDB < 1112) {
     }
 
     if ($revisionDB < 1326) {
-        Logger::logfile("-- update to r1326");
+        Logger::logfile('-- update to r1326');
         exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('editLimit','-')");
     }
 
     if ($revisionDB < 1327) {
-        Logger::logfile("-- update to r1327");
+        Logger::logfile('-- update to r1327');
         $result   = $database->queryAll("SELECT value FROM ${p}var WHERE var = 'defaultTimezone'");
         $timezone = quoteForSql($result[0][0]);
         exec_query("ALTER TABLE ${p}knd ADD COLUMN `knd_timezone` varchar(255) NOT NULL DEFAULT $timezone");
@@ -1286,12 +1295,12 @@ if ($revisionDB < 1112) {
     }
 
     if ($revisionDB < 1328) {
-        Logger::logfile("-- update to r1328");
+        Logger::logfile('-- update to r1328');
         exec_query("DELETE FROM ${p}var WHERE var='login' LIMIT 1;");
     }
 
     if ($revisionDB < 1331) {
-        Logger::logfile("-- update to r1331");
+        Logger::logfile('-- update to r1331');
         exec_query("ALTER TABLE ${p}evt ADD COLUMN `evt_assignable` TINYINT(1) NOT NULL DEFAULT '0';");
         $result = $database->queryAll("SELECT DISTINCT evt_ID FROM ${p}pct_evt");
         foreach ($result as $row) {
@@ -1300,7 +1309,7 @@ if ($revisionDB < 1112) {
     }
 
     if ($revisionDB < 1332) {
-        Logger::logfile("-- update to r1332");
+        Logger::logfile('-- update to r1332');
         $query =
             "CREATE TABLE `${p}fixed_rates` (
               `project_id` int(10) DEFAULT NULL,
@@ -1312,7 +1321,7 @@ if ($revisionDB < 1112) {
     }
 
     if ($revisionDB < 1333) {
-        Logger::logfile("-- update to r1333");
+        Logger::logfile('-- update to r1333');
         $query =
             "CREATE TABLE `${p}grp_usr` (
               `grp_ID` int(10) NOT NULL,
@@ -1330,7 +1339,7 @@ if ($revisionDB < 1112) {
     }
 
     if ($revisionDB < 1347) {
-        Logger::logfile("-- update to r1347");
+        Logger::logfile('-- update to r1347');
         
         exec_query("ALTER TABLE `${p}pct_evt` ADD `evt_budget` DECIMAL( 10, 2 ) NULL ,
                     ADD `evt_effort` DECIMAL( 10, 2 ) NULL ,
@@ -2109,19 +2118,19 @@ if ($revisionDB < 1384) {
 
     }
 
-    Logger::logfile("-- update finished --------------------------------");
+    Logger::logfile('-- update finished --------------------------------');
 
     if ($revisionDB == $kga['core.revision']) {
         echo "<script type=\"text/javascript\">window.location.href = \"index.php\";</script>";
     }
     else {
 
-        $login = $kga['lang']['login'];
-        $updater_90 = $kga['lang']['updater'][90];
+        $login = $kga['dict']['login'];
+        $updater_90 = $kga['dict']['updater'][90];
 
         if (!$errors) {
 
-            $updater_80 = $kga['lang']['updater'][80];
+            $updater_80 = $kga['dict']['updater'][80];
 
             echo <<<HTML
 <script type="text/javascript">
@@ -2135,7 +2144,7 @@ HTML;
         }
         else {
 
-            $updater_100 = $kga['lang']['updater'][100];
+            $updater_100 = $kga['dict']['updater'][100];
 
             echo <<<HTML
 <script type="text/javascript">
@@ -2155,14 +2164,14 @@ HTML;
         ?>
         <br/><br/>
         <script type="text/javascript">
-            $("#important_message").append("<?php echo $kga['lang']['updater'][120];?> <br/>");
+            $("#important_message").append("<?php echo $kga['dict']['updater'][120];?> <br/>");
             $("#important_message").show();
         </script>
-        <div class="important_block_head"> <?php echo $kga['lang']['updater'][110]; ?>:</div>
+        <div class="important_block_head"> <?php echo $kga['dict']['updater'][110]; ?>:</div>
         <table style="width:100%">
             <tr>
-                <td><i> <?php echo $kga['lang']['username']; ?> </i></td>
-                <td><i> <?php echo $kga['lang']['password']; ?> </i></td>
+                <td><i> <?php echo $kga['dict']['username']; ?> </i></td>
+                <td><i> <?php echo $kga['dict']['password']; ?> </i></td>
             </tr>
             <?php
             foreach ($new_passwords as $username => $password) {
@@ -2175,9 +2184,9 @@ HTML;
     ?>
 
 
-    <?php echo "$executed_queries " . $kga['lang']['updater'][90]; ?>
+    <?php echo "$executed_queries " . $kga['dict']['updater'][90]; ?>
 
-    <h1><a href='index.php'><?php echo $kga['lang']['login']; ?></a></h1>
+    <h1><a href='index.php'><?php echo $kga['dict']['login']; ?></a></h1>
 
     </body>
     </html>

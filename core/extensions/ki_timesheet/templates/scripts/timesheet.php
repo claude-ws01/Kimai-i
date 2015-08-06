@@ -74,8 +74,8 @@ if ($this->timeSheetEntries) {
                                     href="#" class="recordAgain">
                                     <img
                                     src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/button_recordthis.gif'
-                                    width='13' height='13' alt='<?php echo $kga['lang']['tip']['ts_recordAgain'] ?>'
-                                    title='<?php echo $kga['lang']['tip']['ts_recordAgain'] ?> (ID:<?php echo $row['time_entry_id'] ?>)'
+                                    width='13' height='13' alt='<?php echo $kga['dict']['tip']['ts_recordAgain'] ?>'
+                                    title='<?php echo $kga['dict']['tip']['ts_recordAgain'] ?> (ID:<?php echo $row['time_entry_id'] ?>)'
                                     border='0'/>
                                 </a>
                             </td>
@@ -86,8 +86,8 @@ if ($this->timeSheetEntries) {
                             <a href='#' class='stop'
                                onClick="ts_ext_stopRecord(<?php echo $row['time_entry_id'] ?>); return false;">
                                 <img src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/button_stopthis.gif'
-                                    width='13' height='13' alt='<?php echo $kga['lang']['tip']['ts_stop'] ?>'
-                                    title='<?php echo $kga['lang']['tip']['ts_stop'] ?> (ID:<?php echo $row['time_entry_id'] ?>)'
+                                    width='13' height='13' alt='<?php echo $kga['dict']['tip']['ts_stop'] ?>'
+                                    title='<?php echo $kga['dict']['tip']['ts_stop'] ?> (ID:<?php echo $row['time_entry_id'] ?>)'
                                     border='0'/>
                             </a>
                         </td>
@@ -98,10 +98,10 @@ if ($this->timeSheetEntries) {
                         <td style="padding:0;border:none;">
                             <a href='#'
                                  onClick="ts_ext_editRecord(<?php echo $row['time_entry_id'] ?>); $(this).blur(); return false;"
-                                 title='<?php echo $kga['lang']['tip']['g_edit'] ?>'>
+                                 title='<?php echo $kga['dict']['tip']['g_edit'] ?>'>
                                 <img src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/edit2.gif'
-                                    width='13' height='13' alt='<?php echo $kga['lang']['tip']['g_edit'] ?>'
-                                    title='<?php echo $kga['lang']['tip']['g_edit'] ?>' border='0'/>
+                                    width='13' height='13' alt='<?php echo $kga['dict']['tip']['g_edit'] ?>'
+                                    title='<?php echo $kga['dict']['tip']['g_edit'] ?>' border='0'/>
                             </a>
                         </td>
                     <?php } ?>
@@ -112,8 +112,8 @@ if ($this->timeSheetEntries) {
                             <a href='#' class='quickdelete'
                                  onClick="ts_ext_quickdelete(<?php echo $row['time_entry_id'] ?>); return false;">
                                 <img src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/button_trashcan.png'
-                                    width='13' height='13' alt='<?php echo $kga['lang']['tip']['g_delete'] ?>'
-                                    title='<?php echo $kga['lang']['tip']['g_delete'] ?>' border=0/>
+                                    width='13' height='13' alt='<?php echo $kga['dict']['tip']['g_delete'] ?>'
+                                    title='<?php echo $kga['dict']['tip']['g_delete'] ?>' border=0/>
                             </a>
                         </td>
                     <?php } ?>
@@ -169,7 +169,7 @@ if ($this->timeSheetEntries) {
                 <?php echo $this->escape($row['customer_name']) ?>
             </td>
             <td class="project <?php echo $tdClass; ?>">
-                <a href="#" class="preselect_lnk" title="<?php echo $kga['lang']['tip']['g_select_for_recording']; ?>"
+                <a href="#" class="preselect_lnk" title="<?php echo $kga['dict']['tip']['g_select_for_recording']; ?>"
                    onClick="buzzer_preselect_project(<?php echo $row['project_id'] ?>,'<?php echo $this->jsEscape($row['project_name']) ?>',<?php echo $this->jsEscape($row['customer_id']) ?>,'<?php echo $this->jsEscape($row['customer_name']) ?>');return false;">
                     <?php echo $this->escape($row['project_name']) ?>
                     <?php if ($kga['pref']['project_comment_flag'] == 1 && $row['project_comment']): ?>
@@ -179,7 +179,7 @@ if ($this->timeSheetEntries) {
             </td>
 
             <td class="activity <?php echo $tdClass; ?>">
-                <a href="#" class="preselect_lnk" title="<?php echo $kga['lang']['tip']['g_select_for_recording']; ?>"
+                <a href="#" class="preselect_lnk" title="<?php echo $kga['dict']['tip']['g_select_for_recording']; ?>"
                    onClick="buzzer_preselect_activity(<?php echo $row['activity_id'] ?>,'<?php echo $this->jsEscape($row['activity_name']) ?>',0,0);return false;">
                     <?php echo $this->escape($row['activity_name']) ?>
                 </a>

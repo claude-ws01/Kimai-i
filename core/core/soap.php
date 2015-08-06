@@ -36,11 +36,11 @@
  * - Ensure library/ is on include_path
  * - Register Autoloader
  */
-defined('WEBROOT') ||
-define('WEBROOT', $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR);
+defined('WEBROOT')
+|| define('WEBROOT', $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR);
 
-defined('APPLICATION_PATH') ||
-    define('APPLICATION_PATH', realpath(__DIR__ . '/../'));
+defined('APPLICATION_PATH')
+|| define('APPLICATION_PATH', $_SERVER['DOCUMENT_ROOT']);
 
 set_include_path(
     implode(
@@ -52,7 +52,7 @@ set_include_path(
 );
 
 //DEBUG// error_log('<<<========== SOAP ==========>>>');
-require_once WEBROOT. 'libraries/Zend/Loader/Autoloader.php';
+require_once WEBROOT . 'libraries/Zend/Loader/Autoloader.php';
 $autoloader = Zend_Loader_Autoloader::getInstance();
 
 /**

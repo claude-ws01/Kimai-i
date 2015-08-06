@@ -24,9 +24,9 @@
 <div id="floater_innerwrap">
 
     <div id="floater_handle">
-        <span id="floater_title"><?php echo $kga['lang']['export_extension']['exportCSV']?></span>
+        <span id="floater_title"><?php echo $kga['dict']['export_extension']['exportCSV']?></span>
         <div class="right">
-            <a href="#" class="close" onClick="floaterClose();"><?php echo $kga['lang']['close']?></a>
+            <a href="#" class="close" onClick="floaterClose();"><?php echo $kga['dict']['close']?></a>
         </div>  
     </div>
 
@@ -45,22 +45,22 @@
                 <ul>
                 
                    <li>
-                       <label for="column_delimiter"><?php echo $kga['lang']['export_extension']['column_delimiter']?>:</label>
+                       <label for="column_delimiter"><?php echo $kga['dict']['export_extension']['column_delimiter']?>:</label>
                        <input type="text" value="<?php echo $this->escape($this->prefs['column_delimiter'])?>" name="column_delimiter" id="column_delimiter" size="1"/>
                    </li>
                 
                    <li>
-                       <label for="quote_char"><?php echo $kga['lang']['export_extension']['quote_char']?>:</label>
+                       <label for="quote_char"><?php echo $kga['dict']['export_extension']['quote_char']?>:</label>
                        <input type="text" value="<?php echo $this->escape($this->prefs['quote_char'])?>" name="quote_char" id="quote_char" size="1">
                    </li>
                 
                    <li>
-                       <label for="reverse_order"><?php echo $kga['lang']['export_extension']['reverse_order']?>:</label>
+                       <label for="reverse_order"><?php echo $kga['dict']['export_extension']['reverse_order']?>:</label>
                        <input type="checkbox" value="true" name="reverse_order" id="reverse_order"/>
                    </li>
 
                    <li>
-	      				<?php echo $kga['lang']['export_extension']['dl_hint']?>
+	      				<?php echo $kga['dict']['export_extension']['dl_hint']?>
 					</li>
                  </ul>
                    
@@ -80,8 +80,8 @@
                 <input name="filter_type" id="filter_type" type="hidden" value=""/>
 
                 <div id="formbuttons">
-                    <input class='btn_norm' type='button' value='<?php echo $kga['lang']['cancel']?>' onClick='floaterClose(); return false;' />
-                    <input class='btn_ok' type='submit' value='<?php echo $kga['lang']['submit']?>' onClick="floaterClose();"/>
+                    <input class='btn_norm' type='button' value='<?php echo $kga['dict']['cancel']?>' onClick='floaterClose(); return false;' />
+                    <input class='btn_ok' type='submit' value='<?php echo $kga['dict']['submit']?>' onClick="floaterClose();"/>
                 </div>
 
 

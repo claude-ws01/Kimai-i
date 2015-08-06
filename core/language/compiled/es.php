@@ -127,6 +127,8 @@ return array(
     'deleteGlobalRole'               => 'delete global role', // REVIEW
     'deleteMembershipRole'           => 'delete membership role', // REVIEW
     'deleteUser'                     => 'Delete this user', // REVIEW
+    'demo_mode'                    => 'DEMO MODE',
+    'demo_login'                     => '*** DEMO MODE ***</br> username: \'admin\'</br> ANY passwords fixed to: \'demo\'',
     'description'                    => 'Designación',
     'display_currentDate_format'     => 'Formato de hora para el campo bajo la duración (<a href="http://php.net/manual/en/function.strftime.php" target="_blank">notación de strftime()</a>)',
     'display_date_format'            => 'Formato de hora para la duración (<a href="http://php.net/manual/en/function.strftime.php" target="_blank">notación de strftime()</a>)',
@@ -391,6 +393,8 @@ return array(
         9  => '¡Estas copias de seguridad en realidad son instantáneas! Lo que significa que aún "viven" en la misma base de datos como los datos reales de su trabajo en Kimai. Las copias de seguridad a través de esta utilidad no son la sustitución de las copias de seguridad reales en un medio físico de datos diferentes. Hay un montón de herramientas para copias de seguridad de bases de datos disponibles en la web. ;)',
         10 => 'Authentication required', // REVIEW
         11 => 'To prevent unauthorized persons from creating, deleting or restoring backups, you need to give the password salt stored in include/autoconf.php. It only consists of letters and numbers.', // REVIEW
+        12 => 'There was an error while doing the restore. Please see the log for more details.',
+        13 => 'Vuelta a la pagina de coneccion.',
     ),
 
     'cf'                             => array(

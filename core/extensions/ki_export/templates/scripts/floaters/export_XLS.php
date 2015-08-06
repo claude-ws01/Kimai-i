@@ -23,9 +23,9 @@
 <div id="floater_innerwrap">
 
     <div id="floater_handle">
-        <span id="floater_title"><?php echo $GLOBALS['kga']['lang']['export_extension']['exportXLS']?></span>
+        <span id="floater_title"><?php echo $GLOBALS['kga']['dict']['export_extension']['exportXLS']?></span>
         <div class="right">
-            <a href="#" class="close" onClick="floaterClose();"><?php echo $GLOBALS['kga']['lang']['close']?></a>
+            <a href="#" class="close" onClick="floaterClose();"><?php echo $GLOBALS['kga']['dict']['close']?></a>
         </div>  
     </div>
 
@@ -43,17 +43,17 @@
 				<ul>
                 
                    <li>
-                       <label for="decimal_separator"><?php echo $GLOBALS['kga']['lang']['decimal_separator']?>:</label>
+                       <label for="decimal_separator"><?php echo $GLOBALS['kga']['dict']['decimal_separator']?>:</label>
                        <input type="text" value="<?php echo $this->escape($GLOBALS['kga']['conf']['decimal_separator'])?>" name="decimal_separator" id="decimal-separator" size="1"/>
                    </li>
                 
                    <li>
-                       <label for="reverse_order"><?php echo $GLOBALS['kga']['lang']['export_extension']['reverse_order']?>:</label>
+                       <label for="reverse_order"><?php echo $GLOBALS['kga']['dict']['export_extension']['reverse_order']?>:</label>
                        <input type="checkbox" value="true" name="reverse_order" id="reverse_order" <?php if ($this->prefs['reverse_order']): ?> checked="checked" <?php endif; ?>/>
                    </li>
 
 			        <li>
-				 		<?php echo $GLOBALS['kga']['lang']['export_extension']['dl_hint']?>
+				 		<?php echo $GLOBALS['kga']['dict']['export_extension']['dl_hint']?>
 					</li>
 				</ul>
 
@@ -70,8 +70,8 @@
                 <input name="filter_type" id="filter_type" type="hidden" value=""/>
 
                 <div id="formbuttons">
-                    <input class='btn_norm' type='button' value='<?php echo $GLOBALS['kga']['lang']['cancel']?>' onClick='floaterClose(); return false;' />
-                    <input class='btn_ok' type='submit' value='<?php echo $GLOBALS['kga']['lang']['submit']?>' onClick="floaterClose();"/>
+                    <input class='btn_norm' type='button' value='<?php echo $GLOBALS['kga']['dict']['cancel']?>' onClick='floaterClose(); return false;' />
+                    <input class='btn_ok' type='submit' value='<?php echo $GLOBALS['kga']['dict']['submit']?>' onClick="floaterClose();"/>
                 </div>
 
             </fieldset>

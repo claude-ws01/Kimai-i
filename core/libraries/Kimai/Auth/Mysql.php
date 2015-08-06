@@ -58,21 +58,23 @@ class Kimai_Auth_Mysql extends Kimai_Auth_Abstract
         $id = $database->user_name2id($name);
 
         $user              = $database->user_get_data($id);
-        $passwordResetHash = str_shuffle(MD5(microtime()));
+        $passwordResetHash = str_shuffle(md5(microtime()));
 
         $database->user_edit($id, array('password_reset_hash' => $passwordResetHash));
 
-        $ssl = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off';
-        $url = ($ssl ? 'https://' : 'http://') . $_SERVER['SERVER_NAME'] . dirname($_SERVER['SCRIPT_NAME']) . '/forgotPassword.php?name=' . urlencode($name) . '&key=' . $passwordResetHash;
+        $ssl = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on';
+        $url = ($ssl ? 'https://' : 'http://') . $_SERVER['SERVER_NAME']
+            . dirname($_SERVER['SCRIPT_NAME']) . '/forgotPassword.php?name='
+            . urlencode($name) . '&key=' . $passwordResetHash;
 
-        $message = $kga['lang']['passwordReset']['mailMessage'];
+        $message = $kga['dict']['passwordReset']['mailMessage'];
         $message = str_replace('%{URL}', $url, $message);
         error_log($user['mail']);
         mail($user['mail'],
-             $kga['lang']['passwordReset']['mailSubject'],
+             $kga['dict']['passwordReset']['mailSubject'],
              $message);
 
-        return $kga['lang']['passwordReset']['mailConfirmation'];
+        return $kga['dict']['passwordReset']['mailConfirmation'];
     }
 
     public function resetPassword($username, $password, $key)
@@ -81,9 +83,9 @@ class Kimai_Auth_Mysql extends Kimai_Auth_Abstract
 
         $id   = $database->user_name2id($username);
         $user = $database->user_get_data($id);
-        if ($key != $user['password_reset_hash']) {
+        if ($key !== $user['password_reset_hash']) {
             return array(
-                "message" => $kga['lang']['passwordReset']['invalidKey'],
+                'message' => $kga['dict']['passwordReset']['invalidKey'],
             );
         }
 
@@ -93,8 +95,8 @@ class Kimai_Auth_Mysql extends Kimai_Auth_Abstract
         $database->user_edit($id, $data);
 
         return array(
-            "message"       => $kga['lang']['passwordReset']['success'],
-            "showLoginLink" => true,
+            'message'       => $kga['dict']['passwordReset']['success'],
+            'showLoginLink' => true,
         );
     }
 

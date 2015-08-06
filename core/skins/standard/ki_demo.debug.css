@@ -1,0 +1,46 @@
+/*! ki_demo */
+#demo_head {
+    border: 1px solid black;
+    border-bottom: none;
+    background-image: url('/skins/standard/grfx/g3_table_header.png');
+    position: absolute;
+    height: 25px;
+    text-align: left;
+    color: #fff;
+    left: 10px;
+    font-size: 11px;
+    top: 125px;
+    overflow: hidden;
+}
+
+#demo_main {
+    background: white;
+    border: 1px solid #000;
+    border-top: none;
+    position: absolute;
+    overflow: hidden;
+    margin: 0;
+    left: 10px;
+    top: 150px;
+    z-index: 2;
+}
+
+.ext.ki_demo {
+    padding: 5px;
+    margin: 25px 10px 10px;
+    color: black;
+}
+
+h1 {
+    color: #f00;
+}
+
+#testdiv {
+    padding: 5px;
+    color: gray;
+    background: yellow;
+}
+
+a {
+    cursor: pointer;
+}

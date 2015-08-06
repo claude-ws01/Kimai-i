@@ -14,7 +14,7 @@
                selected_project+'|'+selected_activity,0,650);
                $(this).blur();
                return false;"
-               title="<?php echo $GLOBALS['kga']['lang']['tip']['ts_add'] ?>"><?php echo $GLOBALS['kga']['lang']['add'] ?></a>
+               title="<?php echo $GLOBALS['kga']['dict']['tip']['ts_add'] ?>"><?php echo $GLOBALS['kga']['dict']['add'] ?></a>
         <?php endif; ?>
     </div>
     <table id="ts_h_tbl">
@@ -34,20 +34,20 @@
         <tbody>
         <tr>
             <?php if (is_user()) echo '<td class="option">&nbsp;</td>'; ?>
-            <td class="date"><?php echo $GLOBALS['kga']['lang']['datum'] ?></td>
-            <td class="from"><?php echo $GLOBALS['kga']['lang']['in'] ?></td>
-            <td class="to"><?php echo $GLOBALS['kga']['lang']['out'] ?></td>
-            <td class="time"><?php echo $GLOBALS['kga']['lang']['time'] ?></td>
+            <td class="date"><?php echo $GLOBALS['kga']['dict']['datum'] ?></td>
+            <td class="from"><?php echo $GLOBALS['kga']['dict']['in'] ?></td>
+            <td class="to"><?php echo $GLOBALS['kga']['dict']['out'] ?></td>
+            <td class="time"><?php echo $GLOBALS['kga']['dict']['time'] ?></td>
             <?php if ($this->showRates): ?>
-                <td class="wage"><?php echo $GLOBALS['kga']['lang']['ts_wage'] ?></td>
+                <td class="wage"><?php echo $GLOBALS['kga']['dict']['ts_wage'] ?></td>
             <?php endif; ?>
-            <td class="customer"><?php echo $GLOBALS['kga']['lang']['customer'] ?></td>
-            <td class="project"><?php echo $GLOBALS['kga']['lang']['project'] ?></td>
-            <td class="activity"><?php echo $GLOBALS['kga']['lang']['activity'] ?></td>
+            <td class="customer"><?php echo $GLOBALS['kga']['dict']['customer'] ?></td>
+            <td class="project"><?php echo $GLOBALS['kga']['dict']['project'] ?></td>
+            <td class="activity"><?php echo $GLOBALS['kga']['dict']['activity'] ?></td>
             <?php if ($this->show_ref_code) { ?>
-                <td class="ref_code"><?php echo $GLOBALS['kga']['lang']['ts_ref_code'] ?></td>
+                <td class="ref_code"><?php echo $GLOBALS['kga']['dict']['ts_ref_code'] ?></td>
             <?php } ?>
-            <td class="username"><?php echo $GLOBALS['kga']['lang']['ts_user'] ?></td>
+            <td class="username"><?php echo $GLOBALS['kga']['dict']['ts_user'] ?></td>
         </tr>
         </tbody>
     </table>

@@ -12,7 +12,7 @@
                onClick="floaterShow('../extensions/ki_expense/floaters.php','add_edit_record',0,0,600);
                 $(this).blur();
                 return false;">
-                <?php echo $kga['lang']['add'] ?></a>
+                <?php echo $kga['dict']['add'] ?></a>
         <?php endif; ?>
     </div>
     <table id="xpe_h_tbl">
@@ -30,14 +30,14 @@
         <tbody>
         <tr>
             <td class="option">&nbsp;</td>
-            <td class="date"><?php echo $kga['lang']['datum'] ?></td>
-            <td class="time"><?php echo $kga['lang']['timelabel'] ?></td>
-            <td class="value"><?php echo $kga['lang']['xpe_expense'] ?></td>
-            <td class="refundable"><?php echo $kga['lang']['xpe_refundable'] ?></td>
-            <td class="customer"><?php echo $kga['lang']['customer'] ?></td>
-            <td class="project"><?php echo $kga['lang']['project'] ?></td>
-            <td class="description"><?php echo $kga['lang']['description'] ?></td>
-            <td class="username"><?php echo $kga['lang']['xpe_username'] ?></td>
+            <td class="date"><?php echo $kga['dict']['datum'] ?></td>
+            <td class="time"><?php echo $kga['dict']['timelabel'] ?></td>
+            <td class="value"><?php echo $kga['dict']['xpe_expense'] ?></td>
+            <td class="refundable"><?php echo $kga['dict']['xpe_refundable'] ?></td>
+            <td class="customer"><?php echo $kga['dict']['customer'] ?></td>
+            <td class="project"><?php echo $kga['dict']['project'] ?></td>
+            <td class="description"><?php echo $kga['dict']['description'] ?></td>
+            <td class="username"><?php echo $kga['dict']['xpe_username'] ?></td>
         </tr>
         </tbody>
     </table>

@@ -59,16 +59,14 @@ checkUser();
 
 $view->kga = $kga;
 
-$commentTypes = array($kga['lang']['ctype0'], $kga['lang']['ctype1'], $kga['lang']['ctype2']);
+$commentTypes = array($kga['dict']['ctype0'], $kga['dict']['ctype1'], $kga['dict']['ctype2']);
 
 // ==================
 // = security check =
 // ==================
+$axAction = '';
 if (isset($_REQUEST['axAction']) && !is_array($_REQUEST['axAction']) && $_REQUEST['axAction'] != '') {
     $axAction = strip_tags($_REQUEST['axAction']);
-}
-else {
-    $axAction = '';
 }
 
 $axValue = isset($_REQUEST['axValue']) ? strip_tags($_REQUEST['axValue']) : '';

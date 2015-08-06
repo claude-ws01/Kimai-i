@@ -26,30 +26,60 @@
 
 define('WEBROOT', $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR);
 
+
+
 if (file_exists(WEBROOT . 'includes/autoconf.php')) {
     require WEBROOT . 'includes/autoconf.php';
 }
-else {
+else { // no autoconf... goto installer //
     header('location:installer/index.php');
     exit;
 }
 
-if (file_exists(WEBROOT . 'dev')) {
-    define('IN_DEV', 1);
-}
-else {
-    define('IN_DEV', 0);
-}
 
-if (file_exists(WEBROOT . 'debug')) {
-    define('DEBUG_JS', '.debug');
+//CN..deactivate some features in demo mode.
+if (file_exists(WEBROOT . '_demo')) {
+    define('DEMO_MODE', true);
+    include WEBROOT . '_demo';
 }
-else {
-    define('DEBUG_JS', '.min');
-}
+else {define('DEMO_MODE', false);}
 
-//DEBUG// error_log('<<================================== kimai testing error log ==================================>');
+
+
+//CN..deactivates some features in development. Follow the breadcrumbs.
+if (file_exists(WEBROOT . '_dev')) {define('IN_DEV', true);}
+else {define('IN_DEV', false);}
+
+
+//CN..use '.debug.' files instead of '.min.' files
+if (file_exists(WEBROOT . '_debug')) {define('DEBUG_JS', '.debug');}
+else {define('DEBUG_JS', '.min');}
+
+
+
+/*
+ *
+ * */
 global $database, $kga, $translations, $view;
+
+require WEBROOT . 'includes/func.php';
+
+
+
+
+//  initialize $kga (conf & pref) //
+config_init();
+// more config
+$kga['error_log_mail_from'] = '';
+$kga['error_log_mail_to'] = '';
+$kga['force_ssl'] = false;
+// local private config that may replace some $kga values
+if(file_exists('_localconf.php')) {include '_localconf.php';}
+
+
+
+
+
 
 require WEBROOT . 'includes/vars.php';
 require WEBROOT . 'libraries/Kimai/Database/kimai.php';
@@ -58,7 +88,6 @@ require WEBROOT . 'includes/classes/logger.class.php';
 require WEBROOT . 'includes/classes/translations.class.php';
 require WEBROOT . 'includes/classes/rounding.class.php';
 require WEBROOT . 'includes/classes/extensions.class.php';
-require WEBROOT . 'includes/func.php';
 
 $database = new Kimai_Database_Mysql(
     $kga['server_hostname'],
@@ -66,6 +95,8 @@ $database = new Kimai_Database_Mysql(
     $kga['server_username'],
     $kga['server_password'],
     $kga['utf8']);
+
+
 
 
 // PHP & MYSQL WARNINGS //
@@ -82,8 +113,6 @@ if (!is_object($database) || !$database->isConnected()) {
 }
 
 
-//  initialize $kga (conf & pref) //
-config_init();
 
 //  DB need an update?   //
 $tranlastion_load_from_db = false;
@@ -93,6 +122,7 @@ if ($_SERVER['DOCUMENT_URI'] !== '/db_restore.php'
     checkDBversion();
     $tranlastion_load_from_db = true;
 }
+
 
 
 //################################################//
@@ -106,8 +136,8 @@ if ($_SERVER['DOCUMENT_URI'] !== '/installer/install.php') {
 }
 
 
-defined('APPLICATION_PATH') ||
-define('APPLICATION_PATH', realpath(__DIR__ . '/../'));
+defined('APPLICATION_PATH')
+|| define('APPLICATION_PATH', $_SERVER['DOCUMENT_ROOT']);
 set_include_path(
     implode(
         PATH_SEPARATOR,
@@ -126,5 +156,5 @@ Kimai_Registry::setDatabase($database);
 
 
 // TRANSLATION //
-$translations = new Translations($tranlastion_load_from_db, $kga['pref']['language']);
+$translations = new Translations($tranlastion_load_from_db);
 

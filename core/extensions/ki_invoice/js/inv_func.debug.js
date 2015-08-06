@@ -28,20 +28,9 @@ function inv_ext_onload() {
 
 function inv_ext_resize() {
 
-    var pagew = pageWidth() - 15;
+    var pagew = pageWidth() - 24;
 
-    $("#inv_ext_header").css({
-        "width": pagew - 27,
-        "top": headerHeight(),
-        "left": 10
-    });
-
-    $("#inv_ext_wrap").css({
-        "top": headerHeight() + 30,
-        "left": 10,
-        "width": pagew - 7
-    });
-
+    $("#inv_head,#inv_main").css("width", pagew);
     $("#invoice_extension").css("height", pageHeight() - headerHeight() - 64);
 }
 
@@ -53,7 +42,8 @@ function inv_ext_timeframe_changed() {
 
     $('#ajax_wait').show();
     $.post(inv_ext_path + "processor.php", {
-            axAction: "reload_timespan"},
+            axAction: "reload_timespan"
+        },
 
         function (data) {
             $('#ajax_wait').hide();

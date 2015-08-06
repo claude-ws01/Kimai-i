@@ -63,7 +63,7 @@ foreach (array(
              'ki_export',
              'ki_invoice',
              'ki_timesheet',
-             'demo_ext') as $extension) {
+             'ki_demo') as $extension) {
     $globalPermissions[] = $extension . '__access';
 }
 

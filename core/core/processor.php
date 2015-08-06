@@ -278,15 +278,15 @@ switch ($axAction) {
                 $errorMessages = array();
 
                 if ($database->user_name2id($data['name']) !== false) {
-                    $errorMessages['name'] = $kga['lang']['errorMessages']['userWithSameName'];
+                    $errorMessages['name'] = $kga['dict']['errorMessages']['userWithSameName'];
                 }
 
                 if (count($_REQUEST['customer_groups']) == 0) {
-                    $errorMessages['customer_groups'] = $kga['lang']['atLeastOneGroup'];
+                    $errorMessages['customer_groups'] = $kga['dict']['atLeastOneGroup'];
                 }
 
                 if (!checkGroupedObjectPermission('customer', $id ? 'edit' : 'add', $oldGroups, $_REQUEST['customer_groups'])) {
-                    $errorMessages[''] = $kga['lang']['errorMessages']['permissionDenied'];
+                    $errorMessages[''] = $kga['dict']['errorMessages']['permissionDenied'];
                 }
 
 
@@ -337,28 +337,28 @@ switch ($axAction) {
                 $errorMessages = array();
 
                 if (count($_REQUEST['projectGroups']) == 0) {
-                    $errorMessages['projectGroups'] = $kga['lang']['atLeastOneGroup'];
+                    $errorMessages['projectGroups'] = $kga['dict']['atLeastOneGroup'];
                 }
 
                 if (!checkGroupedObjectPermission('project', $id ? 'edit' : 'add', $oldGroups, $_REQUEST['projectGroups'])) {
-                    $errorMessages[''] = $kga['lang']['errorMessages']['permissionDenied'];
+                    $errorMessages[''] = $kga['dict']['errorMessages']['permissionDenied'];
                 }
 
                 if (empty($errorMessages)) {
                     if (!$database->transactionBegin()) {
-                        $errorMessages[''] = $kga['lang']['errorMessages']['internalError'];
+                        $errorMessages[''] = $kga['dict']['errorMessages']['internalError'];
                     }
 
                     // add or update the project
                     if (empty($errorMessages)) {
                         if (!$id) {
                             if (!$id = $database->project_create($data)) {
-                                $errorMessages[''] = $kga['lang']['errorMessages']['internalError'];
+                                $errorMessages[''] = $kga['dict']['errorMessages']['internalError'];
                             }
                         }
                         else {
                             if (!$database->project_edit($id, $data)) {
-                                $errorMessages[''] = $kga['lang']['errorMessages']['internalError'];
+                                $errorMessages[''] = $kga['dict']['errorMessages']['internalError'];
                             }
                         }
                     }
@@ -366,7 +366,7 @@ switch ($axAction) {
 
                     if (empty($errorMessages) && isset($_REQUEST['projectGroups'])) {
                         if (!$database->assign_projectToGroups($id, $_REQUEST['projectGroups'])) {
-                            $errorMessages[''] = $kga['lang']['errorMessages']['internalError'];
+                            $errorMessages[''] = $kga['dict']['errorMessages']['internalError'];
                         }
                     }
 
@@ -374,7 +374,7 @@ switch ($axAction) {
                         if (!$database->assignProjectToActivitiesForGroup(
                             $id, array_values($_REQUEST['assignedActivities']), any_get_group_ids())
                         ) {
-                            $errorMessages[''] = $kga['lang']['errorMessages']['internalError'];
+                            $errorMessages[''] = $kga['dict']['errorMessages']['internalError'];
                         }
 
                         if (empty($errorMessages)) {
@@ -397,7 +397,7 @@ switch ($axAction) {
                                 }
 
                                 if (!$database->project_activity_edit($id, $activityID, $data)) {
-                                    $errorMessages[''] = $kga['lang']['errorMessages']['internalError'];
+                                    $errorMessages[''] = $kga['dict']['errorMessages']['internalError'];
                                     break;
                                 }
                             }
@@ -405,7 +405,7 @@ switch ($axAction) {
                     }
 
                     if (empty($errorMessages) && !$database->transactionEnd()) {
-                        $errorMessages[''] = $kga['lang']['errorMessages']['internalError'];
+                        $errorMessages[''] = $kga['dict']['errorMessages']['internalError'];
                     }
 
                     if (!empty($errorMessages)) {
@@ -438,11 +438,11 @@ switch ($axAction) {
                 $errorMessages = array();
 
                 if (count($_REQUEST['activityGroups']) == 0) {
-                    $errorMessages['activityGroups'] = $kga['lang']['atLeastOneGroup'];
+                    $errorMessages['activityGroups'] = $kga['dict']['atLeastOneGroup'];
                 }
 
                 if (!checkGroupedObjectPermission('activity', $id ? 'edit' : 'add', $oldGroups, $_REQUEST['activityGroups'])) {
-                    $errorMessages[''] = $kga['lang']['errorMessages']['permissionDenied'];
+                    $errorMessages[''] = $kga['dict']['errorMessages']['permissionDenied'];
                 }
 
                 if (count($errorMessages) == 0) {

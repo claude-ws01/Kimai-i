@@ -31,7 +31,7 @@ function expense_delete($id)
 {
     global $database;
 
-    $filter["expense_id"] = $database->sqlValue($id, MySQL::SQLVALUE_NUMBER);
+    $filter['expense_id'] = $database->sqlValue($id, MySQL::SQLVALUE_NUMBER);
     $query                = MySQL::buildSqlDelete(TBL_EXPENSE, $filter);
 
     return $database->query($query);
@@ -119,15 +119,15 @@ function expenses_widthhereClausesFromFilters($users, $customers, $projects)
     $whereClauses = array();
 
     if (count($users) > 0) {
-        $whereClauses[] = "user_id in (" . implode(',', $users) . ")";
+        $whereClauses[] = 'user_id in (' . implode(',', $users) . ')';
     }
 
     if (count($customers) > 0) {
-        $whereClauses[] = "customer_id in (" . implode(',', $customers) . ")";
+        $whereClauses[] = 'customer_id in (' . implode(',', $customers) . ')';
     }
 
     if (count($projects) > 0) {
-        $whereClauses[] = "project_id in (" . implode(',', $projects) . ")";
+        $whereClauses[] = 'project_id in (' . implode(',', $projects) . ')';
     }
 
     return $whereClauses;
@@ -162,7 +162,7 @@ function get_expenses($start, $end, $users = null, $customers = null, $projects 
     $whereClauses = expenses_widthhereClausesFromFilters($users, $customers, $projects);
 
     if (array_key_exists('customer', $kga)) {
-        $whereClauses[] = "project.internal = 0";
+        $whereClauses[] = 'project.internal = 0';
     }
 
     if ($start) {
@@ -177,26 +177,25 @@ function get_expenses($start, $end, $users = null, $customers = null, $projects 
 
     switch ($filter_refundable) {
         case 0:
-            $whereClauses[] = "refundable > 0";
+            $whereClauses[] = 'refundable > 0';
             break;
         case 1:
-            $whereClauses[] = "refundable <= 0";
+            $whereClauses[] = 'refundable <= 0';
             break;
         case -1:
         default:
             // return all expenses - refundable and non refundable
     }
     if ($limit) {
+        $limit = 'LIMIT 100';
         if (isset($kga['pref']['rowlimit'])) {
-            $limit = "LIMIT " . $kga['pref']['rowlimit'];
-        }
-        else {
-            $limit = "LIMIT 100";
+            $limit = 'LIMIT ' . $kga['pref']['rowlimit'];
         }
     }
     else {
-        $limit = "";
+        $limit = '';
     }
+
     $query = "SELECT expense.*,
                     customer.name AS customer_name,
                     customer.customer_id,
@@ -208,8 +207,8 @@ function get_expenses($start, $end, $users = null, $customers = null, $projects 
              LEFT Join ${p}project AS project USING(project_id)
              LEFT Join ${p}customer AS customer USING(customer_id)
              LEFT Join `${p}user` AS user USING(user_id) "
-        . (count($whereClauses) > 0 ? " WHERE " : " ") . implode(" AND ", $whereClauses) .
-        ' ORDER BY timestamp ' . ($reverse_order ? 'ASC ' : 'DESC ') . $limit . ";";
+        . (count($whereClauses) > 0 ? ' WHERE ' : ' ') . implode(' AND ', $whereClauses) .
+        ' ORDER BY timestamp ' . ($reverse_order ? 'ASC ' : 'DESC ') . $limit . ';';
 
     $database->query($query);
 
@@ -266,7 +265,7 @@ function get_expense($id)
 
     $database->query($query);
 
-    return $database->rowArray(0, MYSQL_ASSOC);
+    return $database->rowArray(0, MYSQLI_ASSOC);
 }
 
 
@@ -291,14 +290,14 @@ function expense_get($expenseID)
         $result = $database->query("SELECT * FROM ${p}expense WHERE expense_id = " . $expenseID);
     }
     else {
-        $result = $database->query("SELECT * FROM ${p}expense WHERE user_id = " . $kga['user']['user_id'] . " ORDER BY expense_id DESC LIMIT 1");
+        $result = $database->query("SELECT * FROM ${p}expense WHERE user_id = {$kga['user']['user_id']} ORDER BY expense_id DESC LIMIT 1");
     }
 
     if (!$result) {
         return false;
     }
     else {
-        return $database->rowArray(0, MYSQL_ASSOC);
+        return $database->rowArray(0, MYSQLI_ASSOC);
     }
 }
 
@@ -386,15 +385,15 @@ function expenses_by_user($start, $end, $users = null, $customers = null, $proje
              FROM ${p}expense
              Join ${p}project USING (project_id)
              Join ${p}customer USING (customer_id)
-             Join `${p}user` USING (user_id) " . (count($whereClauses) > 0 ? " WHERE "
-            : " ") . implode(" AND ", $whereClauses) .
-        " GROUP BY user_id;";
+             Join `${p}user` USING (user_id) " . (count($whereClauses) > 0 ? ' WHERE '
+            : ' ') . implode(' AND ', $whereClauses) .
+        ' GROUP BY user_id;';
 
     $result = $database->query($query);
     if (!$result) {
         return array();
     }
-    $rows = $database->recordsArray(MYSQL_ASSOC);
+    $rows = $database->recordsArray(MYSQLI_ASSOC);
     if (!$rows) {
         return array();
     }
@@ -441,15 +440,15 @@ function expenses_by_customer($start, $end, $users = null, $customers = null, $p
 
     $query = "SELECT SUM(`value` * `multiplier`) as expenses, customer_id FROM ${p}expense
             Left Join ${p}project USING (project_id)
-            Left Join ${p}customer USING (customer_id) " . (count($whereClauses) > 0 ? " WHERE "
-            : " ") . implode(" AND ", $whereClauses) .
-        " GROUP BY customer_id;";
+            Left Join ${p}customer USING (customer_id) " . (count($whereClauses) > 0 ? ' WHERE '
+            : ' ') . implode(' AND ', $whereClauses) .
+        ' GROUP BY customer_id;';
 
     $result = $database->query($query);
     if (!$result) {
         return array();
     }
-    $rows = $database->recordsArray(MYSQL_ASSOC);
+    $rows = $database->recordsArray(MYSQLI_ASSOC);
     if (!$rows) {
         return array();
     }
@@ -493,15 +492,15 @@ function expenses_by_project($start, $end, $users = null, $customers = null, $pr
 
     $query = "SELECT sum(`value` * `multiplier`) as expenses, project_id FROM ${p}expense
             Left Join ${p}project USING(project_id)
-            Left Join ${p}customer USING(customer_id) " . (count($whereClauses) > 0 ? " WHERE "
-            : " ") . implode(" AND ", $whereClauses) .
-        " GROUP BY project_id;";
+            Left Join ${p}customer USING(customer_id) " . (count($whereClauses) > 0 ? ' WHERE '
+            : ' ') . implode(' AND ', $whereClauses) .
+        ' GROUP BY project_id;';
 
     $result = $database->query($query);
     if (!$result) {
         return array();
     }
-    $rows = $database->recordsArray(MYSQL_ASSOC);
+    $rows = $database->recordsArray(MYSQLI_ASSOC);
     if (!$rows) {
         return array();
     }

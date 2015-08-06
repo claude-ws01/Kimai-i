@@ -24,26 +24,24 @@
  */
 
 global $kga;
-$kga = array();
 
 require(__DIR__ . '/version.php');
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
-
 //$kga['show_sensible_data'] = 1;       // turn this on to display sensible data in the debug/developer extension
-// CAUTION - THINK TWICE IF YOU REALLY WANNA DO THIS AND DON'T FORGET TO TURN IT OFF IN A PRODUCTION ENVIRONMENT!!!
-// DON'T BLAME US - YOU HAVE BEEN WARNED!
+                                        // CAUTION - THINK TWICE IF YOU REALLY WANNA DO THIS AND DON'T FORGET TO TURN IT OFF IN A PRODUCTION ENVIRONMENT!!!
+                                        // DON'T BLAME US - YOU HAVE BEEN WARNED!
 
 $kga['logfile_lines']  = 100;       // number of lines shown from the logfile in debug extension. Set to "@" to display the entire file (might freeze your browser...)
 $kga['delete_logfile'] = 1;         // can the logfile be cleaned via debug_ext?
 
-$kga['utf8'] = 0;         // set to 1 if utf-8 CONVERSION (!) is needed - this is not always the case,
-// depends on server settings
+$kga['utf8'] = 0;                   // set to 1 if utf-8 CONVERSION (!) is needed - this is not always the case,
+                                    // depends on server settings
 
 $kga['calender_start'] = '0';       // here you can set a custom start day for the date-picker.
-// if this is not set the day of the users first day in the system will be taken
-// Format: ... = "DD/MM/YYYY";
+                                    // if this is not set the day of the users first day in the system will be taken
+                                    // Format: ... = "DD/MM/YYYY";
 
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------
@@ -56,60 +54,62 @@ $kga['server_prefix']   = $server_prefix;
 $kga['password_salt']   = isset($password_salt) ? $password_salt : '';
 $kga['authenticator']   = isset($authenticator) ? trim($authenticator) : 'Mysql';
 
-// LANGUAGE
-if (!empty($lang)) {
+
+
+// LANGUAGE default.
+if (!empty($lang)) {                // previous version of kimai use $lang in autoconf.php
     $kga['pref']['language'] = $lang;
 }
-if (!empty($language)) {
+if (!empty($language)) {            // since v0.10.x $language in autoconf.php
     $kga['pref']['language'] = $language;
 }
 $kga['pref']['language'] = isset($kga['pref']['language']) ? $kga['pref']['language'] : 'en';
 
-// TIME ZONE
-if (!empty($timezone)) {
-    $kga['pref']['timezone'] = $timezone;
-}
-if (!empty($defaultTimezone)) {
+
+
+// TIME ZONE default
+if (!empty($defaultTimezone)) {     // previous version of kimai use $defaultTimezone in autoconf.php
     $kga['pref']['timezone'] = $defaultTimezone;
+}
+if (!empty($timezone)) {            // since v0.10.x $timezone in autoconf.php
+    $kga['pref']['timezone'] = $timezone;
 }
 $kga['pref']['timezone'] = isset($kga['pref']['timezone']) ? $kga['pref']['timezone'] : 'Europe/Berlin';
 
 date_default_timezone_set($kga['pref']['timezone']);
 
+
+
+//  SSL - HTTPS  global //
+$kga['https'] = false;
+$server_https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on');
+
+if ($server_https || $kga['force_ssl']) {
+    $kga['https'] = true;
+}
+
+if (!$server_https && $kga['https']) { // force ssl.
+    header("location:https://{$_SERVER['SERVER_NAME']}/{$_SERVER['REQUEST_URI']}");
+}
+
+
+
+
 // unset vars.
-if (isset($server_hostname)) {
-    unset($server_hostname);
-}
-if (isset($server_database)) {
-    unset($server_database);
-}
-if (isset($server_username)) {
-    unset($server_username);
-}
-if (isset($server_password)) {
-    unset($server_password);
-}
-if (isset($server_prefix)) {
-    unset($server_prefix);
-}
-if (isset($password_salt)) {
-    unset($password_salt);
-}
-if (isset($authenticator)) {
-    unset($authenticator);
-}
-if (isset($lang)) {
-    unset($lang);
-}
-if (isset($language)) {
-    unset($language);
-}
-if (isset($timezone)) {
-    unset($timezone);
-}
-if (isset($defaultTimezone)) {
-    unset($defaultTimezone);
-}
+unset(
+    $server_hostname,
+    $server_database,
+    $server_username,
+    $server_password,
+    $server_prefix,
+    $password_salt,
+    $authenticator,
+    $lang,
+    $language,
+    $timezone,
+    $defaultTimezone,
+    $server_https
+);
 
 
 // TABLES NAME CONSTANTS

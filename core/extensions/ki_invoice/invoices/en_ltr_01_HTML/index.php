@@ -140,7 +140,7 @@ $invoiceDate = $this->invoiceDate;
             </td>
         </tr>
         <tr>
-            <td class="t_label"><span><?php echo $kga['lang']['vat'], ' ', $vatRate; ?>%</span></td>
+            <td class="t_label"><span><?php echo $kga['dict']['vat'], ' ', $vatRate; ?>%</span></td>
             <td class="c_amount">
                 <span><?php echo $currency; ?></span> <span><?php echo number_format($vatTotal, 2); ?></span>
             </td>

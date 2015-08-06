@@ -25,7 +25,7 @@ class Rounding
         // calculate how long a steps is (e.g. 15 second steps are 900 seconds long)
         $stepWidth = $steps * 60;
 
-        if ($steps == 0) {
+        if ($steps === 0) {
             $bestTime          = array();
             $bestTime['start'] = $start;
             $bestTime['end']   = $end;
@@ -108,4 +108,3 @@ class Rounding
     }
 }
 
-?>

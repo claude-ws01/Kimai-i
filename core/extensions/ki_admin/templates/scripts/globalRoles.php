@@ -1,15 +1,15 @@
 <?php global $kga; ?>
 <form>
     <input type=text id="newGlobalRole" class="formfield">
-    <input class='btn_ok' type=submit value="<?php echo $kga['lang']['addGlobalRole'] ?>"
+    <input class='btn_ok' type=submit value="<?php echo $kga['dict']['addGlobalRole'] ?>"
            onclick="adm_ext_newGlobalRole(); return false;">
 </form><br/>
 <table>
     <thead>
     <tr class='headerrow'>
-        <th><?php echo $kga['lang']['options'] ?></th>
-        <th><?php echo $kga['lang']['globalRole'] ?></th>
-        <th><?php echo $kga['lang']['users'] ?></th>
+        <th><?php echo $kga['dict']['options'] ?></th>
+        <th><?php echo $kga['dict']['globalRole'] ?></th>
+        <th><?php echo $kga['dict']['users'] ?></th>
     </tr>
     </thead>
     <tbody>
@@ -33,8 +33,8 @@
                 <a href="#"
                    onClick="adm_ext_editGlobalRole('<?php echo $globalRole['global_role_id'] ?>'); $(this).blur(); return false;">
                     <img src="<?php echo $i_edit2 ?>"
-                         title="<?php echo $kga['lang']['editGlobalRole'] ?>" width="13" height="13"
-                         alt="<?php echo $kga['lang']['editGlobalRole'] ?>" border="0"></a>
+                         title="<?php echo $kga['dict']['editGlobalRole'] ?>" width="13" height="13"
+                         alt="<?php echo $kga['dict']['editGlobalRole'] ?>" border="0"></a>
 
                 &nbsp;
 
@@ -43,13 +43,13 @@
                        onClick="adm_ext_deleteGlobalRole(<?php echo $globalRole['global_role_id'] ?>)">
                         <img
                             src="<?php echo $i_button_trashcan ?>"
-                            title="<?php echo $kga['lang']['deleteGlobalRole'] ?>" width="13" height="13"
-                            alt="<?php echo $kga['lang']['deleteGlobalRole'] ?>" border="0">
+                            title="<?php echo $kga['dict']['deleteGlobalRole'] ?>" width="13" height="13"
+                            alt="<?php echo $kga['dict']['deleteGlobalRole'] ?>" border="0">
                     </a>
                 <?php else: ?>
                     <img src="<?php echo $i_button_trashcan ?>"
-                         title="<?php echo $kga['lang']['deleteGlobalRole'] ?>" width="13" height="13"
-                         alt="<?php echo $kga['lang']['deleteGlobalRole'] ?>" border="0"><?php endif; ?>
+                         title="<?php echo $kga['dict']['deleteGlobalRole'] ?>" width="13" height="13"
+                         alt="<?php echo $kga['dict']['deleteGlobalRole'] ?>" border="0"><?php endif; ?>
 
             </td>
 

@@ -71,24 +71,26 @@ class Kimai_Auth_Http extends Kimai_Auth_Abstract
         $userId = false;
 
         // No autologin if not allowed or if no remote user authorized by web server
-        if (!$this->HTAUTH_ALLOW_AUTOLOGIN) return false;
-        $check_username = "";
+        if (!$this->HTAUTH_ALLOW_AUTOLOGIN) {
+            return false;
+        }
+        $check_username = '';
         if ($this->HTAUTH_REMOTE_USER) {
             if (isset($_SERVER['REMOTE_USER'])) {
                 $check_username = $_SERVER['REMOTE_USER'];
             }
         }
-        if ($check_username == "" && $this->HTAUTH_REDIRECT_REMOTE_USER) {
-            if (isset($_SERVER["REDIRECT_REMOTE_USER"])) {
-                $check_username = $_SERVER["REDIRECT_REMOTE_USER"];
+        if ($check_username == '' && $this->HTAUTH_REDIRECT_REMOTE_USER) {
+            if (isset($_SERVER['REDIRECT_REMOTE_USER'])) {
+                $check_username = $_SERVER['REDIRECT_REMOTE_USER'];
             }
         }
-        if ($check_username == "" && $this->HTAUTH_PHP_AUTH_USER) {
-            if (isset($_SERVER["PHP_AUTH_USER"])) {
-                $check_username = $_SERVER["PHP_AUTH_USER"];
+        if ($check_username == '' && $this->HTAUTH_PHP_AUTH_USER) {
+            if (isset($_SERVER['PHP_AUTH_USER'])) {
+                $check_username = $_SERVER['PHP_AUTH_USER'];
             }
         }
-        if ($check_username == "" || $check_username == false) {
+        if ($check_username == '' || $check_username == false) {
             return false;
         }
 
@@ -97,8 +99,8 @@ class Kimai_Auth_Http extends Kimai_Auth_Abstract
         $check_username = $this->HTAUTH_FORCE_USERNAME_LOWERCASE ? strtolower($check_username) : $check_username;
         $check_username = mysqli_real_escape_string($database->link, $check_username);
 
-        $p = $kga['server_prefix'];
-        $query = "SELECT * FROM ${p}user WHERE name ='${check_username}';";
+        $p      = $kga['server_prefix'];
+        $query  = "SELECT * FROM ${p}user WHERE name ='${check_username}';";
         $result = mysqli_query($database->link, $query);
         // $result = mysqli_query($this->link, sprintf("SELECT * FROM %susers WHERE name ='%s';", $kga['server_prefix'], $check_username));
 
@@ -115,15 +117,15 @@ class Kimai_Auth_Http extends Kimai_Auth_Abstract
         if ($this->HTAUTH_USER_AUTOCREATE) {
 
             // AutoCreate the user and return true
-            $userId = $database->user_create(array(
-                                                       'name'         => $check_username,
-                                                       'global_role_id' => $this->getDefaultGlobalRole(),
-                                                       'active'       => 1
-                                                   ));
+            $data   = array('name'           => $check_username,
+                            'global_role_id' => $this->getDefaultGlobalRole(),
+                            'active'         => 1,
+            );
+            $userId = $database->user_create($data);
             $database->setGroupMemberships($userId, array($this->getDefaultGroups()));
 
             // Set a random password, unknown to the user. Autologin must be used until user sets own password
-            $userData = array('password' => md5($kga['password_salt'] . md5(uniqid(rand(), true)) . $kga['password_salt']));
+            $userData = array('password' => md5($kga['password_salt'] . md5(uniqid(mt_rand(), true)) . $kga['password_salt']));
             $database->user_edit($userId, $userData);
 
             return true;
@@ -139,8 +141,8 @@ class Kimai_Auth_Http extends Kimai_Auth_Abstract
         $passCrypt = password_encrypt($password);
         $username  = mysqli_real_escape_string($database->link, $username);
 
-        $p = $kga['server_prefix'];
-        $query = "SELECT * FROM ${p}user WHERE name ='${username}';";
+        $p      = $kga['server_prefix'];
+        $query  = "SELECT * FROM ${p}user WHERE name ='${username}';";
         $result = mysqli_query($database->link, $query);
         //$result = mysqli_query($this->link, sprintf("SELECT * FROM %susers WHERE name ='%s';", $kga['server_prefix'], $username));
 
@@ -152,11 +154,11 @@ class Kimai_Auth_Http extends Kimai_Auth_Abstract
 
         $row     = mysqli_fetch_assoc($result);
         $pass    = $row['password'];
-        $ban     = $row['ban'];
-        $banTime = $row['ban_time'];
+        //$ban     = $row['ban'];
+        //$banTime = $row['ban_time'];
         $userId  = $row['user_id'];
 
-        return $pass == $passCrypt && $username != "";
+        return $pass === $passCrypt && $username !== '';
     }
 }
 

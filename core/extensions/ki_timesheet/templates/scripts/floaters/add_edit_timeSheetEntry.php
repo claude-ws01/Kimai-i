@@ -94,7 +94,7 @@
                 if (!start_day.val().match(ts_dayFormatExp) ||
                     ( !end_day.val().match(ts_dayFormatExp) && end_day.val() != '') || !start_time.val().match(ts_timeFormatExp) ||
                     ( !end_time.val().match(ts_timeFormatExp) && end_time.val() != '')) {
-                    alert("<?php echo $kga['lang']['TimeDateInputError']?>");
+                    alert("<?php echo $kga['dict']['TimeDateInputError']?>");
                     return false;
                 }
 
@@ -119,7 +119,7 @@
                         outVal = 0;
 
                     if (inVal > outVal) {
-                        alert("<?php $kga['lang']['StartTimeBeforeEndTime']?>");
+                        alert("<?php $kga['dict']['StartTimeBeforeEndTime']?>");
                         return false;
                     }
                     else if (inVal < outVal)
@@ -147,7 +147,7 @@
                         outVal = parseInt(outVal);
 
                         if (inVal > outVal) {
-                            alert("<?php echo $kga['lang']['StartTimeBeforeEndTime']?>");
+                            alert("<?php echo $kga['dict']['StartTimeBeforeEndTime']?>");
                             return false;
                         }
                         else if (inVal < outVal)
@@ -282,8 +282,8 @@
         <?php endif; ?>
         var budget = $('#budget_val').val();
         var used = secs / 3600 * rate;
-        var usedString = '<?php echo $kga['lang']['used']?>';
-        var budgetString = '<?php echo $kga['lang']['budget_available']?>';
+        var usedString = '<?php echo $kga['dict']['used']?>';
+        var budgetString = '<?php echo $kga['dict']['budget_available']?>';
         var chartdata = [[usedString, used], [budgetString, budget - used]];
 
         try {
@@ -321,27 +321,27 @@
         <span id="floater_title">
             <?php if (isset($this->id)) {
                 $new_entry = false;
-                echo $kga['lang']['edit'],
+                echo $kga['dict']['edit'],
                 ' - ', $this->escape($this->start_day),
                 ' - ', $this->escape($this->start_time),
                 ' - ', $this->escape($this->customer_name);
             }
             else {
                 $new_entry = true;
-                echo $kga['lang']['add'];
+                echo $kga['dict']['add'];
             } ?>
         </span>
         <div class="right">
-            <a href="#" class="close" onClick="floaterClose();"><?php echo $kga['lang']['close'] ?></a>
+            <a href="#" class="close" onClick="floaterClose();"><?php echo $kga['dict']['close'] ?></a>
             <a href="#"
                class="help"
-               onClick="$(this).blur(); $('#help').slideToggle();"><?php echo $kga['lang']['help'] ?></a>
+               onClick="$(this).blur(); $('#help').slideToggle();"><?php echo $kga['dict']['help'] ?></a>
         </div>
     </div>
 
     <div id="help">
         <div class="content">
-            <?php echo $kga['lang']['dateAndTimeHelp'] ?>
+            <?php echo $kga['dict']['dateAndTimeHelp'] ?>
         </div>
     </div>
 
@@ -350,17 +350,17 @@
         <ul class="menu tabSelection">
             <li class="tab norm"><a href="#general">
                     <span class="aa">&nbsp;</span>
-                    <span class="bb"><?php echo $kga['lang']['general'] ?></span>
+                    <span class="bb"><?php echo $kga['dict']['general'] ?></span>
                     <span class="cc">&nbsp;</span>
                 </a></li>
             <li class="tab norm"><a href="#extended">
                     <span class="aa">&nbsp;</span>
-                    <span class="bb"><?php echo $kga['lang']['advanced'] ?></span>
+                    <span class="bb"><?php echo $kga['dict']['advanced'] ?></span>
                     <span class="cc">&nbsp;</span>
                 </a></li>
             <li class="tab norm"><a href="#budget">
                     <span class="aa">&nbsp;</span>
-                    <span class="bb"><?php echo $kga['lang']['budget'] ?></span>
+                    <span class="bb"><?php echo $kga['dict']['budget'] ?></span>
                     <span class="cc">&nbsp;</span>
                 </a></li>
         </ul>
@@ -379,7 +379,7 @@
             <fieldset id="general">
                 <ul>
                     <li>
-                        <label for="project_id"><?php echo $kga['lang']['project'] ?>:</label>
+                        <label for="project_id"><?php echo $kga['dict']['project'] ?>:</label>
 
                         <div class="multiFields">
                             <?php echo $this->formSelect('project_id', $this->project_id, array(
@@ -395,14 +395,14 @@
                                    style="width:380px;margin-top:3px"
                                    tabindex="2"
                                    size="10"
-                                   placeholder="<?php echo $kga['lang']['searchFilter']; ?>"
+                                   placeholder="<?php echo $kga['dict']['searchFilter']; ?>"
                                    name="filter"
                                    id="filter"
                                    onkeyup="filter_selects('add_edit_timeSheetEntry_projectID', this.value);"/>
                         </div>
                     </li>
                     <li>
-                        <label for="activity_id"><?php echo $kga['lang']['activity'] ?>:</label>
+                        <label for="activity_id"><?php echo $kga['dict']['activity'] ?>:</label>
 
                         <div class="multiFields">
                             <?php echo $this->formSelect('activity_id', $this->activity_id, array(
@@ -418,7 +418,7 @@
                                    style="width:380px;margin-top:3px"
                                    tabindex="4"
                                    size="10"
-                                   placeholder="<?php echo $kga['lang']['searchFilter']; ?>"
+                                   placeholder="<?php echo $kga['dict']['searchFilter']; ?>"
                                    name="filter"
                                    id="filter"
                                    onkeyup="filter_selects('add_edit_timeSheetEntry_activityID', this.value);"/>
@@ -426,7 +426,7 @@
                     </li>
 
                     <li>
-                        <label for="description"><?php echo $kga['lang']['description'] ?>:</label>
+                        <label for="description"><?php echo $kga['dict']['description'] ?>:</label>
                         <textarea tabindex="5"
                                   style="width:395px"
                                   cols='40'
@@ -436,7 +436,7 @@
                     </li>
 
                     <li>
-                        <label><?php echo $kga['lang']['day'] ?>:</label>
+                        <label><?php echo $kga['dict']['day'] ?>:</label>
                         <span style="width: 150px; display: inline-block;">
                          <input id='start_day'
                                 type='text'
@@ -462,7 +462,7 @@
                     </li>
 
                     <li style="vertical-align:top;">
-                        <label><?php echo $kga['lang']['timelabel'] ?>:</label>
+                        <label><?php echo $kga['dict']['timelabel'] ?>:</label>
                        <span style="width: 150px; display: inline-block;">
                             <input id='start_time' type='text' name='start_time' style="text-align:center;"
                                    value='<?php echo $this->escape($this->start_time) ?>'
@@ -471,7 +471,7 @@
                             <a id="currentTime"
                                href="#"
                                onClick="ts_ext_pasteNowToStart(); ts_ext_startTimeToDuration(); $(this).blur(); return false;">
-                                <?php echo $kga['lang']['now'] ?></a>
+                                <?php echo $kga['dict']['now'] ?></a>
                        </span>
 
                         <input id='end_time' type='text' name='end_time' style="text-align:center;"
@@ -482,10 +482,10 @@
                         <a id="currentTime"
                            href="#"
                            onClick="ts_ext_pasteNowToEnd(); ts_ext_endTimeToDuration(); $(this).blur(); return false;">
-                            <?php echo $kga['lang']['now'] ?></a>
+                            <?php echo $kga['dict']['now'] ?></a>
                     </li>
                     <li>
-                        <label for="duration"><?php echo $kga['lang']['durationlabel'] ?>:</label>
+                        <label for="duration"><?php echo $kga['dict']['durationlabel'] ?>:</label>
                         <span style="width: 210px; display: inline-block;text-align:center;">
                             <input id='duration' type='text' name='duration' value='' style="text-align:center;"
                                    onChange="ts_ext_durationToTime();" maxlength='5' size='3' tabindex='10'
@@ -500,7 +500,7 @@
                 <ul>
 
                     <li>
-                        <label for="location"><?php echo $kga['lang']['location'] ?>:</label>
+                        <label for="location"><?php echo $kga['dict']['location'] ?>:</label>
                         <input id='location'
                                type='text'
                                name='location'
@@ -512,7 +512,7 @@
 
                     <?php if ($kga['conf']['ref_num_editable']): ?>
                         <li>
-                            <label for="ref_code"><?php echo $kga['lang']['ref_code'] ?>:</label>
+                            <label for="ref_code"><?php echo $kga['dict']['ref_code'] ?>:</label>
                             <input id='ref_code' type='text' name='ref_code'
                                    value='<?php echo $this->escape($this->ref_code) ?>' maxlength='20' size='20'
                                    tabindex='12' <?php if ($kga['pref']['autoselection']): ?>
@@ -520,7 +520,7 @@
                         </li>
                     <?php endif; ?>
                     <li>
-                        <label for="comment"><?php echo $kga['lang']['comment'] ?>:</label>
+                        <label for="comment"><?php echo $kga['dict']['comment'] ?>:</label>
                         <textarea id='comment'
                                   style="width:395px"
                                   class='comment'
@@ -531,7 +531,7 @@
                     </li>
 
                     <li>
-                        <label for="comment_type"><?php echo $kga['lang']['comment_type'] ?>:</label>
+                        <label for="comment_type"><?php echo $kga['dict']['comment_type'] ?>:</label>
                         <?php echo $this->formSelect('comment_type', $this->comment_type, array(
                             'id'       => 'comment_type',
                             'class'    => 'formfield',
@@ -540,7 +540,7 @@
                     </li>
                     <?php if (count($this->users) > 0): ?>
                         <li>
-                            <label for="user_id"><?php echo $kga['lang']['user'] ?>:</label>
+                            <label for="user_id"><?php echo $kga['dict']['user'] ?>:</label>
                             <?php echo $this->formSelect(
                                 isset($this->id) ? 'user_id' : 'user_id[]',
                                 $this->user_id,
@@ -558,13 +558,13 @@
 
                     <?php if (!$new_entry) { ?>
                         <li>
-                           <label for="erase"><?php echo $kga['lang']['erase'] ?>:</label>
+                           <label for="erase"><?php echo $kga['dict']['erase'] ?>:</label>
                            <input type='checkbox' id='erase' name='erase' tabindex='16'/>
                        </li>
                     <?php } ?>
 
                     <li>
-                        <label for="cleared"><?php echo $kga['lang']['cleared'] ?>:</label>
+                        <label for="cleared"><?php echo $kga['dict']['cleared'] ?>:</label>
                         <input type='checkbox'
                                id='cleared'
                                name='cleared' <?php if ($this->cleared): ?> checked="checked" <?php endif; ?>
@@ -580,7 +580,7 @@
                 <ul>
 
                     <li>
-                        <label for="budget"><?php echo $kga['lang']['budget'] ?>:</label>
+                        <label for="budget"><?php echo $kga['dict']['budget'] ?>:</label>
                         <input id='budget_val'
                                type='text'
                                name='budget'
@@ -593,7 +593,7 @@
                         <?php echo ' ', $kga['conf']['currency_sign']; ?>
                     </li>
                     <li>
-                        <label for="approved"><?php echo $kga['lang']['approved'] ?>:</label>
+                        <label for="approved"><?php echo $kga['dict']['approved'] ?>:</label>
                         <input id='approved'
                                type='text'
                                name='approved'
@@ -607,7 +607,7 @@
                     </li>
 
                     <li>
-                        <label for="status_id"><?php echo $kga['lang']['status'] ?>:</label>
+                        <label for="status_id"><?php echo $kga['dict']['status'] ?>:</label>
                         <?php echo $this->formSelect('status_id', $this->status_id, array(
                             'id'       => 'status_id',
                             'class'    => 'formfield',
@@ -616,7 +616,7 @@
                     </li>
 
                     <li>
-                        <label for="billable"><?php echo $kga['lang']['billable'] ?>:</label>
+                        <label for="billable"><?php echo $kga['dict']['billable'] ?>:</label>
                         <?php echo $this->formSelect('billable', $this->billable_active, array(
                             'id'       => 'billable',
                             'class'    => 'formfield',
@@ -625,13 +625,13 @@
                     </li>
                     <?php if ($this->showRate): ?>
                         <li>
-                            <label for="rate"><?php echo $kga['lang']['rate_hourly'] ?>:</label>
+                            <label for="rate"><?php echo $kga['dict']['rate_hourly'] ?>:</label>
                             <input id='rate' type='text' name='rate' size='5' style="text-align:right;padding-left:5px;"
                                    tabindex='22' value='<?php echo $this->escape($this->rate) ?>'/>
                             <?php echo ' ', $kga['conf']['currency_sign']; ?>
 
                             <label for="fixed_rate" style="float: none; margin-left: 60px;vertical-align: top;">
-                                <?php echo $kga['lang']['fixed_rate'] ?>:</label>
+                                <?php echo $kga['dict']['fixed_rate'] ?>:</label>
                             <input id='fixed_rate'
                                    type='text'
                                    name='fixed_rate'
@@ -647,18 +647,18 @@
                     <li>
                         <table>
                             <tr>
-                                <td style="text-align:right"><?php echo $kga['lang']['budget_activity'] ?>:</td>
+                                <td style="text-align:right"><?php echo $kga['dict']['budget_activity'] ?>:</td>
                                 <td>
                                     <span id="budget_activity"><?php echo $this->budget_activity ?></span></td>
                             </tr>
                             <tr>
-                                <td style="text-align:right"><?php echo $kga['lang']['budget_activity_used'] ?>:</td>
+                                <td style="text-align:right"><?php echo $kga['dict']['budget_activity_used'] ?>:</td>
                                 <td>
                                     <span id="budget_activity_used"><?php echo $this->budget_activity_used ?></span>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="text-align:right"><?php echo $kga['lang']['budget_activity_approved'] ?>:</td>
+                                <td style="text-align:right"><?php echo $kga['dict']['budget_activity_approved'] ?>:</td>
                                 <td>
                                     <span id="budget_activity_approved"><?php echo $this->approved_activity ?></span>
                                 </td>
@@ -680,9 +680,9 @@
         <div id="formbuttons">
             <input class='btn_norm'
                    type='button'
-                   value='<?php echo $kga['lang']['cancel'] ?>'
+                   value='<?php echo $kga['dict']['cancel'] ?>'
                    onClick='floaterClose(); return false;'/>
-            <input class='btn_ok' type='submit' value='<?php echo $kga['lang']['submit'] ?>'/>
+            <input class='btn_ok' type='submit' value='<?php echo $kga['dict']['submit'] ?>'/>
         </div>
 
     </form>

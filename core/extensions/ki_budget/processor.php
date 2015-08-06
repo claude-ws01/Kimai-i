@@ -24,14 +24,14 @@
 
 // insert KSPI
 $isCoreProcessor = 0;
-$dir_templates   = "templates/";
-require("../../includes/kspi.php");
-require("private_func.php");
+$dir_templates   = 'templates/';
+require('../../includes/kspi.php');
+require('private_func.php');
 global $view, $database, $kga;
 
 $filters = explode('|', $axValue);
 
-if ($filters[0] == "") {
+if ($filters[0] === '') {
     $filterUsers = array();
 }
 else {
@@ -43,27 +43,27 @@ $filterCustomers = array_map(
         return $customer['customer_id'];
     },
     $database->get_customers(any_get_group_ids()));
-if (isset($filters[1]) && $filters[1] != "") {
+if (isset($filters[1]) && $filters[1] !== '') {
     $filterCustomers = array_intersect($filterCustomers, explode(':', $filters[1]));
 }
 
 $filterProjects = array_map(function ($project) {
     return $project['project_id'];
 }, $database->get_projects(any_get_group_ids()));
-if (isset($filters[2]) && $filters[2] != "") {
+if (isset($filters[2]) && $filters[2] !== '') {
     $filterProjects = array_intersect($filterProjects, explode(':', $filters[2]));
 }
 
 $filterActivities = array_map(function ($activity) {
     return $activity['activity_id'];
 }, $database->get_activities(any_get_group_ids()));
-if (isset($filters[3]) && $filters[3] != "") {
+if (isset($filters[3]) && $filters[3] !== '') {
     $filterActivities = array_intersect($filterActivities, explode(':', $filters[3]));
 }
 
 // if no userfilter is set, set it to current user
-if (array_key_exists('user', $kga) && count($filterUsers) == 0) {
-    array_push($filterUsers, $kga['user']['user_id']);
+if (array_key_exists('user', $kga) && count($filterUsers) === 0) {
+    $filterUsers[] = $kga['user']['user_id'];
 }
 
 if (array_key_exists('customer', $kga)) {
@@ -111,13 +111,13 @@ switch ($axAction) {
             $activities = $database->get_activities(any_get_group_ids());
         }
         if (is_array($projects)) {
-            foreach ($projects as $index => $project) {
+            foreach ((array)$projects as $index => $project) {
                 if ($projectsFilter === false) {
                     $projectsSelected[] = $project['project_id'];
                 }
                 $projects[ $index ]['activities'] = $database->get_activities_by_project($project['project_id']);
 
-                foreach ($projects[ $index ]['activities'] as $index => $activity) {
+                foreach ($projects[ $index ]['activities'] as $index2 => $activity) {
                     if ($activitiesFilter === false) {
                         $activitiesSelected[] = $activity['activity_id'];
                     }
@@ -139,20 +139,20 @@ switch ($axAction) {
         $view->projects_selected   = $projectsSelected;
         $view->activities_selected = $activitiesSelected;
 
-        $chartColors       = array("#efefef", "#4bb2c5", "#EAA228", "#c5b47f", "#579575", "#839557", "#958c12", "#953579", "#4b5de4", "#d8b83f", "#ff5800", "#0085cc");
+        $chartColors       = array('#efefef', '#4bb2c5', '#EAA228', '#c5b47f', '#579575', '#839557', '#958c12', '#953579', '#4b5de4', '#d8b83f', '#ff5800', '#0085cc');
         $view->chartColors = json_encode($chartColors);
         // Create the keys which explain to the user which color means what for the project based charts
         $keys   = array();
-        $keys[] = array('color' => $chartColors[0], 'name' => $kga['lang']['ext_budget']['unusedBudget']);
+        $keys[] = array('color' => $chartColors[0], 'name' => $kga['dict']['ext_budget']['unusedBudget']);
         if ($expensesOccured) {
-            $keys[] = array('color' => $chartColors[1], 'name' => $kga['lang']['export_extension']['expenses']);
+            $keys[] = array('color' => $chartColors[1], 'name' => $kga['dict']['export_extension']['expenses']);
         }
         /*for ($i = 0; $i < count($usedEvents); $i++) {
             $keys[] = array('color' => $chartColors[($i + 2) % (count($chartColors) - 1)], 'name' => $usedEvents[$i]['evt_name']);
         }*/
         // the activity based charts only need numbers
         $view->arr_keys = $keys;
-        echo $view->render("charts.php");
+        echo $view->render('charts.php');
 
         break;
 }

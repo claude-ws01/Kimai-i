@@ -6,7 +6,7 @@
 class Logger
 {
 
-    private static $instance = null;
+    private static $instance;
     private $file;
 
     /**
@@ -14,15 +14,15 @@ class Logger
      */
     private function __construct()
     {
-        $this->file = fopen(WEBROOT . "temporary/logfile.txt", "a");
-        set_error_handler("Logger::errorHandler");
+        $this->file = fopen(WEBROOT . 'temporary/logfile.txt', 'a');
+        set_error_handler('Logger::errorHandler');
         set_exception_handler('Logger::exceptionHandler');
     }
 
     /**
      * Close the file if the instance is destroyed.
      */
-    function __destruct()
+    public function __destruct()
     {
         fclose($this->file);
     }
@@ -34,7 +34,7 @@ class Logger
      */
     public static function init()
     {
-        if (self::$instance == null) {
+        if (self::$instance === null) {
             self::$instance = new Logger();
         }
     }
@@ -49,7 +49,7 @@ class Logger
      */
     public static function logfile($value)
     {
-        if (self::$instance == null) {
+        if (self::$instance === null) {
             self::$instance = new Logger();
         }
 
@@ -65,16 +65,17 @@ class Logger
      */
     public function log($line)
     {
-        fputs($this->file, date("[d.m.Y H:i:s] ", time()) . $line . "\n");
+        fwrite($this->file, date('[d.m.Y H:i:s] ', time()) . $line . "\n");
     }
 
     public static function exceptionHandler($exception)
     {
-        Logger::logfile("Uncaught exception: " . $exception->getMessage());
+        Logger::logfile('Uncaught exception: ' . $exception->getMessage());
     }
 
     public static function errorHandler($errno, $errstr, $errfile, $errline)
-    {
+    {// function err_log_error($num, $str, $file, $line)
+
 
         // If the @ error-control operator is set don't log the error.
         if (error_reporting() === 0) {
@@ -112,8 +113,38 @@ class Logger
 
         Logger::logfile($line);
 
+        self::err_MessageToMail(new ErrorException($errstr, 0, $errno, $errfile, $errline));
+
         return false; // let PHP do it's error handling as well
     }
 
+
+    private static function err_MessageToMail(exception $e)
+    {   // \r\n are necessary for email content
+        global $kga;
+
+        if (!IN_DEV
+            && !empty($kga['error_log_mail_from'])
+            && !empty($kga['error_log_mail_to'])
+        ) {
+
+            $message = PHP_EOL . 'Hostname: ' . `hostname`;
+            $message .= 'Message: ' . $e->getMessage() . PHP_EOL;
+            $message .= 'REQUEST_URI: ' . $_SERVER['REQUEST_URI'] . PHP_EOL;
+            $message .= 'SCRIPT_FILENAME: ' . $_SERVER['SCRIPT_FILENAME'] . PHP_EOL;
+            $message .= 'QUERY_STRING: ' . $_SERVER['QUERY_STRING'] . PHP_EOL;
+            $message .= 'File:    ' . $e->getFile() . PHP_EOL;
+            $message .= 'Line:    ' . $e->getLine() . PHP_EOL;
+            $message .= 'Trace:' . PHP_EOL . $e->getTraceAsString() . PHP_EOL;
+            $message .= 'PHP ' . PHP_VERSION . ' (' . PHP_OS . ')' . PHP_EOL;
+
+            $headers =
+                'From: ' . $kga['error_log_mail_from'] . "\r\n" .
+                'Reply-To: ' . $kga['error_log_mail_to'] . "\r\n" .
+                'X-Mailer: PHP/' . phpversion() . "\r\n" .
+                'Content-type: text/plain; charset=UTF-8';
+            error_log($message, 1, $kga['error_log_mail_to'], $headers);
+        }
+    }
 }
 

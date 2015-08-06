@@ -108,7 +108,7 @@ switch ($axAction) {
         $view->name         = $globalRoleDetails['name'];
         $view->action       = 'editGlobalRole';
         $view->reloadSubtab = 'globalRoles';
-        $view->title        = $kga['lang']['editGlobalRole'];
+        $view->title        = $kga['dict']['editGlobalRole'];
         $view->permissions  = $globalRoleDetails;
         unset($view->permissions['global_role_id'], $view->permissions['name']);
         echo $view->render('floaters/editglobalrole.php');
@@ -126,7 +126,7 @@ switch ($axAction) {
         $view->name         = $membershipRoleDetails['name'];
         $view->action       = 'editMembershipRole';
         $view->reloadSubtab = 'membershipRoles';
-        $view->title        = $kga['lang']['editMembershipRole'];
+        $view->title        = $kga['dict']['editMembershipRole'];
         $view->permissions  = $membershipRoleDetails;
         unset($view->permissions['membership_role_id'], $view->permissions['name']);
         echo $view->render('floaters/editglobalrole.php');

@@ -62,7 +62,7 @@ class BasePDF extends TCPDF
             return "-------";
         }
         else {
-            return str_replace(".", $GLOBALS['kga']['conf']['decimal_separator'], sprintf("%01.2f", $number)) . " " . $GLOBALS['kga']['lang']['export_extension']['duration_unit'];
+            return str_replace(".", $GLOBALS['kga']['conf']['decimal_separator'], sprintf("%01.2f", $number)) . " " . $GLOBALS['kga']['dict']['export_extension']['duration_unit'];
         }
     }
 
@@ -139,7 +139,7 @@ class BasePDF extends TCPDF
             if ($this->getPageHeight() - $this->pagedim[$this->page]['bm'] - ($this->getY() + 20) < 0) {
                 $this->Cell(array_sum($w), 0, '', 'T');
                 $this->Ln();
-                $this->Cell($w[0], 6, $GLOBALS['kga']['lang']['export_extension']['subtotal'] . ':', '', 0, 'R', false);
+                $this->Cell($w[0], 6, $GLOBALS['kga']['dict']['export_extension']['subtotal'] . ':', '', 0, 'R', false);
                 if (isset($this->columns['dec_time'])) {
                     $this->Cell($w[1], 6, $this->timespan($sum_time), 'R', 0, 'R', true);
                 }
@@ -171,7 +171,7 @@ class BasePDF extends TCPDF
         $this->Cell(array_sum($w), 0, '', 'T');
         $this->Ln();
 
-        $this->Cell($w[0], 6, $GLOBALS['kga']['lang']['export_extension']['finalamount'] . ':', '', 0, 'R', false);
+        $this->Cell($w[0], 6, $GLOBALS['kga']['dict']['export_extension']['finalamount'] . ':', '', 0, 'R', false);
         $this->SetFont('', 'B');
         if (isset($this->columns['dec_time'])) {
             $this->Cell($w[1], 6, $this->timespan($sum_time), '', 0, 'R', true);
@@ -209,7 +209,7 @@ class BasePDF extends TCPDF
                         }
                     }
                     else {
-                        $expenseInfo['name'] = $GLOBALS['kga']['lang']['export_extension']['expense'] . ': ' . $row['project_name'];
+                        $expenseInfo['name'] = $GLOBALS['kga']['dict']['export_extension']['expense'] . ': ' . $row['project_name'];
                         $expenseInfo['time'] = -1;
                         $expenseInfo['wage'] = $row['wage'];
                         $expenseSummary[]    = $expenseInfo;
