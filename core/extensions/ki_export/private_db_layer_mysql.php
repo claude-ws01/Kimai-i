@@ -35,12 +35,7 @@ function export_timesheet_entry_set_cleared($id, $cleared)
     $filter['time_entry_id'] = $database->sqlValue($id, MySQL::SQLVALUE_NUMBER);
     $query                   = MySQL::buildSqlUpdate(TBL_TIMESHEET, $values, $filter);
 
-    if ($database->query($query)) {
-        return true;
-    }
-    else {
-        return false;
-    }
+    return ($database->query($query) !== false);
 }
 
 function export_expense_set_cleared($id, $cleared)
@@ -51,12 +46,7 @@ function export_expense_set_cleared($id, $cleared)
     $filter['expense_id'] = $database->sqlValue($id, MySQL::SQLVALUE_NUMBER);
     $query                = MySQL::buildSqlUpdate(TBL_EXPENSE, $values, $filter);
 
-    if ($database->query($query)) {
-        return true;
-    }
-    else {
-        return false;
-    }
+    return ($database->query($query) !== false);
 }
 
 
@@ -74,7 +64,7 @@ function export_toggle_header($header)
     global $kga, $database, $all_column_headers;
 
     $header_number = array_search($header, $all_column_headers);
-    if ($header_number != false) {
+    if ($header_number !== false) {
         $table  = TBL_PREFERENCE;
         $userID = $database->sqlValue($kga['user']['user_id'], MySQL::SQLVALUE_NUMBER);
 
@@ -83,7 +73,7 @@ function export_toggle_header($header)
                     ($userID, 'export_disabled_columns', POWER(2,$header_number))
                     ON DUPLICATE KEY UPDATE `value`=`value`^POWER(2,$header_number)";
 
-        if ($database->query($query)) {
+        if ($database->query($query) !== false) {
             return true;
         }
     }
@@ -105,27 +95,29 @@ function export_get_disabled_headers($userID)
     global $database, $all_column_headers;
 
     $disabled_headers = array();
-    foreach( $all_column_headers as $key) {
+    foreach ($all_column_headers as $key) {
         $disabled_headers[$key] = null;
     }
 
     $filter['user_id'] = $database->sqlValue($userID, MySQL::SQLVALUE_NUMBER);
     $filter['option']  = $database->sqlValue('export_disabled_columns');
 
-    if (!$database->selectRows(TBL_PREFERENCE, $filter)) return 0;
+    if ($database->selectRows(TBL_PREFERENCE, $filter) === false) {
+        return 0;
+    }
 
     $result_array = $database->rowArray(0, MYSQLI_ASSOC);
     $code         = $result_array['value'];
 
     $i = 0;
     while ($code > 0) {
-        if ($code % 2 == 1) // bit set?
+        if ($code % 2 === 1) // bit set?
         {
             $disabled_headers[$all_column_headers[$i]] = 'disabled';
         }
 
         // next bit and array element
-        $code = $code / 2;
+        $code /= 2;
         $i++;
     }
 

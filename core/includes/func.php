@@ -379,7 +379,7 @@ function config_set($option, $value = null, $force_set = false, $type = 'str', $
             case 'str':
                 break;
             case 'bool':
-                $value = boolval($value) ? 1 : 0;
+                $value = (bool)$value ? 1 : 0;
                 break;
             case 'int':
                 $value = (int)($value);
@@ -416,7 +416,7 @@ function convert_time_strings($in, $out)
 
 function cookie_set($name, $value, $expire = 0, $secure = false, $httponly = false)
 {
-    error_log('<<== COOKIE == NAME >>'.$name.'<<value>>'.$value.'<<expire>>'.$expire);
+    //DEBUG// error_log('<<== COOKIE == NAME >>'.$name.'<<value>>'.$value.'<<expire>>'.$expire);
     if (!headers_sent()) {
         setcookie($name, $value, $expire, '/',
                   $_SERVER['SERVER_NAME'], $secure, $httponly);

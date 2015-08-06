@@ -1,5 +1,16 @@
 *************** REMINDER ... UPDATE /includes/version.php ******************************
 
+=== v0.10.1-b2 ======= 2015-08-06 ============ db revision 2000 ========================================================
+- bugfix: time of day difference between client & server: Messes up with the time recording. Server was behind and
+    timer would start at -50 second because of a 10 second difference. I removed this attempt of managing the offset
+    between client & server, because in fact it is irrelevant. What is, is to have precise delta between start and
+    stop. Since it is now ONLY the server's that is used, for both start/end. So even if client is 5 minutes behind,
+    the user may see a difference in the hour:minutes, it will show in the start as well as the end, but the gap is
+    valid.
+- some corrections in query results evaluations.
+
+
+
 === v0.10.1-b1 ======= 2015-08-06 ============ db revision 2000 ========================================================
 - bugfix: invoice panel width not following. Solved.
 - demo: some attempt to figure out how ki_demo (demoextention) is supposed to perform, or if it even ever worked.(!)

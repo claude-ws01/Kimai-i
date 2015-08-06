@@ -26,13 +26,12 @@
  * @author Kevin Papst
  * @author Alexander Bauer
  */
-
 // used in core/includes/classes/remote.class.php         class Kimai_Remote_Api
 class ApiDatabase
 {
 
     /**
-     * @param $kga
+     * @param                      $kga
      * @param Kimai_Database_Mysql $database
      */
     public function __construct()
@@ -42,7 +41,7 @@ class ApiDatabase
     public function __call($fnName, $arguments)
     {
         global $database;
-        
+
         return call_user_func_array(array($database, $fnName), $arguments);
     }
 
@@ -70,9 +69,14 @@ class ApiDatabase
 	              LEFT JOIN $tbl_customer USING(customer_id)
 	              WHERE $tbl_expense.`expense_id` = $id LIMIT 1;";
 
-        $database->query($query);
+        $result = $database->query($query);
 
-        return $database->rowArray(0, MYSQLI_ASSOC);
+        if ($result->num_rows === 0) {
+            return array();
+        }
+        else {
+            return $database->rowArray(0, MYSQLI_ASSOC);
+        }
     }
 
     /*
@@ -88,7 +92,7 @@ class ApiDatabase
         global $database, $kga;
 
         $tbl_expense = TBL_EXPENSE;
-        $expId = $database->sqlValue($expId, MySQL::SQLVALUE_NUMBER);
+        $expId       = $database->sqlValue($expId, MySQL::SQLVALUE_NUMBER);
 
         if ($expId) {
             $result = $database->query("SELECT * FROM $tbl_expense WHERE `expense_id` = " . $expId);
@@ -97,11 +101,11 @@ class ApiDatabase
             $result = $database->query("SELECT * FROM $tbl_expense WHERE `user_id` = " . $kga['user']['user_id'] . " ORDER BY `expense_id` DESC LIMIT 1");
         }
 
-        if (!$result) {
+        if ($result->num_rows === 0) {
             return false;
         }
 
-            return $database->rowArray(0, MYSQLI_ASSOC);
+        return $database->rowArray(0, MYSQLI_ASSOC);
     }
 
     /*
@@ -159,7 +163,7 @@ class ApiDatabase
         }
 
         if (!empty($limitRows)) {
-            $startRows = (int) $startRows;
+            $startRows = (int)$startRows;
             $limit     = "LIMIT $startRows, $limitRows";
         }
         else {
@@ -186,14 +190,11 @@ class ApiDatabase
 	  		$where
 	  		ORDER BY timestamp $orderDirection $limit";
 
-        $database->query($query);
+        $result = $database->query($query);
 
         // return only the number of rows, ignoring LIMIT
         if ($countOnly) {
-            $database->moveFirst();
-            $row = $database->row();
-
-            return $row->total;
+            return $result->num_rows;
         }
 
 
@@ -203,7 +204,7 @@ class ApiDatabase
         // toArray();
         while (!$database->endOfSeek()) {
             $row     = $database->row();
-            $arr[$i] = (array) $row;
+            $arr[$i] = (array)$row;
             $i++;
         }
 
@@ -227,11 +228,17 @@ class ApiDatabase
     public function expenses_widthhereClausesFromFilters($users, $customers, $projects)
     {
         global $database;
-        
-        
-        if (!is_array($users)) $users = array();
-        if (!is_array($customers)) $customers = array();
-        if (!is_array($projects)) $projects = array();
+
+
+        if (!is_array($users)) {
+            $users = array();
+        }
+        if (!is_array($customers)) {
+            $customers = array();
+        }
+        if (!is_array($projects)) {
+            $projects = array();
+        }
 
         foreach ($users as $i => $user) {
             $users[$i] = $database->sqlValue($user, MySQL::SQLVALUE_NUMBER);
@@ -273,11 +280,11 @@ class ApiDatabase
      * @author sl
      * @author Alexander Bauer
      */
-    function expense_create(Array $data)
+    public function expense_create(Array $data)
     {
         global $database;
-        
-        $data = $database->clean_data($data);
+
+        $data   = $database->clean_data($data);
         $values = array();
 
         if (isset($data ['timestamp'])) {
@@ -323,7 +330,7 @@ class ApiDatabase
      * @author th
      * @author Alexander Bauer
      */
-    function expense_edit($id, Array $data)
+    public function expense_edit($id, Array $data)
     {
         global $database;
 
@@ -333,7 +340,7 @@ class ApiDatabase
         $new_array      = array();
 
         foreach ($original_array as $key => $value) {
-            if (isset($data[$key]) == true) {
+            if (isset($data[$key]) === true) {
                 $new_array[$key] = $data[$key];
             }
             else {
@@ -342,17 +349,17 @@ class ApiDatabase
         }
 
         $values ['project_id']   = $database->sqlValue($new_array ['project_id'], MySQL::SQLVALUE_NUMBER);
-        $values ['description'] = $database->sqlValue($new_array ['description']);
-        $values ['comment']     = $database->sqlValue($new_array ['comment']);
+        $values ['description']  = $database->sqlValue($new_array ['description']);
+        $values ['comment']      = $database->sqlValue($new_array ['comment']);
         $values ['comment_type'] = $database->sqlValue($new_array ['comment_type'], MySQL::SQLVALUE_NUMBER);
-        $values ['timestamp']   = $database->sqlValue($new_array ['timestamp'], MySQL::SQLVALUE_NUMBER);
-        $values ['multiplier']  = $database->sqlValue($new_array ['multiplier'], MySQL::SQLVALUE_NUMBER);
-        $values ['value']       = $database->sqlValue($new_array ['value'], MySQL::SQLVALUE_NUMBER);
-        $values ['refundable']  = $database->sqlValue($new_array ['refundable'], MySQL::SQLVALUE_NUMBER);
-        $values ['cleared']     = $database->sqlValue($new_array ['cleared'], MySQL::SQLVALUE_NUMBER);
+        $values ['timestamp']    = $database->sqlValue($new_array ['timestamp'], MySQL::SQLVALUE_NUMBER);
+        $values ['multiplier']   = $database->sqlValue($new_array ['multiplier'], MySQL::SQLVALUE_NUMBER);
+        $values ['value']        = $database->sqlValue($new_array ['value'], MySQL::SQLVALUE_NUMBER);
+        $values ['refundable']   = $database->sqlValue($new_array ['refundable'], MySQL::SQLVALUE_NUMBER);
+        $values ['cleared']      = $database->sqlValue($new_array ['cleared'], MySQL::SQLVALUE_NUMBER);
 
         $filter ['`expense_id`'] = $database->sqlValue($id, MySQL::SQLVALUE_NUMBER);
-        $query                = MySQL::buildSqlUpdate(TBL_EXPENSE, $values, $filter);
+        $query                   = MySQL::buildSqlUpdate(TBL_EXPENSE, $values, $filter);
 
         return $database->query($query);
     }
@@ -366,7 +373,7 @@ class ApiDatabase
      * @global array  $kga kimai-global-array
      * @author th
      */
-    function expense_delete($id)
+    public function expense_delete($id)
     {
         global $database;
 

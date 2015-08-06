@@ -1,6 +1,6 @@
 <?php global $kga; ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<html lang="en">
 <head>
     <link rel="SHORTCUT ICON" href="favicon.ico">
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
@@ -101,7 +101,7 @@
 <div id="content">
     <div id="box">
         <div id="login" style="display:block;">
-            <form id="form0" action="index.php?a=chg_lang" method="post">
+            <form id="form0" action="index.php?a=chg_lang" method="post" style="margin-top: 20px;">
                 <div>
                     <label for="login_language"><?php echo $kga['dict']['lang'] ?>:</label>
                     <select id="login_language" onchange="chgLanguage(this)" name="language">

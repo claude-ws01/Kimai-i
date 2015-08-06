@@ -23,6 +23,7 @@ class Rounding
     public static function roundTimespan($start, $end, $steps, $allowRoundDown)
     {
         // calculate how long a steps is (e.g. 15 second steps are 900 seconds long)
+        $steps = (int)$steps;
         $stepWidth = $steps * 60;
 
         if ($steps === 0) {
@@ -78,7 +79,7 @@ class Rounding
         $realDuration = $realEnd - $realStart;
         $newDuration  = $newEnd - $newStart;
 
-        if ($allowRoundDown) {
+        if ($allowRoundDown === '1') {
             if (abs($realDuration - $newDuration) > abs($realDuration - $bestTime['duration'])) {
                 // new times are definitely worse, as the timespan is furher away from the real duration
                 return;

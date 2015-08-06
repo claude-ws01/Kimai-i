@@ -414,10 +414,6 @@ function startRecord(projectID, activityID, userID) {
     hour = 0;
     min = 0;
     sec = 0;
-    now = Math.floor(((new Date()).getTime()) / 1000);
-    offset = 0;
-    startsec = now;
-    show_stopwatch();
     value = projectID + "|" + activityID;
 
     $('#ajax_wait').show();
@@ -431,6 +427,11 @@ function startRecord(projectID, activityID, userID) {
             var data = jQuery.parseJSON(response);
 
             currentRecording = data['id'];
+            now = Math.floor(((new Date()).getTime()) / 1000);
+            offset = 0;
+            startsec = now;
+            show_stopwatch();
+
             buzzer.removeClass('disabled');
             ts_ext_reload();
         }
@@ -461,15 +462,14 @@ function stopRecord() {
     );
 }
 
-function updateRecordStatus(record_ID, record_startTime, customerID, customerName, projectID, projectName, activityID, activityName) {
+function updateRecordStatus(record_ID, customerID, customerName, projectID, projectName, activityID, activityName) {
+
     if (record_ID == false) {
         // no recording is running anymore
         currentRecording = -1;
         show_selectors();
         return;
     }
-
-    startsec = record_startTime;
 
     if (selected_project != projectID)
         buzzer_preselect_project(projectID, projectName, customerID, customerName, false);
@@ -599,8 +599,8 @@ function ticktac() {
     startsecoffset = startsec ? startsec : offset;
     sek = Math.floor((new Date()).getTime() / 1000) - startsecoffset;
     hour = Math.floor(sek / 3600);
-    min = Math.floor((sek - hour * 3600) / 60);
-    sec = Math.floor(sek - hour * 3600 - min * 60);
+    min = Math.floor((sek - (hour * 3600)) / 60);
+    sec = Math.floor(sek - (hour * 3600) - (min * 60));
     var htmp, mtmp, stmp, titleclock,
         ss = $("#s"),
         mm = $("#m"),

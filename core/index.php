@@ -71,7 +71,10 @@ $view->kga = $kga;
 // = installation required? =
 // ==========================
 $users = $database->get_users();
-if (count($users) === 0) {
+if (count($users) === 0
+    && file_exists(WEBROOT . 'includes/autoconf.php') === false
+) {
+
     $view->devtimespan = '2015-' . date('y');
     if (isset($_REQUEST['disagreedGPL'])) {
         $view->disagreedGPL = 1;

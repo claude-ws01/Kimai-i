@@ -448,9 +448,9 @@ switch ($axAction) {
 
         // user can change these settings
         if (isset($kga['pref'])) {
-            $view->hideComments     = $kga['pref']['show_comments_by_default'] != 1;
-            $view->showOverlapLines = $kga['pref']['hide_overlap_lines'] != 1;
-            $view->show_ref_code    = $kga['pref']['show_ref_code'] != 0;
+            $view->hideComments     = $kga['pref']['show_comments_by_default'] !== '1';
+            $view->showOverlapLines = $kga['pref']['hide_overlap_lines'] !== '1';
+            $view->show_ref_code    = $kga['pref']['show_ref_code'] !== '0';
         }
 
         $view->showRates = array_key_exists('user', $kga) && $database->global_role_allows(any_get_global_role_id(), 'ki_timesheet__show_rates');

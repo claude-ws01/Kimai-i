@@ -178,14 +178,9 @@ class MySQL
             return false;
         }
         else {
-            $sql = self::buildSqlDelete($tableName, $whereArray);
-            // Execute the UPDATE
-            if (!$this->query($sql)) {
-                return false;
-            }
-            else {
-                return true;
-            }
+            $query = self::buildSqlDelete($tableName, $whereArray);
+
+            return $this->query($query) !== false;
         }
     }
 
@@ -288,17 +283,15 @@ class MySQL
     public function hasRecords($sql = '')
     {
         if (strlen($sql) > 0) {
-            $this->query($sql);
+            $result = $this->query($sql);
             if ($this->error()) {
                 return false;
             }
+
+            return ($result->num_rows > 0);
         }
-        if ($this->rowCount() > 0) {
-            return true;
-        }
-        else {
-            return false;
-        }
+
+        return false;
     }
 
     /**
@@ -323,7 +316,7 @@ class MySQL
         else {
             // Execute the query
             $sql = self::buildSqlInsert($tableName, $valuesArray);
-            if (!$this->query($sql)) {
+            if ($this->query($sql) === false) {
                 return false;
             }
             else {
@@ -372,10 +365,10 @@ class MySQL
      *
      * @param string $sql The query string should not end with a semicolon
      *
-     * @return object PHP 'mysql result' resource object containing the records
-     *                on SELECT, SHOW, DESCRIBE or EXPLAIN queries and returns;
-     *                TRUE or FALSE for all others i.e. UPDATE, DELETE, DROP
-     *                AND FALSE on all errors (setting the local Error message)
+     * @return mysqli_result|bool PHP 'mysqlI result' resource object containing the records
+     *                              on SELECT, SHOW, DESCRIBE or EXPLAIN queries and returns;
+     *                              TRUE or FALSE for all others i.e. UPDATE, DELETE, DROP
+     *                              AND FALSE on all errors (setting the local Error message)
      */
     public function query($sql)
     {
@@ -387,28 +380,25 @@ class MySQL
 
 
         $this->last_result = mysqli_query($this->link, $sql);
-        //DEBUG// error_log('<<============ QUERY ============>>');
 
 
         if ($this->last_result === false) {
-            //DEBUG// error_log('<<== QUERY EMPTY ==>>' . PHP_EOL . $sql);
-
+            // ERROR  ===>>> RETURN FALSE
             $this->setError(mysqli_error($this->link));
 
             return false;
         }
 
-        elseif (strpos(strtolower($sql), 'insert') === 0) {
-
+        elseif (strpos(strtolower($sql), 'insert')  === 0) {
             $this->last_insert_id = mysqli_insert_id($this->link);
-            //DEBUG// error_log('<<== QUERY INSERT - ID ==>' . $this->last_insert_id . '<== ID ==>>' . PHP_EOL . $sql);
 
             if ($this->last_insert_id === false) {
                 $this->setError();
-
+                // ERROR ===>>> RETURN FALSE
                 return false;
             }
             else {
+                // INSERTED ===>>> RETURN result array
                 return $this->last_result;
             }
         }
@@ -416,18 +406,18 @@ class MySQL
         elseif (strpos(strtolower($sql), 'select') === 0) {
 
             $this->num_rows = mysqli_num_rows($this->last_result);
-            //DEBUG// error_log('<<== QUERY SELECT - nb of records ==>' . $this->num_rows . '<== RECORDS ==>>' . PHP_EOL . $sql);
 
             if ($this->num_rows > 0) {
                 $this->active_row = 0;
             }
 
+            // SELECTED ===>>> RETURN result array (even if no records)
             return $this->last_result;
         }
 
         else {
-            //DEBUG//error_log('<<== QUERY OTHER ==>>' . PHP_EOL . $sql);
 
+            // ANY OTHER SUCCESFUL OPERATIONS  ===>>> RETURN result array //
             return $this->last_result;
         }
     }
@@ -444,8 +434,10 @@ class MySQL
      */
     protected function queryArray($sql, $resultType = MYSQLI_BOTH)
     {
-        $this->query($sql);
-        if (!$this->error()) {
+        $result = $this->query($sql);
+        if (!$this->error()
+            && $result->num_rows > 0
+        ) {
             return $this->recordsArray($resultType);
         }
         else {
@@ -747,7 +739,7 @@ class MySQL
      *                               This only works if $sortColumns are specified
      * @param         integer        /string $limit (Optional) The limit of rows to return
      *
-     * @return boolean|array         Returns records on success or FALSE on error
+     * @return boolean|mysqli_result         Returns records on success or FALSE on error
      */
     public function selectRows($tableName, $whereArray = null, $columns = null, $sortColumns = null,
                                $sortAscending = true, $limit = null)
@@ -940,14 +932,9 @@ class MySQL
             return false;
         }
         else {
-            $sql = self::buildSqlUpdate($tableName, $valuesArray, $whereArray);
-            // Execute the UPDATE
-            if (!$this->query($sql)) {
-                return false;
-            }
-            else {
-                return true;
-            }
+            $query = self::buildSqlUpdate($tableName, $valuesArray, $whereArray);
+
+            return ($this->query($query) !== false);
         }
     }
 

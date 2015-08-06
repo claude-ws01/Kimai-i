@@ -29,11 +29,11 @@ function exec_query($query)
 {
     global $database;
 
-    $success   = $database->query($query);
+    $result   = $database->query($query);
     $errorInfo = serialize($database->error());
 
     Logger::logfile($query);
-    if (!$success) {
+    if ($result === false) {
         Logger::logfile($errorInfo);
 
         return false;
@@ -91,7 +91,7 @@ if ($authenticated && isset($_REQUEST['submit'])) {
         $query        = ('SHOW TABLES;');
 
         if (is_object($database)) {
-            $success = $database->query($query);
+            $result = $database->query($query);
             $tables  = $database->recordsArray();
 
             $prefix_length = strlen($p);
@@ -105,7 +105,7 @@ if ($authenticated && isset($_REQUEST['submit'])) {
 
                         $backupTable = "kimai_bak_${backup_stamp}_${row[0]}";
 
-                        $query       = "CREATE TABLE $backupTable LIKE $row[0]";
+                        $query       = "CREATE TABLE IF NOT EXISTS $backupTable LIKE $row[0]";
                         $ok = exec_query($query);
 
                         if (!$ok) {
@@ -147,7 +147,7 @@ if ($authenticated && isset($_REQUEST['submit'])) {
         $query = ('SHOW TABLES;');
         $tables = array();
         if (is_object($database)) {
-            $success = $database->query($query);
+            $result = $database->query($query);
             $tables  = $database->recordsArray();
         }
 
@@ -168,8 +168,8 @@ if ($authenticated && isset($_REQUEST['submit'])) {
             }
             else {
                 foreach ($arr2 AS $row) {
-                    $success = $database->query($row);
-                    if (!$success) {
+                    $result = $database->query($row);
+                    if ($result === false) {
                         Logger::logfile('-- delete backup error - ' . $row);
                         break;
                     }
@@ -291,7 +291,7 @@ if ($authenticated && isset($_REQUEST['submit'])) {
             $ok     = true;
 
             if (is_object($database)) {
-                $success = $database->query($query);
+                $result = $database->query($query);
                 $tables  = $database->recordsArray();
             }
 
@@ -321,7 +321,7 @@ if ($authenticated && isset($_REQUEST['submit'])) {
                         Logger::logfile('-- restore error - ' . $query);
                     }
                     else {
-                        $query = "CREATE TABLE $newTable LIKE $arr[$i]";
+                        $query = "CREATE TABLE IF NOT EXISTS $newTable LIKE $arr[$i]";
                         $ok    = exec_query($query);
                     }
 

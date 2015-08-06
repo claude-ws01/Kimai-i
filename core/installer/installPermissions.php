@@ -7,7 +7,7 @@ function buildRoleTableCreateQuery($tableName, $idColumnName, $permissions)
     $p = $kga['server_prefix'];
 
     $query =
-        "CREATE TABLE `${p}${tableName}` (
+        "CREATE TABLE IF NOT EXISTS `${p}${tableName}` (
           `${idColumnName}` int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
           `name` VARCHAR( 40 ) NOT NULL,";
 

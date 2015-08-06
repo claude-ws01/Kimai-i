@@ -505,7 +505,7 @@ function exec_query($query, $errorProcessing = true, $displayQuery = null)
     global $database, $errors, $executed_queries;
 
     $executed_queries++;
-    $success = $database->query($query);
+    $result = $database->query($query);
     Logger::logfile($query);
 
     $err = $database->error();
@@ -513,7 +513,7 @@ function exec_query($query, $errorProcessing = true, $displayQuery = null)
     $query        = htmlspecialchars($query);
     $displayQuery = htmlspecialchars($displayQuery);
 
-    if ($success) {
+    if ($result !== false) {
         $level = 'green';
     }
     elseif ($errorProcessing) {
@@ -526,7 +526,7 @@ function exec_query($query, $errorProcessing = true, $displayQuery = null)
 
     printLine($level, ($displayQuery === null ? $query : $displayQuery), $err);
 
-    if (!$success) {
+    if ($result === false) {
         Logger::logfile("An error has occured in query: $query");
         $err = $database->error();
 
@@ -602,7 +602,7 @@ function quoteForSql($input)
         foreach ($result_backup as $row) {
             if ((substr($row[0], 0, $prefix_length) === $p) && (substr($row[0], 0, 10) !== 'kimai_bak_')) {
                 $backupTable = 'kimai_bak_' . $backup_stamp . '_' . $row[0];
-                $query       = "CREATE TABLE ${backupTable} LIKE " . $row[0];
+                $query       = "CREATE TABLE IF NOT EXISTS ${backupTable} LIKE " . $row[0];
                 exec_query($query);
 
                 $query = "INSERT INTO ${backupTable} SELECT * FROM " . $row[0];
@@ -696,7 +696,7 @@ function quoteForSql($input)
         $query = "SELECT * FROM `${p}usr` JOIN `${p}conf` ON `${p}usr`.usr_ID = `${p}conf`.conf_usrID";
 
         if (is_object($database)) {
-            $success = $database->query($query);
+            $result = $database->query($query);
             $executed_queries++;
 
             $arr  = array();
@@ -714,13 +714,13 @@ function quoteForSql($input)
                       '$row[secure]',$row[rowlimit],'$row[skin]',$row[lastProject],$row[lastEvent],$row[lastRecord],$row[filter],$row[filter_knd],$row[filter_pct],$row[filter_evt],
                       $row[view_knd],$row[view_pct],$row[view_evt],$row[zef_anzahl],'$row[timespace_in]','$row[timespace_out]',$row[autoselection],$row[quickdelete],$row[allvisible],'$row[lang]');
 SQL;
-                $success = $database->query($query);
+                $result = $database->query($query);
                 $executed_queries++;
                 echo '<td>' . $query . '<br/>';
                 echo '<span class="error_info">' . $database->error() . '</span>';
                 echo '</td>';
 
-                if ($success) {
+                if ($result !== false) {
                     echo '<td class="green">&nbsp;&nbsp;</td>';
                 }
                 else {
@@ -757,14 +757,14 @@ SQL;
         //////// ---------------------------------------------------------------------------------------------------
 
         // put the existing group-customer-relations into the new table
-        exec_query("CREATE TABLE `${p}grp_knd` (`uid` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `grp_ID` INT NOT NULL, `knd_ID` INT NOT NULL)", 0);
+        exec_query("CREATE TABLE IF NOT EXISTS `${p}grp_knd` (`uid` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `grp_ID` INT NOT NULL, `knd_ID` INT NOT NULL)", 0);
 
         //////// ---------------------------------------------------------------------------------------------------
 
         $query = "SELECT `knd_ID`, `knd_grpID` FROM ${p}knd";
 
         if (is_object($database)) {
-            $success = $database->query($query);
+            $result = $database->query($query);
             $executed_queries++;
 
             $arr  = array();
@@ -772,13 +772,13 @@ SQL;
             foreach ($rows as $row) {
                 echo '<tr>';
                 $query   = "INSERT INTO ${p}grp_knd (`grp_ID`, `knd_ID`) VALUES ({$row['knd_grpID']}, {$row['knd_ID']})";
-                $success = $database->query($query);
+                $result = $database->query($query);
                 $executed_queries++;
                 echo '<td>' . $query . '<br/>';
                 echo '<span class="error_info">' . $database->error() . '</span>';
                 echo '</td>';
 
-                if ($success) {
+                if ($result !== false) {
                     echo '<td class="green">&nbsp;&nbsp;</td>';
                 }
                 else {
@@ -793,14 +793,14 @@ SQL;
         //////// ---------------------------------------------------------------------------------------------------
 
         // put the existing group-project-relations into the new table
-        exec_query("CREATE TABLE ${p}grp_pct (`uid` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `grp_ID` INT NOT NULL, `pct_ID` INT NOT NULL)");
+        exec_query("CREATE TABLE IF NOT EXISTS ${p}grp_pct (`uid` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `grp_ID` INT NOT NULL, `pct_ID` INT NOT NULL)");
 
         //////// ---------------------------------------------------------------------------------------------------
 
         $query = "SELECT `pct_ID`, `pct_grpID` FROM ${p}pct";
 
         if (is_object($database)) {
-            $success = $database->query($query);
+            $result = $database->query($query);
             $executed_queries++;
 
             $arr  = array();
@@ -808,13 +808,13 @@ SQL;
             foreach ($rows as $row) {
                 echo '<tr>';
                 $query   = "INSERT INTO ${p}grp_pct (`grp_ID`, `pct_ID`) VALUES (" . $row['pct_grpID'] . ', ' . $row['pct_ID'] . ')';
-                $success = $database->query($query);
+                $result = $database->query($query);
                 $executed_queries++;
                 echo '<td>' . $query . '<br/>';
                 echo '<span class="error_info">' . $database->error() . '</span>';
                 echo '</td>';
 
-                if ($success) {
+                if ($result !== false) {
                     echo '<td class="green">&nbsp;&nbsp;</td>';
                 }
                 else {
@@ -827,7 +827,7 @@ SQL;
         //////// ---------------------------------------------------------------------------------------------------
 
         // put the existing group-event-relations into the new table
-        exec_query("CREATE TABLE ${p}grp_evt (`uid` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `grp_ID` INT NOT NULL, `evt_ID` INT NOT NULL)");
+        exec_query("CREATE TABLE IF NOT EXISTS ${p}grp_evt (`uid` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `grp_ID` INT NOT NULL, `evt_ID` INT NOT NULL)");
 
         //////// ---------------------------------------------------------------------------------------------------
 
@@ -835,7 +835,7 @@ SQL;
         $query = "SELECT `evt_ID`, `evt_grpID` FROM ${p}evt";
 
         if (is_object($database)) {
-            $success = $database->query($query);
+            $result = $database->query($query);
             $executed_queries++;
 
             $arr  = array();
@@ -843,12 +843,12 @@ SQL;
             foreach ($rows as $row) {
                 echo '<tr>';
                 $query   = "INSERT INTO ${p}grp_evt (`grp_ID`, `evt_ID`) VALUES (" . $row['evt_grpID'] . ', ' . $row['evt_ID'] . ')';
-                $success = $database->query($query);
+                $result = $database->query($query);
                 $executed_queries++;
                 echo '<td>' . $query;
                 echo '</td>';
 
-                if ($success) {
+                if ($result !== false) {
                     echo "<td class='green'>&nbsp;&nbsp;</td>";
                 }
                 else {
@@ -907,7 +907,7 @@ SQL;
 
     if ($revisionDB < 898) {
         Logger::logfile('-- update to r898');
-        exec_query("CREATE TABLE `${p}rates` (
+        exec_query("CREATE TABLE IF NOT EXISTS `${p}rates` (
                   `user_id` int(10) DEFAULT NULL,
                   `project_id` int(10) DEFAULT NULL,
                   `event_id` int(10) DEFAULT NULL,
@@ -924,7 +924,7 @@ SQL;
 
     if ($revisionDB < 935) {
         Logger::logfile('-- update to r935');
-        exec_query("CREATE TABLE `${p}exp` (
+        exec_query("CREATE TABLE IF NOT EXISTS `${p}exp` (
                   `exp_ID` int(10) NOT NULL AUTO_INCREMENT,
                   `exp_timestamp` int(10) NOT NULL DEFAULT '0',
                   `exp_usrID` int(10) NOT NULL,
@@ -1095,7 +1095,7 @@ if ($revisionDB < 1112) {
 
     if ($revisionDB < 1185) {
         Logger::logfile('-- update to r1185');
-        exec_query("CREATE TABLE ${p}pct_evt (`uid` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `pct_ID` INT NOT NULL, `evt_ID` INT NOT NULL, UNIQUE (`pct_ID` ,`evt_ID`)) ;");
+        exec_query("CREATE TABLE IF NOT EXISTS ${p}pct_evt (`uid` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `pct_ID` INT NOT NULL, `evt_ID` INT NOT NULL, UNIQUE (`pct_ID` ,`evt_ID`)) ;");
     }
 
     if ($revisionDB < 1206) {
@@ -1132,7 +1132,7 @@ if ($revisionDB < 1112) {
 
     if ($revisionDB < 1225) {
         Logger::logfile('-- update to r1225');
-        exec_query("CREATE TABLE `${p}preferences` (
+        exec_query("CREATE TABLE IF NOT EXISTS `${p}preferences` (
                   `userID` int(10) NOT NULL,
                   `var` varchar(255) NOT NULL,
                   `value` varchar(255) NOT NULL,
@@ -1311,7 +1311,7 @@ if ($revisionDB < 1112) {
     if ($revisionDB < 1332) {
         Logger::logfile('-- update to r1332');
         $query =
-            "CREATE TABLE `${p}fixed_rates` (
+            "CREATE TABLE IF NOT EXISTS `${p}fixed_rates` (
               `project_id` int(10) DEFAULT NULL,
               `event_id` int(10) DEFAULT NULL,
               `rate` decimal(10,2) NOT NULL
@@ -1323,7 +1323,7 @@ if ($revisionDB < 1112) {
     if ($revisionDB < 1333) {
         Logger::logfile('-- update to r1333');
         $query =
-            "CREATE TABLE `${p}grp_usr` (
+            "CREATE TABLE IF NOT EXISTS `${p}grp_usr` (
               `grp_ID` int(10) NOT NULL,
               `usr_ID` int(10) NOT NULL,
               PRIMARY KEY (`grp_ID`,`usr_ID`)
@@ -1353,7 +1353,7 @@ if ($revisionDB < 1112) {
                         ADD `zef_status` SMALLINT DEFAULT 1,
                         ADD `zef_billable` TINYINT NULL");
 
-        exec_query("CREATE TABLE `${p}status` (
+        exec_query("CREATE TABLE IF NOT EXISTS `${p}status` (
                     `status_id` TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
                     `status` VARCHAR( 200 ) NOT NULL
                     ) ENGINE = InnoDB ");

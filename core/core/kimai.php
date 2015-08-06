@@ -76,7 +76,7 @@ else {
 $wd = $kga['dict']['weekdays_short'][date('w', time())];
 
 $dp_start = 0;
-if ($kga['calender_start'] != '') {
+if ($kga['calender_start'] !== '') {
     $dp_start = $kga['calender_start'];
 }
 else {

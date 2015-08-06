@@ -118,13 +118,16 @@ function select_css_file($file)
 
         var timeoutTicktack = 0;
 
+        // use to recover running timer's time.
         var hour = <?php echo $this->current_timer_hour ?>;
         var min = <?php echo $this->current_timer_min ?>;
         var sec = <?php echo $this->current_timer_sec ?>;
         var startsec = <?php echo $this->current_timer_start ?>;
         var now = <?php echo $this->current_time ?>;
-        var offset = Math.floor(((new Date()).getTime()) / 1000) - now;
 
+        // offset is not relevant. It just messes up the client's display.
+        // offset = Math.floor(((new Date()).getTime()) / 1000) - now;
+        var offset = 0;
 
         var default_title = "<?php echo array_key_exists('user', $kga) ? $this->escape($kga['user']['name']) : $this->escape($kga['customer']['name'])?> - Kimai";
         var revision = <?php echo $kga['core.revision'] ?>;

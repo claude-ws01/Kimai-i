@@ -384,7 +384,7 @@ switch ($axAction) {
         }
         else {
             $view->groups = array_filter($groups, function ($group) {
-                return in_array($group['group_id'], any_get_group_ids(),true) !== false;
+                return in_array($group['group_id'], any_get_group_ids(), true) !== false;
             });
         }
 
@@ -691,32 +691,32 @@ switch ($axAction) {
         if (count($errors) === 0) {
             // process AdvancedOptions form
             // @formatter:off
-            if (isset($_REQUEST['admin_mail']))               {config_set('admin_mail',                $_REQUEST['admin_mail']);                          }
-            if (isset($_REQUEST['login_tries']))              {config_set('login_tries',               $_REQUEST['login_tries']);                         }
-            if (isset($_REQUEST['login_ban_time']))           {config_set('login_ban_time',            $_REQUEST['login_ban_time']);                      }
-            if (isset($_REQUEST['show_sensible_data']))       {config_set('show_sensible_data',        $_REQUEST['show_sensible_data'],true,'bool');      }
-            if (isset($_REQUEST['show_update_warn']))         {config_set('show_update_warn',          $_REQUEST['show_update_warn'],true,'bool');        }
-            if (isset($_REQUEST['check_at_startup']))         {config_set('check_at_startup',          $_REQUEST['check_at_startup'],true,'bool');        }
-            if (isset($_REQUEST['check_at_startup']))         {config_set('check_at_startup',          $_REQUEST['check_at_startup'],true,'bool');        }
-            if (isset($_REQUEST['show_day_separator_lines'])) {config_set('show_day_separator_lines',  $_REQUEST['show_day_separator_lines'],true,'bool');}
-            if (isset($_REQUEST['show_gab_breaks']))          {config_set('show_gab_breaks',           $_REQUEST['show_gab_breaks'],true,'bool');         }
-            if (isset($_REQUEST['show_record_again']))        {config_set('show_record_again',         $_REQUEST['show_record_again'],true,'bool');       }
-            if (isset($_REQUEST['ref_num_editable']))         {config_set('ref_num_editable',          $_REQUEST['ref_num_editable'],true,'bool');        }
-            if (isset($_REQUEST['currency_name']))            {config_set('currency_name',             $_REQUEST['currency_name']);                       }
-            if (isset($_REQUEST['currency_sign']))            {config_set('currency_sign',             $_REQUEST['currency_sign']);                       }
-            if (isset($_REQUEST['currency_first']))           {config_set('currency_first',            $_REQUEST['currency_first'],true,'bool');          }
-            if (isset($_REQUEST['date_format_0']))            {config_set('date_format_0',             $_REQUEST['date_format_0']);                       }
-            if (isset($_REQUEST['date_format_1']))            {config_set('date_format_1',             $_REQUEST['date_format_1']);                       }
-            if (isset($_REQUEST['date_format_2']))            {config_set('date_format_2',             $_REQUEST['date_format_2']);                       }
-            if (isset($_REQUEST['round_precision']))          {config_set('round_precision',           $_REQUEST['round_precision']);                     }
-            if (isset($_REQUEST['allow_round_down']))         {config_set('allow_round_down',          $_REQUEST['allow_round_down'],true,'bool');        }
-            if (isset($_REQUEST['round_minutes']))            {config_set('round_minutes',             $_REQUEST['round_minutes'],true,'int');            }
-            if (isset($_REQUEST['round_seconds']))            {config_set('round_seconds',             $_REQUEST['round_seconds'],true,'int');            }
-            if (isset($_REQUEST['round_timesheet_entries']))  {config_set('round_timesheet_entries',   $_REQUEST['round_timesheet_entries'],true,'bool'); }
-            if (isset($_REQUEST['decimal_separator']))        {config_set('decimal_separator',         $_REQUEST['decimal_separator'],true,'str');        }
-            if (isset($_REQUEST['duration_with_seconds']))    {config_set('duration_with_seconds',     $_REQUEST['duration_with_seconds'],true,'bool');   }
-            if (isset($_REQUEST['exact_sums']))               {config_set('exact_sums',                $_REQUEST['exact_sums'],true,'bool');              }
-            if (isset($_REQUEST['vat_rate']))                 {config_set('vat_rate',                  $_REQUEST['vat_rate'],true);                       }
+            config_set('admin_mail',                isset($_REQUEST['admin_mail']               )? $_REQUEST['admin_mail']               : null );
+            config_set('login_tries',               isset($_REQUEST['login_tries']              )? $_REQUEST['login_tries']              : null );
+            config_set('login_ban_time',            isset($_REQUEST['login_ban_time']           )? $_REQUEST['login_ban_time']           : null );
+            config_set('show_sensible_data',        isset($_REQUEST['show_sensible_data']       )? $_REQUEST['show_sensible_data']       : null ,true,'bool');
+            config_set('show_update_warn',          isset($_REQUEST['show_update_warn']         )? $_REQUEST['show_update_warn']         : null ,true,'bool');
+            config_set('check_at_startup',          isset($_REQUEST['check_at_startup']         )? $_REQUEST['check_at_startup']         : null ,true,'bool');
+            config_set('check_at_startup',          isset($_REQUEST['check_at_startup']         )? $_REQUEST['check_at_startup']         : null ,true,'bool');
+            config_set('show_day_separator_lines',  isset($_REQUEST['show_day_separator_lines'] )? $_REQUEST['show_day_separator_lines'] : null ,true,'bool');
+            config_set('show_gab_breaks',           isset($_REQUEST['show_gab_breaks']          )? $_REQUEST['show_gab_breaks']          : null ,true,'bool');
+            config_set('show_record_again',         isset($_REQUEST['show_record_again']        )? $_REQUEST['show_record_again']        : null ,true,'bool');
+            config_set('ref_num_editable',          isset($_REQUEST['ref_num_editable']         )? $_REQUEST['ref_num_editable']         : null ,true,'bool');
+            config_set('currency_name',             isset($_REQUEST['currency_name']            )? $_REQUEST['currency_name']            : null );
+            config_set('currency_sign',             isset($_REQUEST['currency_sign']            )? $_REQUEST['currency_sign']            : null );
+            config_set('currency_first',            isset($_REQUEST['currency_first']           )? $_REQUEST['currency_first']           : null ,true,'bool');
+            config_set('date_format_0',             isset($_REQUEST['date_format_0']            )? $_REQUEST['date_format_0']            : null );
+            config_set('date_format_1',             isset($_REQUEST['date_format_1']            )? $_REQUEST['date_format_1']            : null );
+            config_set('date_format_2',             isset($_REQUEST['date_format_2']            )? $_REQUEST['date_format_2']            : null );
+            config_set('round_precision',           isset($_REQUEST['round_precision']          )? $_REQUEST['round_precision']          : null );
+            config_set('allow_round_down',          isset($_REQUEST['allow_round_down']         )? $_REQUEST['allow_round_down']         : null ,true,'bool');
+            config_set('round_minutes',             isset($_REQUEST['round_minutes']            )? $_REQUEST['round_minutes']            : null ,true,'int');
+            config_set('round_seconds',             isset($_REQUEST['round_seconds']            )? $_REQUEST['round_seconds']            : null ,true,'int');
+            config_set('round_timesheet_entries',   isset($_REQUEST['round_timesheet_entries']  )? $_REQUEST['round_timesheet_entries']  : null ,true,'bool');
+            config_set('decimal_separator',         isset($_REQUEST['decimal_separator']        )? $_REQUEST['decimal_separator']        : null ,true,'str');
+            config_set('duration_with_seconds',     isset($_REQUEST['duration_with_seconds']    )? $_REQUEST['duration_with_seconds']    : null ,true,'bool');
+            config_set('exact_sums',                isset($_REQUEST['exact_sums']               )? $_REQUEST['exact_sums']               : null ,true,'bool');
+            config_set('vat_rate',                  isset($_REQUEST['vat_rate']                 )? $_REQUEST['vat_rate']                 : null ,true);
             // @formatter:on
 
             $editLimit = false;
@@ -735,23 +735,23 @@ switch ($axAction) {
 
             // NEW USER DEFAULTS //
             // @formatter:off
-            config_set('ud.autoselection',              @$_REQUEST['ud_autoselection'], true, 'bool');
-            config_set('ud.flip_project_display',       @$_REQUEST['ud_flip_project_display'], true, 'bool');
-            config_set('ud.hide_cleared_entries',       @$_REQUEST['ud_hide_cleared_entries'], true, 'bool');
-            config_set('ud.hide_overlap_lines',         @$_REQUEST['ud_hide_overlap_lines'], true, 'bool');
-            config_set('ud.language',                   @$_REQUEST['ud_language']);
-            config_set('ud.no_fading',                  @$_REQUEST['ud_no_fading'], true, 'bool');
-            config_set('ud.open_after_recorded',        @$_REQUEST['ud_open_after_recorded'], true, 'bool');
-            config_set('ud.project_comment_flag',       @$_REQUEST['ud_project_comment_flag'], true, 'bool');
-            config_set('ud.quickdelete',                @$_REQUEST['ud_quickdelete'], true, 'bool');
-            config_set('ud.rowlimit',                   @$_REQUEST['ud_rowlimit'], false, 'int');
-            config_set('ud.show_comments_by_default',   @$_REQUEST['ud_show_comments_by_default'], true, 'bool');
-            config_set('ud.show_ids',                   @$_REQUEST['ud_show_ids'], true, 'bool');
-            config_set('ud.show_ref_code',              @$_REQUEST['ud_show_ref_code'], true, 'bool');
-            config_set('ud.skin',                       @$_REQUEST['ud_skin']);
-            config_set('ud.sublist_annotations',        @$_REQUEST['ud_sublist_annotations']);
-            config_set('ud.timezone',                   @$_REQUEST['ud_timezone']);
-            config_set('ud.user_list_hidden',           @$_REQUEST['ud_user_list_hidden'], true, 'bool');
+            config_set('ud.autoselection',              isset($_REQUEST['ud_autoselection']            ) ? $_REQUEST['ud_autoselection']            : null , true, 'bool');
+            config_set('ud.flip_project_display',       isset($_REQUEST['ud_flip_project_display']     ) ? $_REQUEST['ud_flip_project_display']     : null , true, 'bool');
+            config_set('ud.hide_cleared_entries',       isset($_REQUEST['ud_hide_cleared_entries']     ) ? $_REQUEST['ud_hide_cleared_entries']     : null , true, 'bool');
+            config_set('ud.hide_overlap_lines',         isset($_REQUEST['ud_hide_overlap_lines']       ) ? $_REQUEST['ud_hide_overlap_lines']       : null , true, 'bool');
+            config_set('ud.language',                   isset($_REQUEST['ud_language']                 ) ? $_REQUEST['ud_language']                 : null );
+            config_set('ud.no_fading',                  isset($_REQUEST['ud_no_fading']                ) ? $_REQUEST['ud_no_fading']                : null , true, 'bool');
+            config_set('ud.open_after_recorded',        isset($_REQUEST['ud_open_after_recorded']      ) ? $_REQUEST['ud_open_after_recorded']      : null , true, 'bool');
+            config_set('ud.project_comment_flag',       isset($_REQUEST['ud_project_comment_flag']     ) ? $_REQUEST['ud_project_comment_flag']     : null , true, 'bool');
+            config_set('ud.quickdelete',                isset($_REQUEST['ud_quickdelete']              ) ? $_REQUEST['ud_quickdelete']              : null , true, 'bool');
+            config_set('ud.rowlimit',                   isset($_REQUEST['ud_rowlimit']                 ) ? $_REQUEST['ud_rowlimit']                 : null , false, 'int');
+            config_set('ud.show_comments_by_default',   isset($_REQUEST['ud_show_comments_by_default'] ) ? $_REQUEST['ud_show_comments_by_default'] : null , true, 'bool');
+            config_set('ud.show_ids',                   isset($_REQUEST['ud_show_ids']                 ) ? $_REQUEST['ud_show_ids']                 : null , true, 'bool');
+            config_set('ud.show_ref_code',              isset($_REQUEST['ud_show_ref_code']            ) ? $_REQUEST['ud_show_ref_code']            : null , true, 'bool');
+            config_set('ud.skin',                       isset($_REQUEST['ud_skin']                     ) ? $_REQUEST['ud_skin']                     : null );
+            config_set('ud.sublist_annotations',        isset($_REQUEST['ud_sublist_annotations']      ) ? $_REQUEST['ud_sublist_annotations']      : null );
+            config_set('ud.timezone',                   isset($_REQUEST['ud_timezone']                 ) ? $_REQUEST['ud_timezone']                 : null );
+            config_set('ud.user_list_hidden',           isset($_REQUEST['ud_user_list_hidden']         ) ? $_REQUEST['ud_user_list_hidden']         : null , true, 'bool');
             // @formatter:on
             // 17 x user preferences - check.
 
@@ -788,7 +788,7 @@ switch ($axAction) {
         // Unban a user from login
         $sts['active'] = 1;
         $database->user_edit($id, $sts);
-        echo sprintf('<img border="0" title="%s" alt="%s" src="../skins/%s/grfx/jipp.gif" width="16" height="16" />', 
+        echo sprintf('<img border="0" title="%s" alt="%s" src="../skins/%s/grfx/jipp.gif" width="16" height="16" />',
                      $kga['dict']['activeAccount'], $kga['dict']['activeAccount'], $kga['pref']['skin']);
         break;
 }

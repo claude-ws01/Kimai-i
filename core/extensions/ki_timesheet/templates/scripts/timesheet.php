@@ -5,7 +5,7 @@ if ($this->timeSheetEntries) {
     <table id="ts_m_tbl">
 
         <colgroup>
-            <?php if (is_user()) echo '<col class="option"/>'; ?>
+            <?php if (is_user()) { echo '<col class="option"/>';} ?>
             <col class="date"/>
             <col class="from"/>
             <col class="to"/>
@@ -28,42 +28,42 @@ if ($this->timeSheetEntries) {
 
         foreach ($this->timeSheetEntries as $rowIndex => $row) {
             //Assign initial value to time buffer which must be larger than or equal to "end"
-            if ($time_buffer == 0) {
+            if ($time_buffer === 0) {
                 $time_buffer = $row['end'];
             }
 
-            if ($end_buffer == 0) {
+            if ($end_buffer === 0) {
                 $end_buffer = $row['end'];
             }
 
-            $start     = strftime("%d", $row['start']);
+            $start     = strftime('%d', $row['start']);
             $end       = (isset($row['end']) && $row['end']) ? $row['end'] : 0;
-            $ts_buffer = strftime("%H%M", $end);
+            $ts_buffer = strftime('%H%M', $end);
 
-            $tdClass = "";
+            $tdClass = '';
             if ($this->showOverlapLines && $end > $time_buffer) {
-                $tdClass = " time_overlap";
+                $tdClass = ' time_overlap';
             }
-            elseif ($kga['conf']['show_day_separator_lines'] && $start != $day_buffer) {
-                $tdClass = " break_day";
+            elseif ($kga['conf']['show_day_separator_lines'] && $start !== $day_buffer) {
+                $tdClass = ' break_day';
             }
-            elseif ($kga['conf']['show_gab_breaks'] && (strftime("%H%M", $time_buffer) - strftime("%H%M", $row['end']) > 1)) {
-                $tdClass = " break_gap";
+            elseif ($kga['conf']['show_gab_breaks'] && (strftime('%H%M', $time_buffer) - strftime('%H%M', $row['end']) > 1)) {
+                $tdClass = ' break_gap';
             }
             /*
-            if ($row['end'] > $time_buffer                      && $this->showOverlapLines)              echo "time_overlap";
-            elseif (strftime("%d",$row['start']) != $day_buffer && $kga['conf']['show_day_separator_lines']) echo "break_day";
-            elseif ($row['end'] != $start_buffer                && $kga['conf']['show_gab_breaks'])         echo "break_gap";
+            if ($row['end'] > $time_buffer                      && $this->showOverlapLines)              echo 'time_overlap';
+            elseif (strftime('%d',$row['start']) != $day_buffer && $kga['conf']['show_day_separator_lines']) echo 'break_day';
+            elseif ($row['end'] != $start_buffer                && $kga['conf']['show_gab_breaks'])         echo 'break_gap';
             */
 
             ?>
 
             <?php if ($row['end']): ?>
                 <tr id="ts_<?php echo $row['time_entry_id'] ?>"
-                    class="<?php echo $this->cycle(array("odd", "even"))->next() ?>"><?php else: ?><tr id="ts_Entry<?php echo $row['time_entry_id'] ?>" class="<?php echo $this->cycle(array("odd", "even"))->next() ?> active"><?php endif; ?>
+                    class="<?php echo $this->cycle(array('odd', 'even'))->next() ?>"><?php else: ?><tr id="ts_Entry<?php echo $row['time_entry_id'] ?>" class="<?php echo $this->cycle(array("odd", "even"))->next() ?> active"><?php endif; ?>
 
             <?php if (is_user()) { ?>
-            <td style="white-space: nowrap" class="option <?php echo $tdClass; ?>">
+            <td style="white-space: nowrap;" class="option <?php echo $tdClass; ?>">
                 <table style="width:100%;border:none;">
                     <tr>
 
@@ -92,7 +92,7 @@ if ($this->timeSheetEntries) {
                             </a>
                         </td>
                     <?php } ?>
-                    <?php if ($kga['conf']['edit_limit'] == "-" || time() - $row['end'] <= $kga['conf']['edit_limit']) {
+                    <?php if ($kga['conf']['edit_limit'] === '-' || time() - $row['end'] <= $kga['conf']['edit_limit']) {
                         //Edit Record Button
                         ?>
                         <td style="padding:0;border:none;">
@@ -127,16 +127,16 @@ if ($this->timeSheetEntries) {
             </td>
 
             <td class="from <?php echo $tdClass; ?>">
-                <?php echo $this->escape(strftime("%H:%M", $row['start'])); ?>
+                <?php echo $this->escape(strftime('%H:%M', $row['start'])); ?>
             </td>
 
             <td class="to <?php echo $tdClass; ?>">
                 <?php
                 if ($row['end']) {
-                    echo $this->escape(strftime("%H:%M", $row['end']));
+                    echo $this->escape(strftime('%H:%M', $row['end']));
                 }
                 else {
-                    echo "&ndash;&ndash;:&ndash;&ndash;";
+                    echo '&ndash;&ndash;:&ndash;&ndash;';
                 }
                 ?>
             </td>
@@ -147,7 +147,7 @@ if ($this->timeSheetEntries) {
                     echo $row['formatted_duration'];
                 }
                 else {
-                    echo "&ndash;:&ndash;&ndash;";
+                    echo '&ndash;:&ndash;&ndash;';
                 }
                 ?>
             </td>
@@ -159,7 +159,7 @@ if ($this->timeSheetEntries) {
                     echo $this->escape(str_replace('.', $kga['conf']['decimal_separator'], $row['wage']));
                 }
                 else {
-                    echo "&ndash;";
+                    echo '&ndash;';
                 }
                 ?>
                 </td>
@@ -172,7 +172,7 @@ if ($this->timeSheetEntries) {
                 <a href="#" class="preselect_lnk" title="<?php echo $kga['dict']['tip']['g_select_for_recording']; ?>"
                    onClick="buzzer_preselect_project(<?php echo $row['project_id'] ?>,'<?php echo $this->jsEscape($row['project_name']) ?>',<?php echo $this->jsEscape($row['customer_id']) ?>,'<?php echo $this->jsEscape($row['customer_name']) ?>');return false;">
                     <?php echo $this->escape($row['project_name']) ?>
-                    <?php if ($kga['pref']['project_comment_flag'] == 1 && $row['project_comment']): ?>
+                    <?php if ($kga['pref']['project_comment_flag'] === 1 && $row['project_comment']): ?>
                         <span class="lighter">(<?php echo $this->escape($row['project_comment']) ?>
                                               )</span><?php endif; ?>
                 </a>
@@ -184,16 +184,16 @@ if ($this->timeSheetEntries) {
                     <?php echo $this->escape($row['activity_name']) ?>
                 </a>
 
-                <?php if ($row['comment']): ?><?php if ($row['comment_type'] == '0'): ?><a href="#"
+                <?php if ($row['comment']): ?><?php if ($row['comment_type'] === '0'): ?><a href="#"
                                                                                            onClick="ts_ext_comment(<?php echo $row['time_entry_id'] ?>); $(this).blur(); return false;">
                     <img src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/blase.gif'
                          width="12" height="13" title='<?php echo $this->escape($row['comment']) ?>' border="0"/>
-                    </a><?php elseif ($row['comment_type'] == '1'): ?><a href="#"
+                    </a><?php elseif ($row['comment_type'] === '1'): ?><a href="#"
                                                                          onClick="ts_ext_comment(<?php echo $row['time_entry_id'] ?>); $(this).blur(); return false;">
                     <img src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/blase_sys.gif'
                          width="12" height="13" title='<?php echo $this->escape($row['comment']) ?>' border="0"/>
                     </a><?php
-                elseif ($row['comment_type'] == '2'): ?><a href="#"
+                elseif ($row['comment_type'] === '2'): ?><a href="#"
                                                            onClick="ts_ext_comment(<?php echo $row['time_entry_id'] ?>); $(this).blur(); return false;">
                     <img
                         src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/blase_caution.gif'
@@ -220,7 +220,7 @@ if ($this->timeSheetEntries) {
                 </tr><?php endif; ?>
 
             <?php
-            $day_buffer  = strftime("%d", $row['start']);
+            $day_buffer  = strftime('%d', $row['start']);
             $time_buffer = $row['start'];
             $end_buffer  = $row['end'];
         }
@@ -245,14 +245,18 @@ else {
     lists_update_annotations(parseInt($('#gui').find('div.ext.ki_timesheet').attr('id').substring(7)), ts_user_annotations, ts_customer_annotations, ts_project_annotations, ts_activity_annotations);
     $('#display_total').html(ts_total);
 
-    <?php if ($this->latest_running_entry == null): ?>
+    <?php if ($this->latest_running_entry === null): ?>
     updateRecordStatus(false);
     <?php else: ?>
 
-    updateRecordStatus(<?php echo $this->latest_running_entry['time_entry_id']?>, <?php echo $this->latest_running_entry['start']?>,
-        <?php echo $this->latest_running_entry['customer_id']?>, '<?php echo $this->jsEscape($this->latest_running_entry['customer_name'])?>',
-        <?php echo $this->latest_running_entry['project_id']?>, '<?php echo $this->jsEscape($this->latest_running_entry['project_name'])?>',
-        <?php echo $this->latest_running_entry['activity_id']?>, '<?php echo $this->jsEscape($this->latest_running_entry['activity_name'])?>');
+    updateRecordStatus(
+        <?php echo $this->latest_running_entry['time_entry_id']?>,
+        <?php echo $this->latest_running_entry['customer_id']?>,
+        '<?php echo $this->jsEscape($this->latest_running_entry['customer_name'])?>',
+        <?php echo $this->latest_running_entry['project_id']?>,
+        '<?php echo $this->jsEscape($this->latest_running_entry['project_name'])?>',
+        <?php echo $this->latest_running_entry['activity_id']?>,
+        '<?php echo $this->jsEscape($this->latest_running_entry['activity_name'])?>');
     <?php endif; ?>
 
     function timesheet_hide_column(name) {

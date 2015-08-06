@@ -293,7 +293,7 @@ function expense_get($expenseID)
         $result = $database->query("SELECT * FROM ${p}expense WHERE user_id = {$kga['user']['user_id']} ORDER BY expense_id DESC LIMIT 1");
     }
 
-    if (!$result) {
+    if ($result->num_rows === 0) {
         return false;
     }
     else {
@@ -323,7 +323,7 @@ function expense_edit($id, array $data)
     $new_array      = array();
 
     foreach ($original_array as $key => $value) {
-        if (isset($data[$key]) == true) {
+        if (isset($data[$key])) {
             $new_array[$key] = $data[$key];
         }
         else {
@@ -343,13 +343,8 @@ function expense_edit($id, array $data)
     $filter ['expense_id'] = $database->sqlValue($id, MySQL::SQLVALUE_NUMBER);
     $query                 = MySQL::buildSqlUpdate(TBL_EXPENSE, $values, $filter);
 
-    $success = true;
 
-    if (!$database->query($query)) {
-        $success = false;
-    }
-
-    return $success;
+    return ($database->query($query) !== false);
 }
 
 /**
@@ -390,7 +385,8 @@ function expenses_by_user($start, $end, $users = null, $customers = null, $proje
         ' GROUP BY user_id;';
 
     $result = $database->query($query);
-    if (!$result) {
+
+    if ($result->num_rows === 0) {
         return array();
     }
     $rows = $database->recordsArray(MYSQLI_ASSOC);
@@ -445,9 +441,11 @@ function expenses_by_customer($start, $end, $users = null, $customers = null, $p
         ' GROUP BY customer_id;';
 
     $result = $database->query($query);
-    if (!$result) {
+
+    if ($result->num_rows === 0) {
         return array();
     }
+
     $rows = $database->recordsArray(MYSQLI_ASSOC);
     if (!$rows) {
         return array();
@@ -497,9 +495,11 @@ function expenses_by_project($start, $end, $users = null, $customers = null, $pr
         ' GROUP BY project_id;';
 
     $result = $database->query($query);
-    if (!$result) {
+
+    if ($result->num_rows === 0) {
         return array();
     }
+
     $rows = $database->recordsArray(MYSQLI_ASSOC);
     if (!$rows) {
         return array();

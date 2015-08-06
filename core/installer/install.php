@@ -33,10 +33,10 @@ function exec_query($query)
 {
     global $database;
 
-    $success = $database->query($query);
+    $result = $database->query($query);
 
     //Logger::logfile($query);
-    if (!$success) {
+    if ($result === false) {
         $errorInfo = serialize($database->error());
         Logger::logfile('[ERROR] in [' . $query . '] => ' . $errorInfo);
     }
@@ -56,11 +56,11 @@ function quoteForSql($input)
  *
 */
 
-//if (file_exists(WEBROOT . 'includes/autoconf.php')) {
-//    //CN safety from re-installing
-//    header("location:http://${_SERVER['SERVER_NAME']}/index.php");
-//    exit;
-//}
+if (file_exists(WEBROOT . 'includes/autoconf.php')) {
+    //CN safety from re-installing
+    header("location:http://${_SERVER['SERVER_NAME']}/index.php");
+    exit;
+}
 
 if (!isset($_REQUEST['accept'])) {
     header("Location: http://${_SERVER['SERVER_NAME']}/installer/index.php?disagreedGPL=1");

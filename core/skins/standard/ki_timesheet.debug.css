@@ -160,6 +160,11 @@ a {
     width: 40px;
 }
 
+#ts_h_tbl td.ref_code,
+#ts_m_tbl td.ref_code {
+    min-width: 10px;
+}
+
 /* column width */
 
 
