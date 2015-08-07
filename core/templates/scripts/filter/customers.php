@@ -6,14 +6,14 @@ $customers = $this->filterListEntries($this->customers);
 <table>
     <tbody>
     <?php
-    if (!is_array($customers) || count($customers) == 0) {
+    if (!is_array($customers) || count($customers) === 0) {
         ?>
         <tr>
-            <td style="white-space: nowrap" colspan='3'>
+            <td style="white-space: nowrap;" colspan='3'>
                 <?php echo $this->error(); ?>
             </td>
         </tr>
-    <?php
+        <?php
     }
     else {
         foreach ($customers as $customer) {
@@ -23,7 +23,7 @@ $customers = $this->filterListEntries($this->customers);
                 class="customer customer<?php echo $customer['customer_id'] ?> <?php echo $this->cycle(array('odd', 'even'))->next() ?>">
 
                 <!-- option cell -->
-                <td style="white-space: nowrap" class="option">
+                <td style="white-space: nowrap;" class="option">
                     <?php if ($this->show_customer_edit_button): ?>
                         <a href="#"
                            onclick="editSubject('customer',<?php echo $customer['customer_id'] ?>); $(this).blur(); return false;">
@@ -44,17 +44,17 @@ $customers = $this->filterListEntries($this->customers);
                 <td style="width:100%;" class="clients" onmouseover="lists_change_color(this,true);"
                     onmouseout="lists_change_color(this,false);"
                     onclick="lists_customer_highlight(<?php echo $customer['customer_id'] ?>); $(this).blur(); return false;">
-                  <?php if ($customer['visible'] != 1): ?><span style="color:#bbb"><?php endif; ?>
-                  <?php if ($kga['pref']['show_ids'] == 1): ?><span
-                      class="ids"><?php echo $customer['customer_id'] ?></span> <?php endif;
-                  echo $this->escape($customer['name']) ?>
-                  <?php if ($customer['visible'] != 1): ?></span><?php endif; ?>
+                    <?php if ((int)$customer['visible'] !== 1): ?><span style="color:#bbb;"><?php endif; ?>
+                        <?php if ((int)$kga['pref']['show_ids'] === 1): ?><span
+                            class="ids"><?php echo $customer['customer_id'] ?></span> <?php endif;
+                        echo $this->escape($customer['name']) ?>
+                        <?php if ((int)$customer['visible'] !== 1): ?></span><?php endif; ?>
                 </td>
 
                 <!-- annotation cell -->
-                <td style="white-space: nowrap" class="annotation"></td>
+                <td style="white-space: nowrap;" class="annotation"></td>
             </tr>
-        <?php
+            <?php
         }
     }
     ?>

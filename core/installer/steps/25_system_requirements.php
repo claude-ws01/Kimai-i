@@ -21,7 +21,7 @@ if ($_REQUEST['language'] === 'en') {
     <br/><br/>
 
     <button class="sp-button" onClick='check_system_requirements();'>Check requirements now</button>
-    <button onClick="system_requirements_proceed(); return false;" class="invisible proceed">Proceed</button>
+    <button style="float:right;" onClick="system_requirements_proceed(); return false;" class="invisible proceed">Proceed</button>
 
     <?php
 }
@@ -44,7 +44,7 @@ else {
     <br/><br/>
 
     <button class="sp-button" onClick='check_system_requirements();'>Anforderungen jetzt pr&uuml;fen</button>
-    <button onClick="system_requirements_proceed(); return false;" class="invisible proceed">Fortfahren</button>
+    <button style="float:right;" onClick="system_requirements_proceed(); return false;" class="invisible proceed">Fortfahren</button>
 
     <?php
 }

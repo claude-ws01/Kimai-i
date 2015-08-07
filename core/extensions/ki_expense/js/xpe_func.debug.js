@@ -256,7 +256,7 @@ function xpe_ext_quickdelete(id) {
     }
 
     exp_entry.removeAttr('onClick');
-    exp_entry.find('.quickdelete>img').attr("src", "../skins/standard/grfx/loading13.gif");
+    exp_entry.find('.quickdelete>img').attr("src", "../grfx/loading13.gif");
 
     $('#ajax_wait').show();
     $.post(xpe_ext_path + "processor.php", {

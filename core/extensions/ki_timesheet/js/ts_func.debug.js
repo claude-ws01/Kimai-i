@@ -339,7 +339,7 @@ function ts_ext_recordAgain(project, activity, id) {
         stopRecord();
     }
 
-    $('#ts_' + id + '>td>a.recordAgain>img').attr("src", "../skins/" + skin + "/grfx/loading13.gif");
+    $('#ts_' + id + '>td>a.recordAgain>img').attr("src", "../grfx/loading13.gif");
     hour = 0;
     min = 0;
     sec = 0;
@@ -391,7 +391,7 @@ function ts_ext_stopRecord(id) {
 
     if (id) {
         //td.css("background-color", "#F00");
-        $('#ts_' + id + '>td>a.stop>img').attr("src", "../skins/" + skin + "/grfx/loading13_red.gif");
+        $('#ts_' + id + '>td>a.stop>img').attr("src", "../grfx/loading13_red.gif");
         tda.blur();
         tda.removeAttr('onClick');
         td.css({"color": "#FFF", "background-color": "#F00"});
@@ -424,7 +424,7 @@ function ts_ext_quickdelete(id) {
     }
 
     tda.removeAttr('onClick');
-    $('#ts_' + id + '>td>a.quickdelete>img').attr("src", "../skins/" + skin + "/grfx/loading13.gif");
+    $('#ts_' + id + '>td>a.quickdelete>img').attr("src", "../grfx/loading13.gif");
 
     $('#ajax_wait').show();
     $.post(ts_ext_path + "processor.php", {

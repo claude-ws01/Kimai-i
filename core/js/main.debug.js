@@ -260,6 +260,10 @@ function demoCountDown() {
     seconds = demoNextReset - (minutes * 60) - (hours * 3600);
     demoNextReset--;
 
+    if (demoNextReset < 0 ) {
+        demoNextReset = demoResetTime;
+    }
+
 
     if (hours < 10) {
         hourString += "0" + hours;
@@ -289,6 +293,7 @@ function demoCountDown() {
     setTimeout("demoCountDown()", 1000);
 
 }
+
 function n_hour() {
 
     var n_seperator = "<span style=\"color:#EAEAD7;\">:</span>",
@@ -441,7 +446,7 @@ function startRecord(projectID, activityID, userID) {
 // ----------------------------------------------------------------------------------------
 // stops the current recording when the stop-buzzer is hidden
 function stopRecord() {
-    $("#ts_m_tbl>tbody>tr#ts_" + currentRecording + ">td>a.stop>img").attr("src", "../skins/" + skin + "/grfx/loading13_red.gif");
+    $("#ts_m_tbl>tbody>tr#ts_" + currentRecording + ">td>a.stop>img").attr("src", "../grfx/loading13_red.gif");
     $("#ts_m_tbl>tbody>tr#ts_" + currentRecording + ">td").css("background-color", "#F00");
     $("#ts_m_tbl>tbody>tr#ts_" + currentRecording + ">td").css("color", "#FFF");
     show_selectors();
@@ -559,8 +564,8 @@ function buzzer_preselect_update_ui(selector, selectedID, updateRecording) {
         updateRecording = true;
     }
 
-    $('#' + selector + '>table>tbody>tr>td>a.preselect>img').attr('src', '../skins/' + skin + '/grfx/preselect_off.png');
-    $('#' + selector + '>table>tbody>tr>td>a.preselect#ps' + selectedID + '>img').attr('src', '../skins/' + skin + '/grfx/preselect_on.png');
+    $('#' + selector + '>table>tbody>tr>td>a.preselect>img').attr('src', '../grfx/preselect_off.png');
+    $('#' + selector + '>table>tbody>tr>td>a.preselect#ps' + selectedID + '>img').attr('src', '../grfx/preselect_on.png');
     $('#' + selector + '>table>tbody>tr>td>a.preselect#ps' + selectedID).blur();
 
     if (selected_project && selected_activity && $('#activities>table>tbody>tr>td>a.preselect>img[src$="preselect_on.png"]').length > 0) {
@@ -713,9 +718,9 @@ function lists_userShrinkHide() {
 function lists_shrinkExtToggle() {
     (extensionShrinkMode) ? extensionShrinkMode = 0 : extensionShrinkMode = 1;
     if (extensionShrinkMode) {
-        $('#extensionShrink').css("background-image", "url('../skins/" + skin + "/grfx/timeSheetShrink_down.png')");
+        $('#extensionShrink').css("background-image", "url('../grfx/timeSheetShrink_down.png')");
     } else {
-        $('#extensionShrink').css("background-image", "url('../skins/" + skin + "/grfx/timeSheetShrink_up.png')");
+        $('#extensionShrink').css("background-image", "url('../grfx/timeSheetShrink_up.png')");
     }
     lists_set_heightTop();
     hook_resize();
@@ -725,13 +730,13 @@ function lists_shrinkCustomerToggle() {
     (customerShrinkMode) ? customerShrinkMode = 0 : customerShrinkMode = 1;
     if (customerShrinkMode) {
         $('#customers, #customers_head, #customers_foot').fadeOut(fading_enabled ? 100 : 0, lists_set_tableWrapperWidths);
-        $('#customersShrink').css("background-image", "url('../skins/" + skin + "/grfx/customerShrink_right.png')");
+        $('#customersShrink').css("background-image", "url('../grfx/customerShrink_right.png')");
         if (!userShrinkMode)
             $('#usersShrink').hide();
     } else {
         lists_set_tableWrapperWidths();
         $('#customers, #customers_head, #customers_foot').fadeIn(fading_enabled ? 100 : 0);
-        $('#customersShrink').css("background-image", "url('../skins/" + skin + "/grfx/customerShrink_left.png')");
+        $('#customersShrink').css("background-image", "url('../grfx/customerShrink_left.png')");
         lists_resize();
         if (!userShrinkMode)
             $('#usersShrink').show();
@@ -742,11 +747,11 @@ function lists_shrinkUserToggle() {
     (userShrinkMode) ? userShrinkMode = 0 : userShrinkMode = 1;
     if (userShrinkMode) {
         $('#users, #users_head, #users_foot').fadeOut(fading_enabled ? 100 : 0, lists_set_tableWrapperWidths);
-        $('#usersShrink').css("background-image", "url('../skins/" + skin + "/grfx/customerShrink_right.png')");
+        $('#usersShrink').css("background-image", "url('../grfx/customerShrink_right.png')");
     } else {
         $('#users, #users_head, #users_foot').fadeIn(fading_enabled ? 100 : 0);
         lists_set_tableWrapperWidths();
-        $('#usersShrink').css("background-image", "url('../skins/" + skin + "/grfx/customerShrink_left.png')");
+        $('#usersShrink').css("background-image", "url('../grfx/customerShrink_left.png')");
     }
 }
 
@@ -971,7 +976,7 @@ function lists_reload(subject, callback) {
                 $("#projects").html(data);
                 ($("#projects").innerHeight() - $("#projects table").outerHeight() > 0) ? scr = 0 : scr = scroller_width;
                 $("#projects table").css("width", projectColumnWidth - scr);
-                $('#projects>table>tbody>tr>td>a.preselect#ps' + selected_project + '>img').attr('src', '../skins/' + skin + '/grfx/preselect_on.png');
+                $('#projects>table>tbody>tr>td>a.preselect#ps' + selected_project + '>img').attr('src', '../grfx/preselect_on.png');
                 lists_live_filter('project', $('#filter_project').val());
                 lists_write_annotations('project');
                 if (typeof(callback) != "undefined")
@@ -993,7 +998,7 @@ function lists_reload(subject, callback) {
                 $("#activities").html(data);
                 ($("#activities").innerHeight() - $("#activities table").outerHeight() > 0) ? scr = 0 : scr = scroller_width;
                 $("#activities table").css("width", activityColumnWidth - scr);
-                $('#activities>table>tbody>tr>td>a.preselect#ps' + selected_activity + '>img').attr('src', '../skins/' + skin + '/grfx/preselect_on.png');
+                $('#activities>table>tbody>tr>td>a.preselect#ps' + selected_activity + '>img').attr('src', '../grfx/preselect_on.png');
                 lists_live_filter('activity', $('#filter_activity').val());
                 lists_write_annotations('activity');
                 if ($('#row_activity[data-id="' + selected_activity + '"]').length == 0) {

@@ -1,0 +1,13 @@
+written: 2015-08-07 by Claude.
+
+----------------------------------------------------------------
+DEBUG vs MIN files
+----------------------------------------------------------------
+- most js and css files are in .debug. and .min.
+- to use .debug. files, create /_debug empty file.
+- once the modified .debug. files are minified, simply rename/delete the /_debug file to use the minified files.
+
+
+
+----------------------------------------------------------------
+END OF DOCUMENT

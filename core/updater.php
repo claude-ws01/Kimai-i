@@ -115,7 +115,7 @@ if (1385 < $revisionDB && $revisionDB < 2000) {
         <title>Kimai Update</title>
         <style type="text/css" media="screen">
             body {
-            background: #111 url('grfx/ki_twitter_bg.png') no-repeat;
+            background: #111 url('grfx/kii_twitter_bg.png') no-repeat;
                 font-family: sans-serif;
                 color: #333;
             }
@@ -164,7 +164,7 @@ elseif (version_compare(PHP_VERSION, $min_php_version) < 0) { ?>
         <title>Kimai Update</title>
         <style type="text/css" media="screen">
             body {
-            background: #111 url('grfx/ki_twitter_bg.png') no-repeat;
+            background: #111 url('grfx/kii_twitter_bg.png') no-repeat;
                 font-family: sans-serif;
                 color: #333;
             }
@@ -209,7 +209,7 @@ elseif (!isset($_REQUEST['a']) && $kga['conf']['show_update_warn'] === '1') {
         <title>Kimai Update</title>
         <style type="text/css" media="screen">
             body {
-            background: #111 url('grfx/ki_twitter_bg.png') no-repeat;
+            background: #111 url('grfx/kii_twitter_bg.png') no-repeat;
                 font-family: sans-serif;
                 color: #333;
             }
@@ -260,7 +260,7 @@ elseif ($revisionDB < 1219 && !isset($_REQUEST['timezone'])) { ?>
         <title>Kimai Update</title>
         <style type="text/css" media="screen">
             body {
-            background: #111 url('grfx/ki_twitter_bg.png') no-repeat;
+            background: #111 url('grfx/kii_twitter_bg.png') no-repeat;
                 font-family: sans-serif;
                 color: #333;
             }

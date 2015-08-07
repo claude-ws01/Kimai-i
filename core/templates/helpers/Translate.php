@@ -30,6 +30,7 @@ class Zend_View_Helper_Translate extends Zend_View_Helper_Abstract
         if ($subpackage !== null) {
             return $this->view->kga['dict'][$subpackage][$key];
         }
+
         return $this->view->kga['dict'][$key];
     }
 } 

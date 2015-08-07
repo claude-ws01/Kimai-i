@@ -4,8 +4,8 @@
 
         var options = {
             beforeSubmit: function () {
-                var password =$('#password'),
-                    retype =$('#retypePassword'),
+                var password = $('#password'),
+                    retype = $('#retypePassword'),
                     pref = $('#core_prefs');
 
                 if ((password.val() != "" || retype.val() != "")
@@ -47,7 +47,6 @@
             <a href="#" class="close" onclick="floaterClose();"><?php echo $kga['dict']['close'] ?></a>
         </div>
     </div>
-
 
     <div class="menuBackground">
 
@@ -97,10 +96,10 @@
 
                     <?php if (!array_key_exists('customer', $kga)) { ?>
                         <li>
-                           <label for="rate"><?php echo $kga['dict']['my_rate'] ?>:</label>
-                           <?php echo $this->formText('rate', str_replace('.', $kga['conf']['decimal_separator'], $this->rate), array(
-                               'size' => 9)); ?>
-                       </li>
+                            <label for="rate"><?php echo $kga['dict']['my_rate'] ?>:</label>
+                            <?php echo $this->formText('rate', str_replace('.', $kga['conf']['decimal_separator'], $this->rate), array(
+                                'size' => 9)); ?>
+                        </li>
                     <?php } ?>
 
                     <li>
@@ -120,11 +119,11 @@
                     </li>
 
                     <?php if (!array_key_exists('customer', $kga)) { ?>
-                    <li>
-                        <label for="open_after_recorded"></label>
-                        <?php echo $this->formCheckbox('open_after_recorded', '1', array('checked' => isset($kga['conf']['open_after_recorded']) && $kga['conf']['open_after_recorded']));
-                        echo $kga['dict']['open_after_recorded'] ?>
-                    </li>
+                        <li>
+                            <label for="open_after_recorded"></label>
+                            <?php echo $this->formCheckbox('open_after_recorded', '1', array('checked' => isset($kga['conf']['open_after_recorded']) && $kga['conf']['open_after_recorded']));
+                            echo $kga['dict']['open_after_recorded'] ?>
+                        </li>
                     <?php } ?>
                     <li>
                         <label for="no_fading"></label>
@@ -142,19 +141,19 @@
                         <?php echo $this->formText('rowlimit', $kga['pref']['rowlimit'], array('size' => 9)); ?>
                     </li>
                     <?php if (!array_key_exists('customer', $kga)) { ?>
-                    <li>
-                        <label for="quickdelete"><?php echo $kga['dict']['quickdelete'] ?>:</label>
-                        <?php
-                        echo $this->formSelect(
-                            'quickdelete',
-                            $kga['pref']['quickdelete'],
-                            null,
-                            array($kga['dict']['quickdeleteHide'],
-                                $kga['dict']['quickdeleteShow'],
-                                $kga['dict']['quickdeleteShowConfirm']
-                            )
-                        ); ?>
-                    </li>
+                        <li>
+                            <label for="quickdelete"><?php echo $kga['dict']['quickdelete'] ?>:</label>
+                            <?php
+                            echo $this->formSelect(
+                                'quickdelete',
+                                $kga['pref']['quickdelete'],
+                                null,
+                                array($kga['dict']['quickdeleteHide'],
+                                    $kga['dict']['quickdeleteShow'],
+                                    $kga['dict']['quickdeleteShowConfirm'],
+                                )
+                            ); ?>
+                        </li>
                     <?php } ?>
                     <li>
                         <label for="hide_cleared_entries"></label>
@@ -184,16 +183,16 @@
                 <ul>
                     <li>
                         <label for="sublist_annotations"><?php echo $kga['dict']['sublist_annotations'] ?>:</label>
-                        <?php 
+                        <?php
                         echo $this->formSelect(
-                            'sublist_annotations', 
+                            'sublist_annotations',
                             $kga['pref']['sublist_annotations'],
-                            null, 
+                            null,
                             array(
                                 $kga['dict']['timelabel'],
                                 $kga['dict']['export_extension']['costs'],
                                 $kga['dict']['timelabel'] . ' & ' . $kga['dict']['export_extension']['costs'],
-                        )); ?>
+                            )); ?>
                     </li>
 
                     <li>

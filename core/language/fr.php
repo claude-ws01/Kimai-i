@@ -1,32 +1,15 @@
 <?php
-/**
- * This file is part of
- * Kimai - Open Source Time Tracking - http://www.kimai.org
- * (c) 2006-2009 Kimai-Development-Team
- *
- * Kimai-i is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; Version 3, 29 June 2007
- *
- * Kimai-i is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Kimai; If not, see <http://www.gnu.org/licenses/>.
- */
 
 /* Language: 
  * Translated by: 
  * Updated by: 
  * Kimai version: 
  *
- * Generator: find_missing_translations.php
- * Generated: 2015-07-25 20:22:06
+ * Generator: dict_find_missing.php
+ * Generated: 2015-08-06 19:54:31
  * First file (array structure and new values): en.php
  * Second file (translated values): fr.php
- * Third file (resulting array): new_20150725T202206.php
+ * Third file (resulting array): new_20150806T195431.php
  */
 
 return array(
@@ -91,14 +74,13 @@ return array(
     'comment_type'                   => 'Type de commentaire',
     'company'                        => 'Societé',
     'ownGlobalRoleChange'            => 'Etes vous certain de vouloir changer votre propre rôle globale de "%OLD%" à "%NEW%"?\nCeci pourrait conduire à des permissions moindres!',
-
     'construction'                   => 'en construction...',
     'contact'                        => 'Contact',
     'contactPerson'                  => 'Personne contact',
     'cookiewarning'                  => 'Les cookies doivent être acceptés! Autoriser les cookies avant de continuer.',
     'copyr_origin'                   => 'Kimai original - &copy; 2006-15 - <a href="http://www.kimai.org" target="_blank">Kimai Team</a>',
     'copyr_poweredby'                => 'Propulsé par',
-    'copyr_provided'                 => 'Logiciel proportioné sous les termes et conditions<br/>de la <a href="COPYING" target="_blank"> Licence publique générale GNU v3</a>',
+    'copyr_provided'                 => 'Logiciel proportioné sous les termes et conditions<br/>de la <a href="GNU_TERMS" target="_blank"> Licence publique générale GNU v3</a>',
     'countryCode'                    => 'fr-FR',
     'ctype0'                         => 'Commentaire',
     'ctype1'                         => 'Note',
@@ -128,10 +110,10 @@ return array(
     'deleteGlobalRole'               => 'Supprimer rôle global',
     'deleteMembershipRole'           => 'Supprimer rôle de membre',
     'deleteUser'                     => 'Supprimer cet utilisateur',
+    'description'                    => 'Description',
     'demo_mode'                      => 'MODE DÉMO',
     'demo_login'                     => '*** MODE DÉMO ***</br> utilisateur: \'admin\'</br> TOUS les mots-de-passe fixés à: \'demo\'',
     'demo_reset_in'                  => 'Raz des données dans: ',
-    'description'                    => 'Description',
     'display_currentDate_format'     => 'Format de la date pour le champ sous la plage de temps (<a href="http://php.net/manual/en/function.strftime.php" target="_blank">pour la fonction strftime()</a>)',
     'display_date_format'            => 'Format de la date pour la notation de la plage de temps (<a href="http://php.net/manual/en/function.strftime.php" target="_blank"> pour la fonction strftime()</a>)',
     'duration_with_seconds'          => 'Montrer la durée à la seconde près.',
@@ -160,8 +142,10 @@ return array(
     'forgotPassword'                 => 'Mot de passe oublié',
     'general'                        => 'Général',
     'globalRole'                     => 'rôle global',
+    'globalrole_name_add'            => 'Nom rôle global',
     'globalRoles'                    => 'Rôles globaux',
     'group'                          => 'Groupe',
+    'group_name_add'                 => 'Nom groupe',
     'groupname'                      => 'Nom du groupe',
     'groups'                         => 'Groupes',
     'help'                           => 'Assistance',
@@ -174,7 +158,7 @@ return array(
     'hours'                          => 'heures',
     'in'                             => 'début',
     'installerWarningHeadline'       => 'Le dossier d\'installation (INSTALL) est toujours présent!',
-    'installerWarningText'           => 'Vous devez supprimer le dossier d\'installation (INSTALL) afin que personne ne puisse ré-installer KIMAI.',
+    'installerWarningText'           => 'Vous devez supprimer le dossier d\'installation (INSTALL) afin que personne ne puisse ré-installer Kimai-i.',
     'internalProject'                => 'Projet interne',
     'JSwarning'                      => 'JavaScript doit être activé! Cette version ne fonctionne pas sans cela.',
     'lang'                           => 'Langue',
@@ -191,6 +175,7 @@ return array(
     'members'                        => 'Membres',
     'membershipRole'                 => 'Rôle de membre',
     'membershipRoles'                => 'Rôles membre',
+    'membershiprole_name_add'        => 'Nom rôles membre',
     'minLength'                      => 'min. 5 caractères!',
     'mins'                           => 'minutes',
     'minutes'                        => 'Minutes',
@@ -304,6 +289,7 @@ return array(
     'starttime'                      => 'début',
     'StartTimeBeforeEndTime'         => 'Le début doit être antérieure à la fin.',
     'status'                         => 'Statut',
+    'status_name_add'                => 'Nom Statut',
     'street'                         => 'Rue',
     'sublist_annotations'            => 'Notes latérales',
     'sublists'                       => 'Filtres du bas',
@@ -330,10 +316,11 @@ return array(
     'ts_user'                        => 'pers.',
     'ts_wage'                        => 'taux',
     'unassigned'                     => 'pas assigné',
-    'update'                         => 'La structure de la base de données de la version Kimai installée a été mise à jour.<br />Nous recommandons de sauvegarder vos données pour éviter toute perte<br />durant la procédure de mise a jour.',
+    'update'                         => 'La structure de la base de données de la version Kimai-i installée a été mise à jour.<br />Nous recommandons de sauvegarder vos données pour éviter toute perte<br />durant la procédure de mise a jour.',
     'updateNow'                      => 'Mise à jour de la base de données en cours!',
     'used'                           => 'Utilisé',
     'user'                           => 'Utilisateur',
+    'user_name_add'                  => 'Nom utilisateur',
     'user_list_hidden'               => 'Cacher la liste util. par défaut',
     'username'                       => 'Nom d\'utilisateur',
     'users'                          => 'Utilisateurs',
@@ -393,7 +380,7 @@ return array(
         6  => 'Sauvegarde du',
         7  => 'a été restauré.',
         8  => 'Faire une sauvegarde',
-        9  => 'Ces sauvegardes sont des instantanés! Ceci signifie qu\'ils continuent de vivre dans la base de données actuelle dans laquelle Kimai stocke ces données. Les sauvegardes via cet utilitaire ne remplacent pas les sauvegardes sur un media physique séparé. Il y a plein d\'outils de sauvegarde de base de données sur le web ;)',
+        9  => 'Ces sauvegardes sont des instantanés! Ceci signifie qu\'ils continuent de vivre dans la base de données actuelle dans laquelle Kimai-i stocke ces données. Les sauvegardes via cet utilitaire ne remplacent pas les sauvegardes sur un media physique séparé. Il y a plein d\'outils de sauvegarde de base de données sur le web ;)',
         10 => 'Identification requise',
         11 => 'Pour empêcher les personnes non-autorisées de créer, effacer ou restaurer une sauvegarde vous devez donner le code d\'injection du mote de passe inscrite dans include/autoconf.php. Il est constitué de lettre et de chiffres.',
         12 => 'Une erreur est survenu lors de la restauration. Svp, voir le fichier de registre (log file).',
@@ -419,7 +406,7 @@ return array(
         <br/>
         <br/>
         <strong>Ce logiciel est libre et publié \'TEL QUEL\' sans aucune garantie</strong> sous les conditions de la
-        <a href=\'../COPYING\'>License Publique Générale GNU v3</a>.
+        <a href=\'../GNU_TERMS\'>License Publique Générale GNU v3</a>.
         <br/>',
     'dateAndTimeHelp'                => '<strong>Les heures et dates peuvent être entrés en courte notation:</strong><br />
             Dates: 5 &rarr; le 5 du mois courant &nbsp;&nbsp;
@@ -449,9 +436,9 @@ return array(
 
         1 => array(
             'hdl' => 'Erreur durant l\'installation!',
-            'txt' => 'Kimai ne peut créer les tables neccessaires car des tables avec ce nom de préfixe existent déjà.<br/>
+            'txt' => 'Kimai-i ne peut créer les tables neccessaires car des tables avec ce nom de préfixe existent déjà.<br/>
 Pour mettre à jour l\'installation existante, merci de cliquer <a href="../index.php">Ici</a>.<br/>
-Choisissez un autre préfixe de table ou supprimez les tables existantes avec ce préfixe pour permettre à Kimai une installation correcte.',
+Choisissez un autre préfixe de table ou supprimez les tables existantes avec ce préfixe pour permettre à Kimai-i une installation correcte.',
         ),
 
     ),
@@ -540,8 +527,8 @@ Choisissez un autre préfixe de table ou supprimez les tables existantes avec ce
         'instructions'     => 'Entrer votre nom d\'usager et un courriel contenant un lien sera envoyé à l\'adresse courriel associée. Il n\'y aura pas d\'avertissement si votre nom d\'usager est incorecte alors asurez-vous de l\'inscrire correctement!',
         'invalidKey'       => 'Le code de sécurité ne concorde pas avec la clé transmise par courriel. Assurez-vous que le lien complet est ouvert par votre navigateur.',
         'mailConfirmation' => 'Un courriel a été envoyé à l\'adresse courriel associée. Svp, suivre les instructions fournies dans ce courriel. Si aucune adresse courriel n\'est associée à ce nom d\'usager vous ne recevrez aucun courriel et devrez contacter votre administrateur.',
-        'mailMessage'      => 'Ceci est un message courriel automatique pour réinitialiser votre mot de passe à Kimai. Svp, ouvrir l\'adresse suivante dans votre navigateur: %{URL}',
-        'mailSubject'      => 'Kimai - réinitialisation du mot de passe',
+        'mailMessage'      => 'Ceci est un message courriel automatique pour réinitialiser votre mot de passe à Kimai-i. Svp, ouvrir l\'adresse suivante dans votre navigateur: %{URL}',
+        'mailSubject'      => 'Kimai-i - réinitialisation du mot de passe',
         'notSupported'     => 'Le plugin présent ne supporte pas la réinitialisation du mot de passe.',
         'returnToLogin'    => 'retour à la page de connection',
         'success'          => 'Votre mot de passe a été changé.',
@@ -622,7 +609,7 @@ Choisissez un autre préfixe de table ou supprimez les tables existantes avec ce
     ),
 
     'updater'                        => array(
-        0          => 'Oui, j\'ai une sauvegarde de la base Kimai! Continuer la mise à jour!',
+        0          => 'Oui, j\'ai une sauvegarde de la base Kimai-i! Continuer la mise à jour!',
         10         => 'Légende',
         20         => 'La requête a été exécutée correctement.',
         30         => 'La requête a causé une erreur - trècertainement mineure.',
@@ -632,12 +619,12 @@ Choisissez un autre préfixe de table ou supprimez les tables existantes avec ce
         70         => 'Fichier de  log de la mise a jour:',
         80         => 'La base de données a été mise à jour et une copie de sauvegarde a été créée.',
         90         => 'Requêtes exécutées.',
-        100        => 'La mise a jour de la base de données a échoué à cause d\'une erreur fatale. Une sauvegarde a été créée au cas o&ugrave; Kimai ne fonctionnerait plus correctement.',
+        100        => 'La mise a jour de la base de données a échoué à cause d\'une erreur fatale. Une sauvegarde a été créée au cas o&ugrave; Kimai-i ne fonctionnerait plus correctement.',
         110        => 'Nouveau mot de passe',
         120        => 'Voir ci-dessous pour les mots de passe de tous les utilisateurs.',
         130        => 'Impossible d\'écrire dans autoconf.php.',
         140        => 'Mise a jour du fichier autoconf.php',
-        'timezone' => 'Kimai supporte les fuseaux horaires. SVP sélectioner votre fuseau horaire par défaut.Il sera utilisé pour tous les utilisateurs et clients. les utilisateurs peuvent changer leur fuseau horaire.',
+        'timezone' => 'Kimai-i supporte les fuseaux horaires. SVP sélectioner votre fuseau horaire par défaut.Il sera utilisé pour tous les utilisateurs et clients. les utilisateurs peuvent changer leur fuseau horaire.',
     ),
 
 );

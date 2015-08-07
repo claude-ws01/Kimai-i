@@ -25,7 +25,7 @@ if ($_REQUEST['language'] === 'en') {
     </table>
     <span id='caution'></span><br />
     <button onClick="step_back(); return false;">Back</button>
-    <button onClick="host_proceed(); return false;" class="proceed">Proceed</button>
+    <button style="float:right;" onClick="host_proceed(); return false;" class="proceed">Proceed</button>
 EOD;
 
 }
@@ -45,7 +45,7 @@ else {
     </table>
     <span id='caution'></span><br /><br />
     <button onClick="step_back(); return false;">Zurück</button>
-    <button onClick="host_proceed(); return false;" class="proceed">Fortfahren</button>
+    <button style="float:right;" onClick="host_proceed(); return false;" class="proceed">Fortfahren</button>
 EOD;
 
 }

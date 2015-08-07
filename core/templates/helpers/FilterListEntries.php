@@ -27,17 +27,18 @@ class Zend_View_Helper_FilterListEntries extends Zend_View_Helper_Abstract
 {
     /**
      * @param array $entries
-     * @param bool $filterHidden
+     * @param bool  $filterHidden
+     *
      * @return array
      */
     public function filterListEntries($entries, $filterHidden = true)
     {
-        if (!is_array($entries) || count($entries) == 0) {
+        if (!is_array($entries) || count($entries) === 0) {
             return array();
         }
 
         $listEntries = array();
-        foreach($entries as $row) {
+        foreach ($entries as $row) {
             if ($filterHidden && isset($row['visible']) && !$row['visible']) {
                 continue;
             }

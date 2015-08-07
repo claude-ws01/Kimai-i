@@ -20,7 +20,7 @@ body {
 }
 
 #box {
-    background: url(../grfx/login_bg_g3.png) no-repeat;
+    background: url(../grfx/kii_login_bg.png) no-repeat;
     display: block;
     width: 448px;
     height: 298px;
@@ -124,7 +124,7 @@ a#forgotPasswordLink {
     height: 58px;
     right: 40px;
     top: 3px;
-    background: url(../grfx/login_button_cu.png) no-repeat;
+    background: url(../grfx/kii_login_button.png) no-repeat;
     border: 0 none;
     cursor: pointer;
     padding: 0;
@@ -139,6 +139,7 @@ a#forgotPasswordLink {
     text-align: center;
     border-radius: 5px;
     background-color: rgba(255, 121, 0, 1);
+    box-shadow: 3px 3px 10px #000;
     color: #000;
     font-weight: bold;
     line-height: 1.1;
@@ -149,7 +150,7 @@ a#forgotPasswordLink {
 }
 
 #loginButton:hover {
-    background: url(../grfx/login_button_cu.png) no-repeat 0 -58px;
+    background: url(../grfx/kii_login_button.png) no-repeat 0 -58px;
     cursor: pointer;
 }
 
@@ -173,92 +174,6 @@ a#forgotPasswordLink {
 #content > p > a:hover,
 #content > p > a:focus {
     color: white;
-}
-
-#install {
-    color: #FFF;
-    position: absolute;
-    width: 526px;
-    height: 400px;
-    left: 50%;
-    top: 50%;
-    margin: -200px 0 0 -263px;
-}
-
-#install .installtext {
-    /*    background-color:#f00;*/
-    width: 350px;
-}
-
-#install .welcome {
-    font-size: 1.3em;
-    font-weight: bold;
-    color: #15F000;
-    margin-bottom: 10px;
-}
-
-#install .txt {
-    margin-bottom: 7px;
-}
-
-#install form {
-    background: url(../grfx/login_bg_g3.png) no-repeat;
-    display: block;
-    width: 448px;
-    height: 298px;
-    margin: 0 0 0 38px;
-    padding: 0;
-}
-
-#install fieldset {
-    border: 0 none;
-    display: block;
-    margin: 105px 0 0 15px;
-    width: 420px;
-    height: 160px;
-    padding: 0;
-    position: absolute;
-    text-align: left;
-}
-
-#install label {
-    display: block;
-    color: #999;
-}
-
-#install input {
-    border: 1px solid #ccc;
-    padding: 2px;
-    display: block;
-    width: 140px;
-    position: relative;
-    margin: 0;
-    left: 0;
-}
-
-#install button {
-    position: absolute;
-    width: 58px;
-    height: 58px;
-    right: 0;
-    bottom: 0;
-    background: url(../grfx/login_button_cu.png) no-repeat;
-    text-indent: -1000em;
-    border: 0 none;
-    cursor: pointer;
-    padding: 0;
-    margin: 0;
-}
-
-#install button:hover {
-    background: url(../grfx/login_button_cu.png) no-repeat 0 -58px;
-    cursor: pointer;
-}
-
-#install p, #install p > a {
-    font-size: x-small;
-    color: #555;
-    text-align: center;
 }
 
 /* way the hell off screen */

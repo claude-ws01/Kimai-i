@@ -32,7 +32,7 @@ if ($_REQUEST['language'] === "en") {
     <br/><br/>
 
     <button onClick="step_back(); return false;">Back</button>
-    <button onClick="timezone_proceed(); return false;" class="proceed">Proceed</button>
+    <button style="float:right;" onClick="timezone_proceed(); return false;" class="proceed">Proceed</button>
 
     <?php
 }
@@ -67,7 +67,7 @@ else {
     <br/><br/>
 
     <button onClick="step_back(); return false;">Zurück</button>
-    <button onClick="timezone_proceed(); return false;" class="proceed">Fortfahren</button>
+    <button style="float:right;" onClick="timezone_proceed(); return false;" class="proceed">Fortfahren</button>
 
     <?php
 }

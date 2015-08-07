@@ -1,0 +1,69 @@
+written: 2015-08-07 by Claude.
+
+----------------------------------------------------------------
+LANGUAGE FILES
+----------------------------------------------------------------
+
+- en.php (english dictionary)
+    ~ use as the reference
+    ~ should be kept available, even if you do not use it
+
+
+- only language files in /language are displayed in Kimai-i.
+    (not sub-folders of /language)
+
+- /language/originals
+    ~ files from original Kimai (not Kimai-i)
+    ~ do not contains new definitions of Kimai-i
+    ~ use them to create your new language file with </shellscripts/dict_find_missing.php>
+
+- /language/translated
+    ~ Kimai-i language files you do not need in your installation
+
+
+
+
+----------------------------------------------------------------
+TOOLS
+----------------------------------------------------------------
+
+
+DICT_FIND_MISSING.PHP
+---------------------
+- compare language file <B> to reference file <A>, and gives a new language file <C> with '// REVIEW' comment.
+- will re-sort the definitions
+- non destructive
+
+- syntax:
+    php dict_find_missing.php <reference_file> <file_to_be_checked> <resulting_file>(optional)
+
+    <resulting_file> name will be generated if argument is not present
+
+- run from command line, not browser.
+    (MUST be inside the language folder)
+    ex:     php dict_find_missing.php en de
+
+- previous '// REVIEW' comments are NOT transfered in the new file
+
+
+
+
+DICT_RE_SORT.PHP
+----------------
+- does what it says. Re-sort the definitions in a new file.
+- non destructive.
+- run from command line, not browser.
+
+- syntax:
+    php dict_find_missing.php <file_to_be_re_sorted> <resulting_file>(optional)
+
+    <resulting_file> name will be generated if argument is not present
+
+- run from command line, not browser.
+    (MUST be inside the language folder)
+    ex:     php dict_find_missing.php en
+
+
+
+----------------------------------------------------------------
+END OF DOCUMENT

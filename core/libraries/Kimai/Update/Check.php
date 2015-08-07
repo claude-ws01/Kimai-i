@@ -23,8 +23,7 @@
  */
 class Kimai_Update_Check
 {
-    //const URL = 'https://raw.githubusercontent.com/kimai/kimai/master/kimai.json';
-    const URL = 'https://raw.githubusercontent.com/cloudeasy/kimai/master/kimai.json';
+    const URL = 'https://raw.githubusercontent.com/cloudeasy/kimai/master/kimai-i.json';
     const CURRENT = -1;
     const BETA = 0;
     const RELEASE = 1;
@@ -47,5 +46,4 @@ class Kimai_Update_Check
         }
         return self::CURRENT;
     }
-
-} 
+}

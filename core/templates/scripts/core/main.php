@@ -72,7 +72,7 @@ function select_css_file($file)
     <?php echo '<script type="text/javascript">', file_get_contents('../js/main' . DEBUG_JS . '.js'), '</script>'; ?>
     <!-- Extension JavaScripts -->
     <?php
-    if (DEBUG_JS == '.min') {
+    if (DEBUG_JS === '.min') {
         foreach ($this->js_extension_files as $object) {
             echo '<script type="text/javascript">', "\n", file_get_contents($object), '</script>', "\n";
         }
@@ -143,9 +143,11 @@ function select_css_file($file)
         var demoMode = <?php echo (DEMO_MODE ? 1 : 0); ?>;
         <?php
             $demo_next_reset = 0;
+            $demo_reset_time = 24 * 3600;
             if (DEMO_MODE && defined('DEMO_RESET_TIME')) {
-                  $hour = (int)date('H');
-                  $next_reset_hour = ((int)($hour / DEMO_RESET_TIME) * DEMO_RESET_TIME) + DEMO_RESET_TIME;
+                $demo_reset_time = DEMO_RESET_TIME * 3600;
+                $hour = (int)date('H');
+                $next_reset_hour = ((int)($hour / DEMO_RESET_TIME) * DEMO_RESET_TIME) + DEMO_RESET_TIME;
                 if ($next_reset_hour > 23) {
                     $next_reset_hour = 0;
                     $next_time = mktime($next_reset_hour, 0, 0, date('m'), date('j')+1);
@@ -158,6 +160,7 @@ function select_css_file($file)
             }
             ?>
         var demoNextReset = <?php echo $demo_next_reset ?>;
+        var demoResetTime = <?php echo $demo_reset_time ?>;
 
         $.datepicker.setDefaults({
             showOtherMonths: true,
@@ -209,7 +212,7 @@ function select_css_file($file)
         }
 
         function hook_filter() {<?php echo $this->hook_filter?>
-            //CN..ex://  function hook_filter() {bud_ext_reload();xpe_ext_reload();xpo_ext_reload();ts_ext_reload();        }
+            //CN..call example://  function hook_filter() {bud_ext_reload();xpe_ext_reload();xpo_ext_reload();ts_ext_reload();        }
         }
 
         function hook_resize() {<?php echo $this->hook_resize?>
@@ -238,8 +241,8 @@ function select_css_file($file)
             <?php if ($kga['pref']['user_list_hidden'] or count($this->users) <= 1): ?>
             lists_shrinkUserToggle();
             <?php endif; ?>
-            $('#projects>table>tbody>tr>td>a.preselect#ps' + selected_project + '>img').attr('src', '../skins/' + skin + '/grfx/preselect_on.png');
-            $('#activities>table>tbody>tr>td>a.preselect#ps' + selected_activity + '>img').attr('src', '../skins/' + skin + '/grfx/preselect_on.png');
+            $('#projects>table>tbody>tr>td>a.preselect#ps' + selected_project + '>img').attr('src', '../grfx/preselect_on.png');
+            $('#activities>table>tbody>tr>td>a.preselect#ps' + selected_activity + '>img').attr('src', '../grfx/preselect_on.png');
 
             $('#floater').draggable({
                 zIndex: 20,
@@ -283,7 +286,7 @@ function select_css_file($file)
         <tr>
             <td id="tt_logo">
                 <div id="logo">
-                    <img src="../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/g3_logo.png"
+                    <img src="../grfx/kii_logo.png"
                          width="122" height="52" alt="Logo"/>
                 </div>
             </td>
@@ -293,21 +296,21 @@ function select_css_file($file)
                         <tr>
                             <td id="first">
                                 <a id="main_about_btn" href="#"><img
-                                        src="../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/g3_about.png"
+                                        src="/grfx/cu_about.png"
                                         width="31" height="27" alt="<?php echo $kga['dict']['btn_about'] ?>"
                                         title="<?php echo $kga['dict']['btn_about'] ?>"/>
                                 </a>
                             </td>
                             <td>
                                 <a id="main_prefs_btn" href="#"><img
-                                        src="../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/g3_prefs.png"
+                                        src="/grfx/cu_prefs.png"
                                         width="31" height="27" alt="<?php echo $kga['dict']['btn_preferences'] ?>"
                                         title="<?php echo $kga['dict']['btn_preferences'] ?>"/>
                                 </a>
                             </td>
                             <td id="last">
                                 <a id="main_logout_btn" href="../index.php?a=logout"><img
-                                        src="../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/g3_logout.png"
+                                        src="/grfx/cu_logout.png"
                                         width="32" height="27" alt="<?php echo $kga['dict']['btn_logout'] ?>"
                                         title="<?php echo $kga['dict']['btn_logout'] ?>"/>
                                 </a>
@@ -475,7 +478,7 @@ if (defined('DEMO_MODE') && DEMO_MODE) {
     <?php } ?>
 </div>
 <!-- filter section start -->
-<div class="lists" style="display:none">
+<div class="lists" style="display:none;">
     <div id="users_head">
         <input class="livefilterfield" onkeyup="lists_live_filter('users', this.value);" type="text" id="filt_user"
                name="filt_user"
@@ -513,7 +516,7 @@ if (defined('DEMO_MODE') && DEMO_MODE) {
         <a href="#" class="selectInvertLink" title="<?php echo $kga['dict']['tip']['f_select_invert'] ?>"
            onclick="lists_filter_select_invert('users'); $(this).blur(); return false;"></a>
 
-        <div style="clear:both"></div>
+        <div style="clear:both;"></div>
     </div>
 
     <div id="customers_foot">
@@ -528,7 +531,7 @@ if (defined('DEMO_MODE') && DEMO_MODE) {
         <a href="#" class="selectInvertLink" title="<?php echo $kga['dict']['tip']['f_select_invert'] ?>"
            onclick="lists_filter_select_invert('customers'); $(this).blur(); return false;"></a>
 
-        <div style="clear:both"></div>
+        <div style="clear:both;"></div>
     </div>
 
     <div id="projects_foot">
@@ -542,7 +545,7 @@ if (defined('DEMO_MODE') && DEMO_MODE) {
         <a href="#" class="selectInvertLink" title="<?php echo $kga['dict']['tip']['f_select_invert'] ?>"
            onclick="lists_filter_select_invert('projects'); $(this).blur(); return false;"></a>
 
-        <div style="clear:both"></div>
+        <div style="clear:both;"></div>
     </div>
 
     <div id="activities_foot">
@@ -556,7 +559,7 @@ if (defined('DEMO_MODE') && DEMO_MODE) {
         <a href="#" class="selectInvertLink" title="<?php echo $kga['dict']['tip']['f_select_invert'] ?>"
            onclick="lists_filter_select_invert('activities'); $(this).blur(); return false;"></a>
 
-        <div style="clear:both"></div>
+        <div style="clear:both;"></div>
     </div>
 
     <div id="extensionShrink">&nbsp;</div>

@@ -1,0 +1,16 @@
+written: 2015-08-07 by Claude.
+
+----------------------------------------------------------------
+** REQUIREMENTS **
+----------------------------------------------------------------
+
+- PHP v5.4+ (recommended v5.5+)
+- MySQL v5.1+
+- webserver: Apache, Nginx..
+    ~ mysqli module MUST be present
+
+- MySQL database access (for creating database & user).
+- write access to the Kimai-i folders & files.
+
+----------------------------------------------------------------
+END OF DOCUMENT

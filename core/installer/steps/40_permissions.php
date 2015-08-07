@@ -12,7 +12,7 @@ if ($_REQUEST['language'] === "en") {
     <span class="ch_autoconf"><strong>/includes/autoconf.php</strong> <span class="gray">(File)</span></span><br/><br/>
     <button onClick="step_back(); return false;" class="">Back</button>
     <button class="cp-button" onClick='check_permissions();'>Check permissions now</button>
-    <button onClick="cp_proceed(); return false;" class="invisible proceed">Proceed</button>
+    <button style="float:right;" onClick="cp_proceed(); return false;" class="invisible proceed">Proceed</button>
     <span class="ch_correctit invisible arrow">Please correct the write-permissions and press the button again!</span><br/>
 EOD;
 
@@ -28,7 +28,7 @@ else {
     <span class="ch_autoconf"><strong>/includes/autoconf.php</strong> <span class="gray">(Datei)</span></span><br/><br/>
     <button onClick="step_back(); return false;" class="">Zurück</button>
     <button class="cp-button" onClick='check_permissions();'>Schreibrechte prüfen</button>
-    <button onClick="cp_proceed(); return false;" class="invisible proceed">Fortfahren</button>
+    <button style="float:right;" onClick="cp_proceed(); return false;" class="invisible proceed">Fortfahren</button>
     <span class="ch_correctit invisible arrow">Korrigieren Sie die Schreibrechte und klicken Sie den Button erneut!</span><br/>
 EOD;
 

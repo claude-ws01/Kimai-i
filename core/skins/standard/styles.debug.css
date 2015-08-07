@@ -356,7 +356,7 @@ table#menu_btns td#last {
 
 #buzzer div {
     display: block;
-    background: url('../../skins/standard/grfx/g3_buzzer.png') no-repeat 0 0;
+    background: url('../../skins/standard/grfx/cu_buzzer.png') no-repeat 0 0;
     width: 73px;
     height: 73px;
     text-indent: -1000px;
@@ -364,22 +364,22 @@ table#menu_btns td#last {
 
 #buzzer div:hover {
     cursor: pointer;
-    background: url('../../skins/standard/grfx/g3_buzzer.png') no-repeat 0 -73px;
+    background: url('../../skins/standard/grfx/cu_buzzer.png') no-repeat 0 -73px;
 }
 
 #buzzer.act div {
-    background: url('../../skins/standard/grfx/g3_buzzer.png') no-repeat 0 -146px;
+    background: url('../../skins/standard/grfx/cu_buzzer.png') no-repeat 0 -146px;
 }
 
 #buzzer.act div:hover {
     cursor: pointer;
-    background: url('../../skins/standard/grfx/g3_buzzer.png') no-repeat 0 -219px;
+    background: url('../../skins/standard/grfx/cu_buzzer.png') no-repeat 0 -219px;
 }
 
 #buzzer.disabled div,
 #buzzer.disabled div:hover {
     cursor: auto;
-    background: url('../../skins/standard/grfx/g3_buzzer.png') no-repeat 0 -292px;
+    background: url('../../skins/standard/grfx/cu_buzzer.png') no-repeat 0 -292px;
 }
 
 /*
@@ -796,21 +796,21 @@ fieldset#activitiestab input {
 }
 
 #customersShrink {
-    background: transparent url('../../skins/standard/grfx/customerShrink_left.png') no-repeat center;
+    background: transparent url('../../grfx/customerShrink_left.png') no-repeat center;
     width: 10px;
     height: 100px;
     z-index: 31;
 }
 
 #usersShrink {
-    background: transparent url('../../skins/standard/grfx/customerShrink_left.png') no-repeat center;
+    background: transparent url('../../grfx/customerShrink_left.png') no-repeat center;
     width: 10px;
     height: 100px;
     z-index: 31;
 }
 
 #extensionShrink {
-    background: transparent url('../../skins/standard/grfx/timeSheetShrink_up.png') no-repeat center;
+    background: transparent url('../../grfx/timeSheetShrink_up.png') no-repeat center;
     width: 500px;
     height: 10px;
     z-index: 30;

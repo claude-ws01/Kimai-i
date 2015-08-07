@@ -53,11 +53,6 @@ global $database, $kga, $executed_queries, $translations;
 require('includes/basics.php');
 
 
-if (file_exists(WEBROOT . '_demo')) {
-    define('DEMO_MODE', true);
-    include WEBROOT . '_demo';
-}
-else {define('DEMO_MODE', false);}
 //CN..blocked feature in demo mode.
 if (DEMO_MODE) {
     header("Location: http://${_SERVER['SERVER_NAME']}/index.php");
@@ -188,7 +183,7 @@ if ($authenticated && isset($_REQUEST['submit'])) {
     <title>Kimai Backup Restore Utility</title>
     <style type="text/css" media="screen">
         body {
-            background: #111 url('grfx/ki_twitter_bg.png') no-repeat;
+            background: #111 url('grfx/kii_twitter_bg.png') no-repeat;
             font-family: sans-serif;
         }
 
@@ -221,12 +216,12 @@ if ($authenticated && isset($_REQUEST['submit'])) {
 
         div.warn {
             padding: 5px;
-            background-color: rgba(64, 64, 64, 0.7);;
-            color: red;
+            background-color: rgba(255, 0, 0, 0.7);
+            color: yellow;
             font-weight: bold;
             text-align: center;
-            border-top: 2px solid red;
-            border-bottom: 2px solid red;
+            border-top: 2px solid yellow;
+            border-bottom: 2px solid yellow;
         }
 
         p.label_checkbox input {

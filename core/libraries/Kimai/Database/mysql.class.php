@@ -142,7 +142,7 @@ class MySQL
             $this->in_transaction = 0;
         }
 
-        if (!$this->link) {
+        if (is_object($this->link)) {
             $success = @mysqli_close($this->link);
             if (!$success) {
                 $this->setError();
@@ -433,6 +433,7 @@ class MySQL
      *               returned from the query or FALSE on all errors
      */
     protected function queryArray($sql, $resultType = MYSQLI_BOTH)
+
     {
         $result = $this->query($sql);
         if (!$this->error()

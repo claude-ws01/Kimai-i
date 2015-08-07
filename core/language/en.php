@@ -54,8 +54,6 @@ return array(
     'and'                            => 'and',
     'approved'                       => 'Approved',
     'atLeastOneGroup'                => 'At least one group has to be selected.',
-    'autoOff'                        => 'Auto Off',
-    'autoOn'                         => 'Auto On',
     'autoselection'                  => 'Auto selection entire field',
     'back'                           => 'Back to login window',
     'backupUser'                     => 'Make backup of this user',
@@ -98,7 +96,7 @@ return array(
     'cookiewarning'                  => 'Turn Cookies on before you proceed.',
     'copyr_origin'                   => 'Original Kimai - &copy; 2006-15 - <a href="http://www.kimai.org" target="_blank">Kimai Team</a>',
     'copyr_poweredby'                => 'Powered by',
-    'copyr_provided'                 => 'Software provided under the terms and conditions<br/>of the <a href="COPYING" target="_blank"> General Public License Version 3</a>',
+    'copyr_provided'                 => 'Software provided under the terms and conditions<br/>of the <a href="GNU_TERMS" target="_blank"> General Public License Version 3</a>',
     'countryCode'                    => 'en-EN',
     'ctype0'                         => 'Comment',
     'ctype1'                         => 'Notice',
@@ -160,8 +158,10 @@ return array(
     'forgotPassword'                 => 'Forgot my password',
     'general'                        => 'General',
     'globalRole'                     => 'global role',
+    'globalrole_name_add'            => 'Global role name',
     'globalRoles'                    => 'Global roles',
     'group'                          => 'Group',
+    'group_name_add'                 => 'Group name',
     'groupname'                      => 'Group name',
     'groups'                         => 'Groups',
     'help'                           => 'Help',
@@ -174,7 +174,7 @@ return array(
     'hours'                          => 'hours',
     'in'                             => 'In',
     'installerWarningHeadline'       => 'installer folder still present!',
-    'installerWarningText'           => 'You should delete the installer folder so nobody else can reinstall Kimai-i.',
+    'installerWarningText'           => 'You should delete/rename the installer folder so nobody else can reinstall Kimai-i.',
     'internalProject'                => 'internal project',
     'JSwarning'                      => 'JavaScript must be active.',
     'lang'                           => 'Language',
@@ -191,6 +191,7 @@ return array(
     'members'                        => 'Members',
     'membershipRole'                 => 'Membership role',
     'membershipRoles'                => 'Membership roles',
+    'membershiprole_name_add'        => 'Membership role name',
     'minLength'                      => 'min. 5 characters!',
     'mins'                           => 'minutes',
     'minutes'                        => 'Minutes',
@@ -230,10 +231,10 @@ return array(
     'multiplier'                     => 'Multiplier',
     'my_rate'                        => 'My rate',
     'name'                           => 'Name',
-    'new_activity'                   => ' add activity',
-    'new_customer'                   => ' add customer',
-    'new_project'                    => ' add project',
-    'new_status'                     => ' add status',
+    'new_activity'                   => 'add activity',
+    'new_customer'                   => 'add customer',
+    'new_project'                    => 'add project',
+    'new_status'                     => 'add status',
     'new_user_defaults'              => 'NEW USER DEFAULT PREFERENCES',
     'newPassword'                    => 'New Password',
     'no'                             => 'no',
@@ -304,6 +305,7 @@ return array(
     'starttime'                      => 'start time',
     'StartTimeBeforeEndTime'         => 'The start time must be before the end time.',
     'status'                         => 'Status',
+    'status_name_add'                => 'Status name',
     'street'                         => 'Street',
     'sublist_annotations'            => 'Side annotations',
     'sublists'                       => 'Bottom filters',
@@ -334,6 +336,7 @@ return array(
     'updateNow'                      => 'Update the database now!',
     'used'                           => 'Used',
     'user'                           => 'User',
+    'user_name_add'                  => 'User name',
     'user_list_hidden'               => 'hide user list by default',
     'username'                       => 'Username',
     'users'                          => 'Users',
@@ -419,7 +422,7 @@ return array(
         <br/>
         <br/>
         <strong>This program is free software and published \'AS IS\' without any kind of warranty</strong> under the terms of the
-        <a href="../COPYING">GNU GENERAL PUBLIC LICENSE v3</a>.
+        <a href="../GNU_TERMS">GNU GENERAL PUBLIC LICENSE v3</a>.
         <br/>',
     'dateAndTimeHelp'                => '<strong>Times and dates have to be entered in the following form:</strong><br />Dates: DD.MM.YYYY<br />Times: HH:MM:SS or HH:MM or just HH. Ommitted parts will be set to 0.',
     'errorMessages'                  => array(
@@ -444,7 +447,7 @@ return array(
             'hdl' => 'Error during installation!',
             'txt' => 'Kimai-i is unable to create necessary tables because tables with the name name already exist.<br/>
 To update your existing installation please click <a href="../index.php">here</a>.<br/>
-Choose another table prefix or delete existing tables with this prefix in order to allow Kimai to perform a clean installation.',
+Choose another table prefix or delete existing tables with this prefix in order to allow Kimai-i to perform a clean installation.',
         ),
 
     ),
@@ -533,9 +536,9 @@ Choose another table prefix or delete existing tables with this prefix in order 
         'instructions'     => 'Enter your username and an email will containing a link will be sent to the associated email address. There will be no indication if your username is correct so make sure to enter it correctly!',
         'invalidKey'       => 'The security key does not match the key sent by email. Make sure the complete URL is opened by your browser.',
         'mailConfirmation' => 'An email has been sent to the associated email address. Please follow the instructions provided in that email. If no email address is associated with this username you will not receive an email and need to contact your administrator.',
-        'mailMessage'      => 'This is an automatically generated mail to reset your password at Kimai. Please open the following address in your browser:
+        'mailMessage'      => 'This is an automatically generated mail to reset your password at Kimai-i. Please open the following address in your browser:
 %{URL}',
-        'mailSubject'      => 'Kimai - Password reset',
+        'mailSubject'      => 'Kimai-i - Password reset',
         'notSupported'     => 'The current authentication plugin does not support resetting the password.',
         'returnToLogin'    => 'return to login page',
         'success'          => 'Your password has been changed.',
@@ -616,7 +619,7 @@ Choose another table prefix or delete existing tables with this prefix in order 
     ),
 
     'updater'                        => array(
-        0          => 'Yes, I have a backup of my Kimai database! Proceed updating!',
+        0          => 'Yes, I have a backup of my Kimai-i database! Proceed updating!',
         10         => 'Legend:',
         20         => 'Query was executed successfully.',
         30         => 'Query caused error - most likely irrelevant.',
@@ -626,12 +629,12 @@ Choose another table prefix or delete existing tables with this prefix in order 
         70         => 'Update Log:',
         80         => 'The database was updated successfully and a backup was created.',
         90         => 'Queries processed.',
-        100        => 'The database-update failed due to fatal error(s). A backup was made which can be used to recreate the database in case Kimai does not work properly.',
+        100        => 'The database-update failed due to fatal error(s). A backup was made which can be used to recreate the database in case Kimai-i does not work properly.',
         110        => 'New Passwords',
         120        => 'See below for new passwords for every user.',
         130        => 'Could not write to autoconf.php.',
         140        => 'update file autoconf.php',
-        'timezone' => 'Kimai now supports timezones. Please select your default time zone. It will be used for all users and customers. Users can change their time zone.',
+        'timezone' => 'Kimai-i now supports timezones. Please select your default time zone. It will be used for all users and customers. Users can change their time zone.',
     ),
 
 );

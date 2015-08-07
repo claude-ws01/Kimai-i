@@ -66,7 +66,7 @@
 
     <div id="box">
 
-        <div id="login" <?php if ($this->keyCorrect): ?>style="display:block" <?php endif; ?>>
+        <div id="login" <?php if ($this->keyCorrect): ?>style="display:block;" <?php endif; ?>>
             <form action='index.php?a=checklogin' id='form1' method='post'>
                 <fieldset>
                     <label for="password">
@@ -85,13 +85,13 @@
             <p>
                 <?php echo $kga['dict']['passwordReset']['invalidKey']; ?>
             </p>
-            <a style="display:none"
+            <a style="display:none;"
                href="index.php"><?php echo $kga['dict']['passwordReset']['returnToLogin'] ?></a>
         </div>
         <div id="warning">
-            <p id="JSwarning"><strong style="color:red"><?php $kga['dict']['JSwarning'] ?></strong></p>
+            <p id="JSwarning"><strong style="color:red;"><?php $kga['dict']['JSwarning'] ?></strong></p>
 
-            <p id="cookiewarning"><strong style="color:red"><?php $kga['dict']['cookiewarning'] ?></strong></p>
+            <p id="cookiewarning"><strong style="color:red;"><?php $kga['dict']['cookiewarning'] ?></strong></p>
         </div>
     </div><?php echo $this->partial('misc/copyrightnotes.php', array('kga' => &$kga, 'devtimespan' => devTimeSpan())); ?>
 </div>

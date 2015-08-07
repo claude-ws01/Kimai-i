@@ -11,13 +11,13 @@ $copyr_origin = isset($kga['dict']['copyr_origin']) ? $kga['dict']['copyr_origin
 
 $copyr_provided = isset($kga['dict']['copyr_provided']) ? $kga['dict']['copyr_provided'] :
     'Software provided under the terms and conditions
-         <br/>of the <a href="COPYING" target="_blank">
+         <br/>of the <a href="GNU_TERMS" target="_blank">
             General Public License GNU v3</a>';
 
 $copyr_powerby = isset($kga['dict']['copyr_poweredby']) ? $kga['dict']['copyr_poweredby'] : ' Powered by ';
 ?>
 <p>
-    <strong>Kimai-i <span style="color:red"><?php echo $GLOBALS['kga']['core.status'] ?></span> <?php
+    <strong>Kimai-i <span style="color:red;"><?php echo $GLOBALS['kga']['core.status'] ?></span> <?php
         echo 'v' . $GLOBALS['kga']['core.version'], ' (db.', $GLOBALS['kga']['core.revision'] . ')'; ?>
     </strong> - &copy; <?php echo devTimeSpan(); ?> - <a href="https://github.com/cloudeasy/Kimai-i"
                                                          target="_blank">Claude Nadon</a>

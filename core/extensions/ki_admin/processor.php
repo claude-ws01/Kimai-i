@@ -33,8 +33,8 @@ switch ($axAction) {
         // Ban a user from login
         $sts['active'] = 0;
         $database->user_edit($id, $sts);
-        echo sprintf('<img border="0" title="%s" alt="%s" src="../skins/%s/grfx/lock.png" width="16" height="16" />',
-                     $kga['dict']['banneduser'], $kga['dict']['banneduser'], $kga['pref']['skin']);
+        echo sprintf('<img border="0" title="%s" alt="%s" src="../grfx/lock.png" width="16" height="16" />',
+                     $kga['dict']['banneduser'], $kga['dict']['banneduser']);
         break;
 
     case 'createUser' :
@@ -788,7 +788,7 @@ switch ($axAction) {
         // Unban a user from login
         $sts['active'] = 1;
         $database->user_edit($id, $sts);
-        echo sprintf('<img border="0" title="%s" alt="%s" src="../skins/%s/grfx/jipp.gif" width="16" height="16" />',
-                     $kga['dict']['activeAccount'], $kga['dict']['activeAccount'], $kga['pref']['skin']);
+        echo sprintf('<img border="0" title="%s" alt="%s" src="../grfx/jipp.gif" width="16" height="16" />',
+                     $kga['dict']['activeAccount'], $kga['dict']['activeAccount']);
         break;
 }

@@ -1,7 +1,7 @@
 <?php global $kga ?>
 <a href="#" onClick="floaterShow('floaters.php','add_edit_project',0,0,450); $(this).blur(); return false;"><img
         src="../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/add.png" width="22" height="16"
-        alt="<?php echo $kga['dict']['new_project'] ?>"></a><?php echo $kga['dict']['new_project'] ?>
+        alt="<?php echo $kga['dict']['new_project'] ?>"></a>&nbsp;<?php echo $kga['dict']['new_project'] ?>
 <br/><br/>
 
 <table>

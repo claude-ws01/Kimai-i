@@ -67,25 +67,6 @@ $authPlugin = new $authClass($database, $kga);
 
 $view->kga = $kga;
 
-// ==========================
-// = installation required? =
-// ==========================
-$users = $database->get_users();
-if (count($users) === 0
-    && file_exists(WEBROOT . 'includes/autoconf.php') === false
-) {
-
-    $view->devtimespan = '2015-' . date('y');
-    if (isset($_REQUEST['disagreedGPL'])) {
-        $view->disagreedGPL = 1;
-    }
-    else {
-        $view->disagreedGPL = 0;
-    }
-    echo $view->render('install/welcome.php');
-    ob_end_flush();
-    exit;
-}
 
 
 // =========================

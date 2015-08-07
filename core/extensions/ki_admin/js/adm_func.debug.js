@@ -617,7 +617,7 @@ function adm_ext_unbanUser(id) {
     var ban = $("#ban" + id);
 
     ban.blur();
-    ban.html("<img border='0' width='16' height='16' src='../skins/" + skin + "/grfx/loading13.gif'/>");
+    ban.html("<img border='0' width='16' height='16' src='../grfx/loading13.gif'/>");
 
     $('#ajax_wait').show();
     $.post(adm_ext_path + "processor.php", {
@@ -641,7 +641,7 @@ function adm_ext_banUser(id) {
     var ban = $("#ban" + id);
 
     ban.blur();
-    ban.html("<img border='0' width='16' height='16' src='../skins/" + skin + "/grfx/loading13.gif'/>");
+    ban.html("<img border='0' width='16' height='16' src='../grfx/loading13.gif'/>");
 
     $('#ajax_wait').show();
     $.post(adm_ext_path + "processor.php", {
