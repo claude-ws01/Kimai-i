@@ -1,7 +1,7 @@
 <script type="text/javascript" charset="utf-8">current = 28;</script>
 
 <?php
-if ($_REQUEST['language'] === "en") {
+if ($_REQUEST['language'] === 'en') {
     ?>
 
     <h2>Timezone</h2>
@@ -13,11 +13,10 @@ if ($_REQUEST['language'] === "en") {
     <br/><br/>
 
     <select id="timezone">><?php
-        require("../../includes/func.php");
+        require('../../includes/func.php');
 
         $serverZone = @date_default_timezone_get();
-        //DEBUG//
-        error_log('<<== SERVER ZONE ==>>'.$serverZone . '<<=>>');
+        //DEBUG// error_log('<<== SERVER ZONE ==>>'.$serverZone . '<<=>>');
         foreach (timezoneList() as $name) {
             if ($name === $serverZone) {
                 echo "<option selected=\"selected\">$name</option>";
@@ -49,12 +48,12 @@ else {
 
     <select id="timezone">
         <?php
-        require("../../includes/func.php");
+        require('../../includes/func.php');
 
         $serverZone = @date_default_timezone_get();
 
         foreach (timezoneList() as $name) {
-            if ($name == $serverZone) {
+            if ($name === $serverZone) {
                 echo "<option selected=\"selected\">$name</option>";
             }
             else {

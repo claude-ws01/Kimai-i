@@ -163,7 +163,7 @@ function export_get_data($start, $end, $users = null, $customers = null, $projec
                 $arr['time_out']           = $row['end'];
                 $arr['duration']           = $row['duration'];
                 $arr['formatted_duration'] = $row['formatted_duration'];
-                $arr['decimal_duration']   = sprintf("%01.2f", $row['duration'] / 3600);
+                $arr['decimal_duration']   = sprintf('%01.2f', $row['duration'] / 3600);
                 $arr['rate']               = $row['rate'];
                 $arr['wage']               = $row['wage'];
                 $arr['wage_decimal']       = $row['wage_decimal'];
@@ -202,7 +202,7 @@ function export_get_data($start, $end, $users = null, $customers = null, $projec
             $arr['id']              = $row['expense_id'];
             $arr['time_in']         = $row['timestamp'];
             $arr['time_out']        = $row['timestamp'];
-            $arr['wage']            = sprintf("%01.2f", $row['value'] * $row['multiplier']);
+            $arr['wage']            = sprintf('%01.2f', $row['value'] * $row['multiplier']);
             $arr['customer_id']     = $row['customer_id'];
             $arr['customer_name']   = $row['customer_name'];
             $arr['project_id']      = $row['project_id'];

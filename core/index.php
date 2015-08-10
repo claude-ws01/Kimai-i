@@ -70,7 +70,7 @@ $view->kga = $kga;
 
 
 // =========================
-// = User requested logout =
+// =    LOG OUT            =
 // =========================
 $justLoggedOut = false;
 if ($_REQUEST['a'] === 'logout') {
@@ -100,11 +100,11 @@ if (!$justLoggedOut
     && $authPlugin->performAutoLogin($userId)
 ) {
     if ($userId === false) {
-        $userId = $database->user_create(array(
-                                             'name'           => $name,
-                                             'global_role_id' => $kga['who']['global_role_id'],
-                                             'active'         => 1,
-                                         ));
+        $userId = $database->user_create(
+            array('name'           => $name,
+                  'global_role_id' => $kga['who']['global_role_id'],
+                  'active'         => 1,
+            ));
         $database->setGroupMemberships($userId, array($authPlugin->getDefaultGroups()));
     }
     $userData = $database->user_get_data($userId);
@@ -146,12 +146,13 @@ switch ($_REQUEST['a']) {
             $data      = $database->customer_get_data($id);
 
             // TODO: add BAN support
-            if ($data['password'] === $passCrypt && $name !== '' && $passCrypt !== '') {
+            if ($passCrypt !== '' && $name !== '' && $data['password'] === $passCrypt) {
                 Logger::logfile('login OK: ' . $name . ($is_customer ? ' as customer' : ' as user'));
                 $keymai = random_code(30);
                 cookie_set('ki_key', $keymai);
                 cookie_set('ki_user', 'customer_' . $name);
                 $database->customer_loginSetKey($id, $keymai);
+//                error_log('<<== QUERY SECURE KEY ==>>'.$database->get_seq('customer_' . $name));
                 header('Location: core/kimai.php');
             }
             else {
@@ -180,6 +181,7 @@ switch ($_REQUEST['a']) {
                 cookie_set('ki_key', $keymai);
                 cookie_set('ki_user', $userData['name']);
                 $database->user_loginSetKey($userId, $keymai);
+//                error_log('<<== QUERY SECURE KEY ==>>'.$database->get_seq($name));
                 header('Location: core/kimai.php');
             }
 

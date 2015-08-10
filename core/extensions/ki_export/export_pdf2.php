@@ -107,15 +107,15 @@ class MYPDF extends BasePDF
         $this->moneySum = 0;
         $this->timeSum  = 0;
         foreach ($data as $row) {
-            error_log($row['type']);
-            if ($row['type'] == "expense") {
+            //DEBUG// error_log('<<== ROW TYPE PDF ==>>' . $row['type']);
+            if ($row['type'] === 'expense') {
                 $this->printExpenseRow($widths, $row);
                 $this->moneySum += $row['wage'];
             }
             else {
                 $this->printTimeRow($widths, $row);
                 $this->moneySum += $row['wage'];
-                $this->timeSum += $row['decimal_duration'] == -1 ? 0 : $row['decimal_duration'];
+                $this->timeSum += $row['decimal_duration'] === -1 ? 0 : $row['decimal_duration'];
             }
         }
     }

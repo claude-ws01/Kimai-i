@@ -47,7 +47,7 @@ class MySQL
     private $in_transaction = 0; // level, number of transaction begin requested
     private $last_insert_id;
     private $last_result;
-    private $last_sql = '';
+    public $last_sql = '';
 
     /**
      * Constructor: Opens the connection to the database
@@ -417,6 +417,7 @@ class MySQL
         else {
 
             // ANY OTHER SUCCESFUL OPERATIONS  ===>>> RETURN result array //
+            // INSERT, UPDATE, REPLACE or DELETE   ====> use mysqli_affected_rows //
             return $this->last_result;
         }
     }
@@ -1259,7 +1260,6 @@ class MySQL
                     $coma = ', ';
                 }
 
-                //DEBUG// error_log('<<==== QUERY ====>>' . PHP_EOL . $sql);
                 return $sql;
                 break;
 

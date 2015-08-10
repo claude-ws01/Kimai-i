@@ -1,7 +1,11 @@
 *************** REMINDER ... UPDATE /includes/version.php AND kimai-i.json ******************************
 
+=== v0.10.1-b6 ======= 2015-08-xx ============ db revision 2000 ========================================================
+- export-print: some corrections
+
 === v0.10.1-b5 ======= 2015-08-10 ============ db revision 2000 ========================================================
 - corrections in https mode.
+
 
 === v0.10.1-b4 ======= 2015-08-10 ============ db revision 2000 ========================================================
 - admin panel: revision of all panel into a single function.php files. No reason to duplicate code in init.php and

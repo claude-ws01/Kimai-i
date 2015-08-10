@@ -68,7 +68,9 @@ class Kimai_Auth_Mysql extends Kimai_Auth_Abstract
 
         $message = $kga['dict']['passwordReset']['mailMessage'];
         $message = str_replace('%{URL}', $url, $message);
-        error_log($user['mail']);
+
+        //TRACE//
+        error_log('<<== FORGOT PASSWORD CONFIRMATION EMAIL ==>>' . $user['mail']);
         mail($user['mail'],
              $kga['dict']['passwordReset']['mailSubject'],
              $message);

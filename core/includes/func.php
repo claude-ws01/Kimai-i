@@ -78,7 +78,12 @@ function checkUser()
         $kimai_user = addslashes($_COOKIE['ki_user']);
         $kimai_key  = addslashes($_COOKIE['ki_key']);
 
-        if ($database->get_seq($kimai_user) !== $kimai_key) {
+        $db_key = $database->get_seq($kimai_user);
+        if ($db_key !== $kimai_key) {
+            error_log('<<========================================>>');
+            error_log('<<== DB KEY ==>>'.$db_key.'<<>>');
+            error_log('<<== COOKIE ==>>'.$kimai_key.'<<>>');
+            error_log('<<========================================>>');
             Logger::logfile("Kicking user $kimai_user because of authentication key mismatch.");
             kickUser();
         }
@@ -295,7 +300,11 @@ function cookie_get($cookie_name, $default = null)
 
 function cookie_set($name, $value, $expire = 0, $secure = false, $httponly = false)
 {
+    global $kga;
     //DEBUG// error_log('<<== COOKIE == NAME >>'.$name.'<<value>>'.$value.'<<expire>>'.$expire);
+
+    if ($kga['https']): $secure = true; endif;
+
     if (!headers_sent()) {
         setcookie($name, $value, $expire, '/',
                   $_SERVER['SERVER_NAME'], $secure, $httponly);

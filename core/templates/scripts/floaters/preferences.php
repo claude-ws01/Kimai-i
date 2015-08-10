@@ -75,7 +75,7 @@
     <form id="core_prefs" action="processor.php" method="post">
 
         <div id="floater_tabs" class="floater_content">
-            <?php //  GENERAL OPTIONS   //  ?>:
+            <?php //  GENERAL OPTIONS   //  ?>
             <fieldset id="prefGeneral">
                 <ul>
                     <li>
