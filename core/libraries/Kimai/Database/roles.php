@@ -315,7 +315,7 @@ class Roles_Mysql extends Kimai_Mysql
         }
         $rtn_str = $cache[$key] ? 'TRUE' : 'FALSE';
 
-        Logger::logfile("MEMBER role {$roleId}, {$rtn_str} ~ {$for_permission}, USER ~ {$kga['who']['name']}{$cached}");
+        Logger::logfile("member role {$roleId}, {$rtn_str} ~ {$for_permission}, USER ~ {$kga['who']['name']}{$cached}");
 
         return $cache[$key];
     }

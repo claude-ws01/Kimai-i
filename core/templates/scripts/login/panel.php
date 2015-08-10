@@ -70,11 +70,9 @@
         });
 
         function chgLanguage(sel) {
-            var httpHost =
-                '<?php echo $kga['https'] ? 'https://' : 'http://',
-                    $_SERVER['SERVER_NAME'], '/'; ?>';
-
-            window.location.href = httpHost + 'index.php?a=chg_lang&language=' + sel.value;
+            window.location.href = '<?php
+            echo $kga['https'] ? 'https://' : 'http://',
+             $_SERVER['SERVER_NAME']; ?>' + '/index.php?a=chg_lang&language=' + sel.value;
         }
     </script>
 

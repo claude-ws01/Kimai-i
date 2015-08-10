@@ -75,8 +75,8 @@ switch ($_REQUEST['a']) {
             $database->customer_edit($id, array('password_reset_hash' => $passwordResetHash));
 
             $url = ($kga['https'] ? 'https://' : 'http://') .
-                $_SERVER['SERVER_NAME'] .
-                dirname($_SERVER['SCRIPT_NAME']) . '/forgotPassword.php?name=' . urlencode($name) .
+                $_SERVER['SERVER_NAME'] . dirname($_SERVER['SCRIPT_NAME']) .
+                '/forgotPassword.php?name=' . urlencode($name) .
                 '&key=' . $passwordResetHash;
 
             $message = $kga['dict']['passwordReset']['mailMessage'];

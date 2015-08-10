@@ -90,8 +90,12 @@ if ($server_https || $kga['force_ssl']) {
 }
 
 if (!$server_https && $kga['https']) { // force ssl.
-    header("location:https://{$_SERVER['SERVER_NAME']}/{$_SERVER['REQUEST_URI']}");
+    header("location:https://{$_SERVER['SERVER_NAME']}{$_SERVER['REQUEST_URI']}");
 }
+//DEBUG//
+//error_log('<<== SERVER_NAME ==>>'.$_SERVER['SERVER_NAME']);
+//error_log('<<== REQUEST_URI ==>>'.$_SERVER['REQUEST_URI']);
+//error_log('<<== dirname(SCRIPT_NAME) ==>>'.dirname($_SERVER['SCRIPT_NAME']));
 
 
 
