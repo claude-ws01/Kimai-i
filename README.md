@@ -22,7 +22,7 @@ Claude.
 
 kimaii.demo.ws01.info
 =====================
-    - Demo in Deutch, English, Español, Français (Deutch & Español ~ partially translated)
+    - Demo in Deutsch, English, Español, Français (Deutch & Español ~ partially translated)
     - Login as: admin, staff1 or customer1
     - Password: demo
     - Data resets every 6 hours
