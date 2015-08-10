@@ -23,6 +23,7 @@ Claude.
 DEMO
 ====================
 - kimaii_demo.ws01.info
+- Deutch, English, Español, Français (Deutch & Español ~ partially translated)
 
 - login as: admin, staff1 or customer1
 - password: demo
