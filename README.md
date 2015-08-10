@@ -1,20 +1,20 @@
-Kimai-i Time Tracking
+Kimai-i Time Tracking v0.10
 ====================================
+(originates from Kimai v0.9.3rc1)
 
-(This is NOT the repository of The original Kimai)
+Some of the features:
 
-It is a branch from original Kimai v0.9.3rc1.
-It includes
- - Implementation of mysqli
- - Revision of rendering of Timesheet, Export, Expenses, Invoice (header & content alignments)
- - New standard skin (almost like the original but less flashy)
- - Many bug corrections
- - Revised & cleaned language files (only EN and FR)
- - Corrected all encountered "strict standards" PHP 5.5 warnings.
- - Code revision & optimisation... now closer to PSR1.
- - ... and many more improvements.
+    - Implementation of mysqli (and eliminition of mysql-php-4)
+    - Tested on PHP 5.6 (demo runs on PHP 5.5)
+    - Revision of rendering of Timesheet, Export, Expenses, Invoice (header & content alignments)
+    - New skin, better GUI, more intuitive
+    - Code revision & optimisation... now closer to PSR1.
+    - Many bugfix & enhancements
+    - "root" mode, overrides all 'user roles' (great for single and few people team)
+    - Automatic database upgrade from previous version of Kimai (up to v0.9.3)
+    - ...
 
-Enjoy
+Try it!
 
 Claude.
 
@@ -22,20 +22,29 @@ Claude.
 
 kimaii.demo.ws01.info
 =====================
- - Demo in Deutch, English, Español, Français (Deutch & Español ~ partially translated)
- - login as: admin, staff1 or customer1
- - password: demo
- - data resets every 6 hours
+    - Demo in Deutch, English, Español, Français (Deutch & Español ~ partially translated)
+    - Login as: admin, staff1 or customer1
+    - Password: demo
+    - Data resets every 6 hours
 
-have fun... and you can break anything you want, just tell me if you succeed. :)
+Your feedback is welcome.
+
+
+
+For developpers and enthousiasts
+================================
+    - The code has been revised to about 70% (appart from third parties libraries).
+    - Better coherence in the structure, naming convention and style (PSR1-2 as reference)
+    - Deprecated code has been eliminated. Big clean up done.
+    - Focused more on simplicity & practicality & stability. 
 
 
 
 What you can do here
 ====================
-- download it
-- ask questions
-- post bug & solution you find
+    - Download it
+    - Ask questions
+    - Post bug & solution you find
 
 
 
