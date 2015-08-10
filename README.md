@@ -22,13 +22,11 @@ Claude.
 
 DEMO
 ====================
-- kimaii_demo.ws01.info
-- Deutch, English, Español, Français (Deutch & Español ~ partially translated)
-
-- login as: admin, staff1 or customer1
-- password: demo
-
-- data is reset every 6 hours
+ - kimaii_demo.ws01.info
+ - Deutch, English, Español, Français (Deutch & Español ~ partially translated)
+ - login as: admin, staff1 or customer1
+ - password: demo
+ - data is reset every 6 hours
 
 have fun... and you can break anything you want, just tell me if you succeed. :)
 
