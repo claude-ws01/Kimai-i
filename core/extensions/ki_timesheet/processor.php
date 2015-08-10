@@ -25,74 +25,11 @@
 // insert KSPI
 $isCoreProcessor = 0;
 $dir_templates   = 'templates/';
-require('../../includes/kspi.php');
 global $view, $database, $kga;
 
-function timesheetAccessAllowed($entry, $action, &$errors)
-{   // SECURITY //
-    global $database, $kga;
+global $axAction, $axValue, $id, $timeframe, $in, $out;
+require('../../includes/kspi.php');
 
-    if (!array_key_exists('user', $kga)) {
-        $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
-
-        return false;
-    }
-    if ($kga['is_user_root']) {
-        return true;
-    }
-
-
-    if ($kga['conf']['edit_limit'] !== '-' && time() - $entry['end'] > $kga['conf']['edit_limit'] && $entry['end'] != 0) {
-        $errors[''] = $kga['dict']['editLimitError'];
-
-        return false;
-    }
-
-
-    if ((int)$entry['user_id'] === (int)$kga['user']['user_id']) {
-        $permissionName = "ki_timesheet__own_entry__${action}";
-        if ($database->global_role_allows(any_get_global_role_id(), $permissionName)) {
-            return true;
-        }
-        else {
-            Logger::logfile("missing global permission $permissionName for user " . $kga['user']['name']);
-            $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
-
-            return false;
-        }
-    }
-
-    $groups = $database->user_get_group_ids($entry['user_id'], false);
-    //CN..current-user groups already in $kga// $assignedOwnGroups = array_intersect($groups, $database->user_get_group_ids($kga['user']['user_id']));
-    $assignedOwnGroups = array_intersect($groups, $kga['user']['groups']);
-
-    if (count($assignedOwnGroups) > 0) {
-        $permissionName = "ki_timesheet__other_entry__own_group__${action}";
-        if ($database->checkMembershipPermission($kga['user']['user_id'], $assignedOwnGroups, $permissionName)) {
-            return true;
-        }
-        else {
-            Logger::logfile("missing membership permission $permissionName of own group(s) " .
-                            implode(', ', $assignedOwnGroups) . ' for user ' . $kga['user']['name']);
-            $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
-
-            return false;
-        }
-
-    }
-
-    $permissionName = "ki_timesheet__other_entry__other_group__${action}";
-    if ($database->global_role_allows(any_get_global_role_id(), $permissionName)) {
-        return true;
-    }
-    else {
-        Logger::logfile("missing global permission $permissionName for user " . $kga['user']['name']);
-        $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
-
-        return false;
-    }
-
-}
 
 // ==================
 // = handle request =
@@ -113,10 +50,10 @@ switch ($axAction) {
         $timesheet_entry['cleared']  = 0;
 
         $errors = array();
-        timesheetAccessAllowed($timesheet_entry, 'edit', $errors);
+        $database->ts_access_allowed($timesheet_entry, 'edit', $errors);
         $response['errors'] = $errors;
 
-        if (count($errors) == 0) {
+        if (count($errors) === 0) {
 
             $newTimeSheetEntryID = $database->timeEntry_create($timesheet_entry);
 
@@ -124,7 +61,7 @@ switch ($axAction) {
             $userData['last_record']   = $newTimeSheetEntryID;
             $userData['last_project']  = $timesheet_entry['project_id'];
             $userData['last_activity'] = $timesheet_entry['activity_id'];
-            $database->user_edit($kga['user']['user_id'], $userData);
+            $database->user_edit($kga['who']['id'], $userData);
 
 
             $project  = $database->project_get_data($timesheet_entry['project_id']);
@@ -150,9 +87,9 @@ switch ($axAction) {
 
         $data = $database->timesheet_get_data($id);
 
-        timesheetAccessAllowed($data, 'edit', $errors);
+        $database->ts_access_allowed($data, 'edit', $errors);
 
-        if (count($errors) == 0) {
+        if (count($errors) === 0) {
             $database->stopRecorder($id);
         }
 
@@ -169,9 +106,9 @@ switch ($axAction) {
 
         $data = $database->timesheet_get_data($id);
 
-        timesheetAccessAllowed($data, 'edit', $errors);
+        $database->ts_access_allowed($data, 'edit', $errors);
 
-        if (count($errors) == 0) {
+        if (count($errors) === 0) {
             if (isset($_REQUEST['project'])) {
                 $database->timeEntry_edit_project($id, $_REQUEST['project']);
             }
@@ -194,9 +131,9 @@ switch ($axAction) {
 
         $data = $database->timesheet_get_data($id);
 
-        timesheetAccessAllowed($data, 'delete', $errors);
+        $database->ts_access_allowed($data, 'delete', $errors);
 
-        if (count($errors) == 0) {
+        if (count($errors) === 0) {
             $database->timeEntry_delete($id);
         }
 
@@ -211,16 +148,16 @@ switch ($axAction) {
     case 'bestFittingRates':
         $data = array('errors' => array());
 
-        if (!array_key_exists('user', $kga)) {
+        if ($kga['who']['type'] !== 'user') {
             $data['errors'][] = $kga['dict']['editLimitError'];
         }
 
-        if (!$database->global_role_allows(any_get_global_role_id(), 'ki_timesheet__show_rates')) {
+        if (!$database->gRole_allows($kga['who']['global_role_id'], 'ki_timesheet__show_rates')) {
             $data['errors'][] = $kga['dict']['editLimitError'];
         }
 
-        if (count($data['errors']) == 0) {
-            $data['hourly_rate'] = $database->get_best_fitting_rate($kga['user']['user_id'], $_REQUEST['project_id'], $_REQUEST['activity_id']);
+        if (count($data['errors']) === 0) {
+            $data['hourly_rate'] = $database->get_best_fitting_rate($kga['who']['id'], $_REQUEST['project_id'], $_REQUEST['activity_id']);
             $data['fixed_rate']  = $database->get_best_fitting_fixed_rate($_REQUEST['project_id'], $_REQUEST['activity_id']);
         }
 
@@ -235,20 +172,22 @@ switch ($axAction) {
     case 'budgets':
         $data = array('errors' => array());
 
-        if (!array_key_exists('user', $kga)) {
+        if ($kga['who']['type'] !== 'user') {
             $data['errors'][] = $kga['dict']['editLimitError'];
         }
 
-        if (!$database->global_role_allows(any_get_global_role_id(), 'ki_timesheet__show_rates')) {
+        if (!$database->gRole_allows($kga['who']['global_role_id'], 'ki_timesheet__show_rates')) {
             $data['errors'][] = $kga['dict']['editLimitError'];
         }
 
-        if (count($data['errors']) == 0) {
+        if (count($data['errors']) === 0) {
             $timesheet_entry = $database->timesheet_get_data($_REQUEST['timeSheetEntryID']);
             // we subtract the used data in case the activity is the same as in the db, otherwise
             // it would get counted twice. For all aother cases, just set the values to 0
             // so we don't subtract too much
-            if ($timesheet_entry['activity_id'] != $_REQUEST['activity_id'] || $timesheet_entry['project_id'] != $_REQUEST['project_id']) {
+            if ($timesheet_entry['activity_id'] !== $_REQUEST['activity_id']
+                || $timesheet_entry['project_id'] != $_REQUEST['project_id']
+            ) {
                 $timesheet_entry['budget']   = 0;
                 $timesheet_entry['approved'] = 0;
                 $timesheet_entry['rate']     = 0;
@@ -268,16 +207,16 @@ switch ($axAction) {
     case 'allFittingRates':
         $data = array('errors' => array());
 
-        if (!array_key_exists('user', $kga)) {
+        if ($kga['who']['type'] !== 'user') {
             $data['errors'][] = $kga['dict']['editLimitError'];
         }
 
-        if (!$database->global_role_allows(any_get_global_role_id(), 'ki_timesheet__show_rates')) {
+        if (!$database->gRole_allows($kga['who']['global_role_id'], 'ki_timesheet__show_rates')) {
             $data['errors'][] = $kga['dict']['editLimitError'];
         }
 
         if (count($data['errors']) === 0) {
-            $rates = $database->allFittingRates($kga['user']['user_id'], $_REQUEST['project'], $_REQUEST['activity']);
+            $rates = $database->allFittingRates($kga['who']['id'], $_REQUEST['project'], $_REQUEST['activity']);
 
             if (is_array($rates)) {
                 foreach ((array)$rates as $rate) {
@@ -313,11 +252,11 @@ switch ($axAction) {
     case 'allFittingFixedRates':
         $data = array('errors' => array());
 
-        if (!array_key_exists('user', $kga)) {
+        if ($kga['who']['type'] !== 'user') {
             $data['errors'][] = $kga['dict']['editLimitError'];
         }
 
-        if (!$database->global_role_allows(any_get_global_role_id(), 'ki_timesheet__show_rates')) {
+        if (!$database->gRole_allows($kga['who']['global_role_id'], 'ki_timesheet__show_rates')) {
             $data['errors'][] = $kga['dict']['editLimitError'];
         }
 
@@ -353,10 +292,10 @@ switch ($axAction) {
     // = Get the best rate for the project and activity =
     // ==================================================
     case 'reload_activities_options':
-        if (array_key_exists('customer', $kga)) {
+        if (is_customer()) {
             die();
         }
-        $activities = $database->get_activities_by_project($_REQUEST['project'], any_get_group_ids());
+        $activities = $database->get_activities_by_project($_REQUEST['project'], $kga['who']['groups']);
         if (is_array($activities)) {
             foreach ((array)$activities as $activity) {
                 if (!$activity['visible']) {
@@ -382,49 +321,46 @@ switch ($axAction) {
 
         $filterCustomers = array_map(function ($customer) {
             return $customer['customer_id'];
-        }, $database->get_customers(any_get_group_ids()));
+        }, $database->customers_get($kga['who']['groups']));
         if ($filters[1] !== '') {
             $filterCustomers = array_intersect($filterCustomers, explode(':', $filters[1]));
         }
 
         $filterProjects = array_map(function ($project) {
             return $project['project_id'];
-        }, $database->get_projects(any_get_group_ids()));
+        }, $database->get_projects($kga['who']['groups']));
         if ($filters[2] !== '') {
             $filterProjects = array_intersect($filterProjects, explode(':', $filters[2]));
         }
 
         $filterActivities = array_map(function ($activity) {
             return $activity['activity_id'];
-        }, $database->get_activities(any_get_group_ids()));
+        }, $database->get_activities($kga['who']['groups']));
         if ($filters[3] !== '') {
             $filterActivities = array_intersect($filterActivities, explode(':', $filters[3]));
         }
 
         // if no userfilter is set, set it to current user
-        if (array_key_exists('user', $kga) && (!is_array($filterUsers) || count($filterUsers) === 0)) {
-            $filterUsers[] = $kga['user']['user_id'];
+        if (is_customer()) {
+            $filterCustomers = array($kga['who']['id']);
         }
-
-        if (array_key_exists('customer', $kga)) {
-            $filterCustomers = array($kga['customer']['customer_id']);
+        elseif (!is_array($filterUsers) || count($filterUsers) === 0) {
+            $filterUsers[] = $kga['who']['id'];
         }
 
         $timesheet_entries = $database->get_timesheet($in, $out, $filterUsers, $filterCustomers, $filterProjects, $filterActivities, 1);
+        $view->timeSheetEntries = 0;
         if (count($timesheet_entries) > 0) {
             $view->timeSheetEntries = $timesheet_entries;
         }
-        else {
-            $view->timeSheetEntries = 0;
-        }
-        if (array_key_exists('user', $kga)) {
+
+        $view->latest_running_entry = null;
+        $view->total                = null;
+        if (is_user()) {
             $view->latest_running_entry = $database->get_latest_running_entry();
             $view->total                = Format::formatDuration($database->get_duration($in, $out, $filterUsers, $filterCustomers, $filterProjects, $filterActivities));
         }
-        else {
-            $view->latest_running_entry = null;
-            $view->total                = null;
-        }
+
 
         $ann = $database->get_time_users($in, $out, $filterUsers, $filterCustomers, $filterProjects, $filterActivities);
         Format::formatAnnotations($ann);
@@ -453,7 +389,7 @@ switch ($axAction) {
             $view->show_ref_code    = $kga['pref']['show_ref_code'] !== '0';
         }
 
-        $view->showRates = array_key_exists('user', $kga) && $database->global_role_allows(any_get_global_role_id(), 'ki_timesheet__show_rates');
+        $view->showRates = is_user() && $database->gRole_allows($kga['who']['global_role_id'], 'ki_timesheet__show_rates');
 
         echo $view->render('timesheet.php');
         break;
@@ -478,7 +414,7 @@ switch ($axAction) {
             $data = $database->timesheet_get_data($id);
 
             // check if editing or deleting with the old values would be allowed
-            if (!timesheetAccessAllowed($data, $action, $errors)) {
+            if (!$database->ts_access_allowed($data, $action, $errors)) {
                 echo json_encode(array('errors' => $errors));
                 break;
             }
@@ -500,13 +436,15 @@ switch ($axAction) {
         $data['comment']      = $_REQUEST['comment'];
         $data['comment_type'] = $_REQUEST['comment_type'];
 
-        if ($database->global_role_allows(any_get_global_role_id(), 'ki_timesheet__edit_rates')) {
+            $fixed_rate = isset($_REQUEST['fixed_rate']) ? $_REQUEST['fixed_rate'] : '0';
+
+        if ($database->gRole_allows($kga['who']['global_role_id'], 'ki_timesheet__edit_rates')) {
             $data['rate']       = str_replace($kga['conf']['decimal_separator'], '.', $_REQUEST['rate']);
-            $data['fixed_rate'] = str_replace($kga['conf']['decimal_separator'], '.', $_REQUEST['fixed_rate']);
+            $data['fixed_rate'] = str_replace($kga['conf']['decimal_separator'], '.', $fixed_rate);
         }
         elseif (!$id) {
-            $data['rate']       = $database->get_best_fitting_rate($kga['user']['user_id'], $data['project_id'], $data['activity_id']);
-            $data['fixed_rate'] = str_replace($kga['conf']['decimal_separator'], '.', $_REQUEST['fixed_rate']);
+            $data['rate']       = $database->get_best_fitting_rate($kga['who']['id'], $data['project_id'], $data['activity_id']);
+            $data['fixed_rate'] = str_replace($kga['conf']['decimal_separator'], '.', $fixed_rate);
         }
         $data['cleared']   = isset($_REQUEST['cleared']);
         $data['status_id'] = $_REQUEST['status_id'];
@@ -566,7 +504,7 @@ switch ($axAction) {
 
         $inDate = new Zend_Date($edit_in);
 
-        if ($_REQUEST['end_day'] != '' || $_REQUEST['end_time'] != '') {
+        if ($_REQUEST['end_day'] !== '' || $_REQUEST['end_time'] !== '') {
             $edit_out_day  = Zend_Locale_Format::getDate($_REQUEST['end_day'],
                                                          array('date_format' => 'dd.MM.yyyy'));
             $edit_out_time = Zend_Locale_Format::getTime($_REQUEST['end_time'],
@@ -582,13 +520,13 @@ switch ($axAction) {
 
         $data['start'] = $inDate->getTimestamp();
 
-        if ($outDate != null) {
+        if ($outDate !== null) {
             $data['end']      = $outDate->getTimestamp();
             $data['duration'] = $data['end'] - $data['start'];
         }
 
         if ($id) { // existing entry
-            if (!timesheetAccessAllowed($data, $action, $errors)) {
+            if (!$database->ts_access_allowed($data, $action, $errors)) {
                 echo json_encode(array('errors' => $errors));
                 break;
             }
@@ -599,22 +537,22 @@ switch ($axAction) {
         }
 
         else {  // new entry
-            $database->transaction_begin();
+            $database->transactionBegin();
 
             if (is_array($_REQUEST['user_id'])) {
                 foreach ($_REQUEST['user_id'] as $userID) {
                     $data['user_id'] = $userID;
 
-                    if (!timesheetAccessAllowed($data, $action, $errors)) {
+                    if (!$database->ts_access_allowed($data, $action, $errors)) {
                         echo json_encode(array('errors' => $errors));
-                        $database->transaction_rollback();
+                        $database->transactionRollback();
                         break 2;
                     }
                     Logger::logfile('timeEntry_create');
                     $database->timeEntry_create($data);
                 }
             }
-            $database->transaction_end();
+            $database->transactionEnd();
         }
 
         echo json_encode(array('errors' => $errors));

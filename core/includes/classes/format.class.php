@@ -30,7 +30,7 @@ class Format
         }
         else {
             // Format accordingly.
-            if ($kga['conf']['duration_with_seconds'] == 0) {
+            if ((int)$kga['conf']['duration_with_seconds'] === 0) {
                 return sprintf('%d:%02d', $sek / 3600, $sek / 60 % 60);
             }
             else {
@@ -61,12 +61,12 @@ class Format
             return $arr;
         }
         else {
-            $value = str_replace(".", $kga['conf']['decimal_separator'], sprintf("%01.2f", $number));
+            $value = str_replace('.', $kga['conf']['decimal_separator'], sprintf('%01.2f', $number));
             if ($kga['conf']['currency_first']) {
-                $value = $kga['conf']['currency_sign'] . " " . $value;
+                $value = $kga['conf']['currency_sign'] . ' ' . $value;
             }
             else {
-                $value = $value . " " . $kga['conf']['currency_sign'];
+                $value = $value . ' ' . $kga['conf']['currency_sign'];
             }
 
             if ($htmlNoWrap) {
@@ -95,7 +95,7 @@ class Format
 
         $userIds = array_keys($ann);
 
-        if ($type == null) {
+        if ($type === null) {
             $type = 0;
         }
 
@@ -187,59 +187,63 @@ class Format
     public static function expand_date_shortcut($date)
     {
 
-        $date = str_replace(" ", "", $date);
+        $date = str_replace(' ', '', $date);
 
         // empty string can't be a time value
-        if (strlen($date) == 0) {
+        if (empty($date)) {
             return false;
         }
 
         // get the parts
         $parts = preg_split("/\./", $date);
 
-        if (!is_array($parts) || count($parts) == 0 || count($parts) > 3) {
+        $cnt = count($parts);
+
+        if (!is_array($parts) || $cnt === 0 || $cnt > 3) {
             return false;
         }
 
         // check day
-        if (strlen($parts[0]) == 1) {
-            $parts[0] = "0" . $parts[0];
+        if (strlen($parts[0]) === 1) {
+            $parts[0] = '0' . $parts[0];
         }
 
         // check month
         if (!isset($parts[1])) {
-            $parts[1] = date("m");
+            $parts[1] = date('m');
         }
         else {
-            if (strlen($parts[1]) == 1) {
-                $parts[1] = "0" . $parts[1];
+            if (strlen($parts[1]) === 1) {
+                $parts[1] = '0' . $parts[1];
             }
         }
 
         // check year
         if (!isset($parts[2])) {
-            $parts[2] = date("Y");
+            $parts[2] = date('Y');
         }
         else {
-            if (strlen($parts[2]) == 2) {
+            if (strlen($parts[2]) === 2) {
                 if ($parts[2] > 70) {
-                    $parts[2] = "19" . $parts[2];
+                    $parts[2] = '19' . $parts[2];
                 }
                 else {
                     if ($parts[2] < 10) {
-                        $parts[2] = "200" . $parts[2];
+                        $parts[2] = '200' . $parts[2];
                     }
                     else {
-                        $parts[2] = "20" . $parts[2];
+                        $parts[2] = '20' . $parts[2];
                     }
                 }
             }
         }
 
-        $return = implode(".", $parts);
+        $return = implode('.', $parts);
 
 
-        if (!preg_match("/([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{2,4})/", $return)) $return = false;
+        if (!preg_match("/([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{2,4})/", $return)) {
+            $return = false;
+        }
 
         return $return;
     }
@@ -256,35 +260,37 @@ class Format
      */
     public static function expand_time_shortcut($time)
     {
-        $time = str_replace(" ", "", $time);
+        $time = str_replace(' ', '', $time);
 
         // empty string can't be a time value
-        if (strlen($time) == 0) {
+        if (strlen($time) === 0) {
             return false;
         }
 
         // get the parts
         $parts = preg_split("/:|\./", $time);
 
-        for ($i = 0; $i < count($parts); $i++) {
+        for ($i = 0, $n = count($parts); $i < $n; $i++) {
             switch (strlen($parts[$i])) {
                 case 0:
                     return false;
                 case 1:
-                    $parts[$i] = "0" . $parts[$i];
+                    $parts[$i] = '0' . $parts[$i];
             }
         }
 
         // fill unsued parts (eg. 12:00 given but 12:00:00 is needed)
         while (count($parts) < 3) {
-            $parts[] = "00";
+            $parts[] = '00';
         }
 
-        $return = implode(":", $parts);
+        $return = implode(':', $parts);
 
         $regex23 = '([0-1][0-9])|(2[0-3])'; // regular expression for hours
         $regex59 = '([0-5][0-9])'; // regular expression for minutes and seconds
-        if (!preg_match("/^($regex23):($regex59):($regex59)$/", $return)) $return = false;
+        if (!preg_match("/^($regex23):($regex59):($regex59)$/", $return)) {
+            $return = false;
+        }
 
         return $return;
     }
@@ -310,19 +316,27 @@ class Format
             $minutes = substr($timestring, 14, 2);
             $seconds = substr($timestring, 17, 2);
 
-            if ((int) $hours >= 24) $ok = 0;
-            if ((int) $minutes >= 60) $ok = 0;
-            if ((int) $seconds >= 60) $ok = 0;
+            if ((int)$hours >= 24) {
+                $ok = 0;
+            }
+            if ((int)$minutes >= 60) {
+                $ok = 0;
+            }
+            if ((int)$seconds >= 60) {
+                $ok = 0;
+            }
 
-            Logger::logfile("timecheck: " . $ok);
+            Logger::logfile('timecheck: ' . $ok);
 
             $day   = substr($timestring, 0, 2);
             $month = substr($timestring, 3, 2);
             $year  = substr($timestring, 6, 4);
 
-            if (!checkdate((int) $month, (int) $day, (int) $year)) $ok = 0;
+            if (!checkdate((int)$month, (int)$day, (int)$year)) {
+                $ok = 0;
+            }
 
-            Logger::logfile("time/datecheck: " . $ok);
+            Logger::logfile('time/datecheck: ' . $ok);
 
             if ($ok) {
                 return true;

@@ -70,7 +70,7 @@ div.ki_expense a {
 }
 
 a {
-    cursor: pointer
+    cursor: pointer;
 }
 
 /*   TABLE       TABLE       TABLE       TABLE       TABLE    */
@@ -151,6 +151,17 @@ a {
 #xpe_h_tbl td.refundable,
 #xpe_m_tbl td.refundable {
     width: 50px;
+}
+
+#xpe_h_tbl td.customer,
+#xpe_m_tbl td.customer,
+#xpe_h_tbl td.project,
+#xpe_m_tbl td.project,
+#xpe_h_tbl td.description,
+#xpe_m_tbl td.description,
+#xpe_h_tbl td.username,
+#xpe_m_tbl td.username {
+    min-width: 40px;
 }
 
 

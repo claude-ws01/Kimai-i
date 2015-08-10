@@ -23,7 +23,7 @@ $projects = $this->filterListEntries($this->projects);
 
                 <?php if ($this->show_project_edit_button) { ?>
                     <a href="#"
-                       onclick="editSubject('project',<?php echo $project['project_id'] ?>); $(this).blur(); return false;">
+                       onclick="editObject('project',<?php echo $project['project_id'] ?>); $(this).blur(); return false;">
                         <img src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/edit2.gif'
                              width='13' height='13' alt='<?php echo $kga['dict']['edit'] ?>'
                              title='<?php echo $kga['dict']['edit'] ?> (ID:<?php echo $project['project_id'] ?>)'
@@ -38,7 +38,7 @@ $projects = $this->filterListEntries($this->projects);
                          title='<?php echo $kga['dict']['filter'] ?>' border='0'/>
                 </a>
 
-                <?php if (array_key_exists('user', $kga)) { ?>
+                <?php if (is_user()) { ?>
                     <a href="#" class="preselect" title="<?php echo $kga['dict']['tip']['g_select_for_recording']; ?>"
                        onclick="buzzer_preselect_project(<?php
                        echo($project['project_id'] . ', \'' . $this->jsEscape($project['name']) . '\','

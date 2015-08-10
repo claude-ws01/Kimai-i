@@ -39,22 +39,22 @@ if (file_exists(WEBROOT . '_demo')) {
 else {define('DEMO_MODE', false);}
 //CN..blocked feature in demo mode.
 if (DEMO_MODE) {
-    header("Location: http://${_SERVER['SERVER_NAME']}/index.php");
+    header("Location: http://({$_SERVER['SERVER_NAME']}/index.php");
 }
 
 //=================== GLOBAL ======================//
 global $database, $kga, $translations;
 
-require(WEBROOT . 'includes/vars.php');
-require WEBROOT . 'libraries/Kimai/Database/kimai.php';
-require(WEBROOT . 'includes/classes/format.class.php');
-require(WEBROOT . 'includes/classes/logger.class.php');
-require(WEBROOT . 'includes/classes/translations.class.php');
-require(WEBROOT . 'includes/classes/rounding.class.php');
-require(WEBROOT . 'includes/classes/extensions.class.php');
-require(WEBROOT . 'includes/func.php');
+require WEBROOT . 'includes/vars.php';
+require WEBROOT . 'libraries/Kimai/Database/roles.php';
+require WEBROOT . 'includes/classes/format.class.php';
+require WEBROOT . 'includes/classes/logger.class.php';
+require WEBROOT . 'includes/classes/translations.class.php';
+require WEBROOT . 'includes/classes/rounding.class.php';
+require WEBROOT . 'includes/classes/extensions.class.php';
+require WEBROOT . 'includes/func.php';
 
-$database = new Kimai_Database_Mysql(
+$database = new Roles_Mysql(
     $kga['server_hostname'],
     $kga['server_database'],
     $kga['server_username'],
@@ -589,7 +589,7 @@ function quoteForSql($input)
         $query = ('SHOW TABLES;');
 
 
-        $result_backup = $database->queryAll($query);
+        $result_backup = $database->queryArray($query);
         Logger::logfile($query, $result_backup);
         $prefix_length = strlen($p);
 
@@ -602,10 +602,10 @@ function quoteForSql($input)
         foreach ($result_backup as $row) {
             if ((substr($row[0], 0, $prefix_length) === $p) && (substr($row[0], 0, 10) !== 'kimai_bak_')) {
                 $backupTable = 'kimai_bak_' . $backup_stamp . '_' . $row[0];
-                $query       = "CREATE TABLE IF NOT EXISTS ${backupTable} LIKE " . $row[0];
+                $query       = "CREATE TABLE IF NOT EXISTS ($backupTable} LIKE " . $row[0];
                 exec_query($query);
 
-                $query = "INSERT INTO ${backupTable} SELECT * FROM " . $row[0];
+                $query = "INSERT INTO ($backupTable} SELECT * FROM " . $row[0];
                 exec_query($query);
 
                 if ($errors) {
@@ -627,36 +627,36 @@ function quoteForSql($input)
 
     if (((int) $versionDB_e[1] === 7 && (int) $versionDB_e[2] < 12)) {
         Logger::logfile('-- update to 0.7.12');
-        exec_query("ALTER TABLE `${p}evt` ADD `evt_visible` TINYINT NOT NULL DEFAULT '1'", 1);
-        exec_query("ALTER TABLE `${p}knd` ADD `knd_visible` TINYINT NOT NULL DEFAULT '1'", 1);
-        exec_query("ALTER TABLE `${p}pct` ADD `pct_visible` TINYINT NOT NULL DEFAULT '1'", 1);
-        exec_query("ALTER TABLE `${p}evt` ADD `evt_filter` TINYINT NOT NULL DEFAULT '0'", 1);
-        exec_query("ALTER TABLE `${p}knd` ADD `knd_filter` TINYINT NOT NULL DEFAULT '0'", 1);
-        exec_query("ALTER TABLE `${p}pct` ADD `pct_filter` TINYINT NOT NULL DEFAULT '0'", 1);
-        exec_query("INSERT INTO ${p}var (`var`, `value`) VALUES ('revision','0')", 1);
+        exec_query("ALTER TABLE `{$p}evt` ADD `evt_visible` TINYINT NOT NULL DEFAULT '1'", 1);
+        exec_query("ALTER TABLE `{$p}knd` ADD `knd_visible` TINYINT NOT NULL DEFAULT '1'", 1);
+        exec_query("ALTER TABLE `{$p}pct` ADD `pct_visible` TINYINT NOT NULL DEFAULT '1'", 1);
+        exec_query("ALTER TABLE `{$p}evt` ADD `evt_filter` TINYINT NOT NULL DEFAULT '0'", 1);
+        exec_query("ALTER TABLE `{$p}knd` ADD `knd_filter` TINYINT NOT NULL DEFAULT '0'", 1);
+        exec_query("ALTER TABLE `{$p}pct` ADD `pct_filter` TINYINT NOT NULL DEFAULT '0'", 1);
+        exec_query("INSERT INTO {$p}var (`var`, `value`) VALUES ('revision','0')", 1);
     }
 
     if ($revisionDB < 96) {
         Logger::logfile('-- update to 0.7.13r96');
-        exec_query("ALTER TABLE `${p}conf` ADD `allvisible` TINYINT(1) NOT NULL DEFAULT '1'", 1);
+        exec_query("ALTER TABLE `{$p}conf` ADD `allvisible` TINYINT(1) NOT NULL DEFAULT '1'", 1);
         // a proper installed database throws errors from here. don't worry - no problem. We ignore those ...
-        exec_query("ALTER TABLE `${p}evt` CHANGE `visible` `evt_visible` TINYINT(1) NOT NULL DEFAULT '1'", 0);
-        exec_query("ALTER TABLE `${p}knd` CHANGE `visible` `knd_visible` TINYINT(1) NOT NULL DEFAULT '1'", 0);
-        exec_query("ALTER TABLE `${p}pct` CHANGE `visible` `pct_visible` TINYINT(1) NOT NULL DEFAULT '1'", 0);
-        exec_query("ALTER TABLE `${p}evt` CHANGE `filter` `evt_filter` TINYINT(1) NOT NULL DEFAULT '0'", 0);
-        exec_query("ALTER TABLE `${p}knd` CHANGE `filter` `knd_filter` TINYINT(1) NOT NULL DEFAULT '0'", 0);
-        exec_query("ALTER TABLE `${p}pct` CHANGE `filter` `pct_filter` TINYINT(1) NOT NULL DEFAULT '0'", 0);
+        exec_query("ALTER TABLE `{$p}evt` CHANGE `visible` `evt_visible` TINYINT(1) NOT NULL DEFAULT '1'", 0);
+        exec_query("ALTER TABLE `{$p}knd` CHANGE `visible` `knd_visible` TINYINT(1) NOT NULL DEFAULT '1'", 0);
+        exec_query("ALTER TABLE `{$p}pct` CHANGE `visible` `pct_visible` TINYINT(1) NOT NULL DEFAULT '1'", 0);
+        exec_query("ALTER TABLE `{$p}evt` CHANGE `filter` `evt_filter` TINYINT(1) NOT NULL DEFAULT '0'", 0);
+        exec_query("ALTER TABLE `{$p}knd` CHANGE `filter` `knd_filter` TINYINT(1) NOT NULL DEFAULT '0'", 0);
+        exec_query("ALTER TABLE `{$p}pct` CHANGE `filter` `pct_filter` TINYINT(1) NOT NULL DEFAULT '0'", 0);
     }
 
     if ($revisionDB < 221) {
         Logger::logfile('-- update to 0.8');
         // drop views
-        exec_query("DROP VIEW IF EXISTS ${p}get_arr_grp, ${p}get_usr_count_in_grp", 0);
+        exec_query("DROP VIEW IF EXISTS {$p}get_arr_grp, {$p}get_usr_count_in_grp", 0);
         // Set news group name length
-        exec_query("ALTER TABLE `${p}grp` CHANGE `grp_name` `grp_name` VARCHAR(160)", 1);
+        exec_query("ALTER TABLE `{$p}grp` CHANGE `grp_name` `grp_name` VARCHAR(160)", 1);
 
         // Merge usr and conf tables
-        $query = "CREATE TABLE IF NOT EXISTS `${p}usr_tmp` (
+        $query = "CREATE TABLE IF NOT EXISTS `{$p}usr_tmp` (
                 `usr_ID` int(10) NOT NULL,
                 `usr_name` varchar(160) NOT NULL,
                 `usr_grp` int(5) NOT NULL default '1',
@@ -693,7 +693,7 @@ function quoteForSql($input)
 
         //////// ---------------------------------------------------------------------------------------------------
 
-        $query = "SELECT * FROM `${p}usr` JOIN `${p}conf` ON `${p}usr`.usr_ID = `${p}conf`.conf_usrID";
+        $query = "SELECT * FROM `{$p}usr` JOIN `{$p}conf` ON `{$p}usr`.usr_ID = `{$p}conf`.conf_usrID";
 
         if (is_object($database)) {
             $result = $database->query($query);
@@ -705,7 +705,7 @@ function quoteForSql($input)
                 echo '<tr>';
                 $query   =
                     <<<SQL
-                    INSERT INTO ${p}usr_tmp (
+                    INSERT INTO {$p}usr_tmp (
                     `usr_ID`,`usr_name`,`usr_grp`,`usr_sts`,`usr_trash`,`usr_active`,`usr_mail`,`pw`,`ban`,`banTime`,
                     `secure`,`rowlimit`,`skin`,`lastProject`,`lastEvent`,`lastRecord`,`filter`,`filter_knd`,`filter_pct`,`filter_evt`,
                     `view_knd`,`view_pct`,`view_evt`,`zef_anzahl`,`timespace_in`,`timespace_out`,`autoselection`,`quickdelete`,`allvisible`,`lang`
@@ -733,35 +733,35 @@ SQL;
 
         //////// ---------------------------------------------------------------------------------------------------
 
-        exec_query("DROP TABLE `${p}usr`", 1);
-        exec_query("DROP TABLE `${p}conf`", 1);
-        exec_query("RENAME TABLE `${p}usr_tmp` TO `${p}usr`", 1);
+        exec_query("DROP TABLE `{$p}usr`", 1);
+        exec_query("DROP TABLE `{$p}conf`", 1);
+        exec_query("RENAME TABLE `{$p}usr_tmp` TO `{$p}usr`", 1);
 
-        exec_query("ALTER TABLE `${p}knd` CHANGE `knd_telephon` `knd_tel` VARCHAR(255)", 0);
-        exec_query("ALTER TABLE `${p}knd` CHANGE `knd_mobilphon` `knd_mobile` VARCHAR(255)", 0);
+        exec_query("ALTER TABLE `{$p}knd` CHANGE `knd_telephon` `knd_tel` VARCHAR(255)", 0);
+        exec_query("ALTER TABLE `{$p}knd` CHANGE `knd_mobilphon` `knd_mobile` VARCHAR(255)", 0);
 
         // Add field for icon/logo filename to customer, project and task table
-        exec_query("ALTER TABLE `${p}knd` ADD `knd_logo` VARCHAR(80)", 1);
+        exec_query("ALTER TABLE `{$p}knd` ADD `knd_logo` VARCHAR(80)", 1);
 
-        exec_query("ALTER TABLE `${p}pct` ADD `pct_logo` VARCHAR(80)", 1);
-        exec_query("ALTER TABLE `${p}evt` ADD `evt_logo` VARCHAR(80)", 1);
+        exec_query("ALTER TABLE `{$p}pct` ADD `pct_logo` VARCHAR(80)", 1);
+        exec_query("ALTER TABLE `{$p}evt` ADD `evt_logo` VARCHAR(80)", 1);
 
         // Add trash field for customer, project and task tables
-        exec_query("ALTER TABLE `${p}knd` ADD `knd_trash` TINYINT(1) NOT NULL DEFAULT '0'", 1);
+        exec_query("ALTER TABLE `{$p}knd` ADD `knd_trash` TINYINT(1) NOT NULL DEFAULT '0'", 1);
 
-        exec_query("ALTER TABLE `${p}pct` ADD `pct_trash` TINYINT(1) NOT NULL DEFAULT '0'", 1);
-        exec_query("ALTER TABLE `${p}evt` ADD `evt_trash` TINYINT(1) NOT NULL DEFAULT '0'", 1);
-        exec_query("ALTER TABLE `${p}zef` ADD `zef_cleared` TINYINT(1) NOT NULL DEFAULT '0'", 1);
+        exec_query("ALTER TABLE `{$p}pct` ADD `pct_trash` TINYINT(1) NOT NULL DEFAULT '0'", 1);
+        exec_query("ALTER TABLE `{$p}evt` ADD `evt_trash` TINYINT(1) NOT NULL DEFAULT '0'", 1);
+        exec_query("ALTER TABLE `{$p}zef` ADD `zef_cleared` TINYINT(1) NOT NULL DEFAULT '0'", 1);
 
 
         //////// ---------------------------------------------------------------------------------------------------
 
         // put the existing group-customer-relations into the new table
-        exec_query("CREATE TABLE IF NOT EXISTS `${p}grp_knd` (`uid` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `grp_ID` INT NOT NULL, `knd_ID` INT NOT NULL)", 0);
+        exec_query("CREATE TABLE IF NOT EXISTS `{$p}grp_knd` (`uid` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `grp_ID` INT NOT NULL, `knd_ID` INT NOT NULL)", 0);
 
         //////// ---------------------------------------------------------------------------------------------------
 
-        $query = "SELECT `knd_ID`, `knd_grpID` FROM ${p}knd";
+        $query = "SELECT `knd_ID`, `knd_grpID` FROM {$p}knd";
 
         if (is_object($database)) {
             $result = $database->query($query);
@@ -771,7 +771,7 @@ SQL;
             $rows = $database->recordsArray(MYSQLI_ASSOC);
             foreach ($rows as $row) {
                 echo '<tr>';
-                $query   = "INSERT INTO ${p}grp_knd (`grp_ID`, `knd_ID`) VALUES ({$row['knd_grpID']}, {$row['knd_ID']})";
+                $query   = "INSERT INTO {$p}grp_knd (`grp_ID`, `knd_ID`) VALUES ({$row['knd_grpID']}, {$row['knd_ID']})";
                 $result = $database->query($query);
                 $executed_queries++;
                 echo '<td>' . $query . '<br/>';
@@ -793,11 +793,11 @@ SQL;
         //////// ---------------------------------------------------------------------------------------------------
 
         // put the existing group-project-relations into the new table
-        exec_query("CREATE TABLE IF NOT EXISTS ${p}grp_pct (`uid` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `grp_ID` INT NOT NULL, `pct_ID` INT NOT NULL)");
+        exec_query("CREATE TABLE IF NOT EXISTS {$p}grp_pct (`uid` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `grp_ID` INT NOT NULL, `pct_ID` INT NOT NULL)");
 
         //////// ---------------------------------------------------------------------------------------------------
 
-        $query = "SELECT `pct_ID`, `pct_grpID` FROM ${p}pct";
+        $query = "SELECT `pct_ID`, `pct_grpID` FROM {$p}pct";
 
         if (is_object($database)) {
             $result = $database->query($query);
@@ -807,7 +807,7 @@ SQL;
             $rows = $database->recordsArray(MYSQLI_ASSOC);
             foreach ($rows as $row) {
                 echo '<tr>';
-                $query   = "INSERT INTO ${p}grp_pct (`grp_ID`, `pct_ID`) VALUES (" . $row['pct_grpID'] . ', ' . $row['pct_ID'] . ')';
+                $query   = "INSERT INTO {$p}grp_pct (`grp_ID`, `pct_ID`) VALUES (" . $row['pct_grpID'] . ', ' . $row['pct_ID'] . ')';
                 $result = $database->query($query);
                 $executed_queries++;
                 echo '<td>' . $query . '<br/>';
@@ -827,12 +827,12 @@ SQL;
         //////// ---------------------------------------------------------------------------------------------------
 
         // put the existing group-event-relations into the new table
-        exec_query("CREATE TABLE IF NOT EXISTS ${p}grp_evt (`uid` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `grp_ID` INT NOT NULL, `evt_ID` INT NOT NULL)");
+        exec_query("CREATE TABLE IF NOT EXISTS {$p}grp_evt (`uid` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `grp_ID` INT NOT NULL, `evt_ID` INT NOT NULL)");
 
         //////// ---------------------------------------------------------------------------------------------------
 
 
-        $query = "SELECT `evt_ID`, `evt_grpID` FROM ${p}evt";
+        $query = "SELECT `evt_ID`, `evt_grpID` FROM {$p}evt";
 
         if (is_object($database)) {
             $result = $database->query($query);
@@ -842,7 +842,7 @@ SQL;
             $rows = $database->recordsArray(MYSQLI_ASSOC);
             foreach ($rows as $row) {
                 echo '<tr>';
-                $query   = "INSERT INTO ${p}grp_evt (`grp_ID`, `evt_ID`) VALUES (" . $row['evt_grpID'] . ', ' . $row['evt_ID'] . ')';
+                $query   = "INSERT INTO {$p}grp_evt (`grp_ID`, `evt_ID`) VALUES (" . $row['evt_grpID'] . ', ' . $row['evt_ID'] . ')';
                 $result = $database->query($query);
                 $executed_queries++;
                 echo '<td>' . $query;
@@ -861,9 +861,9 @@ SQL;
         //////// ---------------------------------------------------------------------------------------------------
 
         // delete old single-group fields in knd, pct and evt
-        exec_query("ALTER TABLE ${p}knd DROP `knd_grpID`");
-        exec_query("ALTER TABLE ${p}pct DROP `pct_grpID`");
-        exec_query("ALTER TABLE ${p}evt DROP `evt_grpID`");
+        exec_query("ALTER TABLE {$p}knd DROP `knd_grpID`");
+        exec_query("ALTER TABLE {$p}pct DROP `pct_grpID`");
+        exec_query("ALTER TABLE {$p}evt DROP `evt_grpID`");
     }
 
     //////// ---------------------------------------------------------------------------------------------------
@@ -872,59 +872,59 @@ SQL;
 
         Logger::logfile('-- update to 0.8.0a');
 
-        exec_query("ALTER TABLE `${p}evt` CHANGE `evt_visible` `evt_visible` TINYINT(1) NOT NULL DEFAULT '1';", 0);
-        exec_query("ALTER TABLE `${p}knd` CHANGE `knd_visible` `knd_visible` TINYINT(1) NOT NULL DEFAULT '1';", 0);
-        exec_query("ALTER TABLE `${p}pct` CHANGE `pct_visible` `pct_visible` TINYINT(1) NOT NULL DEFAULT '1';", 0);
-        exec_query("ALTER TABLE `${p}evt` CHANGE `evt_filter` `evt_filter` TINYINT(1) NOT NULL DEFAULT '0';", 0);
-        exec_query("ALTER TABLE `${p}knd` CHANGE `knd_filter` `knd_filter` TINYINT(1) NOT NULL DEFAULT '0';", 0);
-        exec_query("ALTER TABLE `${p}pct` CHANGE `pct_filter` `pct_filter` TINYINT(1) NOT NULL DEFAULT '0';", 0);
-        exec_query("ALTER TABLE `${p}evt` CHANGE `evt_ID` `evt_ID` INT( 10 ) NOT NULL AUTO_INCREMENT PRIMARY KEY;", 0);
-        exec_query("ALTER TABLE `${p}grp` CHANGE `grp_ID` `grp_ID` INT( 10 ) NOT NULL AUTO_INCREMENT PRIMARY KEY;", 0);
-        exec_query("ALTER TABLE `${p}grp` DROP `grp_leader`;", 0);
-        exec_query("ALTER TABLE `${p}knd` CHANGE `knd_ID` `knd_ID` INT(10) NOT NULL AUTO_INCREMENT PRIMARY KEY;", 0);
-        exec_query("ALTER TABLE `${p}ldr` ADD `uid` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;", 0);
-        exec_query("ALTER TABLE `${p}pct` CHANGE `pct_ID` `pct_ID` INT(10) NOT NULL AUTO_INCREMENT PRIMARY KEY;", 0);
-        exec_query("ALTER TABLE `${p}usr` DROP `recordingstate`;", 0);
-        exec_query("ALTER TABLE `${p}var` ADD PRIMARY KEY (`var`);", 0);
-        exec_query("ALTER TABLE `${p}zef` CHANGE `zef_ID` `zef_ID` INT(10) NOT NULL AUTO_INCREMENT PRIMARY KEY;", 0);
+        exec_query("ALTER TABLE `{$p}evt` CHANGE `evt_visible` `evt_visible` TINYINT(1) NOT NULL DEFAULT '1';", 0);
+        exec_query("ALTER TABLE `{$p}knd` CHANGE `knd_visible` `knd_visible` TINYINT(1) NOT NULL DEFAULT '1';", 0);
+        exec_query("ALTER TABLE `{$p}pct` CHANGE `pct_visible` `pct_visible` TINYINT(1) NOT NULL DEFAULT '1';", 0);
+        exec_query("ALTER TABLE `{$p}evt` CHANGE `evt_filter` `evt_filter` TINYINT(1) NOT NULL DEFAULT '0';", 0);
+        exec_query("ALTER TABLE `{$p}knd` CHANGE `knd_filter` `knd_filter` TINYINT(1) NOT NULL DEFAULT '0';", 0);
+        exec_query("ALTER TABLE `{$p}pct` CHANGE `pct_filter` `pct_filter` TINYINT(1) NOT NULL DEFAULT '0';", 0);
+        exec_query("ALTER TABLE `{$p}evt` CHANGE `evt_ID` `evt_ID` INT( 10 ) NOT NULL AUTO_INCREMENT PRIMARY KEY;", 0);
+        exec_query("ALTER TABLE `{$p}grp` CHANGE `grp_ID` `grp_ID` INT( 10 ) NOT NULL AUTO_INCREMENT PRIMARY KEY;", 0);
+        exec_query("ALTER TABLE `{$p}grp` DROP `grp_leader`;", 0);
+        exec_query("ALTER TABLE `{$p}knd` CHANGE `knd_ID` `knd_ID` INT(10) NOT NULL AUTO_INCREMENT PRIMARY KEY;", 0);
+        exec_query("ALTER TABLE `{$p}ldr` ADD `uid` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;", 0);
+        exec_query("ALTER TABLE `{$p}pct` CHANGE `pct_ID` `pct_ID` INT(10) NOT NULL AUTO_INCREMENT PRIMARY KEY;", 0);
+        exec_query("ALTER TABLE `{$p}usr` DROP `recordingstate`;", 0);
+        exec_query("ALTER TABLE `{$p}var` ADD PRIMARY KEY (`var`);", 0);
+        exec_query("ALTER TABLE `{$p}zef` CHANGE `zef_ID` `zef_ID` INT(10) NOT NULL AUTO_INCREMENT PRIMARY KEY;", 0);
     }
 
     if ($revisionDB < 817) {
         Logger::logfile('-- update to r817');
-        exec_query("ALTER TABLE `${p}usr` ADD `showIDs` TINYINT(1) NOT NULL DEFAULT '0'", 1);
+        exec_query("ALTER TABLE `{$p}usr` ADD `showIDs` TINYINT(1) NOT NULL DEFAULT '0'", 1);
     }
 
     if ($revisionDB < 837) {
         Logger::logfile('-- update to r837');
-        exec_query("ALTER TABLE `${p}usr` ADD `usr_alias` VARCHAR(10)", 0);
-        exec_query("ALTER TABLE `${p}zef` ADD `zef_location` varchar(50)", 1);
+        exec_query("ALTER TABLE `{$p}usr` ADD `usr_alias` VARCHAR(10)", 0);
+        exec_query("ALTER TABLE `{$p}zef` ADD `zef_location` varchar(50)", 1);
     }
 
     if ($revisionDB < 848) {
         Logger::logfile('-- update to r848');
-        exec_query("ALTER TABLE `${p}zef` ADD `zef_trackingnr` int(20)", 1);
+        exec_query("ALTER TABLE `{$p}zef` ADD `zef_trackingnr` int(20)", 1);
     }
 
     if ($revisionDB < 898) {
         Logger::logfile('-- update to r898');
-        exec_query("CREATE TABLE IF NOT EXISTS `${p}rates` (
+        exec_query("CREATE TABLE IF NOT EXISTS `{$p}rates` (
                   `user_id` int(10) DEFAULT NULL,
                   `project_id` int(10) DEFAULT NULL,
                   `event_id` int(10) DEFAULT NULL,
                   `rate` decimal(10,2) NOT NULL
                 );", 1);
-        exec_query("ALTER TABLE `${p}zef` ADD `zef_rate` DECIMAL( 10, 2 ) NOT NULL DEFAULT '0';", 1);
+        exec_query("ALTER TABLE `{$p}zef` ADD `zef_rate` DECIMAL( 10, 2 ) NOT NULL DEFAULT '0';", 1);
     }
 
     if ($revisionDB < 922) {
         Logger::logfile('-- update to r922');
-        exec_query("ALTER TABLE `${p}knd` ADD `knd_password` VARCHAR(255);", 1);
-        exec_query("ALTER TABLE `${p}knd` ADD `knd_secure` varchar(60) NOT NULL default '0';", 1);
+        exec_query("ALTER TABLE `{$p}knd` ADD `knd_password` VARCHAR(255);", 1);
+        exec_query("ALTER TABLE `{$p}knd` ADD `knd_secure` varchar(60) NOT NULL default '0';", 1);
     }
 
     if ($revisionDB < 935) {
         Logger::logfile('-- update to r935');
-        exec_query("CREATE TABLE IF NOT EXISTS `${p}exp` (
+        exec_query("CREATE TABLE IF NOT EXISTS `{$p}exp` (
                   `exp_ID` int(10) NOT NULL AUTO_INCREMENT,
                   `exp_timestamp` int(10) NOT NULL DEFAULT '0',
                   `exp_usrID` int(10) NOT NULL,
@@ -944,7 +944,7 @@ SQL;
         /*
          *  Write new config file with password salt
          */
-        $kga['password_salt'] = createPassword(20);
+        $kga['password_salt'] = password_create(20);
         if (write_config_file(
             $kga['server_hostname'],
             $kga['server_database'],
@@ -968,16 +968,16 @@ SQL;
          */
         $new_passwords = array();
 
-        $users = $database->queryAll("SELECT * FROM ${p}usr");
+        $users = $database->queryArray("SELECT * FROM {$p}usr");
 
         foreach ($users as $user) {
             if ($user['usr_name'] === 'admin') {
                 $new_password = 'changeme';
             }
             else {
-                $new_password = createPassword(8);
+                $new_password = password_create(8);
             }
-            exec_query("UPDATE ${p}usr SET pw = '" .
+            exec_query("UPDATE {$p}usr SET pw = '" .
                        password_encrypt($new_password) .
                        "' WHERE usr_ID = $user[usr_ID]");
             if ($result) {
@@ -989,150 +989,150 @@ SQL;
 
     if ($revisionDB < 1068) {
         Logger::logfile('-- update to r1068');
-        exec_query("ALTER TABLE `${p}usr` CHANGE `autoselection` `autoselection` TINYINT( 1 ) NOT NULL default '0';");
+        exec_query("ALTER TABLE `{$p}usr` CHANGE `autoselection` `autoselection` TINYINT( 1 ) NOT NULL default '0';");
     }
 
     if ($revisionDB < 1077) {
         Logger::logfile('-- update to r1076');
-        exec_query("ALTER TABLE `${p}usr` CHANGE `usr_mail` `usr_mail` varchar(160) DEFAULT ''");
-        exec_query("ALTER TABLE `${p}usr` CHANGE `pw` `pw` varchar(254) NULL DEFAULT NULL");
-        exec_query("ALTER TABLE `${p}usr` CHANGE `lang` `lang` varchar(6) DEFAULT ''");
-        exec_query("ALTER TABLE `${p}zef` CHANGE `zef_comment` `zef_comment` TEXT NULL DEFAULT NULL");
+        exec_query("ALTER TABLE `{$p}usr` CHANGE `usr_mail` `usr_mail` varchar(160) DEFAULT ''");
+        exec_query("ALTER TABLE `{$p}usr` CHANGE `pw` `pw` varchar(254) NULL DEFAULT NULL");
+        exec_query("ALTER TABLE `{$p}usr` CHANGE `lang` `lang` varchar(6) DEFAULT ''");
+        exec_query("ALTER TABLE `{$p}zef` CHANGE `zef_comment` `zef_comment` TEXT NULL DEFAULT NULL");
     }
 
     if ($revisionDB < 1086) {
         Logger::logfile('-- update to r1086');
-        exec_query("ALTER TABLE `${p}pct` ADD `pct_budget` DECIMAL(10,2) NOT NULL DEFAULT 0.00");
+        exec_query("ALTER TABLE `{$p}pct` ADD `pct_budget` DECIMAL(10,2) NOT NULL DEFAULT 0.00");
     }
 
     if ($revisionDB < 1088) {
         Logger::logfile('-- update to r1088');
-        exec_query("ALTER TABLE `${p}usr` ADD `noFading` TINYINT(1) NOT NULL DEFAULT '0'");
+        exec_query("ALTER TABLE `{$p}usr` ADD `noFading` TINYINT(1) NOT NULL DEFAULT '0'");
     }
 
     if ($revisionDB < 1089) {
         Logger::logfile('-- update to r1089');
-        exec_query("ALTER TABLE `${p}usr` ADD `export_disabled_columns` INT NOT NULL DEFAULT '0'");
+        exec_query("ALTER TABLE `{$p}usr` ADD `export_disabled_columns` INT NOT NULL DEFAULT '0'");
     }
 
     if ($revisionDB < 1103) {
         Logger::logfile('-- update to r1103');
-        exec_query("ALTER TABLE ${p}usr DROP `allvisible`");
+        exec_query("ALTER TABLE {$p}usr DROP `allvisible`");
     }
 
 if ($revisionDB < 1112) {
     Logger::logfile('-- update to r1112');
-    exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('currency_name','Euro')");
-    exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('currency_sign','€')");
-    exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('show_sensible_data','1')");
-    exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('show_update_warn','1')");
-    exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('check_at_startup','0')");
-    exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('show_daySeperatorLines','1')");
-    exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('show_gabBreaks','0')");
-    exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('show_RecordAgain','1')");
-    exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('show_TrackingNr','1')");
+    exec_query("INSERT INTO {$p}var (`var`,`value`) VALUES('currency_name','Euro')");
+    exec_query("INSERT INTO {$p}var (`var`,`value`) VALUES('currency_sign','€')");
+    exec_query("INSERT INTO {$p}var (`var`,`value`) VALUES('show_sensible_data','1')");
+    exec_query("INSERT INTO {$p}var (`var`,`value`) VALUES('show_update_warn','1')");
+    exec_query("INSERT INTO {$p}var (`var`,`value`) VALUES('check_at_startup','0')");
+    exec_query("INSERT INTO {$p}var (`var`,`value`) VALUES('show_daySeperatorLines','1')");
+    exec_query("INSERT INTO {$p}var (`var`,`value`) VALUES('show_gabBreaks','0')");
+    exec_query("INSERT INTO {$p}var (`var`,`value`) VALUES('show_RecordAgain','1')");
+    exec_query("INSERT INTO {$p}var (`var`,`value`) VALUES('show_TrackingNr','1')");
 }
 
     if ($revisionDB < 1113) {
-        exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('date_format_0','%d.%m.%Y')");
-        exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('date_format_1','%d.%m.')");
-        exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('date_format_2','%d.%m.%Y')");
-        exec_query("DELETE FROM ${p}var WHERE `var` = 'charset' LIMIT 1");
+        exec_query("INSERT INTO {$p}var (`var`,`value`) VALUES('date_format_0','%d.%m.%Y')");
+        exec_query("INSERT INTO {$p}var (`var`,`value`) VALUES('date_format_1','%d.%m.')");
+        exec_query("INSERT INTO {$p}var (`var`,`value`) VALUES('date_format_2','%d.%m.%Y')");
+        exec_query("DELETE FROM {$p}var WHERE `var` = 'charset' LIMIT 1");
     }
 
     if ($revisionDB < 1115) {
-        exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('language','" . $kga['pref']['language'] . "')");
+        exec_query("INSERT INTO {$p}var (`var`,`value`) VALUES('language','" . $kga['pref']['language'] . "')");
     }
 
     if ($revisionDB < 1126) {
         Logger::logfile('-- update to r1126');
-        exec_query("ALTER TABLE `${p}grp_evt` ADD UNIQUE (`grp_ID` ,`evt_ID`);");
-        exec_query("ALTER TABLE `${p}grp_knd` ADD UNIQUE (`grp_ID` ,`knd_ID`);");
-        exec_query("ALTER TABLE `${p}grp_pct` ADD UNIQUE (`grp_ID` ,`pct_ID`);");
-        exec_query("ALTER TABLE `${p}ldr` ADD UNIQUE (`grp_ID` ,`grp_leader`);");
+        exec_query("ALTER TABLE `{$p}grp_evt` ADD UNIQUE (`grp_ID` ,`evt_ID`);");
+        exec_query("ALTER TABLE `{$p}grp_knd` ADD UNIQUE (`grp_ID` ,`knd_ID`);");
+        exec_query("ALTER TABLE `{$p}grp_pct` ADD UNIQUE (`grp_ID` ,`pct_ID`);");
+        exec_query("ALTER TABLE `{$p}ldr` ADD UNIQUE (`grp_ID` ,`grp_leader`);");
     }
 
     if ($revisionDB < 1132) {
         Logger::logfile('-- update to r1132');
-            exec_query("UPDATE ${p}usr, ${p}ldr SET usr_sts = 2 WHERE usr_sts = 1");
-            exec_query("UPDATE ${p}usr, ${p}ldr SET usr_sts = 1 WHERE usr_sts = 2 AND grp_leader = usr_ID");
+            exec_query("UPDATE {$p}usr, {$p}ldr SET usr_sts = 2 WHERE usr_sts = 1");
+            exec_query("UPDATE {$p}usr, {$p}ldr SET usr_sts = 1 WHERE usr_sts = 2 AND grp_leader = usr_ID");
     }
 
     if ($revisionDB < 1139) {
         Logger::logfile('-- update to r1139');
-        exec_query("ALTER TABLE `${p}usr` ADD `user_list_hidden` INT NOT NULL DEFAULT '0'");
+        exec_query("ALTER TABLE `{$p}usr` ADD `user_list_hidden` INT NOT NULL DEFAULT '0'");
     }
 
     if ($revisionDB < 1142) {
         Logger::logfile('-- update to r1142');
-        exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('roundPrecision','0')");
+        exec_query("INSERT INTO {$p}var (`var`,`value`) VALUES('roundPrecision','0')");
     }
 
     if ($revisionDB < 1145) {
         Logger::logfile('-- update to r1145');
-        exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('currency_first','0')");
+        exec_query("INSERT INTO {$p}var (`var`,`value`) VALUES('currency_first','0')");
     }
 
     if ($revisionDB < 1176) {
         Logger::logfile('-- update to r1176');
-        exec_query("ALTER TABLE `${p}exp` ADD INDEX ( `exp_usrID` ) ");
-        exec_query("ALTER TABLE `${p}exp` ADD INDEX ( `exp_pctID` ) ");
-        exec_query("ALTER TABLE `${p}pct` ADD INDEX ( `pct_kndID` ) ");
-        exec_query("ALTER TABLE `${p}zef` ADD INDEX ( `zef_usrID` ) ");
-        exec_query("ALTER TABLE `${p}zef` ADD INDEX ( `zef_pctID` ) ");
-        exec_query("ALTER TABLE `${p}zef` ADD INDEX ( `zef_evtID` ) ");
+        exec_query("ALTER TABLE `{$p}exp` ADD INDEX ( `exp_usrID` ) ");
+        exec_query("ALTER TABLE `{$p}exp` ADD INDEX ( `exp_pctID` ) ");
+        exec_query("ALTER TABLE `{$p}pct` ADD INDEX ( `pct_kndID` ) ");
+        exec_query("ALTER TABLE `{$p}zef` ADD INDEX ( `zef_usrID` ) ");
+        exec_query("ALTER TABLE `{$p}zef` ADD INDEX ( `zef_pctID` ) ");
+        exec_query("ALTER TABLE `{$p}zef` ADD INDEX ( `zef_evtID` ) ");
     }
 
     if ($revisionDB < 1183) {
         Logger::logfile('-- update to r1183');
-        exec_query("ALTER TABLE `${p}zef` CHANGE `zef_trackingnr` `zef_trackingnr` varchar(30) DEFAULT ''");
+        exec_query("ALTER TABLE `{$p}zef` CHANGE `zef_trackingnr` `zef_trackingnr` varchar(30) DEFAULT ''");
     }
 
     if ($revisionDB < 1184) {
         Logger::logfile('-- update to r1184');
-        exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('decimalSeparator',',')");
+        exec_query("INSERT INTO {$p}var (`var`,`value`) VALUES('decimalSeparator',',')");
     }
 
     if ($revisionDB < 1185) {
         Logger::logfile('-- update to r1185');
-        exec_query("CREATE TABLE IF NOT EXISTS ${p}pct_evt (`uid` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `pct_ID` INT NOT NULL, `evt_ID` INT NOT NULL, UNIQUE (`pct_ID` ,`evt_ID`)) ;");
+        exec_query("CREATE TABLE IF NOT EXISTS {$p}pct_evt (`uid` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `pct_ID` INT NOT NULL, `evt_ID` INT NOT NULL, UNIQUE (`pct_ID` ,`evt_ID`)) ;");
     }
 
     if ($revisionDB < 1206) {
         Logger::logfile('-- update to r1206');
-        exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('durationWithSeconds','0')");
+        exec_query("INSERT INTO {$p}var (`var`,`value`) VALUES('durationWithSeconds','0')");
     }
 
     if ($revisionDB < 1207) {
         Logger::logfile('-- update to r1207');
-        exec_query("ALTER TABLE `${p}exp` ADD `exp_multiplier` INT NOT NULL DEFAULT '1'");
+        exec_query("ALTER TABLE `{$p}exp` ADD `exp_multiplier` INT NOT NULL DEFAULT '1'");
 
     }
 
     if ($revisionDB < 1213) {
         Logger::logfile('-- update to r1213');
-        exec_query("ALTER TABLE ${p}knd DROP `knd_logo`");
-        exec_query("ALTER TABLE ${p}pct DROP `pct_logo`");
-        exec_query("ALTER TABLE ${p}evt DROP `evt_logo`");
+        exec_query("ALTER TABLE {$p}knd DROP `knd_logo`");
+        exec_query("ALTER TABLE {$p}pct DROP `pct_logo`");
+        exec_query("ALTER TABLE {$p}evt DROP `evt_logo`");
     }
 
     if ($revisionDB < 1216) {
         Logger::logfile('-- update to r1216');
-        exec_query("ALTER TABLE `${p}exp`
+        exec_query("ALTER TABLE `{$p}exp`
                   ADD `exp_refundable` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'expense refundable to employee (0 = no, 1 = yes)' AFTER `exp_comment_type`;");
     }
 
     if ($revisionDB < 1219) {
         $timezone = quoteForSql($_REQUEST['timezone']);
         Logger::logfile('-- update to r1219');
-        exec_query("ALTER TABLE `${p}usr` ADD `timezone` VARCHAR( 40 ) NOT NULL DEFAULT ''");
-        exec_query("UPDATE `${p}usr` SET `timezone` = $timezone");
-        exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('defaultTimezone',$timezone)");
+        exec_query("ALTER TABLE `{$p}usr` ADD `timezone` VARCHAR( 40 ) NOT NULL DEFAULT ''");
+        exec_query("UPDATE `{$p}usr` SET `timezone` = $timezone");
+        exec_query("INSERT INTO {$p}var (`var`,`value`) VALUES('defaultTimezone',$timezone)");
     }
 
     if ($revisionDB < 1225) {
         Logger::logfile('-- update to r1225');
-        exec_query("CREATE TABLE IF NOT EXISTS `${p}preferences` (
+        exec_query("CREATE TABLE IF NOT EXISTS `{$p}preferences` (
                   `userID` int(10) NOT NULL,
                   `var` varchar(255) NOT NULL,
                   `value` varchar(255) NOT NULL,
@@ -1145,59 +1145,59 @@ if ($revisionDB < 1112) {
 
         // move user configuration over to preferences table, which are still in use
         foreach ($columns as $column) {
-            exec_query("INSERT INTO ${p}preferences (`userID`,`var`,`value`) SELECT `usr_ID` , \"$column\", `$column` FROM `${p}usr`");
+            exec_query("INSERT INTO {$p}preferences (`userID`,`var`,`value`) SELECT `usr_ID` , \"$column\", `$column` FROM `{$p}usr`");
         }
 
 
         // add unused columns and drop all in usr table
         $columns = array_merge($columns, array('zef_anzahl', 'filter', 'filter_knd', 'filter_pct', 'filter_evt', 'view_knd', 'view_pct', 'view_evt'));
         foreach ($columns as $column) {
-            exec_query("ALTER TABLE ${p}usr DROP $column");
+            exec_query("ALTER TABLE {$p}usr DROP $column");
         }
     }
 
     if ($revisionDB < 1227) {
         Logger::logfile('-- update to r1227');
-        exec_query("ALTER TABLE `${p}knd` ADD `knd_vat` VARCHAR( 255 ) NOT NULL");
-        exec_query("ALTER TABLE `${p}knd` ADD `knd_contact` VARCHAR( 255 ) NOT NULL");
+        exec_query("ALTER TABLE `{$p}knd` ADD `knd_vat` VARCHAR( 255 ) NOT NULL");
+        exec_query("ALTER TABLE `{$p}knd` ADD `knd_contact` VARCHAR( 255 ) NOT NULL");
     }
 
     if ($revisionDB < 1229) {
         Logger::logfile('-- update to r1229');
-        exec_query("ALTER TABLE `${p}usr` CHANGE `banTime` `banTime` int(10) NOT NULL DEFAULT 0");
+        exec_query("ALTER TABLE `{$p}usr` CHANGE `banTime` `banTime` int(10) NOT NULL DEFAULT 0");
     }
 
     if ($revisionDB < 1236) {
         Logger::logfile('-- update to r1236');
-        exec_query("ALTER TABLE `${p}pct` ADD `pct_internal` TINYINT( 1 ) NOT NULL DEFAULT 0");
+        exec_query("ALTER TABLE `{$p}pct` ADD `pct_internal` TINYINT( 1 ) NOT NULL DEFAULT 0");
     }
 
     if ($revisionDB < 1240) {
         Logger::logfile('-- update to r1240');
-        exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('exactSums','0')");
+        exec_query("INSERT INTO {$p}var (`var`,`value`) VALUES('exactSums','0')");
     }
 
     if ($revisionDB < 1256) {
         Logger::logfile('-- update to r1256');
-        exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('defaultVat','0')");
+        exec_query("INSERT INTO {$p}var (`var`,`value`) VALUES('defaultVat','0')");
     }
 
     if ($revisionDB < 1257) {
         Logger::logfile('-- update to r1257');
-        exec_query("UPDATE ${p}preferences SET var = CONCAT('ui.',var) WHERE var
+        exec_query("UPDATE {$p}preferences SET var = CONCAT('ui.',var) WHERE var
                     IN ('skin', 'rowlimit', 'lang', 'autoselection', 'quickdelete', 'flip_pct_display',
                     'pct_comment_flag', 'showIDs', 'noFading', 'user_list_hidden', 'hideClearedEntries')");
     }
 
     if ($revisionDB < 1284) {
         Logger::logfile('-- update to r1284');
-        exec_query("ALTER TABLE `${p}exp` CHANGE `exp_multiplier` `exp_multiplier` decimal(10,2) NOT NULL DEFAULT '1.00'");
+        exec_query("ALTER TABLE `{$p}exp` CHANGE `exp_multiplier` `exp_multiplier` decimal(10,2) NOT NULL DEFAULT '1.00'");
     }
 
     if ($revisionDB < 1291) {
         Logger::logfile('-- update to r1291');
         $salt  = $kga['password_salt'];
-        $query = "UPDATE `${p}usr` SET pw=MD5(CONCAT('${salt}',pw,'${salt}')) WHERE pw REGEXP '^[0-9a-f]{32}$' = 0 AND pw != ''";
+        $query = "UPDATE `{$p}usr` SET pw=MD5(CONCAT('($salt}',pw,'($salt}')) WHERE pw REGEXP '^[0-9a-f]{32}$' = 0 AND pw != ''";
         exec_query($query, false, str_replace($salt, 'salt was stripped', $query));
     }
 
@@ -1205,7 +1205,7 @@ if ($revisionDB < 1112) {
         Logger::logfile('-- update to r1305');
 
         // update knd_name
-        $result = $database->queryAll("SELECT knd_ID,knd_name FROM ${p}knd");
+        $result = $database->queryArray("SELECT knd_ID,knd_name FROM {$p}knd");
 
         foreach ($result as $customer) {
             $name = htmlspecialchars_decode($customer['knd_name']);
@@ -1214,13 +1214,13 @@ if ($revisionDB < 1112) {
                 continue;
             }
 
-            exec_query("UPDATE ${p}knd SET knd_name = " .
+            exec_query("UPDATE {$p}knd SET knd_name = " .
                        quoteForSql($name) .
                        " WHERE knd_ID = $customer[knd_ID]");
         }
 
         // update pct_name
-        $result = $database->queryAll("SELECT pct_ID,pct_name FROM ${p}pct");
+        $result = $database->queryArray("SELECT pct_ID,pct_name FROM {$p}pct");
 
         foreach ($result as $project) {
             $name = htmlspecialchars_decode($project['pct_name']);
@@ -1229,13 +1229,13 @@ if ($revisionDB < 1112) {
                 continue;
             }
 
-            exec_query("UPDATE ${p}pct SET pct_name = " .
+            exec_query("UPDATE {$p}pct SET pct_name = " .
                        quoteForSql($name) .
                        " WHERE pct_ID = $project[pct_ID]");
         }
 
         // update evt_name
-        $result = $database->queryAll("SELECT evt_ID,evt_name FROM ${p}evt");
+        $result = $database->queryArray("SELECT evt_ID,evt_name FROM {$p}evt");
 
         foreach ($result as $event) {
             $name = htmlspecialchars_decode($event['evt_name']);
@@ -1244,13 +1244,13 @@ if ($revisionDB < 1112) {
                 continue;
             }
 
-            exec_query("UPDATE ${p}evt SET evt_name = " .
+            exec_query("UPDATE {$p}evt SET evt_name = " .
                        quoteForSql($name) .
                        " WHERE evt_ID = $event[evt_ID]");
         }
 
         // update usr_name
-        $result = $database->queryAll("SELECT usr_ID,usr_name FROM ${p}usr");
+        $result = $database->queryArray("SELECT usr_ID,usr_name FROM {$p}usr");
 
         foreach ($result as $user) {
             $name = htmlspecialchars_decode($user['usr_name']);
@@ -1259,13 +1259,13 @@ if ($revisionDB < 1112) {
                 continue;
             }
 
-            exec_query("UPDATE ${p}usr SET usr_name = " .
+            exec_query("UPDATE {$p}usr SET usr_name = " .
                        quoteForSql($name) .
                        " WHERE usr_ID = $user[usr_ID]");
         }
 
         // update grp_name
-        $result = $database->queryAll("SELECT grp_ID,grp_name FROM ${p}grp");
+        $result = $database->queryArray("SELECT grp_ID,grp_name FROM {$p}grp");
 
         foreach ($result as $group) {
             $name = htmlspecialchars_decode($group['grp_name']);
@@ -1274,7 +1274,7 @@ if ($revisionDB < 1112) {
                 continue;
             }
 
-            exec_query("UPDATE ${p}grp SET grp_name = " .
+            exec_query("UPDATE {$p}grp SET grp_name = " .
                        quoteForSql($name) .
                        " WHERE grp_ID = $group[grp_ID]");
         }
@@ -1283,115 +1283,115 @@ if ($revisionDB < 1112) {
 
     if ($revisionDB < 1326) {
         Logger::logfile('-- update to r1326');
-        exec_query("INSERT INTO ${p}var (`var`,`value`) VALUES('editLimit','-')");
+        exec_query("INSERT INTO {$p}var (`var`,`value`) VALUES('editLimit','-')");
     }
 
     if ($revisionDB < 1327) {
         Logger::logfile('-- update to r1327');
-        $result   = $database->queryAll("SELECT value FROM ${p}var WHERE var = 'defaultTimezone'");
+        $result   = $database->queryArray("SELECT value FROM {$p}var WHERE var = 'defaultTimezone'");
         $timezone = quoteForSql($result[0][0]);
-        exec_query("ALTER TABLE ${p}knd ADD COLUMN `knd_timezone` varchar(255) NOT NULL DEFAULT $timezone");
-        exec_query("ALTER TABLE ${p}knd ALTER COLUMN `knd_timezone` DROP DEFAULT");
+        exec_query("ALTER TABLE {$p}knd ADD COLUMN `knd_timezone` varchar(255) NOT NULL DEFAULT $timezone");
+        exec_query("ALTER TABLE {$p}knd ALTER COLUMN `knd_timezone` DROP DEFAULT");
     }
 
     if ($revisionDB < 1328) {
         Logger::logfile('-- update to r1328');
-        exec_query("DELETE FROM ${p}var WHERE var='login' LIMIT 1;");
+        exec_query("DELETE FROM {$p}var WHERE var='login' LIMIT 1;");
     }
 
     if ($revisionDB < 1331) {
         Logger::logfile('-- update to r1331');
-        exec_query("ALTER TABLE ${p}evt ADD COLUMN `evt_assignable` TINYINT(1) NOT NULL DEFAULT '0';");
-        $result = $database->queryAll("SELECT DISTINCT evt_ID FROM ${p}pct_evt");
+        exec_query("ALTER TABLE {$p}evt ADD COLUMN `evt_assignable` TINYINT(1) NOT NULL DEFAULT '0';");
+        $result = $database->queryArray("SELECT DISTINCT evt_ID FROM {$p}pct_evt");
         foreach ($result as $row) {
-            exec_query("UPDATE ${p}evt SET evt_assignable=1 WHERE evt_ID=" . $row[0]);
+            exec_query("UPDATE {$p}evt SET evt_assignable=1 WHERE evt_ID=" . $row[0]);
         }
     }
 
     if ($revisionDB < 1332) {
         Logger::logfile('-- update to r1332');
         $query =
-            "CREATE TABLE IF NOT EXISTS `${p}fixed_rates` (
+            "CREATE TABLE IF NOT EXISTS `{$p}fixed_rates` (
               `project_id` int(10) DEFAULT NULL,
               `event_id` int(10) DEFAULT NULL,
               `rate` decimal(10,2) NOT NULL
             );";
         exec_query($query);
-        exec_query("ALTER TABLE ${p}zef ADD COLUMN `zef_fixed_rate` DECIMAL( 10, 2 ) NOT NULL DEFAULT '0';");
+        exec_query("ALTER TABLE {$p}zef ADD COLUMN `zef_fixed_rate` DECIMAL( 10, 2 ) NOT NULL DEFAULT '0';");
     }
 
     if ($revisionDB < 1333) {
         Logger::logfile('-- update to r1333');
         $query =
-            "CREATE TABLE IF NOT EXISTS `${p}grp_usr` (
+            "CREATE TABLE IF NOT EXISTS `{$p}grp_usr` (
               `grp_ID` int(10) NOT NULL,
               `usr_ID` int(10) NOT NULL,
               PRIMARY KEY (`grp_ID`,`usr_ID`)
             ) AUTO_INCREMENT=1;";
         exec_query($query);
 
-        $result = $database->queryAll("SELECT usr_ID,usr_grp FROM ${p}usr");
+        $result = $database->queryArray("SELECT usr_ID,usr_grp FROM {$p}usr");
         foreach ($result as $row) {
-            exec_query("INSERT INTO ${p}grp_usr (`grp_ID`,`usr_ID`) VALUES($row[usr_grp],$row[usr_ID]);");
+            exec_query("INSERT INTO {$p}grp_usr (`grp_ID`,`usr_ID`) VALUES($row[usr_grp],$row[usr_ID]);");
         }
 
-        exec_query("ALTER TABLE ${p}usr DROP `usr_grp`;");
+        exec_query("ALTER TABLE {$p}usr DROP `usr_grp`;");
     }
 
     if ($revisionDB < 1347) {
         Logger::logfile('-- update to r1347');
         
-        exec_query("ALTER TABLE `${p}pct_evt` ADD `evt_budget` DECIMAL( 10, 2 ) NULL ,
+        exec_query("ALTER TABLE `{$p}pct_evt` ADD `evt_budget` DECIMAL( 10, 2 ) NULL ,
                     ADD `evt_effort` DECIMAL( 10, 2 ) NULL ,
                     ADD `evt_approved` DECIMAL( 10, 2 ) NULL ;");
 
-        exec_query("ALTER TABLE `${p}pct`
+        exec_query("ALTER TABLE `{$p}pct`
                     ADD `pct_effort` DECIMAL( 10, 2 ) NULL AFTER `pct_budget` ,
                     ADD `pct_approved` DECIMAL( 10, 2 ) NULL AFTER `pct_effort` ");
 
-        exec_query("ALTER TABLE `${p}zef`
+        exec_query("ALTER TABLE `{$p}zef`
                         ADD `zef_status` SMALLINT DEFAULT 1,
                         ADD `zef_billable` TINYINT NULL");
 
-        exec_query("CREATE TABLE IF NOT EXISTS `${p}status` (
+        exec_query("CREATE TABLE IF NOT EXISTS `{$p}status` (
                     `status_id` TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
                     `status` VARCHAR( 200 ) NOT NULL
                     ) ENGINE = InnoDB ");
 
-        exec_query("INSERT INTO `${p}status` (`status_id` ,`status`) VALUES ('1', 'open'), ('2', 'review'), ('3', 'closed');");
+        exec_query("INSERT INTO `{$p}status` (`status_id` ,`status`) VALUES ('1', 'open'), ('2', 'review'), ('3', 'closed');");
 
-        exec_query("ALTER TABLE `${p}zef`
+        exec_query("ALTER TABLE `{$p}zef`
                     ADD `zef_budget` DECIMAL( 10, 2 ) NULL AFTER `zef_fixed_rate` ,
                     ADD `zef_approved` DECIMAL( 10, 2 ) NULL AFTER `zef_budget` ;");
 
-        exec_query("ALTER TABLE `${p}zef` ADD `zef_description` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL AFTER `zef_evtID` ");
+        exec_query("ALTER TABLE `{$p}zef` ADD `zef_description` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL AFTER `zef_evtID` ");
 
-        exec_query("UPDATE ${p}zef SET zef_status = 3 WHERE zef_cleared = 1");
+        exec_query("UPDATE {$p}zef SET zef_status = 3 WHERE zef_cleared = 1");
 
-        exec_query("INSERT INTO `${p}var` (`var` ,`value`) VALUES ('roundTimesheetEntries', '0' );");
+        exec_query("INSERT INTO `{$p}var` (`var` ,`value`) VALUES ('roundTimesheetEntries', '0' );");
 
-        exec_query("INSERT INTO `${p}var` (`var` ,`value`) VALUES ('roundMinutes', '0');");
+        exec_query("INSERT INTO `{$p}var` (`var` ,`value`) VALUES ('roundMinutes', '0');");
 
-        exec_query("INSERT INTO `${p}var` (`var` ,`value`) VALUES ('roundSeconds', '0');");
+        exec_query("INSERT INTO `{$p}var` (`var` ,`value`) VALUES ('roundSeconds', '0');");
 
-        exec_query("DELETE FROM `${p}var` WHERE `var` = 'status';");
+        exec_query("DELETE FROM `{$p}var` WHERE `var` = 'status';");
     }
 
     if ($revisionDB < 1349) {
         Logger::logfile('-- update to r1350');
-        exec_query("ALTER TABLE `${p}usr` ADD `apikey` VARCHAR( 30 ) NULL AFTER `timespace_out`");
-        exec_query("ALTER TABLE `${p}usr` ADD UNIQUE (`apikey`)");
+        exec_query("ALTER TABLE `{$p}usr` ADD `apikey` VARCHAR( 30 ) NULL AFTER `timespace_out`");
+        exec_query("ALTER TABLE `{$p}usr` ADD UNIQUE (`apikey`)");
     }
 
     if ($revisionDB < 1368) {
         Logger::logfile('-- update to r1368');
 
         // some users don't seem to have these columns so we add them here (if they don't exist yet).
-        exec_query("ALTER TABLE  `${p}evt` ADD `evt_budget`     decimal(10,2) DEFAULT NULL;", false);
-        exec_query("ALTER TABLE  `${p}evt` ADD `evt_effort`     decimal(10,2) DEFAULT NULL;", false);
-        exec_query("ALTER TABLE  `${p}evt` ADD `evt_approved`   decimal(10,2) DEFAULT NULL;", false);
+        exec_query("ALTER TABLE  `{$p}evt` ADD `evt_budget`     decimal(10,2) DEFAULT NULL;", false);
+        exec_query("ALTER TABLE  `{$p}evt` ADD `evt_effort`     decimal(10,2) DEFAULT NULL;", false);
+        exec_query("ALTER TABLE  `{$p}evt` ADD `evt_approved`   decimal(10,2) DEFAULT NULL;", false);
 
-        exec_query("ALTER TABLE `${p}evt` RENAME TO `${p}activities`,
+        exec_query("ALTER TABLE `{$p}evt` RENAME TO `{$p}activities`,
                     CHANGE `evt_ID`         `activityID` int(10) NOT NULL AUTO_INCREMENT,
                     CHANGE `evt_name`       `name`       varchar(255) NOT NULL,
                     CHANGE `evt_comment`    `comment`    text NOT NULL,
@@ -1404,7 +1404,7 @@ if ($revisionDB < 1112) {
                     CHANGE `evt_approved`   `approved`   decimal(10,2) DEFAULT NULL
                     ;");
 
-        exec_query("ALTER TABLE `${p}exp` RENAME TO `${p}expenses`,
+        exec_query("ALTER TABLE `{$p}exp` RENAME TO `{$p}expenses`,
                     CHANGE `exp_ID`           `expenseID`   int(10) NOT NULL AUTO_INCREMENT,
                     CHANGE `exp_timestamp`    `timestamp`   int(10) NOT NULL DEFAULT '0',
                     CHANGE `exp_usrID`        `userID`      int(10) NOT NULL,
@@ -1418,40 +1418,40 @@ if ($revisionDB < 1112) {
                     CHANGE `exp_value`        `value`       decimal(10,2) NOT NULL DEFAULT '0.00'
                     ;");
 
-        exec_query("ALTER TABLE `${p}fixed_rates` RENAME TO `${p}fixedRates`,
+        exec_query("ALTER TABLE `{$p}fixed_rates` RENAME TO `{$p}fixedRates`,
                     CHANGE `project_id` `projectID`  int(10) DEFAULT NULL,
                     CHANGE `event_id`   `activityID` int(10) DEFAULT NULL
                     ;");
 
-        exec_query("ALTER TABLE `${p}grp` RENAME TO `${p}groups`,
+        exec_query("ALTER TABLE `{$p}grp` RENAME TO `{$p}groups`,
                     CHANGE `grp_ID`    `groupID` int(10) NOT NULL AUTO_INCREMENT,
                     CHANGE `grp_name`  `name`    varchar(160) NOT NULL,
                     CHANGE `grp_trash` `trash`   tinyint(1) NOT NULL DEFAULT '0'
                     ;");
 
-        exec_query("ALTER TABLE `${p}grp_evt` RENAME TO `${p}groups_activities`,
+        exec_query("ALTER TABLE `{$p}grp_evt` RENAME TO `{$p}groups_activities`,
                     CHANGE `grp_ID` `groupID`    int(10) NOT NULL,
                     CHANGE `evt_ID` `activityID` int(10) NOT NULL,
                     DROP `uid`,
                     ADD PRIMARY KEY (`groupID`, `activityID`);");
 
-        exec_query("ALTER TABLE `${p}grp_knd` RENAME TO `${p}groups_customers`,
+        exec_query("ALTER TABLE `{$p}grp_knd` RENAME TO `{$p}groups_customers`,
                     CHANGE `grp_ID` `groupID`    int(10) NOT NULL,
                     CHANGE `knd_ID` `customerID` int(10) NOT NULL,
                     DROP `uid`,
                     ADD PRIMARY KEY (`groupID`, `customerID`);");
 
-        exec_query("ALTER TABLE `${p}grp_pct` RENAME TO `${p}groups_projects`,
+        exec_query("ALTER TABLE `{$p}grp_pct` RENAME TO `{$p}groups_projects`,
                     CHANGE `grp_ID` `groupID`    int(10) NOT NULL,
                     CHANGE `pct_ID` `projectID` int(10) NOT NULL,
                     DROP `uid`,
                     ADD PRIMARY KEY (`groupID`, `projectID`);");
 
-        exec_query("ALTER TABLE `${p}grp_usr` RENAME TO `${p}groups_users`,
+        exec_query("ALTER TABLE `{$p}grp_usr` RENAME TO `{$p}groups_users`,
                     CHANGE `grp_ID` `groupID`    int(10) NOT NULL,
                     CHANGE `usr_ID` `userID` int(10) NOT NULL;");
 
-        exec_query("ALTER TABLE `${p}knd` RENAME TO `${p}customers`,
+        exec_query("ALTER TABLE `{$p}knd` RENAME TO `{$p}customers`,
                     CHANGE `knd_ID`       `customerID` int(10) NOT NULL AUTO_INCREMENT,
                     CHANGE `knd_name`     `name`       varchar(255) NOT NULL,
                     CHANGE `knd_password` `password`   varchar(255) DEFAULT NULL,
@@ -1474,14 +1474,14 @@ if ($revisionDB < 1112) {
                     CHANGE `knd_timezone` `timezone`   varchar(255) NOT NULL
                     ;");
 
-        exec_query("ALTER TABLE `${p}ldr` RENAME TO `${p}groupleaders`,
+        exec_query("ALTER TABLE `{$p}ldr` RENAME TO `{$p}groupleaders`,
                     CHANGE `grp_ID`     `groupID` int(10) NOT NULL,
                     CHANGE `grp_leader` `userID`  int(10) NOT NULL,
                     DROP `uid`,
                     ADD PRIMARY KEY (`groupID`, `userID`)
                     ;");
 
-        exec_query("ALTER TABLE `${p}pct` RENAME TO `${p}projects`,
+        exec_query("ALTER TABLE `{$p}pct` RENAME TO `{$p}projects`,
                     CHANGE `pct_ID`       `projectID`  int(10) NOT NULL AUTO_INCREMENT,
                     CHANGE `pct_kndID`    `customerID` int(3) NOT NULL,
                     CHANGE `pct_name`     `name`       varchar(255) NOT NULL,
@@ -1496,9 +1496,9 @@ if ($revisionDB < 1112) {
                     ;");
 
         // fix ER_WARN_DATA_TRUNCATED for evt_budget
-        exec_query("UPDATE `${p}pct_evt` SET `evt_budget` = 0.00 WHERE `evt_budget` IS NULL");
+        exec_query("UPDATE `{$p}pct_evt` SET `evt_budget` = 0.00 WHERE `evt_budget` IS NULL");
 
-        exec_query("ALTER TABLE `${p}pct_evt` RENAME TO `${p}projects_activities`,
+        exec_query("ALTER TABLE `{$p}pct_evt` RENAME TO `{$p}projects_activities`,
                     CHANGE `pct_ID` `projectID`  int(10) NOT NULL,
                     CHANGE `evt_ID` `activityID` int(10) NOT NULL,
                     CHANGE `evt_budget`   `budget`     decimal(10,2) NOT NULL DEFAULT '0.00',
@@ -1508,21 +1508,21 @@ if ($revisionDB < 1112) {
                     ADD PRIMARY KEY (`projectID`, `activityID`)
                     ;");
 
-        exec_query("ALTER TABLE `${p}preferences`
+        exec_query("ALTER TABLE `{$p}preferences`
                     CHANGE `var` `option` varchar(255) NOT NULL
                     ;");
 
-        exec_query("ALTER TABLE `${p}rates`
+        exec_query("ALTER TABLE `{$p}rates`
                     CHANGE `user_id`    `userID`     int(10) DEFAULT NULL,
                     CHANGE `project_id` `projectID`  int(10) DEFAULT NULL,
                     CHANGE `event_id`   `activityID` int(10) DEFAULT NULL
                     ;");
 
-        exec_query("ALTER TABLE `${p}status` RENAME TO `${p}statuses`,
+        exec_query("ALTER TABLE `{$p}status` RENAME TO `{$p}statuses`,
 CHANGE `status_id` `statusID` tinyint(4) NOT NULL AUTO_INCREMENT
 ;");
 
-        exec_query("ALTER TABLE `${p}usr` RENAME TO `${p}users`,
+        exec_query("ALTER TABLE `{$p}usr` RENAME TO `{$p}users`,
                     CHANGE `usr_ID`        `userID`   int(10) NOT NULL,
                     CHANGE `usr_name`      `name`     varchar(160) COLLATE latin1_general_ci NOT NULL,
                     CHANGE `usr_alias`     `alias`    varchar(10) COLLATE latin1_general_ci DEFAULT NULL,
@@ -1542,13 +1542,13 @@ CHANGE `status_id` `statusID` tinyint(4) NOT NULL AUTO_INCREMENT
                     ADD UNIQUE KEY `name` (`name`)
                     ;");
 
-        exec_query("ALTER TABLE `${p}var` RENAME TO `${p}configuration`,
+        exec_query("ALTER TABLE `{$p}var` RENAME TO `{$p}configuration`,
                     CHANGE `var` `option` varchar(255) NOT NULL
                     ;");
 
-        exec_query("UPDATE `${p}configuration` SET `option` = 'project_comment_flag' WHERE `option` = 'pct_comment_flag';");
+        exec_query("UPDATE `{$p}configuration` SET `option` = 'project_comment_flag' WHERE `option` = 'pct_comment_flag';");
 
-        exec_query("ALTER TABLE `${p}zef` RENAME TO `${p}timeSheet`,
+        exec_query("ALTER TABLE `{$p}zef` RENAME TO `{$p}timeSheet`,
                     CHANGE `zef_ID`           `timeEntryID`     int(10) NOT NULL AUTO_INCREMENT,
                     CHANGE `zef_in`           `start`           int(10) NOT NULL DEFAULT '0',
                     CHANGE `zef_out`          `end`             int(10) NOT NULL DEFAULT '0',
@@ -1573,7 +1573,7 @@ CHANGE `status_id` `statusID` tinyint(4) NOT NULL AUTO_INCREMENT
     }
 
     if ($revisionDB < 1370) {
-        $result          = $database->queryAll("SELECT `value` FROM ${p}configuration WHERE `option` = 'defaultTimezone'");
+        $result          = $database->queryArray("SELECT `value` FROM {$p}configuration WHERE `option` = 'defaultTimezone'");
         $timezone = $result[0][0];
 
         $success = write_config_file(
@@ -1599,7 +1599,7 @@ CHANGE `status_id` `statusID` tinyint(4) NOT NULL AUTO_INCREMENT
         printLine($level, 'Store default timezone in configuration file <i>autoconf.php</i>.', $additional);
 
         if ($success) {
-            exec_query("DELETE FROM `${p}configuration` WHERE `option` = 'defaultTimezone'");
+            exec_query("DELETE FROM `{$p}configuration` WHERE `option` = 'defaultTimezone'");
         }
     }
 
@@ -1609,7 +1609,7 @@ CHANGE `status_id` `statusID` tinyint(4) NOT NULL AUTO_INCREMENT
         // But there might be people using the development version. They lost their data but we have to add the columns again.
         // That's why these queries are allowed to fail. This will happen for all not using a development version.
 
-        exec_query("ALTER TABLE `${p}activities`
+        exec_query("ALTER TABLE `{$p}activities`
                     DROP `budget`,
                     DROP `effort`,
                     DROP `approved`
@@ -1617,11 +1617,11 @@ CHANGE `status_id` `statusID` tinyint(4) NOT NULL AUTO_INCREMENT
     }
 
     if ($revisionDB < 1372) {
-        exec_query("ALTER TABLE `${p}users` CHANGE `alias` `alias` varchar(160);");
+        exec_query("ALTER TABLE `{$p}users` CHANGE `alias` `alias` varchar(160);");
     }
 
     if ($revisionDB < 1373) {
-        exec_query("ALTER TABLE `${p}activities` DROP `assignable`;");
+        exec_query("ALTER TABLE `{$p}activities` DROP `assignable`;");
     }
 
     if ($revisionDB < 1374) {
@@ -1629,42 +1629,42 @@ CHANGE `status_id` `statusID` tinyint(4) NOT NULL AUTO_INCREMENT
         require('installer/installPermissions.php');
 
         // add membershipRoleID column, initialized with user role
-        exec_query("ALTER TABLE `${p}groups_users` ADD `membershipRoleID` int(10) DEFAULT $membershipUserRoleID;");
-        exec_query("ALTER TABLE `${p}groups_users` CHANGE `membershipRoleID` `membershipRoleID` int(10) NOT NULL;");
+        exec_query("ALTER TABLE `{$p}groups_users` ADD `membershipRoleID` int(10) DEFAULT $membershipUserRoleID;");
+        exec_query("ALTER TABLE `{$p}groups_users` CHANGE `membershipRoleID` `membershipRoleID` int(10) NOT NULL;");
 
         // add globalRoleID column, initialized with user role
-        exec_query("ALTER TABLE `${p}users` ADD `globalRoleID` int(10) DEFAULT $globalUserRoleID;");
-        exec_query("ALTER TABLE `${p}users` CHANGE `globalRoleID` `globalRoleID` int(10) NOT NULL;");
-        exec_query("UPDATE `${p}users` SET `globalRoleID` = (SELECT globalRoleID FROM `${p}globalRoles` WHERE name = 'Admin') WHERE status=0;");
+        exec_query("ALTER TABLE `{$p}users` ADD `globalRoleID` int(10) DEFAULT $globalUserRoleID;");
+        exec_query("ALTER TABLE `{$p}users` CHANGE `globalRoleID` `globalRoleID` int(10) NOT NULL;");
+        exec_query("UPDATE `{$p}users` SET `globalRoleID` = (SELECT globalRoleID FROM `{$p}globalRoles` WHERE name = 'Admin') WHERE status=0;");
 
         // set groupleader role
-        exec_query("UPDATE `${p}groups_users` SET membershipRoleID=(SELECT membershipRoleID FROM `${p}membershipRoles` WHERE name = 'Groupleader') WHERE (groupID,userID) IN (SELECT groupID, userID FROM `${p}groupleaders`)");
+        exec_query("UPDATE `{$p}groups_users` SET membershipRoleID=(SELECT membershipRoleID FROM `{$p}membershipRoles` WHERE name = 'Groupleader') WHERE (groupID,userID) IN (SELECT groupID, userID FROM `{$p}groupleaders`)");
 
         // set admin role
-        exec_query("UPDATE `${p}groups_users` SET membershipRoleID=(SELECT membershipRoleID FROM `${p}membershipRoles` WHERE name = 'Admin') WHERE userID IN (SELECT userID FROM `${p}users` WHERE status=0)");
+        exec_query("UPDATE `{$p}groups_users` SET membershipRoleID=(SELECT membershipRoleID FROM `{$p}membershipRoles` WHERE name = 'Admin') WHERE userID IN (SELECT userID FROM `{$p}users` WHERE status=0)");
     }
 
 
     if ($revisionDB < 1375) {
         foreach (array('customer', 'project', 'activity', 'group', 'user') as $object) {
-            exec_query("ALTER TABLE `${p}globalRoles` ADD `core-$object-otherGroup-view` tinyint DEFAULT 1;");
-            exec_query("ALTER TABLE `${p}globalRoles` CHANGE `core-$object-otherGroup-view` `core-$object-otherGroup-view` tinyint DEFAULT 0;");
+            exec_query("ALTER TABLE `{$p}globalRoles` ADD `core-$object-otherGroup-view` tinyint DEFAULT 1;");
+            exec_query("ALTER TABLE `{$p}globalRoles` CHANGE `core-$object-otherGroup-view` `core-$object-otherGroup-view` tinyint DEFAULT 0;");
       }
 
-        exec_query("DROP TABLE `${p}groupleaders`;");
+        exec_query("DROP TABLE `{$p}groupleaders`;");
     }
 
 
     if ($revisionDB < 1376) {
-        exec_query("UPDATE `${p}globalRoles` SET `demo_ext-access` = 1 WHERE `name` = 'Admin';");
+        exec_query("UPDATE `{$p}globalRoles` SET `demo_ext-access` = 1 WHERE `name` = 'Admin';");
     }
 
     if ($revisionDB < 1377) {
-        exec_query("ALTER TABLE `${p}rates` ADD UNIQUE KEY(`userID`, `projectID`, `activityID`);");
+        exec_query("ALTER TABLE `{$p}rates` ADD UNIQUE KEY(`userID`, `projectID`, `activityID`);");
     }
 
     if ($revisionDB < 1378) {
-        exec_query("UPDATE `${p}configuration` SET `value` = '0' WHERE `option` = 'show_sensible_data';");
+        exec_query("UPDATE `{$p}configuration` SET `value` = '0' WHERE `option` = 'show_sensible_data';");
     }
 
     if ($revisionDB < 1379) {
@@ -1699,52 +1699,52 @@ CHANGE `status_id` `statusID` tinyint(4) NOT NULL AUTO_INCREMENT
 
     if ($revisionDB < 1380) {
         Logger::logfile('-- update to r1380');
-        exec_query("INSERT INTO `${p}configuration` VALUES('allowRoundDown', '1');");
+        exec_query("INSERT INTO `{$p}configuration` VALUES('allowRoundDown', '1');");
     }
 
     if ($revisionDB < 1381) {
         Logger::logfile('-- update to r1381');
         // make sure all keys are defined correctly
-        exec_query("ALTER TABLE `${p}expenses`            ADD INDEX      (`userID`);", false);
-        exec_query("ALTER TABLE `${p}expenses`            ADD INDEX      (`projectID`);", false);
-        exec_query("ALTER TABLE `${p}fixedRates`          ADD UNIQUE  KEY(`projectID`, `activityID`);", false);
-        exec_query("ALTER TABLE `${p}groups_activities`   ADD UNIQUE  KEY(`groupID`, `activityID`);", false);
-        exec_query("ALTER TABLE `${p}groups_customers`    ADD UNIQUE  KEY(`groupID`, `customerID`);", false);
-        exec_query("ALTER TABLE `${p}groups_projects`     ADD UNIQUE  KEY(`groupID`, `projectID`);", false);
-        exec_query("ALTER TABLE `${p}groups_users`        ADD UNIQUE  KEY(`groupID`, `userID`);", false);
+        exec_query("ALTER TABLE `{$p}expenses`            ADD INDEX      (`userID`);", false);
+        exec_query("ALTER TABLE `{$p}expenses`            ADD INDEX      (`projectID`);", false);
+        exec_query("ALTER TABLE `{$p}fixedRates`          ADD UNIQUE  KEY(`projectID`, `activityID`);", false);
+        exec_query("ALTER TABLE `{$p}groups_activities`   ADD UNIQUE  KEY(`groupID`, `activityID`);", false);
+        exec_query("ALTER TABLE `{$p}groups_customers`    ADD UNIQUE  KEY(`groupID`, `customerID`);", false);
+        exec_query("ALTER TABLE `{$p}groups_projects`     ADD UNIQUE  KEY(`groupID`, `projectID`);", false);
+        exec_query("ALTER TABLE `{$p}groups_users`        ADD UNIQUE  KEY(`groupID`, `userID`);", false);
 
 
 
-        exec_query("ALTER TABLE `${p}projects`            ADD INDEX      (`customerID`);", false);
-        exec_query("ALTER TABLE `${p}projects_activities` ADD UNIQUE  KEY(`projectID`, `activityID`);", false);
-        exec_query("ALTER TABLE `${p}rates`               ADD UNIQUE  KEY(`userID`, `projectID`, `activityID`);", false);
+        exec_query("ALTER TABLE `{$p}projects`            ADD INDEX      (`customerID`);", false);
+        exec_query("ALTER TABLE `{$p}projects_activities` ADD UNIQUE  KEY(`projectID`, `activityID`);", false);
+        exec_query("ALTER TABLE `{$p}rates`               ADD UNIQUE  KEY(`userID`, `projectID`, `activityID`);", false);
 
 
-        exec_query("ALTER TABLE `${p}timeSheet`           ADD INDEX      (`userID`);", false);
-        exec_query("ALTER TABLE `${p}timeSheet`           ADD INDEX      (`projectID`);", false);
-        exec_query("ALTER TABLE `${p}timeSheet`           ADD INDEX      (`activityID`);", false);
+        exec_query("ALTER TABLE `{$p}timeSheet`           ADD INDEX      (`userID`);", false);
+        exec_query("ALTER TABLE `{$p}timeSheet`           ADD INDEX      (`projectID`);", false);
+        exec_query("ALTER TABLE `{$p}timeSheet`           ADD INDEX      (`activityID`);", false);
 
-        exec_query("ALTER TABLE `${p}users`               ADD UNIQUE  KEY(`name`);", false);
-        exec_query("ALTER TABLE `${p}users`               ADD UNIQUE  KEY(`apiKey`);", false);
+        exec_query("ALTER TABLE `{$p}users`               ADD UNIQUE  KEY(`name`);", false);
+        exec_query("ALTER TABLE `{$p}users`               ADD UNIQUE  KEY(`apiKey`);", false);
 
     }
 
 if ($revisionDB < 1382) {
     Logger::logfile('-- update to r1382');
 
-    exec_query("UPDATE `${p}membershipRoles` SET `core-user-view` = 1 WHERE `name` = 'Admin';");
-    exec_query("UPDATE `${p}membershipRoles` SET `core-user-view` = 1 WHERE `name` = 'Groupleader';");
+    exec_query("UPDATE `{$p}membershipRoles` SET `core-user-view` = 1 WHERE `name` = 'Admin';");
+    exec_query("UPDATE `{$p}membershipRoles` SET `core-user-view` = 1 WHERE `name` = 'Groupleader';");
 }
 
 if ($revisionDB < 1383) {
     Logger::logfile('-- update to r1383');
-    exec_query("INSERT INTO `${p}configuration` VALUES('defaultStatusID', '1');");
+    exec_query("INSERT INTO `{$p}configuration` VALUES('defaultStatusID', '1');");
 }
 
 if ($revisionDB < 1384) {
     Logger::logfile('-- update to r1384');
-    exec_query("ALTER TABLE ${p}users ADD COLUMN `passwordResetHash` char(32) NULL DEFAULT NULL AFTER `password`");
-    exec_query("ALTER TABLE ${p}customers ADD COLUMN `passwordResetHash` char(32) NULL DEFAULT NULL AFTER `password`");
+    exec_query("ALTER TABLE {$p}users ADD COLUMN `passwordResetHash` char(32) NULL DEFAULT NULL AFTER `password`");
+    exec_query("ALTER TABLE {$p}customers ADD COLUMN `passwordResetHash` char(32) NULL DEFAULT NULL AFTER `password`");
 }
 
     /*      2015 07 11      */
@@ -1755,29 +1755,29 @@ if ($revisionDB < 1384) {
         $database->connect();
 
         // RENAME TABLES TO SAFE lower-case & underscore, and singular
-        exec_query("RENAME TABLE `${p}activities` TO `${p}activity`                 ;",1);
-        exec_query("RENAME TABLE `${p}customers` TO `${p}customer`                  ;",1);
-        exec_query("RENAME TABLE `${p}expenses` TO `${p}expense`                    ;",1);
-        exec_query("RENAME TABLE `${p}fixedRates` TO `${p}fixed_rate`               ;",1);
-        exec_query("RENAME TABLE `${p}globalroles` TO `${p}global_role`             ;",1);
-        exec_query("RENAME TABLE `${p}groups_activities` TO `${p}group_activity`    ;",1);
-        exec_query("RENAME TABLE `${p}groups_customers` TO `${p}group_customer`     ;",1);
-        exec_query("RENAME TABLE `${p}groups_projects` TO `${p}group_project`       ;",1);
-        exec_query("RENAME TABLE `${p}groups_users` TO `${p}group_user`             ;",1);
-        exec_query("RENAME TABLE `${p}groups` TO `${p}group`                        ;",1);
-        exec_query("RENAME TABLE `${p}membershipRoles` TO `${p}membership_role`     ;",1);
-        exec_query("RENAME TABLE `${p}preferences` TO `${p}preference`              ;",1);
-        exec_query("RENAME TABLE `${p}projects_activities` TO `${p}project_activity`;",1);
-        exec_query("RENAME TABLE `${p}projects` TO `${p}project`                    ;",1);
-        exec_query("RENAME TABLE `${p}rates` TO `${p}rate`                          ;",1);
-        exec_query("RENAME TABLE `${p}statuses` TO `${p}status`                     ;",1);
-        exec_query("RENAME TABLE `${p}users` TO `${p}user`                          ;",1);
+        exec_query("RENAME TABLE `{$p}activities` TO `{$p}activity`                 ;",1);
+        exec_query("RENAME TABLE `{$p}customers` TO `{$p}customer`                  ;",1);
+        exec_query("RENAME TABLE `{$p}expenses` TO `{$p}expense`                    ;",1);
+        exec_query("RENAME TABLE `{$p}fixedRates` TO `{$p}fixed_rate`               ;",1);
+        exec_query("RENAME TABLE `{$p}globalroles` TO `{$p}global_role`             ;",1);
+        exec_query("RENAME TABLE `{$p}groups_activities` TO `{$p}group_activity`    ;",1);
+        exec_query("RENAME TABLE `{$p}groups_customers` TO `{$p}group_customer`     ;",1);
+        exec_query("RENAME TABLE `{$p}groups_projects` TO `{$p}group_project`       ;",1);
+        exec_query("RENAME TABLE `{$p}groups_users` TO `{$p}group_user`             ;",1);
+        exec_query("RENAME TABLE `{$p}groups` TO `{$p}group`                        ;",1);
+        exec_query("RENAME TABLE `{$p}membershipRoles` TO `{$p}membership_role`     ;",1);
+        exec_query("RENAME TABLE `{$p}preferences` TO `{$p}preference`              ;",1);
+        exec_query("RENAME TABLE `{$p}projects_activities` TO `{$p}project_activity`;",1);
+        exec_query("RENAME TABLE `{$p}projects` TO `{$p}project`                    ;",1);
+        exec_query("RENAME TABLE `{$p}rates` TO `{$p}rate`                          ;",1);
+        exec_query("RENAME TABLE `{$p}statuses` TO `{$p}status`                     ;",1);
+        exec_query("RENAME TABLE `{$p}users` TO `{$p}user`                          ;",1);
 
 
 
         // STANDARDIZE LOWERCASE & UNDERSCORE COLUMN NAMES
         exec_query(
-            "ALTER TABLE `${p}user`
+            "ALTER TABLE `{$p}user`
             CHANGE `userID`             `user_id` int(10) unsigned NOT NULL,
             CHANGE `banTime`            `ban_time` int(10) unsigned NOT NULL default '0',
             CHANGE `lastProject`        `last_project` int(10) unsigned NOT NULL default '1',
@@ -1790,17 +1790,17 @@ if ($revisionDB < 1384) {
             ;");
 
         exec_query(
-            "ALTER TABLE `${p}preference`
+            "ALTER TABLE `{$p}preference`
             CHANGE `userID`             `user_id` int(10) unsigned NOT NULL
             ;");
 
         exec_query(
-            "ALTER TABLE `${p}activity`
+            "ALTER TABLE `{$p}activity`
             CHANGE `activityID`             `activity_id` int(10) unsigned NOT NULL AUTO_INCREMENT
             ;");
 
         exec_query(
-            "ALTER TABLE `${p}global_role`
+            "ALTER TABLE `{$p}global_role`
             CHANGE `globalRoleID`                                `global_role_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
             CHANGE `deb_ext-access`                              `ki_debug__access`tinyint(4) DEFAULT '0',
             CHANGE `adminPanel_extension-access`                 `ki_admin__access`tinyint(4) DEFAULT '0',
@@ -1859,37 +1859,37 @@ if ($revisionDB < 1384) {
             ;");
 
         exec_query(
-            "ALTER TABLE `${p}group`
+            "ALTER TABLE `{$p}group`
             CHANGE `groupID`             `group_id` int(10) unsigned NOT NULL AUTO_INCREMENT
             ;");
 
         exec_query(
-            "ALTER TABLE `${p}group_user`
+            "ALTER TABLE `{$p}group_user`
             CHANGE `groupID`             `group_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
             CHANGE `userID`              `user_id` int(10) unsigned NOT NULL,
             CHANGE `membershipRoleID`    `membership_role_id` int(10) unsigned NOT NULL
             ;");
 
         exec_query(
-            "ALTER TABLE `${p}group_customer`
+            "ALTER TABLE `{$p}group_customer`
             CHANGE `groupID`             `group_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
             CHANGE `customerID`          `customer_id` int(10) unsigned NOT NULL
             ;");
 
         exec_query(
-            "ALTER TABLE `${p}group_project`
+            "ALTER TABLE `{$p}group_project`
             CHANGE `groupID`             `group_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
             CHANGE `projectID`           `project_id` int(10) unsigned NOT NULL
             ;");
 
         exec_query(
-            "ALTER TABLE `${p}group_activity`
+            "ALTER TABLE `{$p}group_activity`
             CHANGE `groupID`             `group_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
             CHANGE `activityID`          `activity_id` int(10) unsigned NOT NULL
             ;");
 
         exec_query(
-            "ALTER TABLE `${p}membership_role`
+            "ALTER TABLE `{$p}membership_role`
             CHANGE `membershipRoleID`                            `membership_role_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
             CHANGE `core-customer-add`                           `core__customer__add`tinyint(4) DEFAULT '0',
             CHANGE `core-customer-edit`                          `core__customer__edit`tinyint(4) DEFAULT '0',
@@ -1923,28 +1923,28 @@ if ($revisionDB < 1384) {
             ;");
 
         exec_query(
-            "ALTER TABLE `${p}project_activity`
+            "ALTER TABLE `{$p}project_activity`
             CHANGE `projectID`           `project_id` int(10) unsigned NOT NULL,
             CHANGE `activityID`          `activity_id` int(10) unsigned NOT NULL
             ;");
 
         exec_query(
-            "ALTER TABLE `${p}customer`
-            CHANGE `customerID`           `customer_id` int(10) unsigned NOT NULL,
-            CHANGE `passwordResetHash`    `password_reset_hash` char(32) NULL DEFAULT NULL,
-            CHANGE `vat`                  `vat_rate` varchar(6) DEFAULT '0',
-            ADD `timeframe_begin` VARCHAR( 60 ) NOT NULL DEFAULT '0',
-            ADD `timeframe_end` VARCHAR( 60 ) NOT NULL DEFAULT '0'
+            "alter table `{$p}customer`
+            change `customerID`           `customer_id` INT(10) UNSIGNED not null,
+            change `passwordResetHash`    `password_reset_hash` CHAR(32) null default null,
+            change `vat`                  `vat_rate` VARCHAR(6) default '0',
+            add                           `timeframe_begin` VARCHAR( 60 ) not null default '0',
+            add                           `timeframe_end` VARCHAR( 60 ) not null default '0'
             ;");
 
         exec_query(
-            "ALTER TABLE `${p}project`
+            "ALTER TABLE `{$p}project`
             CHANGE `projectID`           `project_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
             CHANGE `customerID`          `customer_id` int(3) NOT NULL
             ;");
 
         exec_query(
-            "ALTER TABLE `${p}timesheet`
+            "ALTER TABLE `{$p}timesheet`
             CHANGE `timeEntryID`           `time_entry_id` int(10) unsigned unsigned NOT NULL AUTO_INCREMENT,
             CHANGE `userID`                `user_id` int(10) unsigned NOT NULL,
             CHANGE `projectID`             `project_id` int(10) unsigned NOT NULL,
@@ -1956,20 +1956,20 @@ if ($revisionDB < 1384) {
             ;");
 
         exec_query(
-            "ALTER TABLE `${p}rate`
+            "ALTER TABLE `{$p}rate`
             CHANGE `userID`                `user_id` int(10) unsigned DEFAULT NULL,
             CHANGE `projectID`             `project_id` int(10) unsigned DEFAULT NULL,
             CHANGE `activityID`            `activity_id` int(10) unsigned DEFAULT NULL
             ;");
 
         exec_query(
-            "ALTER TABLE `${p}fixed_rate`
+            "ALTER TABLE `{$p}fixed_rate`
             CHANGE `projectID`             `project_id` int(10) unsigned DEFAULT NULL,
             CHANGE `activityID`            `activity_id` int(10) unsigned DEFAULT NULL
             ;");
 
         exec_query(
-            "ALTER TABLE `${p}expense`
+            "ALTER TABLE `{$p}expense`
             CHANGE `expenseID`             `expense_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
             CHANGE `userID`                `user_id` int(10) unsigned NOT NULL,
             CHANGE `projectID`             `project_id` int(10) unsigned NOT NULL,
@@ -1978,18 +1978,18 @@ if ($revisionDB < 1384) {
             ;");
 
         exec_query(
-            "ALTER TABLE `${p}status`
+            "ALTER TABLE `{$p}status`
             CHANGE `statusID`             `status_id` TINYINT NOT NULL AUTO_INCREMENT
             ;");
 
 
         // gather all userID in preferences
         // customerID checked in this array for uniqueness
-        $users = $database->queryAll("SELECT `user_id` FROM `${p}preference` group by `user_id`");
+        $users = $database->queryArray("SELECT `user_id` FROM `{$p}preference` group by `user_id`");
         $userIds = array_column($users,'user_id');
 
         // convert customerID if necessary & create preference entries              //
-        $customers = $database->queryAll("SELECT customer_id, timezone FROM ${p}customer");
+        $customers = $database->queryArray("SELECT customer_id, timezone FROM {$p}customer");
         $customerIds = array_column($customers,'customer_id');
         $timezones =  array_column($customers,'timezone');
 
@@ -2003,83 +2003,83 @@ if ($revisionDB < 1384) {
                 } while (in_array($newId,$userIds) || in_array($newId,$customerIds));
 
                 // update all related tables
-                exec_query("UPDATE `${p}customer` SET `customer_id` = ${newId} WHERE `customer_id` = ${customerId};", 1);
-                exec_query("UPDATE `${p}group_customer` SET `customer_id` = ${newId} WHERE `customer_id` = ${customerId};", 1);
-                exec_query("UPDATE `${p}project` SET `customer_id` = ${newId} WHERE `customer_id` = ${customerId};", 1);
+                exec_query("UPDATE `{$p}customer` SET `customer_id` = ($newId} WHERE `customer_id` = ($customerId};", 1);
+                exec_query("UPDATE `{$p}group_customer` SET `customer_id` = ($newId} WHERE `customer_id` = ($customerId};", 1);
+                exec_query("UPDATE `{$p}project` SET `customer_id` = ($newId} WHERE `customer_id` = ($customerId};", 1);
             }
 
             // default preferences  NEW FOR CUSTOMERS
-            exec_query("REPLACE INTO `${p}preference` (`user_id`,`option`,`value`) VALUES
-            ('${newId}','ui.autoselection','1'),
-            ('${newId}','ui.flip_project_display','0'),
-            ('${newId}','ui.hide_cleared_entries','0'),
-            ('${newId}','ui.hide_overlap_lines','1'),
-            ('${newId}','ui.language','" . $kga['pref']['language'] . "'),
-            ('${newId}','ui.no_fading','0'),
-            ('${newId}','ui.open_after_recorded','0'),
-            ('${newId}','ui.project_comment_flag','0'),
-            ('${newId}','ui.quickdelete','0'),
-            ('${newId}','ui.rowlimit','100'),
-            ('${newId}','ui.show_comments_by_default','0'),
-            ('${newId}','ui.show_ids','0'),
-            ('${newId}','ui.show_ref_code','1'),
-            ('${newId}','ui.skin','standard'),
-            ('${newId}','ui.sublist_annotations','2'),
-            ('${newId}','ui.timezone','" . $timezones[$key] . "'),
-            ('${newId}','ui.user_list_hidden','0')
+            exec_query("REPLACE INTO `{$p}preference` (`user_id`,`option`,`value`) VALUES
+            ('($newId}','ui.autoselection','1'),
+            ('($newId}','ui.flip_project_display','0'),
+            ('($newId}','ui.hide_cleared_entries','0'),
+            ('($newId}','ui.hide_overlap_lines','1'),
+            ('($newId}','ui.language','" . $kga['pref']['language'] . "'),
+            ('($newId}','ui.no_fading','0'),
+            ('($newId}','ui.open_after_recorded','0'),
+            ('($newId}','ui.project_comment_flag','0'),
+            ('($newId}','ui.quickdelete','0'),
+            ('($newId}','ui.rowlimit','100'),
+            ('($newId}','ui.show_comments_by_default','0'),
+            ('($newId}','ui.show_ids','0'),
+            ('($newId}','ui.show_ref_code','1'),
+            ('($newId}','ui.skin','standard'),
+            ('($newId}','ui.sublist_annotations','2'),
+            ('($newId}','ui.timezone','" . $timezones[$key] . "'),
+            ('($newId}','ui.user_list_hidden','0')
             ;");
         }
 
 
         // PREFERENCE UPDATE //
-        exec_query("UPDATE `${p}preference` SET `option` = 'ui.hide_cleared_entries' WHERE `option` = 'ui.hideClearedEntries'");
-        exec_query("UPDATE `${p}preference` SET `option` = 'ui.hide_overlap_lines' WHERE `option` = 'ui.hideOverlapLines'");
-        exec_query("UPDATE `${p}preference` SET `option` = 'ui.language' WHERE `option` = 'ui.lang'");
-        exec_query("UPDATE `${p}preference` SET `option` = 'ui.no_fading' WHERE `option` = 'ui.noFading'");
-        exec_query("UPDATE `${p}preference` SET `option` = 'ui.open_after_recorded' WHERE `option` = 'ui.openAfterRecorded'");
-        exec_query("UPDATE `${p}preference` SET `option` = 'ui.show_comments_by_default' WHERE `option` = 'ui.showCommentsByDefault'");
-        exec_query("UPDATE `${p}preference` SET `option` = 'ui.show_ids' WHERE `option` = 'ui.showIDs'");
-        exec_query("UPDATE `${p}preference` SET `option` = 'ui.show_ref_code' WHERE `option` = 'ui.showTrackingNumber'");
-        exec_query("UPDATE `${p}preference` SET `option` = 'ui.sublist_annotations' WHERE `option` = 'ui.sublistAnnotations'");
-        exec_query("UPDATE `${p}preference` SET `option` = 'ui.timezone' WHERE `option` = 'timezone'");
+        exec_query("UPDATE `{$p}preference` SET `option` = 'ui.hide_cleared_entries' WHERE `option` = 'ui.hideClearedEntries'");
+        exec_query("UPDATE `{$p}preference` SET `option` = 'ui.hide_overlap_lines' WHERE `option` = 'ui.hideOverlapLines'");
+        exec_query("UPDATE `{$p}preference` SET `option` = 'ui.language' WHERE `option` = 'ui.lang'");
+        exec_query("UPDATE `{$p}preference` SET `option` = 'ui.no_fading' WHERE `option` = 'ui.noFading'");
+        exec_query("UPDATE `{$p}preference` SET `option` = 'ui.open_after_recorded' WHERE `option` = 'ui.openAfterRecorded'");
+        exec_query("UPDATE `{$p}preference` SET `option` = 'ui.show_comments_by_default' WHERE `option` = 'ui.showCommentsByDefault'");
+        exec_query("UPDATE `{$p}preference` SET `option` = 'ui.show_ids' WHERE `option` = 'ui.showIDs'");
+        exec_query("UPDATE `{$p}preference` SET `option` = 'ui.show_ref_code' WHERE `option` = 'ui.showTrackingNumber'");
+        exec_query("UPDATE `{$p}preference` SET `option` = 'ui.sublist_annotations' WHERE `option` = 'ui.sublistAnnotations'");
+        exec_query("UPDATE `{$p}preference` SET `option` = 'ui.timezone' WHERE `option` = 'timezone'");
 
 
 
         // CONFIGURATION UPDATE //
-        exec_query("UPDATE `${p}configuration` SET `option` = 'admin_mail' WHERE `option` = 'adminmail'");
-        exec_query("UPDATE `${p}configuration` SET `option` = 'allow_round_down' WHERE `option` = 'allowRoundDown'");
-        exec_query("UPDATE `${p}configuration` SET `option` = 'decimal_separator' WHERE `option` = 'decimalSeparator'");
-        exec_query("UPDATE `${p}configuration` SET `option` = 'default_status_id' WHERE `option` = 'defaultStatusID'");
-        exec_query("UPDATE `${p}configuration` SET `option` = 'vat_rate' WHERE `option` = 'defaultVat'");
-        exec_query("UPDATE `${p}configuration` SET `option` = 'duration_with_seconds' WHERE `option` = 'durationWithSeconds'");
-        exec_query("UPDATE `${p}configuration` SET `option` = 'edit_limit' WHERE `option` = 'editLimit'");
-        exec_query("UPDATE `${p}configuration` SET `option` = 'exact_sums' WHERE `option` = 'exactSums'");
-        exec_query("UPDATE `${p}configuration` SET `option` = 'login_ban_time' WHERE `option` = 'loginBanTime'");
-        exec_query("UPDATE `${p}configuration` SET `option` = 'login_tries' WHERE `option` = 'loginTries'");
-        exec_query("UPDATE `${p}configuration` SET `option` = 'round_minutes' WHERE `option` = 'roundMinutes'");
-        exec_query("UPDATE `${p}configuration` SET `option` = 'round_precision' WHERE `option` = 'roundPrecision'");
-        exec_query("UPDATE `${p}configuration` SET `option` = 'round_seconds' WHERE `option` = 'roundSeconds'");
-        exec_query("UPDATE `${p}configuration` SET `option` = 'round_timesheet_entries' WHERE `option` = 'roundTimesheetEntries'");
-        exec_query("UPDATE `${p}configuration` SET `option` = 'show_day_separator_lines' WHERE `option` = 'show_daySeperatorLines'");
-        exec_query("UPDATE `${p}configuration` SET `option` = 'show_gab_breaks' WHERE `option` = 'show_gabBreaks'");
-        exec_query("UPDATE `${p}configuration` SET `option` = 'show_record_again' WHERE `option` = 'show_RecordAgain'");
+        exec_query("UPDATE `{$p}configuration` SET `option` = 'admin_mail' WHERE `option` = 'adminmail'");
+        exec_query("UPDATE `{$p}configuration` SET `option` = 'allow_round_down' WHERE `option` = 'allowRoundDown'");
+        exec_query("UPDATE `{$p}configuration` SET `option` = 'decimal_separator' WHERE `option` = 'decimalSeparator'");
+        exec_query("UPDATE `{$p}configuration` SET `option` = 'default_status_id' WHERE `option` = 'defaultStatusID'");
+        exec_query("UPDATE `{$p}configuration` SET `option` = 'vat_rate' WHERE `option` = 'defaultVat'");
+        exec_query("UPDATE `{$p}configuration` SET `option` = 'duration_with_seconds' WHERE `option` = 'durationWithSeconds'");
+        exec_query("UPDATE `{$p}configuration` SET `option` = 'edit_limit' WHERE `option` = 'editLimit'");
+        exec_query("UPDATE `{$p}configuration` SET `option` = 'exact_sums' WHERE `option` = 'exactSums'");
+        exec_query("UPDATE `{$p}configuration` SET `option` = 'login_ban_time' WHERE `option` = 'loginBanTime'");
+        exec_query("UPDATE `{$p}configuration` SET `option` = 'login_tries' WHERE `option` = 'loginTries'");
+        exec_query("UPDATE `{$p}configuration` SET `option` = 'round_minutes' WHERE `option` = 'roundMinutes'");
+        exec_query("UPDATE `{$p}configuration` SET `option` = 'round_precision' WHERE `option` = 'roundPrecision'");
+        exec_query("UPDATE `{$p}configuration` SET `option` = 'round_seconds' WHERE `option` = 'roundSeconds'");
+        exec_query("UPDATE `{$p}configuration` SET `option` = 'round_timesheet_entries' WHERE `option` = 'roundTimesheetEntries'");
+        exec_query("UPDATE `{$p}configuration` SET `option` = 'show_day_separator_lines' WHERE `option` = 'show_daySeperatorLines'");
+        exec_query("UPDATE `{$p}configuration` SET `option` = 'show_gab_breaks' WHERE `option` = 'show_gabBreaks'");
+        exec_query("UPDATE `{$p}configuration` SET `option` = 'show_record_again' WHERE `option` = 'show_RecordAgain'");
 
-        exec_query("UPDATE `${p}configuration` SET `option` = 'core.revision' WHERE `option` = 'revision'");
-        exec_query("UPDATE `${p}configuration` SET `option` = 'core.status' WHERE `option` = 'status'");
-        exec_query("UPDATE `${p}configuration` SET `option` = 'core.version' WHERE `option` = 'version'");
+        exec_query("UPDATE `{$p}configuration` SET `option` = 'core.revision' WHERE `option` = 'revision'");
+        exec_query("UPDATE `{$p}configuration` SET `option` = 'core.status' WHERE `option` = 'status'");
+        exec_query("UPDATE `{$p}configuration` SET `option` = 'core.version' WHERE `option` = 'version'");
 
-        exec_query("DELETE FROM `${p}configuration` WHERE `option` = 'language';");
-        exec_query("DELETE FROM `${p}configuration` WHERE `option` = 'show_TrackingNr';");
-        exec_query("DELETE FROM `${p}configuration` WHERE `option` = 'kimail';");
+        exec_query("DELETE FROM `{$p}configuration` WHERE `option` = 'language';");
+        exec_query("DELETE FROM `{$p}configuration` WHERE `option` = 'show_TrackingNr';");
+        exec_query("DELETE FROM `{$p}configuration` WHERE `option` = 'kimail';");
 
-        exec_query("INSERT INTO `${p}configuration` (`option`, `value`) VALUES
+        exec_query("INSERT INTO `{$p}configuration` (`option`, `value`) VALUES
                     ('core.ident','kimai-i'),
                     ('bill_pct','0,25,50,75,100'),
                     ('ud.autoselection','1'),
                     ('ud.flip_project_display','0'),
                     ('ud.hide_cleared_entries','0'),
                     ('ud.hide_overlap_lines','1'),
-                    ('ud.language','" . $kga['pref']['language'] . "'),
+                    ('ud.language','{$kga['pref']['language']}'),
                     ('ud.no_fading','0'),
                     ('ud.open_after_recorded','0'),
                     ('ud.project_comment_flag','0'),
@@ -2090,7 +2090,7 @@ if ($revisionDB < 1384) {
                     ('ud.show_ref_code','0'),
                     ('ud.skin','standard'),
                     ('ud.sublist_annotations','2'),
-                    ('ud.timezone','" . $timezones[$key] . "'),
+                    ('ud.timezone','{$timezones[$key]}'),
                     ('ud.user_list_hidden','0');");
         
         // load & clean config table
@@ -2108,19 +2108,19 @@ if ($revisionDB < 1384) {
 
 
         $V = $kga['core.version'];
-        exec_query("REPLACE INTO `${p}configuration` SET `value` = '${V}', `option` = 'core.version';", 0);
+        exec_query("REPLACE INTO `{$p}configuration` SET `value` = '($V}', `option` = 'core.version';", 0);
 
         $R = $kga['core.revision'];
-        exec_query("REPLACE INTO `${p}configuration` SET `value` = '${R}', `option` = 'core.revision';", 0);
+        exec_query("REPLACE INTO `{$p}configuration` SET `value` = '($R}', `option` = 'core.revision';", 0);
 
         $S = $kga['core.status'];
-        exec_query("REPLACE INTO `${p}configuration` SET `value` = '${S}', `option` = 'core.status';", 0);
+        exec_query("REPLACE INTO `{$p}configuration` SET `value` = '($S}', `option` = 'core.status';", 0);
 
     }
 
     Logger::logfile('-- update finished --------------------------------');
 
-    if ($revisionDB == $kga['core.revision']) {
+    if ($revisionDB === $kga['core.revision']) {
         echo "<script type=\"text/javascript\">window.location.href = \"index.php\";</script>";
     }
     else {
@@ -2134,10 +2134,11 @@ if ($revisionDB < 1384) {
 
             echo <<<HTML
 <script type="text/javascript">
-$("#link").append("<p><strong>$updater_80</strong></p>");
-$("#link").append("<h1><a href='index.php'>$login</a></h1>");
-$("#link").addClass("success");
-$("#queries").append("$executed_queries $updater_90</p>");
+var link = $("#link");
+link.append("<p><strong>{$updater_80}</strong></p>");
+link.append("<h1><a href='index.php'>{$login}</a></h1>");
+link.addClass("success");
+$("#queries").append("{$executed_queries} {$updater_90}</p>");
 </script>
 HTML;
 
@@ -2148,10 +2149,11 @@ HTML;
 
             echo <<<HTML
 <script type="text/javascript">
-$("#link").append("<p><strong>$updater_100</strong></p>");
-$("#link").append("<h1><a href='index.php'>$login</a></h1>");
-$("#link").addClass("fail");
-$("#queries").append("$executed_queries $updater_90");
+var link = $("#link");
+link.append("<p><strong>{$updater_100}</strong></p>");
+link.append("<h1><a href='index.php'>{$login}</a></h1>");
+link.addClass("fail");
+$("#queries").append("{$executed_queries} {$updater_90}");
 </script>
 HTML;
         }

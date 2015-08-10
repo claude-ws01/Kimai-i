@@ -17,8 +17,19 @@
     display: inline-block;
 }
 
+.floater_content .permission_all {
+    right: 3em;
+    position: absolute;
+}
+
+#floater_innerwrap fieldset.hierarchyLevel9 {
+    border-bottom: 1px dashed #000;
+    padding-bottom: 0;
+    margin-bottom: .8em;
+}
+
 a {
-    cursor: pointer
+    cursor: pointer;
 }
 
 /*    SUB TABS        SUB TABS        SUB TABS        SUB TABS    */
@@ -63,8 +74,24 @@ div.active span.adm_ext_accordeon_triangle {
 .adm_ext_subtab {
     border-bottom: 1px solid black;
     overflow: auto;
-    padding: 10px;
+    padding: 5px 10px;
 }
+.adm_ext_subtab div.top {
+    padding-bottom:5px;
+    padding-left:10px;
+    line-height: 18px;
+}
+.adm_ext_subtab div.top a {
+    text-decoration:none;
+    float:left;
+    height:16px;
+    margin-top: 1px;
+}
+.adm_ext_subtab div.top span {
+    padding-left:5px;
+    padding-right:5px;
+}
+
 
 span.adm_ext_accordeon_triangle {
     padding: 5px;

@@ -1,5 +1,4 @@
 <?php
-// require WEBROOT . 'libraries/Kimai/Database/kimai.php';
 
 /**
  * Ultimate MySQL Wrapper Class
@@ -34,7 +33,7 @@ class MySQL
 /*  Determines if an error throws an exception
     @var boolean Set to true to throw error exceptions */
     public $ThrowExceptions = false; //    was protected $kga;
-    private $db_host = 'localhost';
+    private $db_host = '127.0.0.1';
     private $db_user = '';
     private $db_pass = '';
     private $db_name = '';
@@ -193,7 +192,7 @@ class MySQL
     {
         $this->resetError();
         if ($this->isConnected()) {
-            if ($this->rowCount() === 0 || $this->active_row >= ($this->rowCount())) {
+            if ($this->num_rows === 0 || $this->active_row >= ($this->num_rows)) {
                 return true;
             }
             else {
@@ -432,7 +431,7 @@ class MySQL
      * @return array A multi-dimensional array containing all the data
      *               returned from the query or FALSE on all errors
      */
-    protected function queryArray($sql, $resultType = MYSQLI_BOTH)
+    public function queryArray($sql, $resultType = MYSQLI_BOTH)
 
     {
         $result = $this->query($sql);
@@ -504,7 +503,7 @@ class MySQL
             return false;
         }
         elseif ($optional_row_number === null) {
-            if (($this->active_row) > $this->rowCount()) {
+            if (($this->active_row) > $this->num_rows) {
                 $this->setError('Cannot read past the end of the records', -1);
 
                 return false;
@@ -514,7 +513,7 @@ class MySQL
             }
         }
         else {
-            if ($optional_row_number >= $this->rowCount()) {
+            if ($optional_row_number >= $this->num_rows) {
                 $this->setError('Row number is greater than the total number of rows', -1);
 
                 return false;
@@ -554,7 +553,7 @@ class MySQL
             return false;
         }
         elseif ($optional_row_number === null) {
-            if (($this->active_row) > $this->rowCount()) {
+            if (($this->active_row) > $this->num_rows) {
                 $this->setError('Cannot read past the end of the records', -1);
 
                 return false;
@@ -564,7 +563,7 @@ class MySQL
             }
         }
         else {
-            if ($optional_row_number >= $this->rowCount()) {
+            if ($optional_row_number >= $this->num_rows) {
                 $this->setError('Row number is greater than the total number of rows', -1);
 
                 return false;
@@ -583,16 +582,6 @@ class MySQL
         else {
             return $row;
         }
-    }
-
-    /**
-     * Returns the last query row count
-     *
-     * @return integer Row count or FALSE on error
-     */
-    public function rowCount()
-    {
-        return $this->num_rows;
     }
 
     /**
@@ -692,7 +681,7 @@ class MySQL
     private function seek($row_number)
     {
         $this->resetError();
-        $row_count = $this->rowCount();
+        $row_count = $this->num_rows;
         if (!$row_count) {
             return false;
         }
@@ -755,7 +744,7 @@ class MySQL
             $sql = self::buildSqlSelect($tableName, $whereArray,
                                         $columns, $sortColumns, $sortAscending, $limit);
 
-            return $this->query($sql);
+            return $this->query($sql); // false=error, query_result=no-error
         }
     }
 

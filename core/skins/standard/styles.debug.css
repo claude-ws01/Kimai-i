@@ -35,7 +35,7 @@ a img {
 }
 
 body {
-    font-size: .8em;
+    font-size: 12px;
     font-family: verdana, 'MS Trebuchet', sans-serif;
     background-color: #444;
     margin: 0;
@@ -273,7 +273,10 @@ table#menu_btns td#last {
     font-size: 12px;}
 
 .menu li:not(.ui-state-active) a.tabError span.bb {
-    color: #AF0000 !important;
+    background: url('') #f00;
+}
+.menu li:not(.ui-state-active) a.tabError span.bb:hover {
+    color:yellow;
 }
 
 .menu li span.aa {
@@ -297,7 +300,7 @@ table#menu_btns td#last {
 }
 
 .menu li {
-    font-size: .9em;
+    font-size: 11px;
     font-weight: bold;
 }
 
@@ -476,6 +479,8 @@ table#menu_btns td#last {
 
 #sw_ticker ul {
     list-style-type: none;
+    margin:0;
+    padding:0;
 }
 
 #sw_ticker ul li {
@@ -565,11 +570,11 @@ fieldset#money input {
 }
 
 fieldset#activitiestab label {
-    /*color: #ACDD64;*/
     float: right;
     text-align: right;
     margin: 0 10px 0 0;
     width: 70px;
+    background-color: rgba(0, 0, 0, 0.21);
 }
 
 fieldset#activitiestab input {
@@ -577,6 +582,7 @@ fieldset#activitiestab input {
     text-align: right;
     margin: 0 10px;
     width: 60px;
+    padding-right: 5px;
 }
 
 #floater_innerwrap fieldset ul {
@@ -666,9 +672,8 @@ fieldset#activitiestab input {
 #floater_handle {
     background: url('../../skins/standard/grfx/g3_table_header.png');
     border-bottom: 1px solid #555;
-    padding: 2px 2px 2px 10px;
-    font-weight: bold;
-    line-height: 18px;
+    padding: 2px 2px 0 10px;
+    line-height: 20px;
     color: #FFFFFF;
     height: 20px;
 }

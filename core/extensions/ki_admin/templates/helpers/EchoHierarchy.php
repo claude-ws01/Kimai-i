@@ -34,76 +34,116 @@ class Zend_View_Helper_EchoHierarchy extends Zend_View_Helper_Abstract
      * @param array   $parentKeys   all keys of the parents, the closest one at the end
      * @param integer $level        the level in the hierarchy
      */
-    public function echoHierarchy($kga, $keyHierarchy, $parentKeys = array(), $level = 0)
+    public function echoHierarchy($keyHierarchy, array $parentKeys = array(), $level = 0)
     {
+        global $kga;
+
         $originalLevel     = $level;
         $noLegendOnLevel[] = 0;
 
+
         // If the hierarchy only contains one key that key is "jumped" to simplify the displayed hierarchy.
-        $jumpedKeys = array();
         while ($this->isJumpable($keyHierarchy)) {
             $keys         = array_keys($keyHierarchy);
-            $jumpedKeys[] = $keys[0];
             $parentKeys[] = $keys[0];
             $level++;
             $keyHierarchy = $keyHierarchy[$keys[0]];
         }
 
+
+        // fieldset name (customer, project, activity...)
+        $fieldset_id = null;
         if ($level > 0) {
-            if ($originalLevel == 1) {
-                $id = $parentKeys[$originalLevel - 1];
-                echo "<fieldset id=\"${id}\" class=\"hierarchyLevel${level}\">";
+
+            // find if were in last level. Set as level 9 for css.
+            $cssLevel = null;
+            reset($keyHierarchy);
+            if (is_array(current($keyHierarchy)) || count($keyHierarchy) === 1) {
+                $cssLevel = $level;
             }
             else {
-                echo "<fieldset class=\"hierarchyLevel${level}\">";
+                foreach ($keyHierarchy as $val) {
+                    if (is_array($val)) {
+                        $cssLevel = $level;
+                    }
+                }
             }
+            $cssLevel = $cssLevel ?: 9;
+
+            $fieldset_id = implode('__', $parentKeys);
+            echo "<fieldset id=\"{$fieldset_id}\" class=\"hierarchyLevel{$cssLevel}\">";
+
 
             $names = array();
-            for ($i = max(0, $originalLevel - 1); $i < count($parentKeys); $i++) {
-                if (array_search($i, $noLegendOnLevel) !== false) {
+            for ($i = max(0, $originalLevel - 1), $n = count($parentKeys); $i < $n; $i++) {
+                if (in_array($i, $noLegendOnLevel, false) !== false) {
                     continue;
                 }
 
                 $name = $parentKeys[$i];
-                if (isset($GLOBALS['kga']['dict']['permissions'][$name])) {
-                    $name = $GLOBALS['kga']['dict']['permissions'][$name];
+                if (isset($kga['dict']['permissions'][$name])) {
+                    $name = $kga['dict']['permissions'][$name];
                 }
-                if (isset($GLOBALS['kga']['dict'][$name])) {
-                    $name = $GLOBALS['kga']['dict'][$name];
+                if (isset($kga['dict'][$name])) {
+                    $name = $kga['dict'][$name];
                 }
                 $names[] = $name;
             }
 
-            echo "<legend> " . implode(', ', $names) . " </legend>";
+            echo '<legend> ' . implode(', ', $names) . ' </legend>';
+
         }
 
+        $nb_keys    = 0;
+        $nb_checked = 0;
+
+        // each permission in 1 fieldset (add, edit, delete...)
         foreach ($keyHierarchy as $key => $subKeys) {
             if (is_array($subKeys)) {
                 continue;
             }
 
-            if (empty($parentKeys)) {
-                $permissionKey = $key;
-            }
-            else {
-                $permissionKey = implode('__', $parentKeys) . '__' . $key;
-            }
-            $name = $key;
+            $permissionKey = empty($parentKeys) ? $key : implode('__', $parentKeys) . '__' . $key;
 
-            if (isset($GLOBALS['kga']['dict']['permissions'][$name])) {
-                $name = $GLOBALS['kga']['dict']['permissions'][$name];
+            $name = $key;
+            if (isset($kga['dict']['permissions'][$name])) {
+                $name = $kga['dict']['permissions'][$name];
             }
-            if (isset($GLOBALS['kga']['dict'][$name])) {
-                $name = $GLOBALS['kga']['dict'][$name];
+            elseif (isset($kga['dict'][$name])) {
+                $name = $kga['dict'][$name];
             }
 
             $checkedAttribute = '';
-            if ($subKeys == 1) {
+            if ((int)$subKeys === 1) {
+                $checkedAttribute = 'checked = "checked"';
+                $nb_checked++;
+            }
+
+            //CN..a little help to developpers!
+            if (IN_DEV) {
+                echo "<span class=\"permission\"><input type=\"checkbox\" value=\"1\" name=\"{$permissionKey}\"
+                    title=\"{$permissionKey}\" {$checkedAttribute}/>{$name}</span>";
+            }
+            else {
+                echo "<span class=\"permission\"><input type=\"checkbox\" value=\"1\" name=\"{$permissionKey}\" {$checkedAttribute}/>{$name}</span>";
+            }
+            $nb_keys++;
+        }
+
+
+        // 'all' make all ON or OFF
+        if ($level > 0 && ($nb_keys > 1 || ($nb_keys === 0 && count($keyHierarchy) > 1))) {
+
+            $checkedAttribute = '';
+            if ($nb_keys > 1 && $nb_keys === $nb_checked) {
                 $checkedAttribute = 'checked = "checked"';
             }
 
-            echo '<span class="permission"><input type="checkbox" value="1" name="' . $permissionKey . '" ' . $checkedAttribute . ' />' . $name . '</span>';
+            $name          = 'all';
+
+            echo "<span class=\"permission_all\"><input onchange=\"adm_ext_permissionChangeAll(this)\" type=\"checkbox\" value=\"1\" name=\"{$fieldset_id}\" {$checkedAttribute}/>{$name}</span>";
         }
+
 
         foreach ($keyHierarchy as $key => $subKeys) {
             if (!is_array($subKeys)) {
@@ -113,11 +153,11 @@ class Zend_View_Helper_EchoHierarchy extends Zend_View_Helper_Abstract
             $newParentKeys   = $parentKeys;
             $newParentKeys[] = $key;
 
-            $this->echoHierarchy($kga, $subKeys, $newParentKeys, $level + 1);
+            $this->echoHierarchy($subKeys, $newParentKeys, $level + 1);
         }
 
         if ($level > 0) {
-            echo "</fieldset>";
+            echo '</fieldset>';
         }
     }
 
@@ -132,11 +172,11 @@ class Zend_View_Helper_EchoHierarchy extends Zend_View_Helper_Abstract
      *
      * @param array $keyHierarchy the hierarchy of keys, see parseHierarchy
      *
-     * @return true if this level can be jumped, false otherwise
+     * @return boolean true if this level can be jumped, false otherwise
      */
     private function isJumpable($keyHierarchy)
     {
-        if (count($keyHierarchy) != 1) {
+        if (count($keyHierarchy) !== 1) {
             return false;
         }
 

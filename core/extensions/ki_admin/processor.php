@@ -24,7 +24,10 @@
 $isCoreProcessor = 0;
 $dir_templates   = 'templates/';
 global $database, $kga, $view;
+
+global $axAction, $axValue, $id, $timeframe, $in, $out;
 require('../../includes/kspi.php');
+require 'functions.php';
 
 
 switch ($axAction) {
@@ -37,16 +40,86 @@ switch ($axAction) {
                      $kga['dict']['banneduser'], $kga['dict']['banneduser']);
         break;
 
+    case 'createProject' :
+        $projectData['name']        = $kga['dict']['new_project'];
+        $projectData['comment']     = '';
+        $projectData['budget']      = '0';
+        $projectData['effort']      = '0';
+        $projectData['approved']    = '0';
+        $projectData['customer_id'] = trim($axValue);
+        $projectData['visible']     = '1';
+        $projectData['internal']    = '0';
+        $projectData['filter']      = '0';
+
+        $groupsWithAddPermission = array();
+        foreach ($kga['who']['groups'] as $group) {
+            $membershipRoleID = $database->user_get_mRole_id($kga['who']['id'], $group);
+            if ($database->mRole_allows($membershipRoleID, 'core__project__add')) {
+                $groupsWithAddPermission[$group] = $membershipRoleID;
+                break;
+            }
+        }
+
+        // validate data
+        $errors = array();
+
+        if (count($groupsWithAddPermission) === 0) {
+            $errors[] = $kga['dict']['errorMessages']['permissionDenied'];
+        }
+
+        // PROCESS //
+        if (empty($errors)
+            && !$database->transactionBegin()
+        ) {
+            $errorMessages[''] = $kga['dict']['errorMessages']['internalError'];
+        }
+
+        $project_id = false;
+        if (empty($errors)
+            && ($project_id = $database->project_create($projectData)) === false
+        ) {
+            $errorMessages[''] = $kga['dict']['errorMessages']['internalError'];
+            $project_id        = false;
+        }
+
+        // assign ALL possible groups, for user & customer.
+        $cust_grps = $database->customer_get_group_ids($projectData['customer_id']);
+        $user_grps = $database->user_object_actions__allowed_groups('project', 'add');
+        $ok_grps   = array_intersect($cust_grps, $user_grps);
+
+        if (empty($errors)
+            && !$database->assign_projectToGroups($project_id, $ok_grps)
+        ) {
+            $errorMessages[''] = $kga['dict']['errorMessages']['internalError'];
+        }
+
+        if (empty($errors) && !$database->transactionEnd()) {
+            $errorMessages[''] = $kga['dict']['errorMessages']['internalError'];
+        }
+
+
+        if (!empty($errors)) {
+            $database->transactionRollback();
+        }
+
+        // REPLY //
+        header('Content-Type: application/json;charset=utf-8');
+        echo json_encode(array(
+                             'errors'     => $errors,
+                             'project_id' => $project_id));
+
+        break;
+
     case 'createUser' :
         // create new user account
         $userData['name']           = trim($axValue);
-        $userData['global_role_id'] = any_get_global_role_id();
+        $userData['global_role_id'] = $kga['who']['global_role_id'];
         $userData['active']         = 1;
 
         $groupsWithAddPermission = array();
-        foreach ($kga['user']['groups'] as $group) {
-            $membershipRoleID = $database->user_get_membership_role($kga['user']['user_id'], $group);
-            if ($database->membership_role_allows($membershipRoleID, 'core__user__add')) {
+        foreach ($kga['who']['groups'] as $group) {
+            $membershipRoleID = $database->user_get_mRole_id($kga['who']['id'], $group);
+            if ($database->mRole_allows($membershipRoleID, 'core__user__add')) {
                 $groupsWithAddPermission[$group] = $membershipRoleID;
                 break;
             }
@@ -81,7 +154,7 @@ switch ($axAction) {
         // validate data
         $errors = array();
 
-        if (array_key_exists('customer', $kga) || !$database->global_role_allows(any_get_global_role_id(), 'core__status__add')) {
+        if (is_customer() || !$database->gRole_allows($kga['who']['global_role_id'], 'core__status__add')) {
             $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
@@ -100,7 +173,7 @@ switch ($axAction) {
         // validate data
         $errors = array();
 
-        if (array_key_exists('customer', $kga) || !$database->global_role_allows(any_get_global_role_id(), 'core__group__add')) {
+        if (is_customer() || !$database->gRole_allows($kga['who']['global_role_id'], 'core__group__add')) {
             $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
@@ -118,7 +191,7 @@ switch ($axAction) {
 
         $errors = array();
 
-        if (array_key_exists('customer', $kga)) {
+        if (is_customer()) {
             $errors[] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
@@ -143,7 +216,7 @@ switch ($axAction) {
 
         $errors = array();
 
-        if (array_key_exists('customer', $kga)) {
+        if (is_customer()) {
             $errors[] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
@@ -165,7 +238,7 @@ switch ($axAction) {
         $errors    = array();
         $oldGroups = $database->activity_get_groupIDs($id);
 
-        if (!checkGroupedObjectPermission('activity', 'delete', $oldGroups)) {
+        if (!$database->core_action_group_allowed('activity', 'delete', $oldGroups)) {
             $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
@@ -182,7 +255,7 @@ switch ($axAction) {
     case 'deleteGlobalRole':
         $errors = array();
 
-        if (array_key_exists('customer', $kga)) {
+        if (is_customer()) {
             $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
@@ -198,7 +271,7 @@ switch ($axAction) {
     case 'deleteMembershipRole':
         $errors = array();
 
-        if (array_key_exists('customer', $kga)) {
+        if (is_customer()) {
             $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
@@ -214,7 +287,7 @@ switch ($axAction) {
     case 'deleteGroup' :
         $errors = array();
 
-        if (!checkGroupedObjectPermission('group', 'delete', array($id))) {
+        if (!$database->core_action_group_allowed('group', 'delete', array($id))) {
             $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
@@ -232,7 +305,7 @@ switch ($axAction) {
         $errors    = array();
         $oldGroups = $database->project_get_groupIDs($id);
 
-        if (!checkGroupedObjectPermission('project', 'delete', $oldGroups)) {
+        if (!$database->core_action_group_allowed('project', 'delete', $oldGroups)) {
             $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
@@ -251,7 +324,7 @@ switch ($axAction) {
         $errors    = array();
         $oldGroups = $database->customer_get_group_ids($id);
 
-        if (!checkGroupedObjectPermission('project', 'delete', $oldGroups)) {
+        if (!$database->core_action_group_allowed('project', 'delete', $oldGroups)) {
             $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
@@ -269,7 +342,7 @@ switch ($axAction) {
         $oldGroups = $database->user_get_group_ids($id, false);
         $errors    = array();
 
-        if (!checkGroupedObjectPermission('user', 'delete', $oldGroups)) {
+        if (!$database->core_action_group_allowed('user', 'delete', $oldGroups)) {
             $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
@@ -293,7 +366,7 @@ switch ($axAction) {
 
     case 'deleteStatus' :
         $errors = array();
-        if (array_key_exists('customer', $kga) || !$database->global_role_allows(any_get_global_role_id(), 'core__status__delete')) {
+        if (is_customer() || !$database->gRole_allows($kga['who']['global_role_id'], 'core__status__delete')) {
             $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
@@ -327,7 +400,7 @@ switch ($axAction) {
 
         $errors = array();
 
-        if (array_key_exists('customer', $kga)) {
+        if (is_customer()) {
             $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
@@ -336,8 +409,7 @@ switch ($axAction) {
         }
 
         header('Content-Type: application/json;charset=utf-8');
-        echo json_encode(array(
-                             'errors' => $errors));
+        echo json_encode(array('errors' => $errors));
         break;
 
     case 'editMembershipRole':
@@ -361,7 +433,7 @@ switch ($axAction) {
 
         $errors = array();
 
-        if (array_key_exists('customer', $kga)) {
+        if (is_customer()) {
             $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
@@ -375,91 +447,50 @@ switch ($axAction) {
         break;
 
     case 'refreshSubtab' :
-        // builds either user/group/advanced/DB subtab
-        $view->curr_user        = $kga['user']['name'];
-        $groups                 = $database->get_groups(get_cookie('adm_ext_show_deleted_groups', 0));
-        $viewOtherGroupsAllowed = $database->global_role_allows(any_get_global_role_id(), 'core__group__other_group__view');
-        if ($viewOtherGroupsAllowed) {
-            $view->groups = $groups;
-        }
-        else {
-            $view->groups = array_filter($groups, function ($group) {
-                return in_array($group['group_id'], any_get_group_ids(), true) !== false;
-            });
-        }
-
-        if ($database->global_role_allows(any_get_global_role_id(), 'core__user__other_group__view')) {
-            $users = $database->get_users(get_cookie('adm_ext_show_deleted_users', 0));
-        }
-        else {
-            $users = $database->get_users(get_cookie('adm_ext_show_deleted_users', 0), any_get_group_ids());
-        }
-
-        // get group names for user list
-        foreach ($users as &$user) {
-            $user['groups'] = array();
-
-            $groups = $database->user_get_group_ids($user['user_id'], false);
-            if (is_array($groups)) {
-                foreach ($groups as $group) {
-                    if (!$viewOtherGroupsAllowed && in_array($group, any_get_group_ids(), true) === false) {
-                        continue;
-                    }
-                    $groupData        = $database->group_get_data($group);
-                    $user['groups'][] = $groupData['name'];
-                }
-            }
-        }
-        unset($user);
-
-        $arr_status              = $database->get_statuses();
-        $view->users             = $users;
-        $view->arr_status        = $arr_status;
-        $view->showDeletedGroups = get_cookie('adm_ext_show_deleted_groups', 0);
-        $view->showDeletedUsers  = get_cookie('adm_ext_show_deleted_users', 0);
 
         switch ($axValue) {
+            case 'customers' :
+                prep_customer_list_render();
+                echo $view->render('customers.php');
+                break;
+
+            case 'projects' :
+                prep_project_list_render();
+                echo $view->render('projects.php');
+                break;
+
+            case 'activities' :
+                prep_activity_list_render();
+                echo $view->render('activities.php');
+                break;
+
             case 'users' :
+                prep_user_list_render();
                 echo $view->render('users.php');
                 break;
 
             case 'groups' :
+                prep_group_list_render();
                 echo $view->render('groups.php');
                 break;
 
+            case 'globalRoles':
+                prep_global_list_render();
+                echo $view->render('globalRoles.php');
+                break;
+
+            case 'membershipRoles':
+                prep_membership_list_render();
+                echo $view->render('membershipRoles.php');
+                break;
+
             case 'status' :
+                prep_status_list_render();
                 echo $view->render('status.php');
                 break;
 
             case 'advanced' :
-                if ($kga['conf']['edit_limit'] !== '-') {
-                    $view->edit_limit_enabled = true;
-                    $editLimit                = $kga['conf']['edit_limit'] / (60 * 60); // convert to hours
-                    $view->edit_limit_days    = (int)($editLimit / 24);
-                    $view->edit_limit_hours   = (int)($editLimit % 24);
-                }
-                else {
-                    $view->edit_limit_enabled = false;
-                    $view->edit_limit_days    = '';
-                    $view->edit_limit_hours   = '';
-                }
-
-                $skins = array();
-                $langs = array();
-
-                $allSkins = glob(__DIR__ . '/../skins/*', GLOB_ONLYDIR);
-                foreach ($allSkins as $skin) {
-                    $name         = basename($skin);
-                    $skins[$name] = $name;
-                }
-
-                foreach (Translations::langs() as $lang) {
-                    $langs[$lang] = $lang;
-                }
-
-                $view->skins = $skins;
-                $view->langs = $langs;
-
+                prep_advanced_render();
                 echo $view->render('advanced.php');
                 break;
 
@@ -467,134 +498,9 @@ switch ($axAction) {
                 echo $view->render('database.php');
                 break;
 
-            case 'customers' :
-                $viewOtherGroupsAllowed = $database->global_role_allows(any_get_global_role_id(), 'core__group__other_group__view');
-                if ($database->global_role_allows(any_get_global_role_id(), 'core__customer__other_group__view')) {
-                    $customers = $database->get_customers();
-                }
-                else {
-                    $customers = $database->get_customers(any_get_group_ids());
-                }
-
-                foreach ($customers as $row => $data) {
-                    $groupNames = array();
-                    $groups     = $database->customer_get_group_ids($data['customer_id']);
-                    if (is_array($groups)) {
-                        foreach ($groups as $groupID) {
-                            if (!$viewOtherGroupsAllowed && array_search($groupID, any_get_group_ids()) === false) {
-                                continue;
-                            }
-                            $data         = $database->group_get_data($groupID);
-                            $groupNames[] = $data['name'];
-                        }
-                        $customers[$row]['groups'] = implode(', ', $groupNames);
-                    }
-                }
-                $view->customers = '0';
-                if (count($customers) > 0) {
-                    $view->customers = $customers;
-                }
-
-                echo $view->render('customers.php');
-                break;
-
-            case 'projects' :
-                $viewOtherGroupsAllowed = $database->global_role_allows(any_get_global_role_id(), 'core__group__other_group__view');
-                if ($database->global_role_allows(any_get_global_role_id(), 'core__project__other_group__view')) {
-                    $projects = $database->get_projects();
-                }
-                else {
-                    $projects = $database->get_projects(any_get_group_ids());
-                }
-
-                if (is_array($projects)) {
-                    foreach ($projects as $row => $project) {
-                        $groupNames = array();
-
-                        $groupIDs = $database->project_get_groupIDs($project['project_id']);
-                        if (is_array($groupIDs)) {
-                            foreach ($groupIDs as $groupID) {
-                                if (!$viewOtherGroupsAllowed && array_search($groupID, any_get_group_ids()) === false) {
-                                    continue;
-                                }
-                                $data         = $database->group_get_data($groupID);
-                                $groupNames[] = $data['name'];
-                            }
-                        }
-
-                        $projects[$row]['groups'] = implode(', ', $groupNames);
-                    }
-
-                    $view->projects = $projects;
-                }
-
-                echo $view->render('projects.php');
-                break;
-
-            case 'activities' :
-                $viewOtherGroupsAllowed = $database->global_role_allows(any_get_global_role_id(), 'core__group__other_group__view');
-                $groups                 = null;
-                if (!$database->global_role_allows(any_get_global_role_id(), 'core__activity__other_group__view')) {
-                    $groups = $kga['user']['groups'];
-                }
-
-                $activity_filter = isset($_REQUEST['activity_filter']) ? intval($_REQUEST['activity_filter']) : -2;
-
-                switch ($activity_filter) {
-                    case -2:
-                        // -2 is to get unassigned activities. As -2 is never
-                        // an id of a project this will give us all unassigned
-                        // activities.
-                        $activities = $database->get_activities_by_project(-2, $groups);
-                        break;
-                    case -1:
-                        $activities = $database->get_activities($groups);
-                        break;
-                    default:
-                        $activities = $database->get_activities_by_project($activity_filter, $groups);
-                }
-
-                foreach ($activities as $row => $activity) {
-                    $groupNames = array();
-
-                    $groupIDs = $database->activity_get_groups($activity['activity_id']);
-                    if (is_array($groupIDs)) {
-                        foreach ($groupIDs as $groupID) {
-                            if (!$viewOtherGroupsAllowed && array_search($groupID, any_get_group_ids()) === false) {
-                                continue;
-                            }
-                            $data         = $database->group_get_data($groupID);
-                            $groupNames[] = $data['name'];
-                        }
-                    }
-
-                    $activities[$row]['groups'] = implode(', ', $groupNames);
-                }
-
-                if (count($activities) > 0) {
-                    $view->activities = $activities;
-                }
-                else {
-                    $view->activities = '0';
-                }
-
-                $projects                       = $database->get_projects($groups);
-                $view->projects                 = $projects;
-                $view->selected_activity_filter = isset($_REQUEST['activity_filter']) ? $_REQUEST['activity_filter']
-                    : -2;
-                echo $view->render('activities.php');
-                break;
-
-            case 'globalRoles':
-                $view->globalRoles = $database->global_roles();
-                echo $view->render('globalRoles.php');
-                break;
-
-            case 'membershipRoles':
-                $view->membershipRoles = $database->membership_roles();
-                echo $view->render('membershipRoles.php');
-                break;
         }
+
+        prep__subtabs_render();
         break;
 
     case 'sendEditUser' :
@@ -615,6 +521,7 @@ switch ($axAction) {
         // validate data
         $errorMessages = array();
 
+        // no same name as customer.
         if ($database->customer_nameToID($userData['name']) !== false) {
             $errorMessages['name'] = $kga['dict']['errorMessages']['customerWithSameName'];
         }
@@ -623,14 +530,19 @@ switch ($axAction) {
         $membershipRoles = isset($_REQUEST['membershipRoles']) ? $_REQUEST['membershipRoles'] : array();
 
 
-        if (!checkGroupedObjectPermission('user', 'edit', $oldGroups, $assignedGroups)) {
+        if (!$database->core_action_group_allowed('user', 'edit', $oldGroups, $assignedGroups)) {
             $errorMessages[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
         if (count($errorMessages) === 0) {
-            $database->user_edit($id, $userData);
-            $groups = array_combine($assignedGroups, $membershipRoles);
-            $database->setGroupMemberships($id, $groups);
+            $ok = $database->user_edit($id, $userData);
+            if ($ok) {
+                $groups = array_combine($assignedGroups, $membershipRoles);
+                $ok     = $database->setGroupMemberships($id, $groups);
+            }
+            if (!$ok) {
+                $errorMessages[''] = 'DB transaction failure.';
+            }
         }
 
         header('Content-Type: application/json;charset=utf-8');
@@ -644,7 +556,7 @@ switch ($axAction) {
 
         $errors = array();
 
-        if (!checkGroupedObjectPermission('group', 'edit', array($id))) {
+        if (!$database->core_action_group_allowed('group', 'edit', array($id))) {
             $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
@@ -663,8 +575,8 @@ switch ($axAction) {
 
         $errors = array();
 
-        if (array_key_exists('customer', $kga)
-            || !$database->global_role_allows(any_get_global_role_id(), 'core__status__edit')
+        if (is_customer()
+            || !$database->gRole_allows($kga['who']['global_role_id'], 'core__status__edit')
         ) {
             $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
@@ -682,8 +594,8 @@ switch ($axAction) {
 
     case 'sendEditAdvanced' :
         $errors = array();
-        if (array_key_exists('customer', $kga)
-            || !$database->global_role_allows(any_get_global_role_id(), 'ki_admin__edit_advanced')
+        if (is_customer()
+            || !$database->gRole_allows($kga['who']['global_role_id'], 'ki_admin__edit_advanced')
         ) {
             $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }

@@ -362,7 +362,7 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
                 $database->setGroupMemberships((string)$userId, $this->getDefaultGroups());
 
                 // Set a password, to calm kimai down
-                $usr_data = array('password' => md5($kga['password_salt'] . md5(uniqid(mt_rand(), true)) . $kga['password_salt']));
+                $usr_data = array('password' => password_encrypt_random());
                 if ($emailAddress) {
                     $usr_data['mail'] = $emailAddress;
                 }
@@ -422,7 +422,7 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
             $roles[$role['name']] = $role['membership_role_id'];
         }
 
-        foreach ((array)$database->get_groups() as $group) {
+        foreach ((array)$database->groups_get() as $group) {
             $groups[$group['name']] = $group['group_id'];
         }
 

@@ -60,7 +60,7 @@ $out       = $timeframe[1];
 // = get time for the probably running stopwatch =
 // ===============================================
 $current_timer = array();
-if (array_key_exists('customer', $kga)) {
+if (is_customer()) {
     $current_timer['all']  = 0;
     $current_timer['hour'] = 0;
     $current_timer['min']  = 0;
@@ -80,8 +80,8 @@ if ($kga['calender_start'] !== '') {
     $dp_start = $kga['calender_start'];
 }
 else {
-    if (array_key_exists('user', $kga)) {
-        $dp_start = date('d/m/Y', $database->getjointime($kga['user']['user_id']));
+    if (is_user()) {
+        $dp_start = date('d/m/Y', $database->getjointime($kga['who']['id']));
     }
 }
 
@@ -91,11 +91,11 @@ $dp_today = date('d/m/Y', time());
 $view->dp_start = $dp_start;
 $view->dp_today = $dp_today;
 
-if (array_key_exists('customer', $kga)) {
-    $view->total = Format::formatDuration($database->get_duration($in, $out, null, array($kga['customer']['customer_id'])));
+if (is_customer()) {
+    $view->total = Format::formatDuration($database->get_duration($in, $out, null, array($kga['who']['id'])));
 }
 else {
-    $view->total = Format::formatDuration($database->get_duration($in, $out, $kga['user']['user_id']));
+    $view->total = Format::formatDuration($database->get_duration($in, $out, $kga['who']['id']));
 }
 
 // ===========================
@@ -135,8 +135,8 @@ $view->js_extension_files  = $extensions->jsExtensionFiles();
 
 $view->current_recording = -1;
 
-if (array_key_exists('user', $kga)) {
-    $currentRecordings = $database->get_current_recordings($kga['user']['user_id']);
+if (is_user()) {
+    $currentRecordings = $database->get_current_recordings($kga['who']['id']);
     if (count($currentRecordings) > 0) {
         $view->current_recording = $currentRecordings[0];
     }
@@ -148,7 +148,7 @@ $customerData = array('customer_id' => false, 'name' => '');
 $projectData  = array('project_id' => false, 'name' => '');
 $activityData = array('activity_id' => false, 'name' => '');
 
-if (array_key_exists('user', $kga)) {
+if (is_user()) {
     //$lastTimeSheetRecord = $database->timesheet_get_data(false);
     $lastProject  = $database->project_get_data($kga['user']['last_project']);
     $lastActivity = $database->activity_get_data($kga['user']['last_activity']);
@@ -174,81 +174,77 @@ foreach ($extensions->phpIncludeFiles() as $includeFile) {
 // =======================
 // = display user table =
 // =======================
-if (array_key_exists('customer', $kga)) {
-    $view->users = $database->get_customer_watchable_users($kga['customer']);
+if (is_customer()) {
+    $view->users = $database->customer_watchable_users($kga['customer']);
 }
 else {
-    $view->users = $database->get_user_watchable_users($kga['user']);
+    $view->users = $database->user_watchable_users($kga['user']);
 }
 $view->user_display = $view->render('filter/users.php');
 
 // ==========================
 // = display customer table =
 // ========================
-if (array_key_exists('customer', $kga)) {
+if (is_customer()) {
     $view->customers = array(array(
-        'customer_id' => $kga['customer']['customer_id'],
-        'name'        => $kga['customer']['name'],
+        'customer_id' => $kga['who']['id'],
+        'name'        => $kga['who']['name'],
         'visible'     => $kga['customer']['visible']));
 }
 elseif ($kga['is_user_root']) {
-    $view->customers = $database->get_customers();
+    $view->customers = $database->customers_get();
 }
 else {
-    $view->customers = $database->get_customers(any_get_group_ids());
+    $view->customers = $database->customers_get($kga['who']['groups']);
 }
 
-$view->show_customer_add_button  = array_key_exists('user', $kga) && coreObjectActionAllowed('customer', 'add');
-$view->show_customer_edit_button = array_key_exists('user', $kga) && coreObjectActionAllowed('customer', 'edit');
+$view->show_customer_add_button  = is_user() && $database->user_object_action__allowed('customer', 'add');
+$view->show_customer_edit_button = is_user() && $database->user_object_action__allowed('customer', 'edit');
 
 $view->customer_display = $view->render('filter/customers.php');
 
 // =========================
 // = display project table =
 // =========================
-if (array_key_exists('customer', $kga)) {
-    $view->projects = $database->get_projects_by_customer($kga['customer']['customer_id']);
+if (is_customer()) {
+    $view->projects = $database->get_projects_by_customer($kga['who']['id']);
 }
 elseif ($kga['is_user_root']) {
-    $view->projects = $database->get_projects(any_get_group_ids());
+    $view->projects = $database->get_projects($kga['who']['groups']);
 }
 else {
-    $view->projects = $database->get_projects(any_get_group_ids());
+    $view->projects = $database->get_projects($kga['who']['groups']);
 }
 
-$view->show_project_add_button  = array_key_exists('user', $kga) && coreObjectActionAllowed('project', 'add');
-$view->show_project_edit_button = array_key_exists('user', $kga) && coreObjectActionAllowed('project', 'edit');
+$view->show_project_add_button  = is_user() && $database->user_object_action__allowed('project', 'add');
+$view->show_project_edit_button = is_user() && $database->user_object_action__allowed('project', 'edit');
 
 $view->project_display = $view->render('filter/projects.php');
 
 // ========================
 // = display activity table =
 // ========================
-if (array_key_exists('customer', $kga)) {
-    $view->activities = $database->get_activities_by_customer($kga['customer']['customer_id']);
+if (is_customer()) {
+    $view->activities = $database->get_activities_by_customer($kga['who']['id']);
 }
 elseif ($kga['is_user_root']) {
     $view->activities = $database->get_activities();
 }
 elseif ($projectData['project_id']) {
-    $view->activities = $database->get_activities_by_project($projectData['project_id'], any_get_group_ids());
+    $view->activities = $database->get_activities_by_project($projectData['project_id'], $kga['who']['groups']);
 }
 else {
-    $view->activities = $database->get_activities(any_get_group_ids());
+    $view->activities = $database->get_activities($kga['who']['groups']);
 }
 
-$view->show_activity_add_button  = array_key_exists('user', $kga) && coreObjectActionAllowed('activity', 'add');
-$view->show_activity_edit_button = array_key_exists('user', $kga) && coreObjectActionAllowed('activity', 'edit');
+$view->show_activity_add_button  = is_user() && $database->user_object_action__allowed('activity', 'add');
+$view->show_activity_edit_button = is_user() && $database->user_object_action__allowed('activity', 'edit');
 
 $view->activity_display = $view->render('filter/activities.php');
 
-if (array_key_exists('user', $kga)&& !array_key_exists('customer', $kga)) {
-    if (!IN_DEV) {
+$view->showInstallWarning = false;
+if (!IN_DEV && is_user()) {
         $view->showInstallWarning = file_exists(WEBROOT . 'installer/');
-    }
-}
-else {
-    $view->showInstallWarning = false;
 }
 
 

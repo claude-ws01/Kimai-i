@@ -28,8 +28,7 @@ function select_css_file($file)
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="robots" content="noindex,nofollow"/>
 
-    <title><?php echo array_key_exists('user', $kga) ? $this->escape($kga['user']['name'])
-            : $this->escape($kga['customer']['name']) ?> - Kimai-i</title>
+    <title><?php echo $this->escape($kga['who']['name']) ?> - Kimai-i</title>
     <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
 
     <!-- Default Stylesheets -->
@@ -86,6 +85,7 @@ function select_css_file($file)
 
     <script type="text/javascript">
         var skin = "<?php echo $this->escape($kga['pref']['skin']); ?>";
+        var lang_checkCustomer = "<?php echo $this->escape($kga['dict']['checkCustomer']); ?>";
         var lang_checkUsername = "<?php echo $this->escape($kga['dict']['checkUsername']); ?>";
         var lang_checkGroupname = "<?php echo $this->escape($kga['dict']['checkGroupname']); ?>";
         var lang_checkStatusname = "<?php echo $this->escape($kga['dict']['checkStatusname']); ?>";
@@ -105,8 +105,8 @@ function select_css_file($file)
         var confirmText = undefined;
         <?php endif; ?>
 
-        <?php if (array_key_exists('user', $kga)): ?>
-        var user_id = <?php echo $kga['user']['user_id']; ?>;
+        <?php if (is_user()): ?>
+        var user_id = <?php echo $kga['who']['id']; ?>;
         <?php else: ?>
         var user_id = null;
         <?php endif; ?>
@@ -129,7 +129,7 @@ function select_css_file($file)
         // offset = Math.floor(((new Date()).getTime()) / 1000) - now;
         var offset = 0;
 
-        var default_title = "<?php echo array_key_exists('user', $kga) ? $this->escape($kga['user']['name']) : $this->escape($kga['customer']['name'])?> - Kimai";
+        var default_title = "<?php echo $this->escape($kga['who']['name'])?> - Kimai";
         var revision = <?php echo $kga['core.revision'] ?>;
         var timeframeDateFormat = "<?php echo $this->escape($kga['conf']['date_format_2']) ?>";
 
@@ -161,6 +161,8 @@ function select_css_file($file)
             ?>
         var demoNextReset = <?php echo $demo_next_reset ?>;
         var demoResetTime = <?php echo $demo_reset_time ?>;
+
+        var pwdMinLength = <?php echo $kga['pwdMinLength'] ?>;
 
         $.datepicker.setDefaults({
             showOtherMonths: true,
@@ -266,7 +268,7 @@ function select_css_file($file)
             menu_resize();
 
             // add user filter, to show that user IS filtered on page loading
-            lists_update_filter('user', <?php echo $kga['any']['id'] ?>);
+            lists_update_filter('user', <?php echo $kga['who']['id'] ?>);
 
             <?php if ($this->showInstallWarning): ?>
             floaterShow("floaters.php", "securityWarning", "installer", 0, 450);
@@ -318,8 +320,7 @@ function select_css_file($file)
                         </tr>
                     </table>
 
-                    <div id="logged_in_name"><?php echo array_key_exists('user', $kga)
-                            ? $this->escape($kga['user']['name']) : $this->escape($kga['customer']['name']) ?></div>
+                    <div id="logged_in_name"><?php echo $this->escape($kga['who']['name']) ?></div>
                 </div>
             </td>
             <td id="tt_display">
@@ -364,7 +365,7 @@ function select_css_file($file)
                     </div>
                 </div>
             </td>
-            <?php if (array_key_exists('user', $kga)) { ?>
+            <?php if (is_user()) { ?>
 
                 <td id="tt_selector">
                     <div id="preselector">

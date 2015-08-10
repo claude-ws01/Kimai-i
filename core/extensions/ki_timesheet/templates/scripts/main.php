@@ -7,7 +7,7 @@
 
 <div id="ts_head">
     <div class="left">
-        <?php if (array_key_exists('user', $kga)): ?>
+        <?php if (is_user()): ?>
             <a href="#"
                onClick="floaterShow('../extensions/ki_timesheet/floaters.php',
                'add_edit_timeSheetEntry',

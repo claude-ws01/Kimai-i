@@ -102,7 +102,7 @@ class Translations
         }
 
         // COOKIE //
-        if (!$selected && ($code2 = get_cookie('ki_language'))) {
+        if (!$selected && ($code2 = cookie_get('ki_language'))) {
             $code2 = basename($code2);
             if (self::languageExists($code2)) {
                 $selected = $code2;

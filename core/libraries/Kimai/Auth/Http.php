@@ -100,7 +100,7 @@ class Kimai_Auth_Http extends Kimai_Auth_Abstract
         $check_username = mysqli_real_escape_string($database->link, $check_username);
 
         $p      = $kga['server_prefix'];
-        $query  = "SELECT * FROM ${p}user WHERE name ='${check_username}';";
+        $query  = "SELECT * FROM {$p}user WHERE name ='${check_username}';";
         $result = mysqli_query($database->link, $query);
         // $result = mysqli_query($this->link, sprintf("SELECT * FROM %susers WHERE name ='%s';", $kga['server_prefix'], $check_username));
 
@@ -125,7 +125,7 @@ class Kimai_Auth_Http extends Kimai_Auth_Abstract
             $database->setGroupMemberships($userId, array($this->getDefaultGroups()));
 
             // Set a random password, unknown to the user. Autologin must be used until user sets own password
-            $userData = array('password' => md5($kga['password_salt'] . md5(uniqid(mt_rand(), true)) . $kga['password_salt']));
+            $userData = array('password' => password_encrypt_random());
             $database->user_edit($userId, $userData);
 
             return true;
@@ -142,7 +142,7 @@ class Kimai_Auth_Http extends Kimai_Auth_Abstract
         $username  = mysqli_real_escape_string($database->link, $username);
 
         $p      = $kga['server_prefix'];
-        $query  = "SELECT * FROM ${p}user WHERE name ='${username}';";
+        $query  = "SELECT * FROM {$p}user WHERE name ='${username}';";
         $result = mysqli_query($database->link, $query);
         //$result = mysqli_query($this->link, sprintf("SELECT * FROM %susers WHERE name ='%s';", $kga['server_prefix'], $username));
 

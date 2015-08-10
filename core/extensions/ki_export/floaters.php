@@ -21,8 +21,10 @@
 // insert KSPI
 $isCoreProcessor = 0;
 $dir_templates = "templates";
-require("../../includes/kspi.php");
 global $database, $kga, $view;
+
+global $axAction, $axValue, $id, $timeframe, $in, $out;
+require("../../includes/kspi.php");
 switch ($axAction) {
 
     case "PDF":

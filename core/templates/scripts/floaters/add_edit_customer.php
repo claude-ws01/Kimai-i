@@ -54,7 +54,7 @@
                 echo $kga['dict']['edit'], ' ', $this->name;
             }
             else {
-                echo $kga['dict']['new_customer'];
+                echo $kga['dict']['add_customer'];
             } ?>
         </span>
 
@@ -95,8 +95,7 @@
     </div>
     <form id="add_edit_customer" action="processor.php" method="post">
         <input name="customerFilter" type="hidden" value="0"/>
-        <input name="axAction" type="hidden" value="add_edit_CustomerProjectActivity"/>
-        <input name="axValue" type="hidden" value="customer"/>
+        <input name="axAction" type="hidden" value="add_edit_customer"/>
         <input name="id" type="hidden" value="<?php echo $this->id ?>"/>
 
         <div id="floater_tabs" class="floater_content">

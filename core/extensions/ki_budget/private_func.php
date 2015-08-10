@@ -216,10 +216,10 @@ function budget_plot_data($projects, $projectsFilter, $activitiesFilter, &$expen
 
         //cleanup: don't show charts without any data
         foreach ($wages[$projectId] as $activityId => $entry) {
-            if ($activityId == 0) {
+            if ((int)$activityId === 0) {
                 continue;
             }
-            if (!isset($entry['total']) || is_null($entry['total'])) {
+            if (!isset($entry['total']) || $entry['total'] === null) {
                 unset($wages[$projectId][$activityId]);
             }
         }

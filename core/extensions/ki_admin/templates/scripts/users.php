@@ -1,27 +1,25 @@
 <?php global $kga; ?>
-<form>
-    <input type="text" id="newuser" class="formfield" placeholder="<?php echo $kga['dict']['user_name_add'] ?>"/>
-    <input class='btn_ok'
-           type="submit"
-           value="<?php echo $kga['dict']['adduser'] ?>"
-           onclick="adm_ext_newUser(); return false;">
-    <?php if ($this->showDeletedUsers): ?>
+<div class="top">
+    <form>
+        <input type="text" id="newuser" class="formfield" placeholder="<?php echo $kga['dict']['user_name_add'] ?>"/>
         <input class='btn_ok'
-               type="button"
-               value="<?php echo $kga['dict']['hidedeletedusers'] ?>"
-               onclick="adm_ext_hideDeletedUsers(); return false;">
-    <?php else: ?>
-        <input class='btn_ok'
-               type="button"
-               value="<?php echo $kga['dict']['showdeletedusers'] ?>"
-               onclick="adm_ext_showDeletedUsers(); return false;">
-    <?php endif; ?>
-</form>
-
-<br/>
-
+               type="submit"
+               value="<?php echo $kga['dict']['adduser'] ?>"
+               onclick="adm_ext_newUser(); return false;">
+        <?php if ($this->showDeletedUsers): ?>
+            <input class='btn_ok'
+                   type="button"
+                   value="<?php echo $kga['dict']['hidedeletedusers'] ?>"
+                   onclick="adm_ext_hideDeletedUsers(); return false;">
+        <?php else: ?>
+            <input class='btn_ok'
+                   type="button"
+                   value="<?php echo $kga['dict']['showdeletedusers'] ?>"
+                   onclick="adm_ext_showDeletedUsers(); return false;">
+        <?php endif; ?>
+    </form>
+</div>
 <table>
-
     <thead>
     <tr>
         <th><?php echo $kga['dict']['options'] ?></th>
@@ -57,9 +55,7 @@
                              height="13"
                              alt="<?php echo $kga['dict']['editUser'] ?>"
                              border="0"></a>
-
                     &nbsp;
-
                     <?php if ($userarray['mail']): ?>
                         <a href="mailto:<?php echo $this->escape($userarray['mail']); ?>"><img
                                 src="../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/button_mail.gif"
@@ -76,9 +72,7 @@
                              alt="<?php echo $kga['dict']['mailUser'] ?>"
                              border="0">
                     <?php endif; ?>
-
                     &nbsp;
-
                     <?php if ($this->curr_user !== $userarray['name']) { ?>
                         <a href="#"
                            id="deleteUser<?php echo $userarray['user_id'] ?>"

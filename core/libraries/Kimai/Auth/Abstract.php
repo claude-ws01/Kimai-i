@@ -128,7 +128,7 @@ abstract class Kimai_Auth_Abstract
     public function getDefaultGroups()
     {
         $database = $this->getDatabase();
-        $groups   = $database->get_groups();
+        $groups   = $database->groups_get();
 
         $group = 0;
         if (count($groups) > 1) {

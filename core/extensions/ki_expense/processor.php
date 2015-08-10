@@ -24,72 +24,10 @@ $dir_templates   = 'templates/';
 
 global $database, $kga, $view;
 
+
+global $axAction, $axValue, $id, $timeframe, $in, $out;
 require('../../includes/kspi.php');
 include('private_db_layer_mysql.php');
-
-
-function expenseAccessAllowed($entry, $action, &$errors)
-{   // SECURITY //
-    global $database, $kga;
-
-    if (!array_key_exists('user', $kga)) {
-        $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
-
-        return false;
-    }
-
-    if ($kga['is_user_root']) {return true;}
-
-
-    // check if expense is too far in the past to allow editing (or deleting)
-    if (isset($entry['id']) && $kga['conf']['edit_limit'] != '-' && time() - $entry['timestamp'] > $kga['conf']['edit_limit']) {
-        $errors[''] = $kga['dict']['editLimitError'];
-    }
-
-
-    if ($entry['user_id'] == $kga['user']['user_id']) {
-        $permissionName = "ki_expense__own_entry__${action}";
-        if ($database->global_role_allows(any_get_global_role_id(), $permissionName)) {
-            return true;
-        }
-        else {
-            Logger::logfile("missing global permission $permissionName for user " . $kga['user']['name'] . ' to access expense');
-            $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
-
-            return false;
-        }
-    }
-
-    $groups = $database->user_get_group_ids($entry['user_id'], false);
-    //CN..original $assignedOwnGroups = array_intersect($groups, $database->user_get_group_ids($kga['user']['user_id']));
-    $assignedOwnGroups = array_intersect($groups, $kga['user']['groups']);
-
-    if (count($assignedOwnGroups) > 0) {
-        $permissionName = "ki_expense__other_entry__own_group__${action}";
-        if ($database->checkMembershipPermission($kga['user']['user_id'], $assignedOwnGroups, $permissionName)) {
-            return true;
-        }
-        else {
-            Logger::logfile("missing membership permission $permissionName of own group(s) " . implode(', ', $assignedOwnGroups) . ' for user ' . $kga['user']['name']);
-            $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
-
-            return false;
-        }
-
-    }
-
-    $permissionName = "ki_expense__other_entry__other_group__${action}";
-    if ($database->global_role_allows(any_get_global_role_id(), $permissionName)) {
-        return true;
-    }
-    else {
-        Logger::logfile("missing global permission $permissionName for user " . $kga['user']['name'] . ' to access expense');
-        $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
-
-        return false;
-    }
-
-}
 
 
 switch ($axAction) {
@@ -108,25 +46,24 @@ switch ($axAction) {
 
         $filterCustomers = array_map(function ($customer) {
             return $customer['customer_id'];
-        }, $database->get_customers(any_get_group_ids()));
+        }, $database->customers_get($kga['who']['groups']));
         if ($filters[1] !== '') {
             $filterCustomers = array_intersect($filterCustomers, explode(':', $filters[1]));
         }
 
         $filterProjects = array_map(function ($project) {
             return $project['project_id'];
-        }, $database->get_projects(any_get_group_ids()));
+        }, $database->get_projects($kga['who']['groups']));
         if ($filters[2] !== '') {
             $filterProjects = array_intersect($filterProjects, explode(':', $filters[2]));
         }
 
         // if no userfilter is set, set it to current user
-        if (array_key_exists('user', $kga) && count($filterUsers) === 0) {
-            $filterUsers[] = $kga['user']['user_id'];
+        if (is_customer()) {
+            $filterCustomers = array($kga['who']['id']);
         }
-
-        if (array_key_exists('customer', $kga)) {
-            $filterCustomers = array($kga['customer']['customer_id']);
+        elseif (count($filterUsers) === 0) {
+            $filterUsers[] = $kga['who']['id'];
         }
 
         $view->expenses = get_expenses($in, $out, $filterUsers, $filterCustomers, $filterProjects, 1);
@@ -151,8 +88,8 @@ switch ($axAction) {
         $view->activity_annotations = array();
 
         $view->hideComments = true;
-        if (array_key_exists('user', $kga)) {
-            $view->hideComments = $kga['pref']['show_comments_by_default'] != 1;
+        if (is_user()) {
+            $view->hideComments = (int)$kga['pref']['show_comments_by_default'] !== 1;
         }
 
         echo $view->render('expenses.php');
@@ -166,7 +103,7 @@ switch ($axAction) {
 
         $data = expense_get($id);
 
-        expenseAccessAllowed($data, 'delete', $errors);
+        $database->xpe_access_allowed($data, 'delete', $errors);
 
         if (count($errors) === 0) {
             expense_delete($id);
@@ -197,7 +134,7 @@ switch ($axAction) {
             $data = expense_get($id);
 
             // check if editing or deleting with the old values would be allowed
-            if (!expenseAccessAllowed($data, $action, $errors)) {
+            if (!$database->xpe_access_allowed($data, $action, $errors)) {
                 echo json_encode(array('errors' => $errors));
                 break;
             }
@@ -211,14 +148,14 @@ switch ($axAction) {
         }
 
         // get new data
-        $data['project_id']   = array_key_exists('project_id',$_REQUEST) ? $_REQUEST['project_id'] : '';
-        $data['description'] = $_REQUEST['description'];
-        $data['comment']     = $_REQUEST['comment'];
+        $data['project_id']   = array_key_exists('project_id', $_REQUEST) ? $_REQUEST['project_id'] : '';
+        $data['description']  = $_REQUEST['description'];
+        $data['comment']      = $_REQUEST['comment'];
         $data['comment_type'] = $_REQUEST['comment_type'];
-        $data['refundable']  = getRequestBool('refundable');
-        $data['multiplier']  = getRequestDecimal($_REQUEST['multiplier']);
-        $data['value']       = getRequestDecimal($_REQUEST['edit_value']);
-        $data['user_id']      = $kga['user']['user_id'];
+        $data['refundable']   = getRequestBool('refundable');
+        $data['multiplier']   = getRequestDecimal($_REQUEST['multiplier']);
+        $data['value']        = getRequestDecimal($_REQUEST['edit_value']);
+        $data['user_id']      = $kga['who']['id'];
 
         // parse new day and time
         $edit_day  = Format::expand_date_shortcut($_REQUEST['edit_day']);
@@ -243,7 +180,7 @@ switch ($axAction) {
             $errors['multiplier'] = $kga['dict']['errorMessages']['multiplierNegative'];
         }
 
-        expenseAccessAllowed($data, $action, $errors);
+        $database->xpe_access_allowed($data, $action, $errors);
 
         if (count($errors) > 0) {
             echo json_encode(array('errors' => $errors));
@@ -254,7 +191,7 @@ switch ($axAction) {
             expense_edit($id, $data);
         }
         else {
-            expense_create($kga['user']['user_id'], $data);
+            expense_create($kga['who']['id'], $data);
         }
 
 

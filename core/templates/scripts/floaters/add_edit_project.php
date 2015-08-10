@@ -1,4 +1,8 @@
-<?php global $kga ?>
+<?php
+/** @var $this Zend_View_Helper_FormSelect */
+/** @var $this Zend_View_Helper_FormText */
+global $kga
+?>
 <script type="text/javascript">
 
     $(document).ready(function () {
@@ -94,39 +98,40 @@
         for (i = 0, len = optionsToRemove.length; i < len; i++) {
             $('.activities option[value="' + optionsToRemove[i] + '"]').not(':selected').remove();
         }
+
         var previousValue;
         var previousText;
         $('.activities').on('focus', function () {
-
             previousValue = this.value;
             previousText = $(this).children('[value="' + previousValue + '"]').text();
+        }).on('change'
+            , function () {
 
-        }).on('change', function () {
+                if (previousValue != '') {
+                    // the value we "deselected" has to be added to all other dropdowns to select it again
+                    $('.activities').each(function (index) {
+                        if ($(this).children('[value="' + previousValue + '"]').length == 0) {
+                            $(this).append('<option label="' + previousText + '" value="' + previousValue + '">' + previousText + '</option>');
+                        }
+                    });
+                }
 
-            if (previousValue != '') {
 
-                // the value we "deselected" has to be added to all other dropdowns to select it again
-                $('.activities').each(function (index) {
-                    if ($(this).children('[value="' + previousValue + '"]').length == 0) {
-                        $(this).append('<option label="' + previousText + '" value="' + previousValue + '">' + previousText + '</option>');
-                    }
-                });
+                // add a new one if the value is in the last field, the value is not empty and there are more options to choose from
+                if ($(this).val() != '' && $(this).closest('tr').next().length <= 0 && $(this).children().length > 2) {
+
+                    var label = $(this).val();
+                    $(this).children('[value=""]').remove();
+                    var tr = $(this).closest('tr');
+                    var newSelect = tr.clone();
+                    newSelect.find('select').prepend('<option value=""></option>');
+                    newSelect.find('select').val('');
+                    newSelect.find('option[value="' + label + '"]').remove();
+                    tr.after(newSelect);
+                }
+                return true;
             }
-
-            // add a new one if the value is in the last field, the value is not empty and there are more options to choose from
-            if ($(this).val() != '' && $(this).closest('tr').next().length <= 0 && $(this).children().length > 2) {
-
-                var label = $(this).val();
-                $(this).children('[value=""]').remove();
-                var tr = $(this).closest('tr');
-                var newSelect = tr.clone();
-                newSelect.find('select').prepend('<option value=""></option>');
-                newSelect.find('select').val('');
-                newSelect.find('option[value="' + label + '"]').remove();
-                tr.after(newSelect);
-            }
-            return true;
-        });
+        );
     });
 </script>
 
@@ -138,7 +143,7 @@
                 echo $kga['dict']['edit'], ' ', $this->name;
             }
             else {
-                echo $kga['dict']['new_project'];
+                echo $kga['dict']['add_project'];
             }
             ?>
         </span>
@@ -174,9 +179,9 @@
 
     <form id="addProject" action="processor.php" method="post">
         <input name="project_filter" type="hidden" value="0"/>
-        <input name="axAction" type="hidden" value="add_edit_CustomerProjectActivity"/>
-        <input name="axValue" type="hidden" value="project"/>
+        <input name="axAction" type="hidden" value="add_edit_project"/>
         <input name="id" type="hidden" value="<?php echo $this->id ?>"/>
+        <input name="customer_id" type="hidden" value="<?php echo $this->customer_id; ?>"/>
 
         <div id="floater_tabs" class="floater_content">
 
@@ -187,8 +192,8 @@
                     <li><label for="name"><?php echo $kga['dict']['project'] ?>:</label><?php
                         echo $this->formText('name', $this->name, array('style' => 'width:250px;',)); ?> </li>
 
-                    <li><label for="customer_id"><?php echo $kga['dict']['customer'] ?>:</label> <?php
-                        echo $this->formSelect('customer_id', $this->selectedCustomer, array('class' => 'formfield'), $this->customers); ?>
+                    <li><label for="customer_name"><?php echo $kga['dict']['customer'] ?>:</label>
+                        <span id="customer_name" style="font-size:1.2em;padding-left:5px;"><?php echo $this->customer_name ?></span>
                     </li>
 
                     <li><label for="visible" title="<?php echo $kga['dict']['tip']['pe_visibility'] ?>">

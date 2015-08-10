@@ -50,7 +50,7 @@ function expense_create($userID, array $data)
 {
     global $database;
 
-    $data = $database->clean_data($data);
+    $data = clean_data($data);
 
     $values ['project_id']   = $database->sqlValue($data ['project_id'], MySQL::SQLVALUE_NUMBER);
     $values ['description']  = $database->sqlValue($data ['description']);
@@ -161,7 +161,7 @@ function get_expenses($start, $end, $users = null, $customers = null, $projects 
 
     $whereClauses = expenses_widthhereClausesFromFilters($users, $customers, $projects);
 
-    if (array_key_exists('customer', $kga)) {
+    if (is_customer()) {
         $whereClauses[] = 'project.internal = 0';
     }
 
@@ -203,10 +203,10 @@ function get_expenses($start, $end, $users = null, $customers = null, $projects 
                     project.comment AS project_comment,
                     `user`.name AS username,
                     `user`.alias AS user_alias
-             FROM ${p}expense AS expense
-             LEFT Join ${p}project AS project USING(project_id)
-             LEFT Join ${p}customer AS customer USING(customer_id)
-             LEFT Join `${p}user` AS user USING(user_id) "
+             FROM {$p}expense AS expense
+             LEFT Join {$p}project AS project USING(project_id)
+             LEFT Join {$p}customer AS customer USING(customer_id)
+             LEFT Join `{$p}user` AS user USING(user_id) "
         . (count($whereClauses) > 0 ? ' WHERE ' : ' ') . implode(' AND ', $whereClauses) .
         ' ORDER BY timestamp ' . ($reverse_order ? 'ASC ' : 'DESC ') . $limit . ';';
 
@@ -261,7 +261,7 @@ function get_expense($id)
     $id = $database->sqlValue($id, MySQL::SQLVALUE_NUMBER);
     $p  = $kga['server_prefix'];
 
-    $query = "SELECT * FROM ${p}expense WHERE expense_id = $id LIMIT 1;";
+    $query = "SELECT * FROM {$p}expense WHERE expense_id = $id LIMIT 1;";
 
     $database->query($query);
 
@@ -287,10 +287,10 @@ function expense_get($expenseID)
     $expenseID = $database->sqlValue($expenseID, MySQL::SQLVALUE_NUMBER);
 
     if ($expenseID) {
-        $result = $database->query("SELECT * FROM ${p}expense WHERE expense_id = " . $expenseID);
+        $result = $database->query("SELECT * FROM {$p}expense WHERE expense_id = " . $expenseID);
     }
     else {
-        $result = $database->query("SELECT * FROM ${p}expense WHERE user_id = {$kga['user']['user_id']} ORDER BY expense_id DESC LIMIT 1");
+        $result = $database->query("SELECT * FROM {$p}expense WHERE user_id = {$kga['who']['id']} ORDER BY expense_id DESC LIMIT 1");
     }
 
     if ($result->num_rows === 0) {
@@ -317,7 +317,7 @@ function expense_edit($id, array $data)
 {
     global $kga, $database;
 
-    $data = $database->clean_data($data);
+    $data = clean_data($data);
 
     $original_array = expense_get($id);
     $new_array      = array();
@@ -367,7 +367,7 @@ function expenses_by_user($start, $end, $users = null, $customers = null, $proje
 
     $p              = $kga['server_prefix'];
     $whereClauses   = expenses_widthhereClausesFromFilters($users, $customers, $projects);
-    $whereClauses[] = "`${p}user`.trash = 0";
+    $whereClauses[] = "`{$p}user`.trash = 0";
 
     if ($start) {
         $whereClauses[] = "timestamp >= $start";
@@ -377,10 +377,10 @@ function expenses_by_user($start, $end, $users = null, $customers = null, $proje
     }
 
     $query = "SELECT SUM(value*multiplier) as expenses, user_id
-             FROM ${p}expense
-             Join ${p}project USING (project_id)
-             Join ${p}customer USING (customer_id)
-             Join `${p}user` USING (user_id) " . (count($whereClauses) > 0 ? ' WHERE '
+             FROM {$p}expense
+             Join {$p}project USING (project_id)
+             Join {$p}customer USING (customer_id)
+             Join `{$p}user` USING (user_id) " . (count($whereClauses) > 0 ? ' WHERE '
             : ' ') . implode(' AND ', $whereClauses) .
         ' GROUP BY user_id;';
 
@@ -425,7 +425,7 @@ function expenses_by_customer($start, $end, $users = null, $customers = null, $p
     $p = $kga['server_prefix'];
 
     $whereClauses   = expenses_widthhereClausesFromFilters($users, $customers, $projects);
-    $whereClauses[] = "${p}customer.trash = 0";
+    $whereClauses[] = "{$p}customer.trash = 0";
 
     if ($start) {
         $whereClauses[] = "timestamp >= $start";
@@ -434,9 +434,9 @@ function expenses_by_customer($start, $end, $users = null, $customers = null, $p
         $whereClauses[] = "timestamp <= $end";
     }
 
-    $query = "SELECT SUM(`value` * `multiplier`) as expenses, customer_id FROM ${p}expense
-            Left Join ${p}project USING (project_id)
-            Left Join ${p}customer USING (customer_id) " . (count($whereClauses) > 0 ? ' WHERE '
+    $query = "SELECT SUM(`value` * `multiplier`) as expenses, customer_id FROM {$p}expense
+            Left Join {$p}project USING (project_id)
+            Left Join {$p}customer USING (customer_id) " . (count($whereClauses) > 0 ? ' WHERE '
             : ' ') . implode(' AND ', $whereClauses) .
         ' GROUP BY customer_id;';
 
@@ -479,7 +479,7 @@ function expenses_by_project($start, $end, $users = null, $customers = null, $pr
 
     $p              = $kga['server_prefix'];
     $whereClauses   = expenses_widthhereClausesFromFilters($users, $customers, $projects);
-    $whereClauses[] = "${p}project.trash = 0";
+    $whereClauses[] = "{$p}project.trash = 0";
 
     if ($start) {
         $whereClauses[] = "timestamp >= $start";
@@ -488,9 +488,9 @@ function expenses_by_project($start, $end, $users = null, $customers = null, $pr
         $whereClauses[] = "timestamp <= $end";
     }
 
-    $query = "SELECT sum(`value` * `multiplier`) as expenses, project_id FROM ${p}expense
-            Left Join ${p}project USING(project_id)
-            Left Join ${p}customer USING(customer_id) " . (count($whereClauses) > 0 ? ' WHERE '
+    $query = "SELECT sum(`value` * `multiplier`) as expenses, project_id FROM {$p}expense
+            Left Join {$p}project USING(project_id)
+            Left Join {$p}customer USING(customer_id) " . (count($whereClauses) > 0 ? ' WHERE '
             : ' ') . implode(' AND ', $whereClauses) .
         ' GROUP BY project_id;';
 

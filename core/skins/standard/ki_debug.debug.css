@@ -1,4 +1,8 @@
 /*! ki_deb */
+div.ext.ki_debug {
+    font-size: 0.9em;
+    font-weight: normal;
+}
 #deb_ext_kga_wrap {
     border: 1px solid #000;
     position: absolute;
@@ -7,7 +11,7 @@
 }
 
 #deb_ext_kga {
-    padding: 10px;
+    padding: 5px 10px 5px 5px;
     font-size: 90%;
     font-family: monospace;
     background-color: #000;
@@ -27,7 +31,7 @@
     border: 1px solid #000;
     color: #fff;
     padding: 5px 10px;
-    height: 20px;
+    height: 13px;
     overflow: hidden;
     position: absolute;
 }
@@ -42,7 +46,7 @@
 
 #deb_ext_logfile {
     border: 1px solid #000;
-    padding: 10px;
+    padding: 5px 10px 5px 5px;
     font-size: 90%;
     font-family: monospace;
     background-color: #000;
@@ -72,5 +76,5 @@
 }
 
 a {
-    cursor: pointer
+    cursor: pointer;
 }

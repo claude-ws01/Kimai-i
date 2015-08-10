@@ -134,7 +134,7 @@ switch ($axAction) {
         $database = $_REQUEST['database'];
         $username = $_REQUEST['username'];
         $password = $_REQUEST['password'];
-        $salt     = createPassword(20);
+        $salt     = password_create(20);
         $prefix   = addcslashes($_REQUEST['prefix'], '"$');
         $language = $_REQUEST['language'];
         $timezone = $_REQUEST['timezone'];

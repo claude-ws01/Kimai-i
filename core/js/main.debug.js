@@ -174,6 +174,13 @@ function changeTab(target, path) {
     $('.ext').css('display', 'none');
 
     div = '#extdiv_' + target;
+
+    if ($(div).html()===undefined) {
+        // trying to display a tab that does not exist
+        loader.hide();
+        return;
+    }
+
     $(div).css('display', 'block');
 
     // we don't want to load the tab content every time the tab is activated ...
@@ -503,7 +510,7 @@ function show_selectors() {
 }
 
 function buzzer_onclick() {
-
+    var D;
     if (currentRecording == -1 && buzzer.hasClass('disabled')) return;
 
 
@@ -511,7 +518,9 @@ function buzzer_onclick() {
         stopRecord();
         currentRecording = -1;
     } else {
-        setTimeframe(undefined, new Date());
+        D = new Date();
+        D.setDate(D.getDate() + 1);
+        setTimeframe(undefined, D);
         startRecord(selected_project, selected_activity, user_id);
         buzzer.addClass('disabled');
     }
@@ -651,18 +660,17 @@ function ticktack_off() {
 }
 
 // ----------------------------------------------------------------------------------------
-// shows dialogue for editing an item in either customer, project or activity list
-function editSubject(subject, id) {
+// shows editing dialogue           OBJECT ~ activity, customer, project                  .
+function editObject(object, id) {
     var width = 450;
 
-    if (subject == 'project') {
-        width = 450;
-    }
-    floaterShow('floaters.php', 'add_edit_' + subject, 0, id, width);
+    //if (object == 'project') {
+    //    width = 450;
+    //}
+    floaterShow('floaters.php', 'add_edit_' + object, 0, id, width);
 
     return false;
 }
-
 
 // ----------------------------------------------------------------------------------------
 // filters project and activity fields in add/edit record dialog
@@ -838,6 +846,7 @@ function pageHeight() {
 function headerHeight() {
     var header = 90,
         tabbar = 25;
+
     /* always plus 10 pixels of horizontal padding */
     return header + tabbar + 10;
 }
@@ -1217,7 +1226,7 @@ function validatePassword(password, retypePassword) {
         alert(lang_passwordsDontMatch);
         return false;
     }
-    else if (password.length < 5) {
+    else if (password.length < pwdMinLength) {
         alert(lang_passwordTooShort);
         return false;
     }

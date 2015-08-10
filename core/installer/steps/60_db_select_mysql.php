@@ -1,11 +1,11 @@
 <?php
 echo '<script type="text/javascript" charset="utf-8">current=60;</script>';
 
-$hostname        = isset($_REQUEST['hostname']) ? $_REQUEST['hostname'] : 'localhost';
+$hostname        = isset($_REQUEST['hostname']) ? $_REQUEST['hostname'] : '127.0.0.1';
 $db_name        = isset($_REQUEST['database']) ? $_REQUEST['database'] : '';
 $username        = isset($_REQUEST['username']) ? $_REQUEST['username'] : '???';
 $password        = isset($_REQUEST['password']) ? $_REQUEST['password'] : '';
-$prefix          = isset($_REQUEST['prefix']) ? $_REQUEST['prefix'] : "kimai_";
+$prefix          = isset($_REQUEST['prefix']) ? $_REQUEST['prefix'] : 'kimaii_';
 $language        = isset($_REQUEST['language']) ? $_REQUEST['language'] : 'en';
 $create_database = isset($_REQUEST['create_database']) ? $_REQUEST['create_database'] : '';
 
@@ -51,10 +51,10 @@ while ($row = mysqli_fetch_row($result)) {
 
 if (!$showDatabasesAllowed) {
     if ($language === 'de') {
-        echo "Kein Berechtigung um Datenbanken aufzulisten. Name der zu verwendenden Datenbank:<br/>";
+        echo 'Kein Berechtigung um Datenbanken aufzulisten. Name der zu verwendenden Datenbank:<br/>';
     }
     else {
-        echo "No permission to list databases. Name of the database to use:<br/>";
+        echo 'No permission to list databases. Name of the database to use:<br/>';
     }
 
     echo '<input type="text" id="db_names" value="' . $db_name . '"/>';
@@ -116,7 +116,7 @@ else {
             }
         }
 
-        echo "</select> <strong id='db_select_label'></strong><br/><br/>";
+        echo '</select> <strong id="db_select_label"></strong><br/><br/>';
     }
 }
 
@@ -169,7 +169,7 @@ if ($db_name !== '' && $create_database !== '') {
 // Table prefix
 if ($prefix !== 'kimai' && strlen($prefix) > 0 && !preg_match('/^[a-zA-Z0-9_]+$/', $prefix)) {
     $errors             = true;
-    $prefixErrorMessage = ($language == 'de') ? 'Nur Buchstaben, Zahlen und Unterstriche.'
+    $prefixErrorMessage = ($language === 'de') ? 'Nur Buchstaben, Zahlen und Unterstriche.'
         : 'Only letters, numbers and underscores.';
 }
 if ($prefix !== 'kimai' && strlen($prefix) > 64) {
@@ -188,7 +188,7 @@ if (isset($prefixErrorMessage)) {
     echo "<strong id='prefix_label' class='arrow'>$prefixErrorMessage</strong><br/><br/>";
 }
 else {
-    echo "<strong id='prefix_label'></strong><br/><br/>";
+    echo '<strong id=\'prefix_label\'></strong><br/><br/>';
 }
 
 echo '<br/><br/>';

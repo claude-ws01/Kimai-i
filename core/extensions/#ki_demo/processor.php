@@ -23,8 +23,10 @@
 // insert KSPI
 $isCoreProcessor = 0;
 $dir_templates = 'templates/';
-require('../../includes/kspi.php');
 global $kga, $database, $view;
+
+global $axAction, $axValue, $id, $timeframe, $in, $out;
+require('../../includes/kspi.php');
 
 switch ($axAction) {
     case 'test':

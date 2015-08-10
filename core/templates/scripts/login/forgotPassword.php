@@ -70,7 +70,7 @@
             <form action='index.php?a=checklogin' id='form1' method='post'>
                 <fieldset>
                     <label for="password">
-                        <?php echo $kga['dict']['newPassword'] ?>:
+                        <?php echo $kga['dict']['new_password'] ?>:
                     </label>
                     <input type='password' name="password" id="password"/>
                     <label for="password2">

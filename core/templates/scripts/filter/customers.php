@@ -26,7 +26,7 @@ $customers = $this->filterListEntries($this->customers);
                 <td style="white-space: nowrap;" class="option">
                     <?php if ($this->show_customer_edit_button): ?>
                         <a href="#"
-                           onclick="editSubject('customer',<?php echo $customer['customer_id'] ?>); $(this).blur(); return false;">
+                           onclick="editObject('customer',<?php echo $customer['customer_id'] ?>); $(this).blur(); return false;">
                             <img src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/edit2.gif'
                                  width='13' height='13' alt='<?php echo $kga['dict']['edit'] ?>'
                                  title='<?php echo $kga['dict']['edit'] ?>' border='0'/>

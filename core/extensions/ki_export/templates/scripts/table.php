@@ -41,10 +41,10 @@ if (count($this->exportData) < 1): ?>
         $isExpense = $row['type'] === 'expense';
         
         $td_class = null;
-        if (strftime('%d', $row['time_in']) != $day_buffer && $kga['conf']['show_day_separator_lines']) {
+        if ((int)$kga['conf']['show_day_separator_lines'] === 1 && strftime('%d', $row['time_in']) !== $day_buffer) {
             $td_class = ' break_day ';
         }
-        elseif ($row['time_out'] != $time_in_buffer && $kga['conf']['show_gab_breaks']) {
+        elseif ($row['time_out'] !== $time_in_buffer && $kga['conf']['show_gab_breaks']) {
             $td_class = ' break_gap ';
         }
         ?>
@@ -134,7 +134,7 @@ if (count($this->exportData) < 1): ?>
             <a href="#" class="preselect_lnk" title="<?php echo $kga['dict']['tip']['g_select_for_recording']; ?>"
                onClick="buzzer_preselect_project(<?php echo $row['project_id'] ?>,'<?php echo $this->jsEscape($row['project_name']) ?>',<?php echo $row['customer_id'] ?>,'<?php echo $this->jsEscape($row['customer_name']) ?>');return false;">
                 <?php echo $this->escape($row['project_name']) ?>
-                <?php if ($kga['pref']['project_comment_flag'] == 1): ?>
+                <?php if ((int)$kga['pref']['project_comment_flag'] === 1): ?>
                     <?php if ($row['project_comment']): ?>
                         <span class="lighter">(<?php echo $this->jsEscape($row['project_comment']); ?>)</span>
                     <?php endif; ?>

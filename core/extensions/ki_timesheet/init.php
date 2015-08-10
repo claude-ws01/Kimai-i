@@ -53,22 +53,22 @@ header('Pragma: no-cache');
 
 
 // Get the total time displayed in the table.
-if (array_key_exists('customer', $kga)) {
-    $total = Format::formatDuration($database->get_duration($in, $out, null, array($kga['customer']['customer_id']),
+if (is_customer()) {
+    $total = Format::formatDuration($database->get_duration($in, $out, null, array($kga['who']['id']),
                                                             null));
 }
 else {
-    $total = Format::formatDuration($database->get_duration($in, $out, array($kga['user']['user_id']), null, null));
+    $total = Format::formatDuration($database->get_duration($in, $out, array($kga['who']['id']), null, null));
 }
 $view->total = $total;
 
 
 // Get the array of timesheet entries.
-if (array_key_exists('customer', $kga)) {
+if (is_customer()) {
 
     //DEBUG// error_log('<<===== timesheet - customer =====>>');
 
-    $timesheet_entries          = $database->get_timesheet($in, $out, null, array($kga['customer']['customer_id']),
+    $timesheet_entries          = $database->get_timesheet($in, $out, null, array($kga['who']['id']),
                                                            null, 1);
     $view->latest_running_entry = null;
 }
@@ -76,7 +76,7 @@ else {
 
     //DEBUG// error_log('<<===== timesheet - user =====>>');
 
-    $timesheet_entries          = $database->get_timesheet($in, $out, array($kga['user']['user_id']), null, null, 1);
+    $timesheet_entries          = $database->get_timesheet($in, $out, array($kga['who']['id']), null, null, 1);
     $view->latest_running_entry = $database->get_latest_running_entry();
 }
 
@@ -89,44 +89,44 @@ else {
 
 
 // Get the annotations for the user sub list.
-if (array_key_exists('customer', $kga)) {
-    $ann = $database->get_time_users($in, $out, null, array($kga['customer']['customer_id']));
+if (is_customer()) {
+    $ann = $database->get_time_users($in, $out, null, array($kga['who']['id']));
 }
 else {
-    $ann = $database->get_time_users($in, $out, array($kga['user']['user_id']));
+    $ann = $database->get_time_users($in, $out, array($kga['who']['id']));
 }
 Format::formatAnnotations($ann);
 $view->user_annotations = $ann;
 
 
 // Get the annotations for the customer sub list.
-if (array_key_exists('customer', $kga)) {
-    $ann = $database->get_time_customers($in, $out, null, array($kga['customer']['customer_id']));
+if (is_customer()) {
+    $ann = $database->get_time_customers($in, $out, null, array($kga['who']['id']));
 }
 else {
-    $ann = $database->get_time_customers($in, $out, array($kga['user']['user_id']));
+    $ann = $database->get_time_customers($in, $out, array($kga['who']['id']));
 }
 Format::formatAnnotations($ann);
 $view->customer_annotations = $ann;
 
 
 // Get the annotations for the project sub list.
-if (array_key_exists('customer', $kga)) {
-    $ann = $database->get_time_projects($in, $out, null, array($kga['customer']['customer_id']));
+if (is_customer()) {
+    $ann = $database->get_time_projects($in, $out, null, array($kga['who']['id']));
 }
 else {
-    $ann = $database->get_time_projects($in, $out, array($kga['user']['user_id']));
+    $ann = $database->get_time_projects($in, $out, array($kga['who']['id']));
 }
 Format::formatAnnotations($ann);
 $view->project_annotations = $ann;
 
 
 // Get the annotations for the activity sub list.
-if (array_key_exists('customer', $kga)) {
-    $ann = $database->get_time_activities($in, $out, null, array($kga['customer']['customer_id']));
+if (is_customer()) {
+    $ann = $database->get_time_activities($in, $out, null, array($kga['who']['id']));
 }
 else {
-    $ann = $database->get_time_activities($in, $out, array($kga['user']['user_id']));
+    $ann = $database->get_time_activities($in, $out, array($kga['who']['id']));
 }
 Format::formatAnnotations($ann);
 $view->activity_annotations = $ann;
@@ -143,25 +143,25 @@ if (isset($kga['pref'])) {
     $view->show_ref_code    = $kga['pref']['show_ref_code'] !== '0';
 }
 
-$view->showRates         = array_key_exists('user', $kga) && $database->global_role_allows(any_get_global_role_id(), 'ki_timesheet__show_rates');
+$view->showRates         = is_user() && $database->gRole_allows($kga['who']['global_role_id'], 'ki_timesheet__show_rates');
 $view->timeSheet_display = $view->render('timesheet.php');
 $view->buzzerAction      = 'startRecord()';
 
 // select for projects
-if (array_key_exists('customer', $kga)) {
+if (is_customer()) {
     $view->projects = array();
 }
 else {
-    $sel            = makeSelectBox('project', any_get_group_ids());
+    $sel            = makeSelectBox('project', $kga['who']['groups']);
     $view->projects = $sel;
 }
 
 // select for activities
-if (array_key_exists('customer', $kga)) {
+if (is_customer()) {
     $view->activities = array();
 }
 else {
-    $sel              = makeSelectBox('activity', any_get_group_ids());
+    $sel              = makeSelectBox('activity', $kga['who']['groups']);
     $view->activities = $sel;
 }
 

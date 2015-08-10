@@ -66,7 +66,7 @@ function export_toggle_header($header)
     $header_number = array_search($header, $all_column_headers);
     if ($header_number !== false) {
         $table  = TBL_PREFERENCE;
-        $userID = $database->sqlValue($kga['user']['user_id'], MySQL::SQLVALUE_NUMBER);
+        $userID = $database->sqlValue($kga['who']['id'], MySQL::SQLVALUE_NUMBER);
 
         $query = "INSERT INTO $table
                     (`user_id`, `option`, `value`) VALUES

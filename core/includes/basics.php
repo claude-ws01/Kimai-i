@@ -74,18 +74,25 @@ require WEBROOT . 'includes/func.php';
 
 //  initialize $kga (conf & pref) //
 config_init();
+
 // more config
 $kga['error_log_mail_from'] = '';
 $kga['error_log_mail_to']   = '';
 $kga['force_ssl']           = false;
+
+
 // local private config that may replace some $kga values
-if (file_exists('_localconf.php')) {
-    include '_localconf.php';
+// called twice. needed here and later
+if (file_exists(WEBROOT . 'includes/_localconf.php')) {
+    include WEBROOT . 'includes/_localconf.php';
 }
 
 
+
+
+
 require WEBROOT . 'includes/vars.php';
-require WEBROOT . 'libraries/Kimai/Database/kimai.php';
+require WEBROOT . 'libraries/Kimai/Database/roles.php';
 require WEBROOT . 'includes/classes/format.class.php';
 require WEBROOT . 'includes/classes/logger.class.php';
 require WEBROOT . 'includes/classes/translations.class.php';
@@ -93,48 +100,54 @@ require WEBROOT . 'includes/classes/rounding.class.php';
 require WEBROOT . 'includes/classes/extensions.class.php';
 
 
-
-    $database = new Kimai_Database_Mysql(
-        $kga['server_hostname'],
-        $kga['server_database'],
-        $kga['server_username'],
-        $kga['server_password'],
-        $kga['utf8']);
-
-
-    // PHP & MYSQL WARNINGS //
-    if (IN_DEV) {
-        ini_set('display_errors', '1');
-        mysqli_report(MYSQLI_REPORT_ERROR);
-    }
-    else {
-        ini_set('display_errors', '0');
-    }
-
-    if (!is_object($database) || !$database->isConnected()) {
-        die('Kimai-i could not connect to database. Check your autoconf.php.');
-    }
+$database = new Roles_Mysql(
+    $kga['server_hostname'],
+    $kga['server_database'],
+    $kga['server_username'],
+    $kga['server_password'],
+    $kga['utf8']);
 
 
-    //  DB need an update?   //
-    $tranlastion_load_from_db = false;
-    if ($_SERVER['DOCUMENT_URI'] !== '/db_restore.php'
-        && $_SERVER['DOCUMENT_URI'] !== '/installer/install.php'
-    ) {
-        checkDBversion();
-        $tranlastion_load_from_db = true;
-    }
+// PHP & MYSQL WARNINGS //
+if (IN_DEV) {
+    ini_set('display_errors', '1');
+    mysqli_report(MYSQLI_REPORT_ERROR);
+}
+else {
+    ini_set('display_errors', '0');
+}
+
+if (!is_object($database) || !$database->isConnected()) {
+    die('Kimai-i could not connect to database. Check your autoconf.php.');
+}
 
 
-    //################################################//
-    // FROM THIS POINT ON, WE NEED AN UP-TO-DATE DB   //
-    //################################################//
+//  DATABASE UPDATE  //
+$tranlastion_load_from_db = false;
+if ($_SERVER['DOCUMENT_URI'] !== '/db_restore.php'
+    && $_SERVER['DOCUMENT_URI'] !== '/installer/install.php'
+) {
+    checkDBversion();
+    $tranlastion_load_from_db = true;
+}
 
 
-    //  DBget the config and prefs  //
-    if ($_SERVER['DOCUMENT_URI'] !== '/installer/install.php') {
-        $database->config_load();
-    }
+//################################################//
+// FROM THIS POINT ON, WE NEED AN UP-TO-DATE DB   //
+//################################################//
+
+
+//  DBget the config and prefs  //
+if ($_SERVER['DOCUMENT_URI'] !== '/installer/install.php') {
+    $database->config_load();
+}
+
+// local private config that may replace some $kga values
+// called twice. needed earlier and here
+if (file_exists(WEBROOT . 'includes/_localconf.php')) {
+    include WEBROOT . 'includes/_localconf.php';
+}
+
 
 
 

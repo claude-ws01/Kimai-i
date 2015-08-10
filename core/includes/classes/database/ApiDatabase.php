@@ -30,7 +30,7 @@
 class ApiDatabase
 {
 
-    /**
+    /*
      * @param                      $kga
      * @param Kimai_Database_Mysql $database
      */
@@ -98,7 +98,7 @@ class ApiDatabase
             $result = $database->query("SELECT * FROM $tbl_expense WHERE `expense_id` = " . $expId);
         }
         else {
-            $result = $database->query("SELECT * FROM $tbl_expense WHERE `user_id` = " . $kga['user']['user_id'] . " ORDER BY `expense_id` DESC LIMIT 1");
+            $result = $database->query("SELECT * FROM $tbl_expense WHERE `user_id` = " . $kga['who']['id'] . " ORDER BY `expense_id` DESC LIMIT 1");
         }
 
         if ($result->num_rows === 0) {
@@ -136,8 +136,8 @@ class ApiDatabase
 
         $whereClauses = $this->expenses_widthhereClausesFromFilters($users, $customers, $projects);
 
-        if (array_key_exists('customer', $kga)) {
-            $whereClauses[] = "${p}project.internal = 0";
+        if (is_customer()) {
+            $whereClauses[] = "{$p}project.internal = 0";
         }
 
         if (!empty($start)) {
@@ -183,10 +183,10 @@ class ApiDatabase
         }
 
         $query = "$select
-  			FROM ${p}expense
-	  		Join ${p}project USING(project_id)
-	  		Join ${p}customer USING(customer_id)
-	  		Join ${p}user USING(`user_id`)
+  			FROM {$p}expense
+	  		Join {$p}project USING(project_id)
+	  		Join {$p}customer USING(customer_id)
+	  		Join {$p}user USING(`user_id`)
 	  		$where
 	  		ORDER BY timestamp $orderDirection $limit";
 
@@ -284,7 +284,7 @@ class ApiDatabase
     {
         global $database;
 
-        $data   = $database->clean_data($data);
+        $data   = clean_data($data);
         $values = array();
 
         if (isset($data ['timestamp'])) {
@@ -334,7 +334,7 @@ class ApiDatabase
     {
         global $database;
 
-        $data = $database->clean_data($data);
+        $data = clean_data($data);
 
         $original_array = $this->expense_get($id);
         $new_array      = array();

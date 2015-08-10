@@ -24,7 +24,7 @@ $activities = $this->filterListEntries($this->activities);
                 <td style="white-space: nowrap;" class="option">
                     <?php if ($this->show_activity_edit_button): ?>
                         <a href="#"
-                           onclick="editSubject('activity',<?php echo $activity['activity_id'] ?>); $(this).blur(); return false;">
+                           onclick="editObject('activity',<?php echo $activity['activity_id'] ?>); $(this).blur(); return false;">
                             <img src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/edit2.gif'
                                  width='13' height='13' alt='<?php echo $kga['dict']['edit'] ?>'
                                  title='<?php echo $kga['dict']['edit'] ?> (ID:<?php echo $activity['activity_id'] ?>)'
@@ -38,7 +38,7 @@ $activities = $this->filterListEntries($this->activities);
                              width='13' height='13' alt='<?php echo $kga['dict']['filter'] ?>'
                              title='<?php echo $kga['dict']['filter'] ?>' border='0'/>
                     </a>
-                    <?php if (array_key_exists('user', $kga)) { ?>
+                    <?php if (is_user()) { ?>
                         <a href="#"
                            class="preselect"
                            title="<?php echo $kga['dict']['tip']['g_select_for_recording']; ?>"

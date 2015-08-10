@@ -44,7 +44,7 @@ class Extensions
 
     public function cssExtensionFiles()
     {
-        foreach ($this->css_extension_files as $key => $file) {
+        foreach ($this->css_extension_files as $key => &$file) {
             if (!preg_match('/^.+(?:\.debug|\.min)\.css$/', $file)) {
                 $test = preg_replace('/\.css$/', DEBUG_JS . '.css', $file);
                 //DEV//
@@ -52,7 +52,7 @@ class Extensions
                     error_log('<<==KEY==>>' . $key . '<<==FILE==>>' . $file . '<<==NEW==>>' . $test . '<<= DO NOT HAVE .min .debug ==>>');
                 }
 
-                $this->css_extension_files[$key] = $test;
+                $file = $test;
             }
         }
 
@@ -95,12 +95,14 @@ class Extensions
 
         $handle = opendir($this->extensionsDir);
 
-        if (!$handle) return;
+        if (!$handle) {
+            return;
+        }
 
 
         while (false !== ($dir = readdir($handle))) {
 
-            if (is_file($dir) OR ($dir == ".") OR ($dir == "..") OR (substr($dir, 0) == ".") OR (substr($dir, 0, 1) == "#")) {
+            if (($dir === '..') || ($dir === '.') || is_file($dir) || (substr($dir, 0) === '.') || (substr($dir, 0, 1) === '#')) {
                 continue;
             }
 
@@ -118,13 +120,13 @@ class Extensions
             $settings = parse_ini_file($dir . 'config.ini');
 
             // Check if user has the correct rank to use this extension
-            if (array_key_exists('user', $kga)) {
-                if (!$database->global_role_allows($kga['user']['global_role_id'], $settings['EXTENSION_KEY'] . '__access')) {
+            if (is_user()) {
+                if (!$database->gRole_allows($kga['user']['global_role_id'], $settings['EXTENSION_KEY'] . '__access')) {
                     continue;
                 }
             }
             else {
-                if ($settings['CUSTOMER_ALLOWED'] != "1") {
+                if ($settings['CUSTOMER_ALLOWED'] !== '1') {
                     continue;
                 }
             }
@@ -134,7 +136,7 @@ class Extensions
                       'key'              => $settings['EXTENSION_KEY'],
                       'initFile'         => $settings['EXTENSION_INIT_FILE'],
                       'tabChangeTrigger' => isset($settings['TAB_CHANGE_TRIGGER'])
-                          ? $settings['TAB_CHANGE_TRIGGER'] : "",
+                          ? $settings['TAB_CHANGE_TRIGGER'] : '',
                 );
 
             //CN, check if the skin has it's own css/grfx folder
@@ -194,9 +196,9 @@ class Extensions
 
     public function timeoutList()
     {
-        $timeoutlist = "";
+        $timeoutlist = '';
         foreach ($this->timeouts as $timeout) {
-            $timeoutlist .= "kill_timeout('" . $timeout . "');";
+            $timeoutlist .= "kill_timeout('{$timeout}');";
         }
 
         return $timeoutlist;
@@ -223,7 +225,6 @@ class Extensions
         if (IN_DEV) {
             error_log('<<== EXTENSIONS - SKIN CSS FILE MISSING==>>' . $skin_extension_css_file);
         }
-
 
 
         return '../extensions/' . $settings['EXTENSION_DIR'] . '/css/styles' . DEBUG_JS . '.css';

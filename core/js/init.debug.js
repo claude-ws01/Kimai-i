@@ -106,12 +106,15 @@ $(document).ready(function () {
         buzzer_onclick();
     });
 
-    if (currentRecording > -1 || (selected_customer && selected_project && selected_activity)) {
+    if ($('#exttab_0').length > 0
+        && (currentRecording > -1
+            || (selected_customer && selected_project && selected_activity)
+        )) {
         buzzer.removeClass('disabled');
     }
 
     n_hour();
-    if (demoMode === 1){
+    if (demoMode === 1) {
         demoCountDown();
     }
 
@@ -125,7 +128,7 @@ $(document).ready(function () {
     $(window).bind('resize', function () {
 
         // menu_resize();
-       floater_resize();
+        floater_resize();
 
         if (lists_resizeTimer) clearTimeout(lists_resizeTimer);
         lists_resizeTimer = setTimeout(lists_resize, 500);

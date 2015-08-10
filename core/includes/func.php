@@ -22,40 +22,6 @@
  * Functions defined here are not directly accessing the database.
  */
 
-function any_get_group_ids()
-{
-    global $kga;
-
-    if (array_key_exists('customer', $kga)) {
-        return (array)$kga['customer']['groups'];
-    }
-    else {
-        return (array)$kga['user']['groups'];
-    }
-}
-
-function any_get_global_role_id()
-{
-    global $kga;
-
-    if (array_key_exists('customer', $kga)) {
-        return 0;
-    }
-    else {
-        return $kga['user']['global_role_id'];
-    }
-}
-
-/**
- * checks if the database structure needs to be updated for new Kimai version.
- * if yes the function redirects to /admin/updater.php
- *
- * @param string $path path to admin dir relative to the document that calls this function (usually "." or "..")
- *
- * @global array $kga  kimai-global-array
- * @return array
- * @author th
- */
 function checkDBversion()
 {
     global $kga, $database;
@@ -67,7 +33,7 @@ function checkDBversion()
 
 
     if ($db_version === '0.5.1'
-        && count($database->get_users()) === 0
+        && count($database->users_get()) === 0
         && strpos(basename($_SERVER['DOCUMENT_URI']), 'installer') === 0
     ) {
         // fresh install
@@ -95,120 +61,6 @@ function checkDBversion()
         header("Location: http://${_SERVER['SERVER_NAME']}/index.php");
         exit;
     }
-}
-
-/*
- * @brief Check the permission to access an object.
- *
- * This method is meant to check permissions for adding, editing and deleting customers,
- * projects, activities and users. The input is not checked whether it falls within those boundaries since
- * it can also work with others, if the permissions match the pattern.
- *
- * @param       $objectTypeName string name of the object type being edited (e.g. Project)
- * @param array $action         the action being performed (e.g. add)
- * @param array $oldGroups      the old groups of the object (empty array for new objects)
- * @param array $newGroups      the new groups of the object (same as oldGroups if nothing should be changed in group
- *                              assignment)
- *
- * @return true if the permission is granted, false otherwise
- */
-function checkGroupedObjectPermission($objectTypeName, $action, $oldGroups, $newGroups = null)
-{   // SECURITY //
-    global $database, $kga;
-
-    if (!array_key_exists('user', $kga)) {
-        return false;
-    }
-
-    if ($kga['is_user_root']) {
-        return true;
-    }
-
-
-    //CN..current-user groups already in $kga// $assignedOwnGroups   = array_intersect($oldGroups, $database->user_get_group_ids($kga['user']['user_id']));
-    $assignedOwnGroups   = array_intersect($oldGroups, $kga['user']['groups']);
-    //CN..current-user groups already in $kga//$assignedOtherGroups = array_diff($oldGroups, $database->user_get_group_ids($kga['user']['user_id']));
-    $assignedOtherGroups = array_diff($oldGroups, $kga['user']['groups']);
-
-    if (count($assignedOtherGroups) > 0) {
-        $permissionName = "core__${objectTypeName}__other_group__${action}";
-        if (!$database->global_role_allows(any_get_global_role_id(), $permissionName)) {
-            Logger::logfile("missing global permission $permissionName for user " . $kga['user']['name'] . " to access $objectTypeName");
-
-            return false;
-        }
-    }
-
-    if (count($assignedOwnGroups) > 0) {
-        $permissionName = "core__${objectTypeName}__${action}";
-        if (!$database->checkMembershipPermission($kga['user']['user_id'], $assignedOwnGroups, $permissionName)) {
-            Logger::logfile("missing membership permission $permissionName of current own group(s) " .
-                            implode(', ', $assignedOwnGroups) . ' for user ' . $kga['user']['name'] .
-                            " to access $objectTypeName");
-
-            return false;
-        }
-    }
-
-
-
-    if ($newGroups !== null && count($oldGroups) !== array_intersect($oldGroups, $newGroups)) {
-        // group assignment has changed
-
-        $addToGroups      = array_diff($newGroups, $oldGroups);
-        $removeFromGroups = array_diff($oldGroups, $newGroups);
-
-        //CN..current-user groups already in $kga//
-        $addToOtherGroups      = array_diff($addToGroups, $kga['user']['groups']);
-        $addToOwnGroups        = array_intersect($addToGroups, $kga['user']['groups']);
-        $removeFromOtherGroups = array_diff($removeFromGroups, $kga['user']['groups']);
-        $removeFromOwnGroups   = array_intersect($removeFromGroups, $kga['user']['groups']);
-
-        $action = 'assign';
-        if (count($addToOtherGroups) > 0) {
-            $permissionName = "core__${objectTypeName}__other_group__${action}";
-            if (!$database->global_role_allows(any_get_global_role_id(), $permissionName)) {
-                Logger::logfile("missing global permission $permissionName for user " . $kga['user']['name'] . " to access $objectTypeName");
-
-                return false;
-            }
-        }
-
-        if (count($addToOwnGroups) > 0) {
-            $permissionName = "core__${objectTypeName}__${action}";
-            if (!$database->checkMembershipPermission($kga['user']['user_id'], $addToOwnGroups, $permissionName)) {
-                Logger::logfile("missing membership permission $permissionName of new own group(s) " . 
-                                implode(', ', $addToOwnGroups) . ' for user ' . $kga['user']['name'] . 
-                                " to access $objectTypeName");
-
-                return false;
-            }
-        }
-
-        $action = 'unassign';
-        if (count($removeFromOtherGroups) > 0) {
-            $permissionName = "core__${objectTypeName}__other_group__${action}";
-            if (!$database->global_role_allows(any_get_global_role_id(), $permissionName)) {
-                Logger::logfile("missing global permission $permissionName for user " .
-                                $kga['user']['name'] . " to access $objectTypeName");
-
-                return false;
-            }
-        }
-
-        if (count($removeFromOwnGroups) > 0) {
-            $permissionName = "core__${objectTypeName}__${action}";
-            if (!$database->checkMembershipPermission($kga['user']['user_id'], $removeFromOwnGroups, $permissionName)) {
-                Logger::logfile("missing membership permission $permissionName of old own group(s) " .
-                                implode(', ', $removeFromOwnGroups) . ' for user ' . $kga['user']['name'] .
-                                " to access $objectTypeName");
-
-                return false;
-            }
-        }
-    }
-
-    return true;
 }
 
 /**
@@ -247,16 +99,36 @@ function checkUser()
     kickUser();
 }
 
-/*
- * this is entry point to manager the whole list of configuration.  This is the one to maintain.
- * What goes through here:
- *      - basics.php (all interactions initialize with basics.php)
- *      - admin..advanced edition
- *      - installation
- *      - updater
- */
+function clean_data($data)
+{
+    $return = array();
+
+    foreach ($data as $key => $value) {
+        if ($key !== 'pw') {
+            $return[$key] = urldecode(strip_tags($data[$key]));
+            $return[$key] = str_replace('"', '_', $data[$key]);
+            $return[$key] = str_replace("'", '_', $data[$key]);
+            $return[$key] = str_replace('\\', '', $data[$key]);
+        }
+        else {
+            $return[$key] = $data[$key];
+        }
+    }
+
+    return $return;
+}
+
 function config_init()
 {
+    /*
+     * this is entry point to manager the whole list of configuration.  This is the one to maintain.
+     * What goes through here:
+     *      - basics.php (all interactions initialize with basics.php)
+     *      - admin..advanced edition
+     *      - installation
+     *      - updater
+     */
+
     global $kga;
 
     //DEFAULT CONFIG VALUES
@@ -275,7 +147,7 @@ function config_init()
     $K['date_format_1']               = '%d.%m.';
     $K['date_format_2']               = '%d.%m.%Y';
     $K['decimal_separator']           = ',';
-    $K['default_status_id']             = '4';
+    $K['default_status_id']           = '4';
     $K['duration_with_seconds']       = '0';
     $K['edit_limit']                  = '-';
     $K['exact_sums']                  = '0';
@@ -334,14 +206,16 @@ function config_bill_pct()
     }
 
     // safety
-    if (null === ($kga['bill_pct'])) {$kga['bill_pct'][] = array(100 => '100%');}
+    if (null === ($kga['bill_pct'])) {
+        $kga['bill_pct'][] = array(100 => '100%');
+    }
 }
 
 function config_set($option, $value = null, $force_set = false, $type = 'str', $decimals = 2)
 {
     global $kga;
 
-    if (!array_key_exists($option,$kga['conf'])) {
+    if (!array_key_exists($option, $kga['conf'])) {
         Logger::logfile("Error: Option *$option* does not exist. Can not set it.");
 
         return false;
@@ -414,6 +288,11 @@ function convert_time_strings($in, $out)
     return $time;
 }
 
+function cookie_get($cookie_name, $default = null)
+{
+    return isset($_COOKIE[$cookie_name]) ? $_COOKIE[$cookie_name] : $default;
+}
+
 function cookie_set($name, $value, $expire = 0, $secure = false, $httponly = false)
 {
     //DEBUG// error_log('<<== COOKIE == NAME >>'.$name.'<<value>>'.$value.'<<expire>>'.$expire);
@@ -421,56 +300,6 @@ function cookie_set($name, $value, $expire = 0, $secure = false, $httponly = fal
         setcookie($name, $value, $expire, '/',
                   $_SERVER['SERVER_NAME'], $secure, $httponly);
     }
-}
-
-/*
- * Check if an action on a core object is allowed either
- *   - for other groups or
- *   - for any group the current user is a member of.
- *
- *  This is helpfull to check if an option to do the action should be presented to the user.
- *
- * @param $objectTypeName string name of the object type being edited (e.g. Project)
- * @param $action         the action being performed (e.g. add)
- *
- * @return true if allowed, false otherwise
- */
-function coreObjectActionAllowed($objectTypeName, $action)
-{
-    global $database, $kga;
-
-    if ($database->global_role_allows(any_get_global_role_id(), "core__${objectTypeName}__other_group__${action}")) {
-        return true;
-    }
-
-    return (array_key_exists('user', $kga)
-        && $database->checkMembershipPermission($kga['user']['user_id'],
-                                                $kga['user']['groups'],
-                                                "core__${objectTypeName}__${action}", 'any'));
-}
-
-function password_encrypt($new_password)
-{
-    global $kga;
-
-    $encrypted = md5($kga['password_salt'] . $new_password . $kga['password_salt']);
-
-    //DEBUG// error_log('<<== PASSWORD ==>>' . $new_password . '<<== ENCRYPTED ==>>' . $encrypted);
-
-    return $encrypted;
-}
-
-function createPassword($length)
-{
-    $chars    = '234567890abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $i        = 0;
-    $password = '';
-    while ($i <= $length) {
-        $password .= $chars{mt_rand(0, strlen($chars) - 1)};
-        $i++;
-    }
-
-    return $password;
 }
 
 function devTimeSpan()
@@ -531,21 +360,6 @@ function getRequestDecimal($value)
 }
 
 /**
- * read a cookie or return a default value, if cookie is not set
- *
- * @param string $cookie_name
- * @param mixed  $default the value, which will be returned, when the cookie is not set
- *
- * @return mixed
- *
- * @author rvock
- */
-function get_cookie($cookie_name, $default = null)
-{
-    return isset($_COOKIE[$cookie_name]) ? $_COOKIE[$cookie_name] : $default;
-}
-
-/**
  * get in and out unix seconds of specific user
  *
  * <pre>
@@ -565,21 +379,8 @@ function get_timeframe()
     global $kga;
 
     $timeframe = array(null, null);
-
-    switch (true) {
-        case array_key_exists('user', $kga):
-            $timeframe[0] = $kga['user']['timeframe_begin'];
-            $timeframe[1] = $kga['user']['timeframe_end'];
-            break;
-
-        case array_key_exists('customer', $kga):
-            $timeframe[0] = $kga['customer']['timeframe_begin'];
-            $timeframe[1] = $kga['customer']['timeframe_end'];
-            break;
-
-        default:
-            return $timeframe;
-    }
+    $timeframe[0] = $kga['who']['timeframe_begin'] ?: null;
+    $timeframe[1] = $kga['who']['timeframe_end'] ?: null;
 
 
     /* database has no entries? */
@@ -596,39 +397,55 @@ function get_timeframe()
     return $timeframe;
 }
 
+function is_customer()
+{
+    global $kga;
+
+    return ($kga['who']['type'] === 'customer');
+}
+
 function is_user()
 {
     global $kga;
 
-    if (array_key_exists('user', $kga)) {return true;}
-
-    return false;
+    return ($kga['who']['type'] === 'user');
 }
 
-/**
- * Kill the current users session by redirecting him to the logout page.
- */
 function kickUser()
 {
     die('<script type="text/javascript">window.location.href = "../index.php?a=logout";</script>');
 }
 
-/*
- * Returns array for smarty's html_options funtion.
- *
- * <pre>
- * returns:
- * [0] -> project/activity names
- * [1] -> values as IDs
- * </pre>
- *
- * @param string either 'project', 'activity', 'customer', 'group'
- *
- * @return array
- * @author th, sl, kp
- */
+function ki_iconv_set_encoding($type, $charset = 'UTF-8')
+{
+    // iconv_set_encoding deprecated WARNINGS //
+
+    if (PHP_VERSION_ID < 50600) {
+        iconv_set_encoding($type, $charset);
+    }
+    else {
+        ini_set('default_charset', $charset);
+    }
+
+    return true;
+}
+
 function makeSelectBox($subject, $groups, $selection = null, $includeDeleted = false)
 {
+    /*
+     * Returns array for smarty's html_options funtion.
+     *
+     * <pre>
+     * returns:
+     * [0] -> project/activity names
+     * [1] -> values as IDs
+     * </pre>
+     *
+     * @param string either 'project', 'activity', 'customer', 'group'
+     *
+     * @return array
+     * @author th, sl, kp
+     */
 
     global $database, $kga;
 
@@ -638,20 +455,21 @@ function makeSelectBox($subject, $groups, $selection = null, $includeDeleted = f
         case 'project':
             $projects = $database->get_projects($groups);
             if (is_array($projects)) {
+
                 foreach ($projects as $project) {
                     if ($project['visible']) {
+
                         if ($kga['pref']['flip_project_display']) {
                             $projectName = $project['customer_name'] . ': ' . $project['name'];
-                            if ($kga['pref']['project_comment_flag']) {
-                                $projectName .= '(' . $project['comment'] . ')';
-                            }
                         }
                         else {
                             $projectName = $project['name'] . ' (' . $project['customer_name'] . ')';
-                            if ($kga['pref']['project_comment_flag']) {
-                                $projectName .= '(' . $project['comment'] . ')';
-                            }
                         }
+
+                        if ($kga['pref']['project_comment_flag']) {
+                            $projectName .= '(' . $project['comment'] . ')';
+                        }
+
                         $sel[$project['project_id']] = $projectName;
                     }
                 }
@@ -670,13 +488,13 @@ function makeSelectBox($subject, $groups, $selection = null, $includeDeleted = f
             break;
 
         case 'customer':
-            $customers      = $database->get_customers($groups);
+            $customers      = $database->customers_get($groups);
             $selectionFound = false;
             if (is_array($customers)) {
                 foreach ($customers as $customer) {
                     if ($customer['visible']) {
                         $sel[$customer['customer_id']] = $customer['name'];
-                        if ($selection == $customer['customer_id']) {
+                        if ($selection === $customer['customer_id']) {
                             $selectionFound = true;
                         }
                     }
@@ -688,12 +506,14 @@ function makeSelectBox($subject, $groups, $selection = null, $includeDeleted = f
             }
             break;
 
+
         case 'group':
-            $groups = $database->get_groups();
-            if (!$database->global_role_allows(any_get_global_role_id(), 'core__group__other_group__view')) {
+            $groups = $database->groups_get();
+            if (!$database->gRole_allows($kga['who']['global_role_id'], 'core__group__other_group__view')) {
                 $groups = array_filter($groups,
                     function ($group) {
-                        return in_array($group['group_id'], any_get_group_ids(), true) !== false;
+                        global $kga;
+                        return in_array($group['group_id'], $kga['who']['groups'], true) !== false;
                     }
                 );
             }
@@ -707,7 +527,7 @@ function makeSelectBox($subject, $groups, $selection = null, $includeDeleted = f
 
         case 'sameGroupUser':
             //CN..current-user groups already in $kga//
-            $users = $database->get_users(0, $kga['user']['groups']);
+            $users = $database->users_get(0, $kga['who']['groups']);
 
             foreach ($users as $user) {
                 if ($includeDeleted || !$user['trash']) {
@@ -717,7 +537,7 @@ function makeSelectBox($subject, $groups, $selection = null, $includeDeleted = f
             break;
 
         case 'allUser':
-            $users = $database->get_users($kga['user']);
+            $users = $database->users_get($kga['user']);
 
             foreach ($users as $user) {
                 if ($includeDeleted || !$user['trash']) {
@@ -735,25 +555,37 @@ function makeSelectBox($subject, $groups, $selection = null, $includeDeleted = f
 
 }
 
-function ki_iconv_set_encoding($type, $charset = 'UTF-8') {
-    // iconv_set_encoding deprecated WARNINGS //
-
-    if (PHP_VERSION_ID < 50600) {
-        iconv_set_encoding($type, $charset);
+function password_create($length)
+{
+    $chars    = '234567890abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $i        = 0;
+    $password = '';
+    while ($i <= $length) {
+        $password .= $chars{mt_rand(0, strlen($chars) - 1)};
+        $i++;
     }
-    else {
-        ini_set('default_charset', $charset);
-    }
 
-    return true;
+    return $password;
 }
-/*
- * returns a random code with given length
- *
- * @global integer $length length of the code
- * @return array
- * @author th
- */
+
+function password_encrypt($new_password)
+{
+    global $kga;
+
+    $encrypted = md5($kga['password_salt'] . $new_password . $kga['password_salt']);
+
+    return $encrypted;
+}
+
+function password_encrypt_random()
+{
+    global $kga;
+
+    $random = md5($kga['password_salt'] . md5(uniqid(mt_rand(), true)) . $kga['password_salt']);
+
+    return $random;
+}
+
 function random_code($length)
 {
     $code   = '';
@@ -766,13 +598,6 @@ function random_code($length)
     return $code;
 }
 
-/*
- * returns a random number with X digits
- *
- * @global integer $length digit count of number
- * @return array
- * @author th
- */
 function random_number($length)
 {
     $number = '';
@@ -785,11 +610,6 @@ function random_number($length)
     return $number;
 }
 
-/**
- * Get a list of available time zones. This is directly taken from PHP.
- *
- * @return array of timezone names
- */
 function timezoneList()
 {
     return DateTimeZone::listIdentifiers();

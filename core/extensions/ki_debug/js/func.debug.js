@@ -61,12 +61,12 @@ function deb_ext_resize() {
     });
 
     $("#deb_ext_kga_wrap").css({
-        "top": headerHeight() + 30,
+        "top": headerHeight() + 23,
         "left": 10,
         "width": halb - 7
     });
 
-    $("#deb_ext_kga").css("height", pageHeight() - headerHeight() - 64);
+    $("#deb_ext_kga").css("height", pageHeight() - headerHeight() - 57);
 
     $("#deb_ext_logfile_header").css({
         "width": halb - 17,
@@ -75,11 +75,11 @@ function deb_ext_resize() {
     });
 
     $("#deb_ext_logfile_wrap").css({
-        "top": headerHeight() + 20,
+        "top": headerHeight() + 13,
         "left": halb + 5,
         "width": halb + 5
     });
-    $("#deb_ext_logfile").css("height", pageHeight() - headerHeight() - 64);
+    $("#deb_ext_logfile").css("height", pageHeight() - headerHeight() - 57);
 
 }
 

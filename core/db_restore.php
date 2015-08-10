@@ -359,7 +359,7 @@ if ($authenticated && isset($_REQUEST['submit'])) {
 
             $query = ('SHOW TABLES;');
 
-            $result_backup = $database->queryAll($query);
+            $result_backup = $database->queryArray($query);
 
             $arr  = array();
             $arr2 = array();

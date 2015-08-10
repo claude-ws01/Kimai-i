@@ -9,9 +9,12 @@ global $kga, $extensions;
 </script>
 
 <div id="deb_ext_kga_header">
-    <a href="#" title="Clear" onclick="deb_ext_reloadKGA();return false;"><img src="/grfx/action_refresh.png"
-                                                                               alt="Reload KGA"></a>
-    <strong>KIMAI GLOBAL ARRAY ($kga)</strong>
+    <a href="#"
+       title="Clear"
+       style="float:left;padding-right:5px;"
+       onclick="deb_ext_reloadKGA();return false;"><img src="/grfx/action_refresh.png"
+                                                        alt="Reload KGA"></a>
+    KIMAI GLOBAL ARRAY ($kga)
 </div>
 
 <div id="deb_ext_kga_wrap">
@@ -27,13 +30,14 @@ global $kga, $extensions;
         <div id="deb_ext_buttons">
             <a href="#"
                title="Clear"
-               onclick="deb_ext_clearLogfile();return false;"><img src="../skins/<?php echo $kga['pref']['skin'] ?>/grfx/button_trashcan.png"
-                                                                   width="13"
-                                                                   height="13"
-                                                                   alt="Clear"></a>
+               onclick="deb_ext_clearLogfile();return false;">
+                <img src="../skins/<?php echo $kga['pref']['skin'] ?>/grfx/button_trashcan.png"
+                     width="13"
+                     height="13"
+                     alt="Clear"></a>
         </div>
     <?php endif; ?>
-    <strong>DEBUG LOGFILE</strong> <?php echo $this->limitText ?>
+    DEBUG LOGFILE <?php echo $this->limitText ?>
 
     <form id="deb_ext_shoutbox" action="../extensions/ki_debug/processor.php" method="post">
         <input type="text" id="deb_ext_shoutbox_field" name="axValue" value="shoutbox"/>

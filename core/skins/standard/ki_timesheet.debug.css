@@ -100,11 +100,6 @@ div.ext.ki_timesheet table {
 /*     */
 
 
-a {
-    /*cursor: pointer*/
-}
-
-
 /* LINKS */
 #ts_m_tbl a.preselect_lnk {
     color: #363636;
@@ -135,7 +130,7 @@ a {
 /* column width */
 #ts_h_tbl td.option,
 #ts_m_tbl td.option {
-    width: 70px;
+    width: 60px;
 }
 
 #ts_h_tbl td.date,

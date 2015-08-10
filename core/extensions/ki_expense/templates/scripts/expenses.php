@@ -4,7 +4,9 @@ if ($this->expenses) {
     ?>
         <table id="xpe_m_tbl">
             <colgroup>
-                <col class="option"/>
+                <?php if (is_user()) { ?>
+                    <col class="option"/>
+                <?php } ?>
                 <col class="date"/>
                 <col class="time"/>
                 <col class="value"/>
@@ -35,10 +37,11 @@ if ($this->expenses) {
                 ?>
                 <tr id="xpe_<?php echo $row['expense_id'] ?>"
                     class="<?php echo $this->cycle(array('odd', 'even'))->next() ?>">
+                    <?php if (is_user()) { ?>
 
-                    <td style="white-space: nowrap" class="option <?php echo $td_class ?>">
+                    <td style="white-space: nowrap;" class="option <?php echo $td_class ?>">
 
-                        <?php if (array_key_exists('user', $kga) && ($kga['conf']['edit_limit'] === '-' 
+                        <?php if (($kga['conf']['edit_limit'] === '-'
                                 || time() - $row['timestamp'] <= $kga['conf']['edit_limit'])): ?>
                             <a href='#'
                                onClick="xpe_ext_editRecord(<?php echo $row['expense_id'] ?>); $(this).blur(); return false;"
@@ -60,6 +63,7 @@ if ($this->expenses) {
                         <?php endif; ?>
 
                     </td>
+                    <?php } ?>
 
                     <td class="date <?php echo $td_class ?>">
                         <?php echo $this->escape(strftime($kga['conf']['date_format_1'], $row['timestamp'])) ?>
@@ -89,20 +93,20 @@ if ($this->expenses) {
                         <?php echo $this->escape($row['description']) ?>
 
                         <?php if ($row['comment']): ?>
-                            <?php if ($row['comment_type'] == '0'): ?>
+                            <?php if ($row['comment_type'] === '0'): ?>
                                 <a href="#"
                                    onClick="xpe_ext_comment(<?php echo $row['expense_id'] ?>); $(this).blur(); return false;"><img
                                         src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/blase.gif'
                                         width="12" height="13" title='<?php echo $this->escape($row['comment']); ?>'
                                         border="0"/></a>
-                            <?php elseif ($row['comment_type'] == '1'): ?>
+                            <?php elseif ($row['comment_type'] === '1'): ?>
                                 <a href="#"
                                    onClick="xpe_ext_comment(<?php echo $row['expense_id'] ?>); $(this).blur(); return false;"><img
                                         src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/blase_sys.gif'
                                         width="12" height="13" title='<?php echo $this->escape($row['comment']); ?>'
                                         border="0"/></a>
                             <?php
-                            elseif ($row['comment_type'] == '2'): ?>
+                            elseif ($row['comment_type'] === '2'): ?>
                                 <a href="#"
                                    onClick="xpe_ext_comment(<?php echo $row['expense_id'] ?>); $(this).blur(); return false;"><img
                                         src='../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/blase_caution.gif'
@@ -122,7 +126,7 @@ if ($this->expenses) {
                 if ($row['comment']) {
                     ?>
                     <tr id="xpe_c_<?php echo $row['expense_id'] ?>"
-                        class="comm<?php echo $row['comment_type'] ?>" <?php if ($this->hideComments): ?> style="display:none;"<?php endif; ?>>
+                        class="comm<?php echo $row['comment_type'] ?>" <?php if ($this->hideComments): ?> style="display:none;;"<?php endif; ?>>
                         <td colspan="8"><?php echo nl2br($this->escape($row['comment'])); ?></td>
                     </tr>
                 <?php }

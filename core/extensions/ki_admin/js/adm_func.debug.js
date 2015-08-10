@@ -38,7 +38,7 @@ function adm_ext_resize() {
         pagew, panel_w, panel_h;
 
     pagew = pageWidth();
-    drittel = (pagew - 10) / 3 - 7;
+    drittel = (pagew - 10) / 3 - 7; //drittel = 'third'
 
     panel_w = pagew - 24;
     panel_h = pageHeight() - 10 - headerHeight();
@@ -49,7 +49,7 @@ function adm_ext_resize() {
     $(".adm_ext_panel_header").css("width", panel_w);
     panel.css("height", panel_h);
 
-    subtab.css("height", panel_h - (10 * 21) - 20 - 1);
+    subtab.css("height", panel_h - (subtab.length * 21) - 10 - 1);
 
     adm_ext_subtab_autoexpand();
 }
@@ -80,7 +80,7 @@ function adm_ext_subtab_expand(id) {
     subtab = "#adm_ext_s" + id;
     $(subtab).css("display", "block");
 
-    $.cookie('adm_ext_activePanel_' + user_id, id,";path=/");
+    $.cookie('adm_ext_activePanel_' + user_id, id, ";path=/");
 }
 
 /**
@@ -164,11 +164,9 @@ function adm_ext_users_changed() {
     }
 }
 
-// ------------------------------------------------------
 // ----------------------------------------------------------------------------------------
 // graps the value of the newUser input field 
 // and ajaxes it to the createUser function of the processor
-//
 function adm_ext_newUser() {
 
     var newuser = $("#newuser").val();
@@ -180,7 +178,9 @@ function adm_ext_newUser() {
     $('#ajax_wait').show();
     $.post(adm_ext_path + "processor.php", {
             axAction: "createUser",
-            axValue: newuser, id: 0},
+            axValue: newuser,
+            id: 0
+        },
 
         function (data) {
             $('#ajax_wait').hide();
@@ -194,13 +194,40 @@ function adm_ext_newUser() {
         });
 }
 
+function adm_ext_newProject() {
+
+    var customerId = $("#customer_id").val();
+    if (customerId == "" || customerId == 0) {
+        alert(lang_checkCustomer);
+        return false;
+    }
+    $('#ajax_wait').show();
+    $.post(adm_ext_path + "processor.php", {
+            axAction: "createProject",
+            axValue: customerId,
+            id: 0
+        },
+
+        function (data) {
+            $('#ajax_wait').hide();
+            if (data.project_id === false) {
+                alert(data.errors.join("\n"));
+                return;
+            }
+
+            adm_ext_refreshSubtab('projects');
+            editObject('project',data.project_id);
+        });
+}
+
 function adm_ext_showDeletedUsers() {
 
     $('#ajax_wait').show();
     $.post(adm_ext_path + "processor.php", {
             axAction: "toggleDeletedUsers",
             axValue: 1,
-            id: 0},
+            id: 0
+        },
 
         function (data) {
             $('#ajax_wait').hide();
@@ -214,7 +241,8 @@ function adm_ext_hideDeletedUsers() {
     $.post(adm_ext_path + "processor.php", {
             axAction: "toggleDeletedUsers",
             axValue: 0,
-            id: 0},
+            id: 0
+        },
 
         function (data) {
             $('#ajax_wait').hide();
@@ -225,7 +253,6 @@ function adm_ext_hideDeletedUsers() {
 // ----------------------------------------------------------------------------------------
 // graps the value of the newGroup input field 
 // and ajaxes it to the createGroup function of the processor
-//
 function adm_ext_newGroup() {
 
     var newgroup = $("#newgroup").val();
@@ -238,7 +265,8 @@ function adm_ext_newGroup() {
     $.post(adm_ext_path + "processor.php", {
             axAction: "createGroup",
             axValue: newgroup,
-            id: 0},
+            id: 0
+        },
 
         function (data) {
             $('#ajax_wait').hide();
@@ -249,7 +277,6 @@ function adm_ext_newGroup() {
 //----------------------------------------------------------------------------------------
 //graps the value of the newGroup input field 
 //and ajaxes it to the createGroup function of the processor
-//
 function adm_ext_newStatus() {
 
     var newstatus = $("#newstatus").val();
@@ -263,7 +290,8 @@ function adm_ext_newStatus() {
     $.post(adm_ext_path + "processor.php", {
             axAction: "createStatus",
             axValue: newstatus,
-            id: 0},
+            id: 0
+        },
 
         function (data) {
             $('#ajax_wait').hide();
@@ -274,7 +302,6 @@ function adm_ext_newStatus() {
 //----------------------------------------------------------------------------------------
 //graps the value of the newGlobalRole input field 
 //and ajaxes it to the createGlobalRole function of the processor
-//
 function adm_ext_newGlobalRole() {
 
     var newGlobalRole = $("#newGlobalRole").val();
@@ -287,7 +314,8 @@ function adm_ext_newGlobalRole() {
     $.post(adm_ext_path + "processor.php", {
             axAction: "createGlobalRole",
             axValue: newGlobalRole,
-            id: 0},
+            id: 0
+        },
 
         function (data) {
             if (data.errors.length > 0) {
@@ -303,7 +331,6 @@ function adm_ext_newGlobalRole() {
 //----------------------------------------------------------------------------------------
 //graps the value of the newMembershipRole input field 
 //and ajaxes it to the createMembershipRole function of the processor
-//
 function adm_ext_newMembershipRole() {
 
     var newMembershipRole = $("#newMembershipRole").val();
@@ -331,7 +358,6 @@ function adm_ext_newMembershipRole() {
 
 // ----------------------------------------------------------------------------------------
 // by clicking on the edit button of a user the edit dialogue pops up
-//
 function adm_ext_editUser(id) {
 
     floaterShow(adm_ext_path + "floaters.php", "editUser", 0, id, 400);
@@ -339,7 +365,6 @@ function adm_ext_editUser(id) {
 
 // ----------------------------------------------------------------------------------------
 // by clicking on the edit button of a group the edit dialogue pops up
-//
 function adm_ext_editGroup(id) {
 
     floaterShow(adm_ext_path + "floaters.php", "editGroup", 0, id, 450);
@@ -347,7 +372,6 @@ function adm_ext_editGroup(id) {
 
 //----------------------------------------------------------------------------------------
 //by clicking on the edit button of a status the edit dialogue pops up
-//
 function adm_ext_editStatus(id) {
 
     floaterShow(adm_ext_path + "floaters.php", "editStatus", 0, id, 450);
@@ -355,7 +379,6 @@ function adm_ext_editStatus(id) {
 
 //----------------------------------------------------------------------------------------
 //by clicking on the edit button of a global role the edit dialogue pops up
-//
 function adm_ext_editGlobalRole(id) {
 
     floaterShow(adm_ext_path + "floaters.php", "editGlobalRole", 0, id, 550, function () {
@@ -365,7 +388,6 @@ function adm_ext_editGlobalRole(id) {
 
 //----------------------------------------------------------------------------------------
 //by clicking on the edit button of a membership role the edit dialogue pops up
-//
 function adm_ext_editMembershipRole(id) {
 
     floaterShow(adm_ext_path + "floaters.php", "editMembershipRole", 0, id, 550, function () {
@@ -375,7 +397,6 @@ function adm_ext_editMembershipRole(id) {
 
 // ----------------------------------------------------------------------------------------
 // refreshes either user/group/advanced/DB subtab
-//
 function adm_ext_refreshSubtab(tab) {
 
     var options, target;
@@ -427,7 +448,6 @@ function adm_ext_refreshSubtab(tab) {
 
 // ----------------------------------------------------------------------------------------
 // delete user
-//
 function adm_ext_deleteUser(id, trash) {
 
     if (!confirm(lang_sure)) return;
@@ -438,7 +458,8 @@ function adm_ext_deleteUser(id, trash) {
     $.post(adm_ext_path + "processor.php", {
             axAction: "deleteUser",
             axValue: axData,
-            id: id},
+            id: id
+        },
 
         function () {
             $('#ajax_wait').hide();
@@ -451,7 +472,6 @@ function adm_ext_deleteUser(id, trash) {
 
 // ----------------------------------------------------------------------------------------
 // delete group
-//
 function adm_ext_deleteGroup(id) {
 
     if (!confirm(lang_sure)) return;
@@ -459,7 +479,8 @@ function adm_ext_deleteGroup(id) {
     $('#ajax_wait').show();
     $.post(adm_ext_path + "processor.php", {
             axAction: "deleteGroup",
-            id: id},
+            id: id
+        },
 
         function (result) {
             $('#ajax_wait').hide();
@@ -476,7 +497,6 @@ function adm_ext_deleteGroup(id) {
 
 //----------------------------------------------------------------------------------------
 //delete status
-//
 function adm_ext_deleteStatus(id) {
 
     if (!confirm(lang_sure)) return;
@@ -484,7 +504,8 @@ function adm_ext_deleteStatus(id) {
     $('#ajax_wait').show();
     $.post(adm_ext_path + "processor.php", {
             axAction: "deleteStatus",
-            id: id},
+            id: id
+        },
 
         function () {
             $('#ajax_wait').hide();
@@ -495,7 +516,6 @@ function adm_ext_deleteStatus(id) {
 
 // ----------------------------------------------------------------------------------------
 // delete project
-//
 function adm_ext_deleteProject(id) {
 
     if (!confirm(lang_sure)) return;
@@ -509,7 +529,8 @@ function adm_ext_deleteProject(id) {
     $('#ajax_wait').show();
     $.post(adm_ext_path + "processor.php", {
             axAction: "deleteProject",
-            id: id},
+            id: id
+        },
 
         function () {
             $('#ajax_wait').hide();
@@ -521,7 +542,6 @@ function adm_ext_deleteProject(id) {
 
 // ----------------------------------------------------------------------------------------
 // delete customer
-//
 function adm_ext_deleteCustomer(id) {
 
     if (!confirm(lang_sure)) return;
@@ -535,7 +555,8 @@ function adm_ext_deleteCustomer(id) {
     $('#ajax_wait').show();
     $.post(adm_ext_path + "processor.php", {
             axAction: "deleteCustomer",
-            id: id},
+            id: id
+        },
 
         function () {
             $('#ajax_wait').hide();
@@ -547,7 +568,6 @@ function adm_ext_deleteCustomer(id) {
 
 // ----------------------------------------------------------------------------------------
 // delete activity
-//
 function adm_ext_deleteActivity(id) {
 
     if (!confirm(lang_sure)) return;
@@ -561,7 +581,8 @@ function adm_ext_deleteActivity(id) {
     $('#ajax_wait').show();
     $.post(adm_ext_path + "processor.php", {
             axAction: "deleteActivity",
-            id: id},
+            id: id
+        },
 
         function () {
             $('#ajax_wait').hide();
@@ -573,7 +594,6 @@ function adm_ext_deleteActivity(id) {
 
 //----------------------------------------------------------------------------------------
 //delete global role
-//
 function adm_ext_deleteGlobalRole(id) {
 
     if (!confirm(lang_sure)) return;
@@ -581,7 +601,8 @@ function adm_ext_deleteGlobalRole(id) {
     $('#ajax_wait').show();
     $.post(adm_ext_path + "processor.php", {
             axAction: "deleteGlobalRole",
-            id: id},
+            id: id
+        },
 
         function () {
             $('#ajax_wait').hide();
@@ -592,7 +613,6 @@ function adm_ext_deleteGlobalRole(id) {
 
 //----------------------------------------------------------------------------------------
 //delete membership role
-//
 function adm_ext_deleteMembershipRole(id) {
 
     if (!confirm(lang_sure)) return;
@@ -600,7 +620,8 @@ function adm_ext_deleteMembershipRole(id) {
     $('#ajax_wait').show();
     $.post(adm_ext_path + "processor.php", {
             axAction: "deleteMembershipRole",
-            id: id},
+            id: id
+        },
 
         function () {
             $('#ajax_wait').hide();
@@ -611,7 +632,6 @@ function adm_ext_deleteMembershipRole(id) {
 
 // ----------------------------------------------------------------------------------------
 // activates user for login
-//
 function adm_ext_unbanUser(id) {
 
     var ban = $("#ban" + id);
@@ -623,7 +643,8 @@ function adm_ext_unbanUser(id) {
     $.post(adm_ext_path + "processor.php", {
             axAction: "unbanUser",
             axValue: 0,
-            id: id},
+            id: id
+        },
 
         function (data) {
             $('#ajax_wait').hide();
@@ -635,7 +656,6 @@ function adm_ext_unbanUser(id) {
 
 // ----------------------------------------------------------------------------------------
 // toggle ban and unban of users in admin panel
-//
 function adm_ext_banUser(id) {
 
     var ban = $("#ban" + id);
@@ -647,7 +667,8 @@ function adm_ext_banUser(id) {
     $.post(adm_ext_path + "processor.php", {
             axAction: "banUser",
             axValue: 0,
-            id: id},
+            id: id
+        },
 
         function (data) {
             $('#ajax_wait').hide();
@@ -668,4 +689,14 @@ function adm_ext_checkupdate() {
         }
     );
 
+}
+
+function adm_ext_permissionChangeAll(input) {
+
+    var group = input.name,
+        permissions = $('#' + group).find('input');
+
+    permissions.each(function (element, index, array) {
+        index.checked = input.checked;
+    });
 }

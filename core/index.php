@@ -102,7 +102,7 @@ if (!$justLoggedOut
     if ($userId === false) {
         $userId = $database->user_create(array(
                                              'name'           => $name,
-                                             'global_role_id' => any_get_global_role_id(),
+                                             'global_role_id' => $kga['who']['global_role_id'],
                                              'active'         => 1,
                                          ));
         $database->setGroupMemberships($userId, array($authPlugin->getDefaultGroups()));

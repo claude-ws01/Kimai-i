@@ -1,4 +1,5 @@
 <?php global $kga; ?>
+<div class="top">
 <form>
     <input type=text
            id="newMembershipRole"
@@ -9,7 +10,7 @@
            value="<?php echo $kga['dict']['addMembershipRole'] ?>"
            onclick="adm_ext_newMembershipRole(); return false;">
 </form>
-<br/>
+</div>
 <table>
     <thead>
     <tr class='headerrow'>
@@ -43,9 +44,7 @@
                              height="13"
                              alt="<?php echo $kga['dict']['editMembershipRole'] ?>"
                              border="0"></a>
-
                     &nbsp;
-
                     <?php if ((int)$membershipRole['count_users'] === 0): ?>
                         <a href="#"
                            onClick="adm_ext_deleteMembershipRole(<?php echo $membershipRole['membership_role_id'] ?>)"><img

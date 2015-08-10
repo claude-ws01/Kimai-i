@@ -27,8 +27,8 @@ include('private_db_layer_mysql.php');
 
 checkUser();
 
-$dir_templates = "templates/";
-$datasrc       = "config.ini";
+$dir_templates = 'templates/';
+$datasrc       = 'config.ini';
 $settings      = parse_ini_file($datasrc);
 $dir_ext       = $settings['EXTENSION_DIR'];
 
@@ -46,18 +46,20 @@ $view->addHelperPath(WEBROOT . '/templates/helpers', 'Zend_View_Helper');
 $view->kga = $kga;
 
 // prevent IE from caching the response
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-header("Cache-Control: no-store, no-cache, must-revalidate");
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache");
+header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+header('Cache-Control: no-store, no-cache, must-revalidate');
+header('Cache-Control: post-check=0, pre-check=0', false);
+header('Pragma: no-cache');
 
-if (array_key_exists('user', $kga)) // user logged in
+
+
+if (is_user()) // user logged in
 {
-    $view->expenses = get_expenses($in, $out, array($kga['user']['user_id']), null, null, 1);
+    $view->expenses = get_expenses($in, $out, array($kga['who']['id']), null, null, 1);
 }
 else // customer logged in
 {
-    $view->expenses = get_expenses($in, $out, null, array($kga['customer']['customer_id']), null, 1);
+    $view->expenses = get_expenses($in, $out, null, array($kga['who']['id']), null, 1);
 }
 
 $view->total = Format::formatCurrency(array_reduce($view->expenses, function ($sum, $expense) {
@@ -65,48 +67,52 @@ $view->total = Format::formatCurrency(array_reduce($view->expenses, function ($s
 }, 0));
 
 
-if (array_key_exists('user', $kga)) // user logged in
+
+
+if (is_user())
 {
-    $ann = expenses_by_user($in, $out, array($kga['user']['user_id']));
+    $ann = expenses_by_user($in, $out, array($kga['who']['id']));
 }
-else // customer logged in
+else
 {
-    $ann = expenses_by_user($in, $out, null, array($kga['customer']['customer_id']));
+    $ann = expenses_by_user($in, $out, null, array($kga['who']['id']));
 }
 $ann                    = Format::formatCurrency($ann);
 $view->user_annotations = $ann;
 
 // TODO: function for loops or convert it in template with new function
-if (array_key_exists('user', $kga)) // user logged in
+if (is_user())
 {
-    $ann = expenses_by_customer($in, $out, array($kga['user']['user_id']));
+    $ann = expenses_by_customer($in, $out, array($kga['who']['id']));
 }
-else // customer logged in
+else
 {
-    $ann = expenses_by_customer($in, $out, null, array($kga['customer']['customer_id']));
+    $ann = expenses_by_customer($in, $out, null, array($kga['who']['id']));
 }
 $ann                        = Format::formatCurrency($ann);
 $view->customer_annotations = $ann;
 
-if (array_key_exists('user', $kga)) // user logged in
+
+
+if (is_user())
 {
-    $ann = expenses_by_project($in, $out, array($kga['user']['user_id']));
+    $ann = expenses_by_project($in, $out, array($kga['who']['id']));
 }
-else // customer logged in
+else
 {
-    $ann = expenses_by_project($in, $out, null, array($kga['customer']['customer_id']));
+    $ann = expenses_by_project($in, $out, null, array($kga['who']['id']));
 }
 $ann                       = Format::formatCurrency($ann);
 $view->project_annotations = $ann;
 
-if (array_key_exists('user', $kga)) {
-    $view->hideComments = $kga['pref']['show_comments_by_default'] != 1;
-}
-else {
-    $view->hideComments = true;
+
+
+$view->hideComments = true;
+if (is_user()) {
+    $view->hideComments = (int)$kga['pref']['show_comments_by_default'] !== 1;
 }
 
-$view->expenses_display = $view->render("expenses.php");
+$view->expenses_display = $view->render('expenses.php');
 
 echo $view->render('main.php');
 

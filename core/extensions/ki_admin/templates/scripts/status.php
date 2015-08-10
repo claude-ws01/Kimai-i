@@ -1,12 +1,16 @@
 <?php global $kga; ?>
-<form>
-    <input type="text" id="newstatus" class="formfield" placeholder="<?php echo $kga['dict']['status_name_add'] ?>"/>
-    <input class='btn_ok'
-           type=submit
-           value="<?php echo $kga['dict']['new_status'] ?>"
-           onclick="adm_ext_newStatus(); return false;">
-</form>
-<br/>
+<div class="top">
+    <form>
+        <input type="text"
+               id="newstatus"
+               class="formfield"
+               placeholder="<?php echo $kga['dict']['status_name_add'] ?>"/>
+        <input class='btn_ok'
+               type=submit
+               value="<?php echo $kga['dict']['add_status'] ?>"
+               onclick="adm_ext_newStatus(); return false;">
+    </form>
+</div>
 <table>
     <thead>
     <tr class='headerrow'>
@@ -39,8 +43,8 @@
                             width="13"
                             height="13"
                             alt="<?php echo $kga['dict']['editstatus'] ?>"
-                            border="0">
-                    </a>&nbsp;
+                            border="0"></a>
+                    &nbsp;
                     <?php if ((int)$statusarray['timeSheetEntryCount'] === 0): ?>
                         <a href="#" onClick="adm_ext_deleteStatus(<?php echo $statusarray['status_id'] ?>)"><img
                                 src="../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/button_trashcan.png"

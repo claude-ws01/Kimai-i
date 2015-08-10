@@ -33,7 +33,7 @@ if ($_REQUEST['language'] === "en") {
         Don't forget to change the password immediately!
     </div>
     <button onClick="step_back(); return false;">Back</button>
-    <button onClick="install(); return false;" class="proceed">Install</button>
+    <button style="float:right;" onClick="install(); return false;" class="proceed">Install</button>
 EOD;
 
 }
@@ -61,7 +61,7 @@ else {
         anmelden. Vergessen Sie nicht das Admin-Passwort anschließend sofort zu ändern!
     </div>
     <button onClick="step_back(); return false;">Zurück</button>
-    <button onClick="install(); return false;" class="proceed">Installieren</button>
+    <button style="float:right;" onClick="install(); return false;" class="proceed">Installieren</button>
 EOD;
 
 }

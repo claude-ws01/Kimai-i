@@ -22,6 +22,8 @@
 $isCoreProcessor = 0;
 $dir_templates   = 'templates';
 global $database, $kga, $view;
+
+global $axAction, $axValue, $id, $timeframe, $in, $out;
 require('../../includes/kspi.php');
 
 $datasrc  = 'config.ini';
@@ -47,18 +49,18 @@ switch ($axAction) {
 
         $view->memberships = array();
         foreach ($database->user_get_group_ids($id, false) as $groupId) {
-            $view->memberships[$groupId] = $database->user_get_membership_role($id, $groupId);
+            $view->memberships[$groupId] = $database->user_get_mRole_id($id, $groupId);
         }
 
-        $groups = $database->get_groups(get_cookie('adm_ext_show_deleted_groups', 0));
-        if ($database->global_role_allows(any_get_global_role_id(), 'core__group__other_group__view')) {
+        $groups = $database->groups_get();
+        if ($database->gRole_allows($kga['who']['global_role_id'], 'core__group__other_group__view')) {
             $view->groups = $groups;
         }
         else {
             $view->groups = array_filter($groups, function ($group) {
                 global $kga;
 
-                return in_array($group['group_id'], $kga['user']['groups'], true);
+                return in_array($group['group_id'], $kga['who']['groups'], true);
             });
         }
 
@@ -108,7 +110,7 @@ switch ($axAction) {
         $view->name         = $globalRoleDetails['name'];
         $view->action       = 'editGlobalRole';
         $view->reloadSubtab = 'globalRoles';
-        $view->title        = $kga['dict']['editGlobalRole'];
+        $view->title        = $kga['dict']['editGlobalRole'] . ':&nbsp;&nbsp;' . $globalRoleDetails['name'];
         $view->permissions  = $globalRoleDetails;
         unset($view->permissions['global_role_id'], $view->permissions['name']);
         echo $view->render('floaters/editglobalrole.php');
@@ -126,9 +128,11 @@ switch ($axAction) {
         $view->name         = $membershipRoleDetails['name'];
         $view->action       = 'editMembershipRole';
         $view->reloadSubtab = 'membershipRoles';
-        $view->title        = $kga['dict']['editMembershipRole'];
+        $view->title        = $kga['dict']['editMembershipRole'] . ':&nbsp;&nbsp;' . $membershipRoleDetails['name'];
         $view->permissions  = $membershipRoleDetails;
+
         unset($view->permissions['membership_role_id'], $view->permissions['name']);
+
         echo $view->render('floaters/editglobalrole.php');
 
         break;

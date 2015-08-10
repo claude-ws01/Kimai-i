@@ -7,7 +7,7 @@
 
 <div id="xpe_head">
     <div class="left">
-        <?php if (array_key_exists('user', $kga)): ?>
+        <?php if (is_user()): ?>
             <a href="#"
                onClick="floaterShow('../extensions/ki_expense/floaters.php','add_edit_record',0,0,600);
                 $(this).blur();
@@ -17,7 +17,7 @@
     </div>
     <table id="xpe_h_tbl">
         <colgroup>
-            <col class="option"/>
+            <?php if (is_user()) { ?><col class="option"/><?php } ?>
             <col class="date"/>
             <col class="time"/>
             <col class="value"/>
@@ -29,7 +29,7 @@
         </colgroup>
         <tbody>
         <tr>
-            <td class="option">&nbsp;</td>
+            <?php if (is_user()) { ?><td class="option">&nbsp;</td><?php } ?>
             <td class="date"><?php echo $kga['dict']['datum'] ?></td>
             <td class="time"><?php echo $kga['dict']['timelabel'] ?></td>
             <td class="value"><?php echo $kga['dict']['xpe_expense'] ?></td>

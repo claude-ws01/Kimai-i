@@ -56,7 +56,7 @@ class Kimai_Remote_Api
      */
     private function init($apiKey, $permission = null, $allowCustomer = false)
     {
-        global $database, $kga;
+        global $database;
 
         if (!is_object($database)) {
             return false;
@@ -70,13 +70,13 @@ class Kimai_Remote_Api
         $database->checkUserInternal($uName, false);
 
         if ($permission !== null) {
-         // if we ever want to check permissions!
+            // if we ever want to check permissions!
             $dummy = true;
         }
 
         // do not let customers access the SOAP API
 
-        return !(empty($kga['user']) || (!$allowCustomer && array_key_exists('customer', $kga)));
+        return !(!$allowCustomer && is_customer());
     }
 
     /**
@@ -235,7 +235,7 @@ class Kimai_Remote_Api
             return $this->getErrorResult('Invalid project or task');
         }
 
-        $uid = $kga['user']['user_id'];
+        $uid = $kga['who']['id'];
 
         /*
         if (count($database->get_current_recordings($uid)) > 0) {
@@ -297,12 +297,13 @@ class Kimai_Remote_Api
             return $this->getAuthErrorResult();
         }
 
-        $users = $database->get_user_watchable_users($kga['user']);
+        $users = $database->user_watchable_users($kga['user']);
 
         if (count($users) > 0) {
             $results = array();
             foreach ($users as $row) {
-                $results[] = array('user_id' => $row['user_id'], 'name' => $row['name']);
+                $results[] = array('user_id' => $row['user_id'],
+                                   'name'    => $row['name']);
             }
 
             return $this->getSuccessResult($results);
@@ -328,18 +329,20 @@ class Kimai_Remote_Api
             return $this->getAuthErrorResult();
         }
 
-        if (array_key_exists('customer', $kga)) {
+        if (is_customer()) {
             return array(
-                'customer_id' => $kga['customer']['customer_id'], 'ame' => $kga['customer']['name'],
+                'customer_id' => $kga['who']['id'],
+                'name'        => $kga['who']['name'],
             );
         }
 
-        $customers = $database->get_customers(any_get_group_ids());
+        $customers = $database->customers_get($kga['who']['groups']);
 
         if (count($customers) > 0) {
             $results = array();
             foreach ($customers as $row) {
-                $results[] = array('customer_id' => $row['customer_id'], 'name' => $row['name']);
+                $results[] = array('customer_id' => $row['customer_id'],
+                                   'name'        => $row['name']);
             }
 
             return $this->getSuccessResult($results);
@@ -364,11 +367,11 @@ class Kimai_Remote_Api
             return $this->getAuthErrorResult();
         }
 
-        if (array_key_exists('customer', $kga)) {
-            $projects = $database->get_projects_by_customer($kga['customer']['customer_id']);
+        if (is_customer()) {
+            $projects = $database->get_projects_by_customer($kga['who']['id']);
         }
         else {
-            $projects = $database->get_projects(any_get_group_ids());
+            $projects = $database->get_projects($kga['who']['groups']);
         }
 
         if (is_array($projects) && count($projects) > 0) {
@@ -398,12 +401,12 @@ class Kimai_Remote_Api
             return $this->getAuthErrorResult();
         }
 
-        if (array_key_exists('customer', $kga)) {
-            $tasks = $database->get_activities_by_customer($kga['customer']['customer_id']);
+        if (is_customer()) {
+            $tasks = $database->get_activities_by_customer($kga['who']['id']);
         }
         else {
             if ($projectId !== null) {
-                $tasks = $database->get_activities_by_project($projectId, any_get_group_ids());
+                $tasks = $database->get_activities_by_project($projectId, $kga['who']['groups']);
                 /**
                  * we need to copy the array with new keys (remove the customerID key)
                  * if we do not do this, soap server will break our response scheme
@@ -422,7 +425,7 @@ class Kimai_Remote_Api
                 $tasks = $tempTasks;
             }
             else {
-                $tasks = $database->get_activities(any_get_group_ids());
+                $tasks = $database->get_activities($kga['who']['groups']);
             }
         }
 
@@ -448,7 +451,7 @@ class Kimai_Remote_Api
             return $this->getAuthErrorResult();
         }
 
-        $result = $database->get_current_recordings($kga['user']['user_id']);
+        $result = $database->get_current_recordings($kga['who']['id']);
 
         // no 'last' activity existing
         if (!is_array($result) || count($result) === 0) {
@@ -479,7 +482,7 @@ class Kimai_Remote_Api
 
 
         // add customerId & Name
-        $timeSheet                = $database->get_timesheet($current['start'], $current['end'], array($kga['user']['user_id']));
+        $timeSheet                = $database->get_timesheet($current['start'], $current['end'], array($kga['who']['id']));
         $current['customer_id']   = $timeSheet[0]['customer_id'];
         $current['customer_name'] = $timeSheet[0]['customer_name'];
         $current['project_name']  = $timeSheet[0]['project_name'];
@@ -516,15 +519,15 @@ class Kimai_Remote_Api
             return $this->getAuthErrorResult();
         }
 
-        $user = $kga['user']['user_id'];
+        $user = $kga['who']['id'];
 
         $in  = (int)strtotime($from);
         $out = (int)strtotime($to);
 
         // Get the array of timesheet entries.
-        if (array_key_exists('customer', $kga)) {
-            $timesheet_entries = $database->get_timesheet($in, $out, null, array($kga['customer']['customer_id']), false, $cleared, $start, $limit);
-            $totalCount        = $database->get_timesheet($in, $out, null, array($kga['customer']['customer_id']), false, $cleared, $start, $limit, true);
+        if (is_customer()) {
+            $timesheet_entries = $database->get_timesheet($in, $out, null, array($kga['who']['id']), false, $cleared, $start, $limit);
+            $totalCount        = $database->get_timesheet($in, $out, null, array($kga['who']['id']), false, $cleared, $start, $limit, true);
 
             return $this->getSuccessResult($timesheet_entries, $totalCount);
         }
@@ -610,7 +613,7 @@ class Kimai_Remote_Api
 
         // prepare data array
         // requried
-        $data['user_id']     = $kga['user']['user_id'];
+        $data['user_id']     = $kga['who']['id'];
         $data['project_id']  = $record['projectId'];
         $data['activity_id'] = $record['taskId'];
         $data['start']       = $in;
@@ -734,17 +737,17 @@ class Kimai_Remote_Api
             return $this->getAuthErrorResult();
         }
 
-        $user = $kga['user']['user_id'];
+        $user = $kga['who']['id'];
 
         $in  = (int)strtotime($from);
         $out = (int)strtotime($to);
 
 
         // Get the array of timesheet entries.
-        if (array_key_exists('customer', $kga)) {
-            $arr_exp    = $this->ApiDatabase->get_expenses($in, $out, array($kga['customer']['customer_id']), null, null, false,
+        if (is_customer()) {
+            $arr_exp    = $this->ApiDatabase->get_expenses($in, $out, array($kga['who']['id']), null, null, false,
                                                            $refundable, $cleared, $start, $limit);
-            $totalCount = $this->ApiDatabase->get_expenses($in, $out, array($kga['customer']['customer_id']), null, null, false,
+            $totalCount = $this->ApiDatabase->get_expenses($in, $out, array($kga['who']['id']), null, null, false,
                                                            $refundable, $cleared, $start, $limit, true);
         }
         else {

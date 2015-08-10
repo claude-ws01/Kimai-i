@@ -26,6 +26,8 @@
 $isCoreProcessor = 0;
 $dir_templates   = 'templates/';
 global $database, $kga, $view;
+
+global $axAction, $axValue, $id, $timeframe, $in, $out;
 require('../../includes/kspi.php');
 
 require('private_func.php');
@@ -79,29 +81,29 @@ if ($axAction === 'export_csv' ||
         $filterUsers = explode(':', $filters[0]);
     }
 
-    if (array_key_exists('customer', $kga)) {
-        $filterCustomers  = $kga['customer']['customer_id'];
+    if (is_customer()) {
+        $filterCustomers  = $kga['who']['id'];
         $filterProjects   = array_map(function ($project) {
             return $project['project_id'];
-        }, $database->get_projects_by_customer($kga['customer']['customer_id']));
+        }, $database->get_projects_by_customer($kga['who']['id']));
         $filterActivities = array_map(function ($activity) {
             return $activity['activity_id'];
-        }, $database->get_activities_by_customer($kga['customer']['customer_id']));
+        }, $database->get_activities_by_customer($kga['who']['id']));
     }
     else {
         $filterCustomers  = array_map(function ($customer) {
             return $customer['customer_id'];
-        }, $database->get_customers(any_get_group_ids()));
+        }, $database->customers_get($kga['who']['groups']));
         $filterProjects   = array_map(function ($project) {
             return $project['project_id'];
-        }, $database->get_projects(any_get_group_ids()));
+        }, $database->get_projects($kga['who']['groups']));
         $filterActivities = array_map(function ($activity) {
             return $activity['activity_id'];
-        }, $database->get_activities(any_get_group_ids()));
+        }, $database->get_activities($kga['who']['groups']));
 
         // if no userfilter is set, set it to current user
-        if (array_key_exists('user', $kga) && count($filterUsers) === 0) {
-            $filterUsers[] = $kga['user']['user_id'];
+        if (is_user() && count($filterUsers) === 0) {
+            $filterUsers[] = $kga['who']['id'];
         }
     }
 
@@ -132,7 +134,7 @@ switch ($axAction) {
     case 'set_cleared':
 
         // NO CUSTOMER ??
-        if (array_key_exists('customer', $kga)) {
+        if (is_customer()) {
             echo 0;
             break;
         }
@@ -141,10 +143,10 @@ switch ($axAction) {
         $success = false;
 
         if (strncmp($id, 'timesheet', 9) === 0) {
-            $success = export_timesheet_entry_set_cleared(substr($id, 9), $axValue == 1);
+            $success = export_timesheet_entry_set_cleared(substr($id, 9), (int)$axValue === 1);
         }
         elseif (strncmp($id, 'expense', 7) === 0) {
-            $success = export_expense_set_cleared(substr($id, 7), $axValue == 1);
+            $success = export_expense_set_cleared(substr($id, 7), (int)$axValue === 1);
         }
 
         echo $success ? 1 : 0;
@@ -188,8 +190,8 @@ switch ($axAction) {
 
         $view->timeformat = $timeformat;
         $view->dateformat = $dateformat;
-        if (array_key_exists('user', $kga)) {
-            $view->disabled_columns = export_get_disabled_headers($kga['user']['user_id']);
+        if (is_user()) {
+            $view->disabled_columns = export_get_disabled_headers($kga['who']['id']);
         }
         echo $view->render('table.php');
         break;

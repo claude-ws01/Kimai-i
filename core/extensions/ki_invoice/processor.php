@@ -26,6 +26,8 @@
 $isCoreProcessor = 0;
 $dir_templates   = 'templates/';
 global $database, $kga, $view;
+
+global $axAction, $axValue, $id, $timeframe, $in, $out;
 require('../../includes/kspi.php');
 
 // ==================
@@ -68,11 +70,11 @@ switch ($axAction) {
     // = Change the default vat =
     // ==========================
     case 'projects':
-        if (array_key_exists('user', $kga)) {
-            $db_projects = $database->get_projects_by_customer($_GET['customer_id'], any_get_group_ids());
+        if (is_user()) {
+            $db_projects = $database->get_projects_by_customer($_GET['customer_id'], $kga['who']['groups']);
         }
         else {
-            $db_projects = $database->get_projects_by_customer($kga['customer']['customer_id'], any_get_group_ids());
+            $db_projects = $database->get_projects_by_customer($kga['who']['id'], $kga['who']['groups']);
         }
         $js_projects = array();
         foreach ($db_projects as $project) {

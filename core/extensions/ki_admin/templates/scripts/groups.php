@@ -1,12 +1,13 @@
 <?php global $kga; ?>
-<form>
-    <input type=text id="newgroup" class="formfield" placeholder="<?php echo $kga['dict']['group_name_add'] ?>">
-    <input class='btn_ok'
-           type=submit
-           value="<?php echo $kga['dict']['addgroup'] ?>"
-           onclick="adm_ext_newGroup(); return false;">
-</form>
-<br/>
+<div class="top">
+    <form>
+        <input type=text id="newgroup" class="formfield" placeholder="<?php echo $kga['dict']['group_name_add'] ?>">
+        <input class='btn_ok'
+               type=submit
+               value="<?php echo $kga['dict']['addgroup'] ?>"
+               onclick="adm_ext_newGroup(); return false;">
+    </form>
+</div>
 <table>
     <thead>
     <tr class='headerrow'>
@@ -39,8 +40,8 @@
                              width="13"
                              height="13"
                              alt="<?php echo $kga['dict']['editGroup'] ?>"
-                             border="0">
-                    </a>&nbsp;
+                             border="0"></a>
+                    &nbsp;
                     <?php if ((int)$grouparray['count_users'] === 0): ?>
                         <a href="#" onClick="adm_ext_deleteGroup(<?php echo $grouparray['group_id'] ?>)"><img
                                 src="../skins/<?php echo $this->escape($kga['pref']['skin']) ?>/grfx/button_trashcan.png"
@@ -61,9 +62,10 @@
                 </td>
 
                 <td>
-                    <?php if ((int)$grouparray['group_id'] === 1){ ?>
+                    <?php if ((int)$grouparray['group_id'] === 1) { ?>
                         <span style="color:red;"><?php echo $this->escape($grouparray['name']); ?></span>
-                    <?php } else { ?>
+                    <?php }
+                    else { ?>
                         <?php echo $this->escape($grouparray['name']); ?>
                     <?php } ?>
                 </td>

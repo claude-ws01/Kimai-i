@@ -392,7 +392,7 @@
                             ), $this->projects); ?>
                             <br/>
                             <input type="text"
-                                   style="width:380px;margin-top:3px"
+                                   style="width:380px;margin-top:3px;"
                                    tabindex="2"
                                    size="10"
                                    placeholder="<?php echo $kga['dict']['searchFilter']; ?>"
@@ -415,7 +415,7 @@
                             ), $this->activities); ?>
                             <br/>
                             <input type="text"
-                                   style="width:380px;margin-top:3px"
+                                   style="width:380px;margin-top:3px;"
                                    tabindex="4"
                                    size="10"
                                    placeholder="<?php echo $kga['dict']['searchFilter']; ?>"
@@ -428,7 +428,7 @@
                     <li>
                         <label for="description"><?php echo $kga['dict']['description'] ?>:</label>
                         <textarea tabindex="5"
-                                  style="width:395px"
+                                  style="width:395px;"
                                   cols='40'
                                   rows='5'
                                   name="description"
@@ -522,7 +522,7 @@
                     <li>
                         <label for="comment"><?php echo $kga['dict']['comment'] ?>:</label>
                         <textarea id='comment'
-                                  style="width:395px"
+                                  style="width:395px;"
                                   class='comment'
                                   name='comment'
                                   cols='40'
@@ -553,7 +553,7 @@
                                 $this->users); ?>
                         </li>
                     <?php else: ?>
-                        <input type="hidden" name="user_id" value="<?php echo $kga['user']['user_id']; ?>"/>
+                        <input type="hidden" name="user_id" value="<?php echo $kga['who']['id']; ?>"/>
                     <?php endif; ?>
 
                     <?php if (!$new_entry) { ?>
@@ -588,7 +588,7 @@
                                maxlength='10'
                                size='5'
                                tabindex='18'
-                               style="text-align:right;padding-left:5px;"
+                               style="text-align:right;padding-right:5px;"
                             <?php if ($kga['pref']['autoselection']): ?> onClick="this.select();"<?php endif; ?> />
                         <?php echo ' ', $kga['conf']['currency_sign']; ?>
                     </li>
@@ -601,8 +601,8 @@
                                maxlength='10'
                                size='5'
                                tabindex='19'
-                               style="text-align:right;padding-left:5px;"
-                            <?php if ($kga['pref']['autoselection']): ?> onClick="this.select();"<?php endif; ?> />
+                               style="text-align:right;padding-right:5px;"
+                            <?php if ($kga['pref']['autoselection']){ ?> onClick="this.select();"<?php } ?> />
                         <?php echo ' ', $kga['conf']['currency_sign']; ?>
                     </li>
 
@@ -626,7 +626,7 @@
                     <?php if ($this->showRate): ?>
                         <li>
                             <label for="rate"><?php echo $kga['dict']['rate_hourly'] ?>:</label>
-                            <input id='rate' type='text' name='rate' size='5' style="text-align:right;padding-left:5px;"
+                            <input id='rate' type='text' name='rate' size='5' style="text-align:right;padding-right:5px;"
                                    tabindex='22' value='<?php echo $this->escape($this->rate) ?>'/>
                             <?php echo ' ', $kga['conf']['currency_sign']; ?>
 
@@ -636,7 +636,7 @@
                                    type='text'
                                    name='fixed_rate'
                                    size='5'
-                                   style="text-align:right;padding-left:5px;"
+                                   style="text-align:right;padding-right:5px;"
                                    tabindex='23'
                                    value='<?php echo $this->escape($this->fixed_rate) ?>'
                                 <?php if ($kga['pref']['autoselection']): ?> onClick="this.select();"<?php endif; ?> />
@@ -647,18 +647,18 @@
                     <li>
                         <table>
                             <tr>
-                                <td style="text-align:right"><?php echo $kga['dict']['budget_activity'] ?>:</td>
+                                <td style="text-align:right;"><?php echo $kga['dict']['budget_activity'] ?>:</td>
                                 <td>
                                     <span id="budget_activity"><?php echo $this->budget_activity ?></span></td>
                             </tr>
                             <tr>
-                                <td style="text-align:right"><?php echo $kga['dict']['budget_activity_used'] ?>:</td>
+                                <td style="text-align:right;"><?php echo $kga['dict']['budget_activity_used'] ?>:</td>
                                 <td>
                                     <span id="budget_activity_used"><?php echo $this->budget_activity_used ?></span>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="text-align:right"><?php echo $kga['dict']['budget_activity_approved'] ?>:</td>
+                                <td style="text-align:right;"><?php echo $kga['dict']['budget_activity_approved'] ?>:</td>
                                 <td>
                                     <span id="budget_activity_approved"><?php echo $this->approved_activity ?></span>
                                 </td>

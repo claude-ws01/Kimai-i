@@ -23,6 +23,8 @@ $isCoreProcessor = 0;
 $dir_templates = "templates/";
 global $database, $kga, $translations, $view;
 
+
+global $axAction, $axValue, $id, $timeframe, $in, $out;
 require("../../includes/kspi.php");
 
 include('private_db_layer_mysql.php');
@@ -36,8 +38,8 @@ switch ($axAction)
         }
 
         $view->commentTypes = $commentTypes;
-        $view->projects     = makeSelectBox("project",any_get_group_ids()); // select for projects
-        $view->activities   = makeSelectBox("activity",any_get_group_ids()); // select for activities
+        $view->projects     = makeSelectBox("project",$kga['who']['groups']); // select for projects
+        $view->activities   = makeSelectBox("activity",$kga['who']['groups']); // select for activities
 
         // ==============================================
         // = display edit dialog for timesheet record   =
@@ -57,7 +59,7 @@ switch ($axAction)
             $view->refundable       = $expense['refundable'];
 
             // check if this entry may be edited
-            if (!$database->global_role_allows(any_get_global_role_id(),'ki_expense__own_entry__edit'))
+            if (!$database->gRole_allows($kga['who']['global_role_id'],'ki_expense__own_entry__edit'))
               break;
 
             if (!isset($view->projects[$expense['project_id']])) {
@@ -75,7 +77,7 @@ switch ($axAction)
           $view->multiplier = '1'.$GLOBALS['kga']['conf']['decimal_separator'].'0';
 
           // check if this entry may be added
-          if (!$database->global_role_allows(any_get_global_role_id(),'ki_expense__own_entry__add'))
+          if (!$database->gRole_allows($kga['who']['global_role_id'],'ki_expense__own_entry__add'))
             break;
         }
 

@@ -101,9 +101,9 @@ $this->getHelper('ParseHierarchy')->parseHierarchy($this->permissions, $extensio
                 </ul>
 
                 <fieldset class="floatingTabLayout">
-                    <?php if (count($extensions) > 0): ?>
+                    <?php if (count($extensions) > 0){ ?>
                         <legend><?php echo $kga['dict']['extensionsTitle']; ?></legend><?php
-                    endif;
+                    };
                     foreach ($extensions as $key => $value) {
                         $name = $key;
                         if (isset($kga['dict']['extensions'][$name])) {
@@ -111,13 +111,13 @@ $this->getHelper('ParseHierarchy')->parseHierarchy($this->permissions, $extensio
                         } ?>
                         <span class="permission">
                         <input type="checkbox" value="1" name="<?php echo $key ?>__access"
-                        <?php if ($value === 1) { ?>checked="checked" <?php } ?> /><?php echo $name ?>
+                        <?php if ((int)$value === 1) { ?>checked="checked" <?php } ?> /><?php echo $name ?>
                         </span>
                     <?php } ?>
                 </fieldset>
             </fieldset>
 
-            <?php $this->echoHierarchy($kga, $keyHierarchy); ?>
+            <?php $this->echoHierarchy($keyHierarchy); ?>
         </div>
         <div id="formbuttons">
             <input class='btn_norm' type='button' value='<?php echo $kga['dict']['cancel'] ?>'

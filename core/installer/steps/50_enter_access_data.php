@@ -1,12 +1,12 @@
 <?php
 echo '<script type="text/javascript" charset="utf-8">current=50;</script>';
 
-$hostname = isset($_REQUEST['hostname']) ? $_REQUEST['hostname'] : 'localhost';
+$hostname = isset($_REQUEST['hostname']) ? $_REQUEST['hostname'] : '127.0.0.1';
 $username = isset($_REQUEST['username']) ? $_REQUEST['username'] : '';
 $password = isset($_REQUEST['password']) ? $_REQUEST['password'] : '';
 
-if ($hostname == '') {
-    $hostname = 'localhost';
+if ($hostname === '') {
+    $hostname = '127.0.0.1';
 }
 
 if ($_REQUEST['language'] === 'en') {

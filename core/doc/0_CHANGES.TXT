@@ -1,6 +1,26 @@
 *************** REMINDER ... UPDATE /includes/version.php AND kimai-i.json ******************************
 
-=== v0.10.1-b3 ======= 2015-08-06 ============ db revision 2000 ========================================================
+=== v0.10.1-b4 ======= 2015-08-10 ============ db revision 2000 ========================================================
+- admin panel: revision of all panel into a single function.php files. No reason to duplicate code in init.php and
+    processor.php
+- for developpers: added the permission field name in title for global/membership role panels. Hover over the checkbox
+    to see what permission field name.
+- corrections: typos here and there.
+- installer: db schema is now in kimaii.sql (excluding permissions).
+- https: centralized evaluation. Testing.
+- password minimum lenght: now configurable in /include/vars.php. Set it as you see fit. Messages and evaluation
+    modified as well.
+- installation: default host was 'localhost' now is '127.0.0.1'. Privilege more direct and fast access. No DNS lookup.
+- bugfix: timer display on Firefox.
+- bugfix: 'other_groups' privileges not applied in project add-edit. Was limited to user's group only.
+- mysql classes revision: regrouped all functions related to roles evaluation in a third file/class called roles.php.
+    Less searching all over (in func, kimai...). And some cleaning up.
+- time range initialisation correction: If client's timezone is different and ahead of time from preference's timezone,
+    new recording may not display because of timezone's time is next day. Now, timeframe's "to_date" is set to 'today+1'.
+
+
+
+=== v0.10.1-b3 ======= 2015-08-07 ============ db revision 2000 ========================================================
 - language: Google & manual traduction in Spanish. Inclusion of incomplete traduction in German.
 - Doc: some more small documentation in, now, /doc folder.
 - grfx: clean up of unused images.  Regrouping of images that are not refered in the skin, to the main /grfx folder.

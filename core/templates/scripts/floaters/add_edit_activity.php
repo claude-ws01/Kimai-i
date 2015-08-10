@@ -41,7 +41,7 @@
                 echo $GLOBALS['kga']['dict']['edit'], ' ', $this->name;
             }
             else {
-                echo $GLOBALS['kga']['dict']['new_activity'];
+                echo $GLOBALS['kga']['dict']['add_activity'];
             }
             ?>
         </span>
@@ -81,8 +81,7 @@
 
         <input name="activityFilter" type="hidden" value="0"/>
 
-        <input name="axAction" type="hidden" value="add_edit_CustomerProjectActivity"/>
-        <input name="axValue" type="hidden" value="activity"/>
+        <input name="axAction" type="hidden" value="add_edit_activity"/>
         <input name="id" type="hidden" value="<?php echo $this->id; ?>"/>
 
         <div id="floater_tabs" class="floater_content">

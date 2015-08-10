@@ -38,7 +38,7 @@ else {
 // = standard includes =
 // =====================
 require('includes/basics.php');
-global $kga, $database, $view;
+global $database, $kga, $view;
 $view = new Zend_View();
 $view->setBasePath(WEBROOT . '/templates');
 
@@ -74,8 +74,10 @@ switch ($_REQUEST['a']) {
 
             $database->customer_edit($id, array('password_reset_hash' => $passwordResetHash));
 
-            $ssl = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on';
-            $url = ($ssl ? 'https://' : 'http://') . $_SERVER['SERVER_NAME'] . dirname($_SERVER['SCRIPT_NAME']) . '/forgotPassword.php?name=' . urlencode($name) . '&key=' . $passwordResetHash;
+            $url = ($kga['https'] ? 'https://' : 'http://') .
+                $_SERVER['SERVER_NAME'] .
+                dirname($_SERVER['SCRIPT_NAME']) . '/forgotPassword.php?name=' . urlencode($name) .
+                '&key=' . $passwordResetHash;
 
             $message = $kga['dict']['passwordReset']['mailMessage'];
             $message = str_replace('%{URL}', $url, $message);
@@ -113,7 +115,7 @@ switch ($_REQUEST['a']) {
         if ($is_customer) {
             $id       = $database->customer_nameToID($name);
             $customer = $database->customer_get_data($id);
-            if ($key != $customer['password_reset_hash']) {
+            if ($key !== $customer['password_reset_hash']) {
                 echo json_encode(array(
                                      'message' => $kga['dict']['passwordReset']['invalidKey'],
                                  ));

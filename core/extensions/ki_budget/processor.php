@@ -25,9 +25,11 @@
 // insert KSPI
 $isCoreProcessor = 0;
 $dir_templates   = 'templates/';
+global $view, $database, $kga;
+
+global $axAction, $axValue, $id, $timeframe, $in, $out;
 require('../../includes/kspi.php');
 require('private_func.php');
-global $view, $database, $kga;
 
 $filters = explode('|', $axValue);
 
@@ -42,32 +44,31 @@ $filterCustomers = array_map(
     function ($customer) {
         return $customer['customer_id'];
     },
-    $database->get_customers(any_get_group_ids()));
+    $database->customers_get($kga['who']['groups']));
 if (isset($filters[1]) && $filters[1] !== '') {
     $filterCustomers = array_intersect($filterCustomers, explode(':', $filters[1]));
 }
 
 $filterProjects = array_map(function ($project) {
     return $project['project_id'];
-}, $database->get_projects(any_get_group_ids()));
+}, $database->get_projects($kga['who']['groups']));
 if (isset($filters[2]) && $filters[2] !== '') {
     $filterProjects = array_intersect($filterProjects, explode(':', $filters[2]));
 }
 
 $filterActivities = array_map(function ($activity) {
     return $activity['activity_id'];
-}, $database->get_activities(any_get_group_ids()));
+}, $database->get_activities($kga['who']['groups']));
 if (isset($filters[3]) && $filters[3] !== '') {
     $filterActivities = array_intersect($filterActivities, explode(':', $filters[3]));
 }
 
 // if no userfilter is set, set it to current user
-if (array_key_exists('user', $kga) && count($filterUsers) === 0) {
-    $filterUsers[] = $kga['user']['user_id'];
+if (is_customer()) {
+    $filterCustomers = array($kga['who']['id']);
 }
-
-if (array_key_exists('customer', $kga)) {
-    $filterCustomers = array($kga['customer']['customer_id']);
+elseif (count($filterUsers) === 0) {
+    $filterUsers[] = $kga['who']['id'];
 }
 
 // ==================
@@ -93,12 +94,12 @@ switch ($axAction) {
             $activitiesSelected = $activitiesFilter;
         }
         // Get all project for the logged in customer or the current user.
-        if (array_key_exists('customer', $kga)) {
-            $projects   = $database->get_projects_by_customer(($kga['customer']['customer_id']));
+        if (is_customer()) {
+            $projects   = $database->get_projects_by_customer(($kga['who']['id']));
             $activities = $database->get_activities();
         }
         else {
-            $customers = $database->get_customers(any_get_group_ids());
+            $customers = $database->customers_get($kga['who']['groups']);
             if (is_array($filterCustomers) && count($filterCustomers) > 0) {
                 $projects = array();
                 foreach ($filterCustomers as $customerId) {
@@ -106,9 +107,9 @@ switch ($axAction) {
                 }
             }
             else {
-                $projects = $database->get_projects(any_get_group_ids());
+                $projects = $database->get_projects($kga['who']['groups']);
             }
-            $activities = $database->get_activities(any_get_group_ids());
+            $activities = $database->get_activities($kga['who']['groups']);
         }
         if (is_array($projects)) {
             foreach ((array)$projects as $index => $project) {

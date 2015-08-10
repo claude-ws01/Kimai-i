@@ -231,6 +231,7 @@ global $kga;
                     <?php //  GENERAL OPTIONS   //
                     echo $kga['dict']['new_user_defaults'] ?>:
                 </span>
+                <div style="font-weight:bold;border:none;text-decoration:underline;font-size:1.1em;"><?php echo $kga['dict']['general'] ?></div>
 
                 <div>
                     <?php echo $this->formSelect('ud_skin', $kga['conf']['ud.skin'],
@@ -261,6 +262,8 @@ global $kga;
                     $kga['dict']['no_fading'] ?>
                 </div>
                 <?php //        NEW USER DEFAULTS          GRID-LIST OPTIONS   // ?>
+                <div style="font-weight:bold;border:none;text-decoration:underline;font-size:1.1em;">
+                    <?php echo $kga['dict']['list'] ?></div>
 
                 <div>
                     <?php echo $this->formText('ud_rowlimit', $kga['conf']['ud.rowlimit'], array('size' => 3, 'style' => 'text-align:center;')); ?>
@@ -310,6 +313,9 @@ global $kga;
                 </div>
 
                 <?php //        NEW USER DEFAULTS          BOTTOM FILTER OPTIONS    // ?>
+                <div style="font-weight:bold;border:none;text-decoration:underline;font-size:1.1em;">
+                    <?php echo $kga['dict']['sublists'] ?></div>
+
                 <div>
                     <?php
                     echo $this->formSelect(

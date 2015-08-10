@@ -172,7 +172,7 @@ if ($this->timeSheetEntries) {
                 <a href="#" class="preselect_lnk" title="<?php echo $kga['dict']['tip']['g_select_for_recording']; ?>"
                    onClick="buzzer_preselect_project(<?php echo $row['project_id'] ?>,'<?php echo $this->jsEscape($row['project_name']) ?>',<?php echo $this->jsEscape($row['customer_id']) ?>,'<?php echo $this->jsEscape($row['customer_name']) ?>');return false;">
                     <?php echo $this->escape($row['project_name']) ?>
-                    <?php if ($kga['pref']['project_comment_flag'] === 1 && $row['project_comment']): ?>
+                    <?php if ($row['project_comment'] && (int)$kga['pref']['project_comment_flag'] === 1): ?>
                         <span class="lighter">(<?php echo $this->escape($row['project_comment']) ?>
                                               )</span><?php endif; ?>
                 </a>
@@ -260,7 +260,7 @@ else {
     <?php endif; ?>
 
     function timesheet_hide_column(name) {
-        $('.' + name).hide();
+        $('.ext.ki_timesheet .' + name).hide();
     }
 
     <?php if (!$this->show_ref_code) { ?>

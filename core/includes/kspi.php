@@ -56,7 +56,6 @@ $view->addHelperPath(WEBROOT . '/templates/helpers', 'Zend_View_Helper');
 // ============================================================================================
 
 checkUser();
-
 $view->kga = $kga;
 
 $commentTypes = array($kga['dict']['ctype0'], $kga['dict']['ctype1'], $kga['dict']['ctype2']);
@@ -88,7 +87,7 @@ if (isset($_REQUEST['last_day'])) {
 }
 
 if ($axAction !== 'reloadLogfile') {
-    Logger::logfile('KSPI axAction (' . (array_key_exists('customer', $kga) ? $kga['customer']['name'] : $kga['user']['name']) . '): ' . $axAction);
+    Logger::logfile('KSPI axAction (' . $kga['who']['name'] . '): ' . $axAction);
 }
 
 // prevent IE from caching the response

@@ -75,7 +75,7 @@
     <form id="core_prefs" action="processor.php" method="post">
 
         <div id="floater_tabs" class="floater_content">
-
+            <?php //  GENERAL OPTIONS   //  ?>:
             <fieldset id="prefGeneral">
                 <ul>
                     <li>
@@ -84,9 +84,9 @@
                     </li>
 
                     <li>
-                        <label for="password"><?php echo $kga['dict']['newPassword'] ?>:</label>
+                        <label for="password"><?php echo $kga['dict']['new_password'] ?>:</label>
                         <input name="password" size="15"
-                               id="password"/> <?php echo $kga['dict']['minLength'] ?>
+                               id="password"/> <?php echo sprintf($kga['dict']['minLength'], $kga['pwdMinLength']) ?>
                     </li>
 
                     <li>
@@ -94,7 +94,7 @@
                         <input name="retypePassword" size="15" id="retypePassword"/>
                     </li>
 
-                    <?php if (!array_key_exists('customer', $kga)) { ?>
+                    <?php if (is_user()) { ?>
                         <li>
                             <label for="rate"><?php echo $kga['dict']['my_rate'] ?>:</label>
                             <?php echo $this->formText('rate', str_replace('.', $kga['conf']['decimal_separator'], $this->rate), array(
@@ -118,7 +118,7 @@
                         echo $kga['dict']['autoselection'] ?>
                     </li>
 
-                    <?php if (!array_key_exists('customer', $kga)) { ?>
+                    <?php if (is_user()) { ?>
                         <li>
                             <label for="open_after_recorded"></label>
                             <?php echo $this->formCheckbox('open_after_recorded', '1', array('checked' => isset($kga['conf']['open_after_recorded']) && $kga['conf']['open_after_recorded']));
@@ -133,14 +133,14 @@
                 </ul>
 
             </fieldset>
-
+            <?php //    GRID-LIST OPTIONS   // ?>
             <fieldset id="prefList">
                 <ul>
                     <li>
                         <label for="rowlimit"><?php echo $kga['dict']['rowlimit'] ?>:</label>
                         <?php echo $this->formText('rowlimit', $kga['pref']['rowlimit'], array('size' => 9)); ?>
                     </li>
-                    <?php if (!array_key_exists('customer', $kga)) { ?>
+                    <?php if (is_user()) { ?>
                         <li>
                             <label for="quickdelete"><?php echo $kga['dict']['quickdelete'] ?>:</label>
                             <?php
@@ -178,7 +178,7 @@
                     </li>
                 </ul>
             </fieldset>
-
+            <?php //     BOTTOM FILTER OPTIONS    // ?>
             <fieldset id="prefSublists">
                 <ul>
                     <li>

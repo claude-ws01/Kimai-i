@@ -64,70 +64,70 @@ $view->timeformat = preg_replace('/([A-Za-z])/', '%$1', $timeformat);
 $view->dateformat = preg_replace('/([A-Za-z])/', '%$1', $dateformat);
 
 // Get the total amount of time shown in the table.
-if (array_key_exists('customer', $kga)) {
-    $total = Format::formatDuration($database->get_duration($in, $out, null, array($kga['customer']['customer_id']), null));
+if (is_customer()) {
+    $total = Format::formatDuration($database->get_duration($in, $out, null, array($kga['who']['id']), null));
 }
 else {
-    $total = Format::formatDuration($database->get_duration($in, $out, array($kga['user']['user_id']), null, null));
+    $total = Format::formatDuration($database->get_duration($in, $out, array($kga['who']['id']), null, null));
 }
 
-if (array_key_exists('customer', $kga)) {
-    $view->exportData = export_get_data($in, $out, null, array($kga['customer']['customer_id']));
+if (is_customer()) {
+    $view->exportData = export_get_data($in, $out, null, array($kga['who']['id']));
 }
 else {
-    $view->exportData = export_get_data($in, $out, array($kga['user']['user_id']));
+    $view->exportData = export_get_data($in, $out, array($kga['who']['id']));
 }
 
 $view->total = $total;
 
 
 // Get the annotations for the user sub list.
-if (array_key_exists('customer', $kga)) {
-    $ann = export_get_user_annotations($in, $out, null, array($kga['customer']['customer_id']));
+if (is_customer()) {
+    $ann = export_get_user_annotations($in, $out, null, array($kga['who']['id']));
 }
 else {
-    $ann = export_get_user_annotations($in, $out, array($kga['user']['user_id']));
+    $ann = export_get_user_annotations($in, $out, array($kga['who']['id']));
 }
 Format::formatAnnotations($ann);
 $view->user_annotations = $ann;
 
 
 // Get the annotations for the customer sub list.
-if (array_key_exists('customer', $kga)) {
-    $ann = export_get_customer_annotations($in, $out, null, array($kga['customer']['customer_id']));
+if (is_customer()) {
+    $ann = export_get_customer_annotations($in, $out, null, array($kga['who']['id']));
 }
 else {
-    $ann = export_get_customer_annotations($in, $out, array($kga['user']['user_id']));
+    $ann = export_get_customer_annotations($in, $out, array($kga['who']['id']));
 }
 Format::formatAnnotations($ann);
 $view->customer_annotations = $ann;
 
 
 // Get the annotations for the project sub list.
-if (array_key_exists('customer', $kga)) {
-    $ann = export_get_project_annotations($in, $out, null, array($kga['customer']['customer_id']));
+if (is_customer()) {
+    $ann = export_get_project_annotations($in, $out, null, array($kga['who']['id']));
 }
 else {
-    $ann = export_get_project_annotations($in, $out, array($kga['user']['user_id']));
+    $ann = export_get_project_annotations($in, $out, array($kga['who']['id']));
 }
 Format::formatAnnotations($ann);
 $view->project_annotations = $ann;
 
 
 // Get the annotations for the activity sub list.
-if (array_key_exists('customer', $kga)) {
-    $ann = export_get_activity_annotations($in, $out, null, array($kga['customer']['customer_id']));
+if (is_customer()) {
+    $ann = export_get_activity_annotations($in, $out, null, array($kga['who']['id']));
 }
 else {
-    $ann = export_get_activity_annotations($in, $out, array($kga['user']['user_id']));
+    $ann = export_get_activity_annotations($in, $out, array($kga['who']['id']));
 }
 Format::formatAnnotations($ann);
 $view->activity_annotations = $ann;
 
 
 // Get the columns the user had disabled last time.
-if (array_key_exists('user', $kga)) {
-    $view->disabled_columns = export_get_disabled_headers($kga['user']['user_id']);
+if (is_user()) {
+    $view->disabled_columns = export_get_disabled_headers($kga['who']['id']);
 }
 
 $view->table_display = $view->render('table.php');

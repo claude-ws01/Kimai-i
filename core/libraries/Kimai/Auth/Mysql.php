@@ -62,8 +62,7 @@ class Kimai_Auth_Mysql extends Kimai_Auth_Abstract
 
         $database->user_edit($id, array('password_reset_hash' => $passwordResetHash));
 
-        $ssl = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on';
-        $url = ($ssl ? 'https://' : 'http://') . $_SERVER['SERVER_NAME']
+        $url = ($kga['https'] ? 'https://' : 'http://') . $_SERVER['SERVER_NAME']
             . dirname($_SERVER['SCRIPT_NAME']) . '/forgotPassword.php?name='
             . urlencode($name) . '&key=' . $passwordResetHash;
 
