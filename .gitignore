@@ -1,0 +1,9 @@
+/.project
+*.*~
+/core/temporary/*.txt
+autoconf.php
+autoconfx.php
+.settings
+.idea/
+.DS_Store
+

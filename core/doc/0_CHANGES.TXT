@@ -3,6 +3,7 @@
 === v0.10.1-b6 ======= 2015-08-xx ============ db revision 2000 ========================================================
 - export-print: some corrections
 - logger: added more validation.
+- gitignore: some corrections, some needed files were excluded.
 
 === v0.10.1-b5 ======= 2015-08-10 ============ db revision 2000 ========================================================
 - corrections in https mode.

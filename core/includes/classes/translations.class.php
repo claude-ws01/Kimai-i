@@ -73,7 +73,7 @@ class Translations
 
         if ($current !== $selected) {
 
-            $kga['dict'] = require WEBROOT . 'language/' . $selected . '.php';;
+            $kga['dict'] = require WEBROOT . "language/{$selected}.php";;
 
             if ($this->load_status) {
                 $database->status_def_load();
@@ -127,5 +127,17 @@ class Translations
 
         // LAST RESORT //
         return $selected ?: 'en';
+    }
+
+    //todo: CN..to implement instead of directly accessing $kga['dict']
+    public function get($key)
+    {
+        global $kga;
+
+        if (array_key_exists($key,$kga['dict'])) {
+            return $kga['dict'][$key];
+        }
+
+        return $key;
     }
 }

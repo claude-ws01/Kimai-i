@@ -207,7 +207,7 @@ function prep_project_list_render()
                         continue;
                     }
                     $data         = $database->group_get_data($groupID);
-                    $groupNames[] = $data['name'];
+                    $groupNames[] = is_array($data) ? $data['name'] : $groupID;
                 }
             }
             $project['groups'] = implode(', ', $groupNames);

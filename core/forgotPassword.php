@@ -23,18 +23,18 @@
  * will be redirected to core/kimai.php.
  */
 
-if (!isset($_REQUEST['a'])) {
+if ( ! isset($_REQUEST['a'])) {
     $_REQUEST['a'] = '';
 }
 
-if (!isset($_REQUEST['name']) || is_array($_REQUEST['name'])) {
+if ( ! isset($_REQUEST['name']) || is_array($_REQUEST['name'])) {
     $name = '';
 }
 else {
     $name = $_REQUEST['name'];
 }
 
-if (!isset($_REQUEST['key']) || is_array($_REQUEST['key'])) {
+if ( ! isset($_REQUEST['key']) || is_array($_REQUEST['key'])) {
     $key = 'nokey';  // will never match since hash values are either NULL or 32 characters
 }
 else {
@@ -55,7 +55,7 @@ $view->setBasePath(WEBROOT . '/templates');
 // = authentication method =
 // =========================
 $authClass = 'Kimai_Auth_' . ucfirst($GLOBALS['kga']['authenticator']);
-if (!class_exists($authClass)) {
+if ( ! class_exists($authClass)) {
     $authClass = 'Kimai_Auth_' . ucfirst($GLOBALS['kga']['authenticator']);
 }
 $authPlugin = new $authClass($database, $kga);
@@ -75,19 +75,18 @@ $name        = htmlspecialchars(trim($name));
 $is_customer = $database->is_customer_name($name);
 if ($is_customer) {
     $id         = $database->customer_nameToID($name);
-    $customer   = (array)$database->customer_get_data($id);
+    $customer   = (array) $database->customer_get_data($id);
     $keyCorrect = $key === $customer['password_reset_hash'];
 }
 else {
     $id         = $database->user_name2id($name);
-    $user       = (array)$database->user_get_data($id);
+    $user       = (array) $database->user_get_data($id);
     $keyCorrect = $key === $user['password_reset_hash'];
 }
 
 
-
-if ( $_REQUEST['a'] === 'request' ) {
-    Logger::logfile( 'password reset: ' . $name . ( $is_customer ? ' as customer' : ' as user' ) );
+if ($_REQUEST['a'] === 'request') {
+    Logger::logfile('password reset: ' . $name . ($is_customer ? ' as customer' : ' as user'));
 }
 
 else {
@@ -100,6 +99,6 @@ else {
         'name' => $name,
     );
 
-    echo $view->render( 'login/forgotPassword.php' );
+    echo $view->render('login/forgotPassword.php');
 
 }
