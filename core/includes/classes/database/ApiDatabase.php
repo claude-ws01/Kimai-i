@@ -134,7 +134,7 @@ class ApiDatabase
 
         $p = $kga['server_prefix'];
 
-        $whereClauses = $this->expenses_widthhereClausesFromFilters($users, $customers, $projects);
+        $whereClauses = $this->expenses_whereClausesFromFilters($users, $customers, $projects);
 
         if (is_customer()) {
             $whereClauses[] = "{$p}project.internal = 0";
@@ -225,7 +225,7 @@ class ApiDatabase
      *
      * @return Array list of where clauses to include in the query
      */
-    public function expenses_widthhereClausesFromFilters($users, $customers, $projects)
+    public function expenses_whereClausesFromFilters($users, $customers, $projects)
     {
         global $database;
 

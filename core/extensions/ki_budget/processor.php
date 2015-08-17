@@ -148,9 +148,7 @@ switch ($axAction) {
         if ($expensesOccured) {
             $keys[] = array('color' => $chartColors[1], 'name' => $kga['dict']['export_extension']['expenses']);
         }
-        /*for ($i = 0; $i < count($usedEvents); $i++) {
-            $keys[] = array('color' => $chartColors[($i + 2) % (count($chartColors) - 1)], 'name' => $usedEvents[$i]['evt_name']);
-        }*/
+
         // the activity based charts only need numbers
         $view->arr_keys = $keys;
         echo $view->render('charts.php');

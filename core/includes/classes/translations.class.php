@@ -37,7 +37,6 @@ class Translations
 
     public static function languageExists($language)
     {
-
         return file_exists(WEBROOT . '/language/' . $language . '.php');
     }
 
@@ -71,6 +70,7 @@ class Translations
 
         $selected = self::setLanguage();
         $current  = isset($kga['language']) ? $kga['language'] : '';
+
         if ($current !== $selected) {
 
             $kga['dict'] = require WEBROOT . 'language/' . $selected . '.php';;
@@ -117,6 +117,7 @@ class Translations
             }
         }
 
+        // DEFAULT //
         if (!$selected && isset($kga['conf']['ud.language'])) {
             $code2 = basename($kga['conf']['ud.language']);
             if (self::languageExists($code2)) {
@@ -124,6 +125,7 @@ class Translations
             }
         }
 
+        // LAST RESORT //
         return $selected ?: 'en';
     }
 }

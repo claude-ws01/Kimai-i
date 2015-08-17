@@ -23,15 +23,14 @@
  * Updated by: 
  * Kimai version: 
  *
- * Generator: dict_find_missing.php
- * Generated: 2015-08-07 00:14:07
- * First file (array structure and new values): en.php
- * Second file (translated values): es.php
- * Third file (resulting array): new_20150807T001407.php
+ * Generator: dict_re_sort.php
+ * Generated: 2015-08-10 09:11:23
+ * First file (array structure and new values): es.php
+ * Third file (resulting array): new_20150810T091123.php
  */
 
 return array(
-    'select_customer'                           => 'Elijir cliente',
+    'select_customer'                => 'Elijir cliente',
     'about'                          => 'Acerca de Kimai-i',
     'ac'                             => 'Entrada automáticamente continuada.',
     'ac_error'                       => 'Entrada automáticamente continuada con error (duración demasiado larga).',
@@ -130,7 +129,7 @@ return array(
     'deleteUser'                     => 'borrar este usario',
     'description'                    => 'Designación',
     'demo_mode'                      => 'DEMO MODE',
-    'demo_login'                     => '*** DEMO MODE ***</br> username: \'admin\'</br> ANY passwords fixed to: \'demo\'',
+    'demo_login'                     => '*** DEMO MODE ***</br>admin ~ staff1 ~ customer1</br>llave:  demo',
     'demo_reset_in'                  => 'Reinicio datos en: ',
     'display_currentDate_format'     => 'Formato de hora para el campo bajo la duración (<a href="http://php.net/manual/en/function.strftime.php" target="_blank">notación de strftime()</a>)',
     'display_date_format'            => 'Formato de hora para la duración (<a href="http://php.net/manual/en/function.strftime.php" target="_blank">notación de strftime()</a>)',
@@ -240,7 +239,7 @@ return array(
     'add_project'                    => 'añadir proyecto',
     'add_status'                     => 'añadir estatus',
     'new_user_defaults'              => 'PREFERENCÍAS POR DEFECTO - NUEVO USARIO/CLIENTE',
-    'new_password'                    => 'Nueva contraseña',
+    'new_password'                   => 'Nueva contraseña',
     'no'                             => 'no',
     'no_fading'                      => 'sin efecto de fundido',
     'no_web_access'                  => 'No acceso web',

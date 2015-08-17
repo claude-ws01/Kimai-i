@@ -73,7 +73,7 @@
                              border="0">
                     <?php endif; ?>
                     &nbsp;
-                    <?php if ($this->curr_user !== $userarray['name']) { ?>
+                    <?php if ($kga['who']['name'] !== $userarray['name']) { ?>
                         <a href="#"
                            id="deleteUser<?php echo $userarray['user_id'] ?>"
                            onClick="adm_ext_deleteUser(<?php echo $userarray['user_id'] ?>, <?php echo($userarray['trash'] ? 'false' : 'true'); ?>)"><img
@@ -97,7 +97,7 @@
 
                 <!-- ########## USER NAME ########## -->
                 <td>
-                    <?php if ($this->curr_user === $userarray['name']): ?>
+                    <?php if ($kga['who']['name'] === $userarray['name']): ?>
                         <strong style="color:#00E600;"><?php echo $this->escape($userarray['name']) ?></strong>
                     <?php else: ?>
                         <?php if ($userarray['trash']): ?><span style="color:#999;"><?php endif; ?>
@@ -109,7 +109,7 @@
 
                 <td>
                     <?php if ((int)$userarray['active'] === 1): ?>
-                        <?php if ($this->curr_user !== $userarray['name']): ?>
+                        <?php if ($kga['who']['name'] !== $userarray['name']): ?>
                             <a href="#"
                                id="ban<?php echo $userarray['user_id'] ?>"
                                onClick="adm_ext_banUser('<?php echo $userarray['user_id'] ?>'); return false;">
@@ -175,5 +175,7 @@
 </table>
 
 <p>
-    <strong><?php echo $kga['dict']['hint'] ?></strong> <?php echo $kga['dict']['rename_caution_before_username'] ?> '<?php echo $this->escape($this->curr_user) ?>' <?php echo $kga['dict']['rename_caution_after_username'] ?>
+    <strong><?php echo $kga['dict']['hint'] ?></strong>
+    <?php echo $kga['dict']['rename_caution_before_username'], ' <strong>',
+    $this->escape($kga['who']['name']), '</strong> ', $kga['dict']['rename_caution_after_username'] ?>
 </p>

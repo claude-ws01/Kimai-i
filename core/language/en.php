@@ -1,7 +1,8 @@
 <?php
 /**
  * This file is part of
- * Kimai - Open Source Time Tracking - http://www.kimai.org
+ * Kimai-i - Open Source Time Tracking - https://github.com/cloudeasy/Kimai-i
+ * (c) 2015 Claude Nadon
  * (c) 2006-2009 Kimai-Development-Team
  *
  * Kimai-i is free software; you can redistribute it and/or modify
@@ -14,7 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Kimai; If not, see <http://www.gnu.org/licenses/>.
+ * along with Kimai-i; If not, see <http://www.gnu.org/licenses/>.
  */
 
 /* Language: 
@@ -22,11 +23,10 @@
  * Updated by: 
  * Kimai version: 
  *
- * Generator: find_missing_translations.php
- * Generated: 2015-07-25 20:23:23
- * First file (array structure and new values): fr.php
- * Second file (translated values): en.php
- * Third file (resulting array): new_20150725T202323.php
+ * Generator: dict_re_sort.php
+ * Generated: 2015-08-10 09:10:58
+ * First file (array structure and new values): en.php
+ * Third file (resulting array): new_20150810T091058.php
  */
 
 return array(
@@ -82,7 +82,7 @@ return array(
     'checkupdate'                    => 'Look for update',
     'checkUsername'                  => 'You must enter a username in the field left from the add-button!',
     'city'                           => 'City',
-    'select_customer'                           => 'Select customer',
+    'select_customer'                => 'Select customer',
     'cleared'                        => 'cleared/paid',
     'clickToReload'                  => 'Click here to reload the GUI',
     'clock'                          => 'Clock',
@@ -91,7 +91,6 @@ return array(
     'comment_type'                   => 'Comment type',
     'company'                        => 'Company',
     'ownGlobalRoleChange'            => 'Are you sure you want to change your own global role from "%OLD%" to "%NEW%"?\nThis can lead to less permissions!',
-
     'construction'                   => 'under construction...',
     'contact'                        => 'Contact',
     'contactPerson'                  => 'Contact person',
@@ -130,7 +129,7 @@ return array(
     'deleteUser'                     => 'Delete this user',
     'description'                    => 'Description',
     'demo_mode'                      => 'DEMO MODE',
-    'demo_login'                     => '*** DEMO MODE ***</br> username: \'admin\'</br> ANY passwords fixed to: \'demo\'',
+    'demo_login'                     => '*** DEMO MODE ***</br>admin ~ staff1 ~ customer1</br>pass:  demo',
     'demo_reset_in'                  => 'Data reset in: ',
     'display_currentDate_format'     => 'Date format for the field below the timespan (<a href="http://php.net/manual/en/function.strftime.php" target="_blank">notation for strftime()</a>)',
     'display_date_format'            => 'Date format of the timespan (<a href="http://php.net/manual/en/function.strftime.php" target="_blank">notation for strftime()</a>)',
@@ -240,7 +239,7 @@ return array(
     'new_project'                    => 'NEW PROJECT',
     'add_status'                     => 'add status',
     'new_user_defaults'              => 'NEW USER DEFAULT PREFERENCES',
-    'new_password'                    => 'New Password',
+    'new_password'                   => 'New Password',
     'no'                             => 'no',
     'no_fading'                      => 'no fading effect',
     'no_web_access'                  => 'No web access',

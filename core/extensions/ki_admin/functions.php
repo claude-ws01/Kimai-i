@@ -169,7 +169,6 @@ function prep_group_list_render()
                 return in_array($group['group_id'], $kga['who']['groups'], true) !== false;
             });
     }
-
 }
 
 function prep_membership_list_render()
@@ -231,7 +230,6 @@ function prep_status_list_render()
     global $database, $view;
 
     $view->arr_status = $database->status_get_all();
-
 }
 
 function prep_user_list_render()
@@ -274,10 +272,7 @@ function prep_user_list_render()
 
 function prep__subtabs_render()
 {
-    global $kga, $view;
-    $view->curr_user = $kga['who']['name'];
+    global $view;
     $view->languages = Translations::langs(); //?? is used ??
     $view->timezones = timezoneList();
-
-    $view->curr_user = $kga['who']['name'];
 }

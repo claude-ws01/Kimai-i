@@ -1018,8 +1018,17 @@ class Kimai_Mysql extends MySQL
         $p          = $kga['server_prefix'];
         $customerId = mysqli_real_escape_string($this->link, $customerId);
 
-        $query = "UPDATE {$p}customer SET secure='$keymai' WHERE customer_id='" . $customerId . "';";
-        $this->query($query);
+        $query = "UPDATE {$p}customer
+                SET secure='$keymai'
+                WHERE customer_id='" . $customerId . "';";
+
+        //DEBUG// error_log('<<== SETTING CUSTOMER SECURE KEY ==>>' . PHP_EOL . $query);
+
+        $result = $this->query($query);
+
+        if (mysqli_affected_rows($this->link) < 1) {
+            error_log('<<== FAILED SETTING CUSTOMER SECURE KEY ==>>' . PHP_EOL . $query);
+        }
     }
 
     public function customer_nameToID($name)
@@ -1870,6 +1879,9 @@ class Kimai_Mysql extends MySQL
         $columns[] = "secure";
 
         $result = $this->selectRows($table, $filter, $columns);
+        //DEBUG//
+        error_log('<<== FETCH SECURE ==>'. $this->last_sql);
+
         if ($result == false) {
             $this->logLastError('get_seq');
 
@@ -1878,6 +1890,8 @@ class Kimai_Mysql extends MySQL
 
         $row = $this->rowArray(0, MYSQLI_ASSOC);
 
+        //DEBUG//
+        error_log('<<== SECURE IS ==>'. $row['secure']);
         return $row['secure'];
     }
 
@@ -4189,8 +4203,20 @@ class Kimai_Mysql extends MySQL
         $p = $kga['server_prefix'];
         $u = mysqli_real_escape_string($this->link, $userId);
 
-        $query = "UPDATE {$p}user SET secure='$keymai',ban=0,ban_time=0 WHERE user_id='" . $u . "';";
-        $this->query($query);
+        $query = "UPDATE {$p}user
+                SET secure='$keymai',
+                    ban=0,
+                    ban_time=0
+                WHERE user_id='" . $u . "';";
+
+        //DEBUG//
+        error_log('<<== SETTING USER SECURE KEY ==>>' . PHP_EOL . $query);
+        $result = $this->query($query);
+
+        if (mysqli_affected_rows($this->link) < 1) {
+            error_log('<<== FAILED SETTING USER SECURE KEY ==>>' . PHP_EOL . $query);
+        }
+
     }
 
     public function user_name2id($name)

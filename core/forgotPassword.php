@@ -75,34 +75,31 @@ $name        = htmlspecialchars(trim($name));
 $is_customer = $database->is_customer_name($name);
 if ($is_customer) {
     $id         = $database->customer_nameToID($name);
-    $customer   = $database->customer_get_data($id);
-    $keyCorrect = $key == $customer['password_reset_hash'];
+    $customer   = (array)$database->customer_get_data($id);
+    $keyCorrect = $key === $customer['password_reset_hash'];
 }
 else {
     $id         = $database->user_name2id($name);
-    $user       = $database->user_get_data($id);
-    $keyCorrect = $key == $user['password_reset_hash'];
+    $user       = (array)$database->user_get_data($id);
+    $keyCorrect = $key === $user['password_reset_hash'];
 }
 
-switch ($_REQUEST['a']) {
 
-    case 'request':
 
-        Logger::logfile('password reset: ' . $name . ($is_customer ? ' as customer' : ' as user'));
-        break;
+if ( $_REQUEST['a'] === 'request' ) {
+    Logger::logfile( 'password reset: ' . $name . ( $is_customer ? ' as customer' : ' as user' ) );
+}
 
+else {
     // ============================
     // = Show password reset page =
     // ============================
-    default:
+    $view->keyCorrect  = $keyCorrect;
+    $view->requestData = array(
+        'key'  => $key,
+        'name' => $name,
+    );
 
+    echo $view->render( 'login/forgotPassword.php' );
 
-        $view->keyCorrect  = $keyCorrect;
-        $view->requestData = array(
-            'key'  => $key,
-            'name' => $name,
-        );
-
-        echo $view->render('login/forgotPassword.php');
-        break;
 }

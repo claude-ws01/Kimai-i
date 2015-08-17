@@ -89,8 +89,7 @@ function expense_create($userID, array $data)
  * @return Array list of where clauses to include in the query
  *
  */
-
-function expenses_widthhereClausesFromFilters($users, $customers, $projects)
+function expenses_whereClausesFromFilters($users, $customers, $projects)
 {
     global $database;
 
@@ -104,17 +103,20 @@ function expenses_widthhereClausesFromFilters($users, $customers, $projects)
         $projects = array();;
     }
 
-    foreach ($users as $i => $user) {
-        $users[$i] = $database->sqlValue($user, MySQL::SQLVALUE_NUMBER);
+    foreach ($users as &$user) {
+        $user = $database->sqlValue($user, MySQL::SQLVALUE_NUMBER);
     }
+    unset($user);
 
-    foreach ($customers as $i => $customer) {
-        $customers[$i] = $database->sqlValue($customer, MySQL::SQLVALUE_NUMBER);
+    foreach ($customers as &$customer) {
+        $customer = $database->sqlValue($customer, MySQL::SQLVALUE_NUMBER);
     }
+    unset($customer);
 
-    foreach ($projects as $i => $project) {
-        $projects[$i] = $database->sqlValue($project, MySQL::SQLVALUE_NUMBER);
+    foreach ($projects as &$project) {
+        $project = $database->sqlValue($project, MySQL::SQLVALUE_NUMBER);
     }
+    unset($project);
 
     $whereClauses = array();
 
@@ -159,7 +161,7 @@ function get_expenses($start, $end, $users = null, $customers = null, $projects 
 
     $p = $kga['server_prefix'];
 
-    $whereClauses = expenses_widthhereClausesFromFilters($users, $customers, $projects);
+    $whereClauses = expenses_whereClausesFromFilters($users, $customers, $projects);
 
     if (is_customer()) {
         $whereClauses[] = 'project.internal = 0';
@@ -315,7 +317,7 @@ function expense_get($expenseID)
  */
 function expense_edit($id, array $data)
 {
-    global $kga, $database;
+    global $database;
 
     $data = clean_data($data);
 
@@ -366,7 +368,7 @@ function expenses_by_user($start, $end, $users = null, $customers = null, $proje
     $end   = $database->sqlValue($end, MySQL::SQLVALUE_NUMBER);
 
     $p              = $kga['server_prefix'];
-    $whereClauses   = expenses_widthhereClausesFromFilters($users, $customers, $projects);
+    $whereClauses   = expenses_whereClausesFromFilters($users, $customers, $projects);
     $whereClauses[] = "`{$p}user`.trash = 0";
 
     if ($start) {
@@ -424,7 +426,7 @@ function expenses_by_customer($start, $end, $users = null, $customers = null, $p
 
     $p = $kga['server_prefix'];
 
-    $whereClauses   = expenses_widthhereClausesFromFilters($users, $customers, $projects);
+    $whereClauses   = expenses_whereClausesFromFilters($users, $customers, $projects);
     $whereClauses[] = "{$p}customer.trash = 0";
 
     if ($start) {
@@ -478,7 +480,7 @@ function expenses_by_project($start, $end, $users = null, $customers = null, $pr
     $end   = $database->sqlValue($end, MySQL::SQLVALUE_NUMBER);
 
     $p              = $kga['server_prefix'];
-    $whereClauses   = expenses_widthhereClausesFromFilters($users, $customers, $projects);
+    $whereClauses   = expenses_whereClausesFromFilters($users, $customers, $projects);
     $whereClauses[] = "{$p}project.trash = 0";
 
     if ($start) {

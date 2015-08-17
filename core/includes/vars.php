@@ -42,7 +42,7 @@ $kga['calender_start'] = '0';           // here you can set a custom start day f
                                         // if this is not set the day of the users first day in the system will be taken
                                         // Format: ... = "DD/MM/YYYY";
 
-$kga['pwdMinLength'] = 4;               // set your password minimum lenght
+$kga['pwdMinLength'] = 4;               // set your password's minimum length
 
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------
@@ -118,23 +118,24 @@ unset(
 
 
 // TABLES NAME CONSTANTS
-define('TBL_ACTIVITY', $kga['server_prefix'] . 'activity');
-define('TBL_CONFIGURATION', $kga['server_prefix'] . 'configuration');
-define('TBL_CUSTOMER', $kga['server_prefix'] . 'customer');
-define('TBL_EXPENSE', $kga['server_prefix'] . 'expense');
-define('TBL_FIXED_RATE', $kga['server_prefix'] . 'fixed_rate');
-define('TBL_GLOBAL_ROLE', $kga['server_prefix'] . 'global_role');
-define('TBL_GROUP', $kga['server_prefix'] . 'group');
-define('TBL_GROUP_ACTIVITY', $kga['server_prefix'] . 'group_activity');
-define('TBL_GROUP_CUSTOMER', $kga['server_prefix'] . 'group_customer');
-define('TBL_GROUP_PROJECT', $kga['server_prefix'] . 'group_project');
-define('TBL_GROUP_USER', $kga['server_prefix'] . 'group_user');
-define('TBL_MEMBERSHIP_ROLE', $kga['server_prefix'] . 'membership_role');
-define('TBL_PREFERENCE', $kga['server_prefix'] . 'preference');
-define('TBL_PROJECT', $kga['server_prefix'] . 'project');
-define('TBL_PROJECT_ACTIVITY', $kga['server_prefix'] . 'project_activity');
-define('TBL_RATE', $kga['server_prefix'] . 'rate');
-define('TBL_STATUS', $kga['server_prefix'] . 'status');
-define('TBL_TIMESHEET', $kga['server_prefix'] . 'timesheet');
-define('TBL_USER', $kga['server_prefix'] . 'user');
+define('TBL_ACTIVITY',              $kga['server_prefix'] . 'activity');
+define('TBL_CONFIGURATION',         $kga['server_prefix'] . 'configuration');
+define('TBL_CUSTOMER',              $kga['server_prefix'] . 'customer');
+define('TBL_EXPENSE',               $kga['server_prefix'] . 'expense');
+define('TBL_FIXED_RATE',            $kga['server_prefix'] . 'fixed_rate');
+define('TBL_GLOBAL_ROLE',           $kga['server_prefix'] . 'global_role');
+define('TBL_GROUP',                 $kga['server_prefix'] . 'group');
+define('TBL_GROUP_ACTIVITY',        $kga['server_prefix'] . 'group_activity');
+define('TBL_GROUP_CUSTOMER',        $kga['server_prefix'] . 'group_customer');
+define('TBL_GROUP_PROJECT',         $kga['server_prefix'] . 'group_project');
+define('TBL_GROUP_USER',            $kga['server_prefix'] . 'group_user');
+define('TBL_MEMBERSHIP_ROLE',       $kga['server_prefix'] . 'membership_role');
+define('TBL_PREFERENCE',            $kga['server_prefix'] . 'preference');
+define('TBL_PROJECT',               $kga['server_prefix'] . 'project');
+define('TBL_PROJECT_ACTIVITY',      $kga['server_prefix'] . 'project_activity');
+define('TBL_RATE',                  $kga['server_prefix'] . 'rate');
+define('TBL_STATUS',                $kga['server_prefix'] . 'status');
+define('TBL_TIMESHEET',             $kga['server_prefix'] . 'timesheet');
+define('TBL_USER',                  $kga['server_prefix'] . 'user');
+
 

@@ -75,7 +75,7 @@ ini_set('display_errors', 1);
 //}
 
 // Get command line arguments or set default values
-$keyPath    = !empty($argv[1]) ? '../language/' . trim($argv[1]) . '.php' :'../language/en.php';
+$keyPath    = !empty($argv[1]) ? '../language/' . trim($argv[1]) . '.php' :'../language/fr.php';
 $targetPath = !empty($argv[2]) ? '../language/' . trim($argv[2]) . '.php' : '../language/new_' . date('Ymd\THis') . '.php';
 
 // Define counters

@@ -23,15 +23,14 @@
  * Updated by: 
  * Kimai version: 
  *
- * Generator: dict_find_missing.php
- * Generated: 2015-08-07 00:22:58
- * First file (array structure and new values): en.php
- * Second file (translated values): de.php
- * Third file (resulting array): new_20150807T002258.php
+ * Generator: dict_re_sort.php
+ * Generated: 2015-08-10 09:10:28
+ * First file (array structure and new values): de.php
+ * Third file (resulting array): new_20150810T091028.php
  */
 
 return array(
-    'select_customer'                           => 'Wählen kunden',
+    'select_customer'                => 'Wählen kunden',
     'about'                          => 'Über Kimai-i',
     'ac'                             => 'Automatisch fortgesetzter Eintrag.',
     'ac_error'                       => 'Automatisch fortgesetzter Eintrag mit Fehler (Zeitraum zu lang).',
@@ -91,14 +90,14 @@ return array(
     'comment'                        => 'Kommentar',
     'comment_type'                   => 'Kommentar-Art',
     'company'                        => 'Firma',
-    'ownGlobalRoleChange'            => 'Are you sure you want to change your own global role from "%OLD%" to "%NEW%"?\nThis can lead to less permissions!', // REVIEW
+    'ownGlobalRoleChange'            => 'Are you sure you want to change your own global role from "%OLD%" to "%NEW%"?\nThis can lead to less permissions!',
     'construction'                   => 'Hier wird noch gebaut...',
     'contact'                        => 'Kontakt',
     'contactPerson'                  => 'Ansprechpartner',
     'cookiewarning'                  => 'Bitte schalten Sie Cookies an bevor Sie sich anmelden.',
-    'copyr_origin'                   => 'Original Kimai - &copy; 2006-15 - <a href="http://www.kimai.org" target="_blank">Kimai Team</a>', // REVIEW
-    'copyr_poweredby'                => 'Powered by', // REVIEW
-    'copyr_provided'                 => 'Software provided under the terms and conditions<br/>of the <a href="GNU_TERMS" target="_blank"> General Public License Version 3</a>', // REVIEW
+    'copyr_origin'                   => 'Original Kimai - &copy; 2006-15 - <a href="http://www.kimai.org" target="_blank">Kimai Team</a>',
+    'copyr_poweredby'                => 'Powered by',
+    'copyr_provided'                 => 'Software provided under the terms and conditions<br/>of the <a href="GNU_TERMS" target="_blank"> General Public License Version 3</a>',
     'countryCode'                    => 'de-DE',
     'ctype0'                         => 'Kommentar',
     'ctype1'                         => 'Notiz',
@@ -130,8 +129,8 @@ return array(
     'deleteUser'                     => 'Account löschen',
     'description'                    => 'Verwendung',
     'demo_mode'                      => 'DEMO MODE',
-    'demo_login'                     => '*** DEMO MODE ***</br> username: \'admin\'</br> ANY passwords fixed to: \'demo\'',
-    'demo_reset_in'                  => 'Data reset in: ', // REVIEW
+    'demo_login'                     => '*** DEMO MODE ***</br>admin ~ staff1 ~ customer1</br>pass:  demo',
+    'demo_reset_in'                  => 'Data reset in: ',
     'display_currentDate_format'     => 'Format des Datums in dem Feld unterhalb der Zeitspanne (<a href="http://php.net/manual/de/function.strftime.php" target="_blank">Notation für strftime()</a>)',
     'display_date_format'            => 'Format des Datums der Zeitspanne (<a href="http://php.net/manual/de/function.strftime.php" target="_blank">Notation für strftime()</a>)',
     'duration_with_seconds'          => 'Dauer sekundengenau anzeigen.',
@@ -160,10 +159,10 @@ return array(
     'forgotPassword'                 => 'Passwort vergessen',
     'general'                        => 'Allgemein',
     'globalRole'                     => 'Globale Rolle',
-    'globalrole_name_add'            => 'Global role name', // REVIEW
+    'globalrole_name_add'            => 'Global role name',
     'globalRoles'                    => 'Globale Rollen',
     'group'                          => 'Gruppe',
-    'group_name_add'                 => 'Group name', // REVIEW
+    'group_name_add'                 => 'Group name',
     'groupname'                      => 'Gruppen-Name',
     'groups'                         => 'Gruppen',
     'help'                           => 'Hilfe',
@@ -194,7 +193,7 @@ return array(
     'members'                        => 'Mitglieder',
     'membershipRole'                 => 'Gruppenbezogene Rolle',
     'membershipRoles'                => 'Gruppenbezogene Rollen',
-    'membershiprole_name_add'        => 'Membership role name', // REVIEW
+    'membershiprole_name_add'        => 'Membership role name',
     'minLength'                      => 'min. %s Zeichen!',
     'mins'                           => 'Minuten',
     'minutes'                        => 'Minuten',
@@ -240,7 +239,7 @@ return array(
     'new_project'                    => 'NEUES PROJEKT',
     'add_status'                     => 'Status hinzufügen',
     'new_user_defaults'              => 'NEW USER DEFAULT PREFERENCES',
-    'new_password'                    => 'Neues Passwort',
+    'new_password'                   => 'Neues Passwort',
     'no'                             => 'nein',
     'no_fading'                      => 'Ein-/Ausblenden deaktivieren',
     'no_web_access'                  => 'No web access',
@@ -275,7 +274,7 @@ return array(
     'refundable_long'                => 'Rückerstattbar (Mitarbeiter)',
     'rename_caution_after_username'  => 'ändern, müssen Sie sich danach direkt mit dem neuen Namen wieder einloggen!',
     'rename_caution_before_username' => 'Wenn Sie den Benutzernamen von',
-    'reset_password'                 => 'reset password', // REVIEW
+    'reset_password'                 => 'reset password',
     'retypePassword'                 => 'Passwort bestätigen',
     'rolename'                       => 'Rollenname',
     'round_time'                     => 'Zeit runden auf ',
@@ -309,7 +308,7 @@ return array(
     'starttime'                      => 'Startzeit',
     'StartTimeBeforeEndTime'         => 'Die Startzeit muss vor der Endzeit liegen.',
     'status'                         => 'Status',
-    'status_name_add'                => 'Status name', // REVIEW
+    'status_name_add'                => 'Status name',
     'street'                         => 'Straße',
     'sublist_annotations'            => 'Anmerkungen bei den Listen',
     'sublists'                       => 'Untere Listen',
@@ -340,7 +339,7 @@ return array(
     'updateNow'                      => 'Datenbank-Aktualisierung jetzt durchführen!',
     'used'                           => 'Aufgebraucht',
     'user'                           => 'Benutzer',
-    'user_name_add'                  => 'User name', // REVIEW
+    'user_name_add'                  => 'User name',
     'user_list_hidden'               => 'standardmäßig Liste mit Benutzern ausblenden',
     'username'                       => 'Benutzer',
     'users'                          => 'Benutzer',
@@ -529,8 +528,8 @@ Wählen Sie ein anderes Tabellenpräfix oder löschen Sie die existierenden Tabe
     'extensions'                     => array(
         'ki_admin'     => 'Administration',
         'core'         => 'Berechtigungen',
-        'ki_debug'     => 'Debug', // REVIEW
-        'ki_demo'      => 'Demo', // REVIEW
+        'ki_debug'     => 'Debug',
+        'ki_demo'      => 'Demo',
         'ki_budget'    => 'Budget',
         'ki_expense'   => 'Auslagen',
         'ki_export'    => 'Export',

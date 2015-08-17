@@ -1,15 +1,32 @@
 <?php
+/**
+ * This file is part of
+ * Kimai-i - Open Source Time Tracking - https://github.com/cloudeasy/Kimai-i
+ * (c) 2015 Claude Nadon
+ * (c) 2006-2009 Kimai-Development-Team
+ *
+ * Kimai-i is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; Version 3, 29 June 2007
+ *
+ * Kimai-i is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Kimai-i; If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* Language: 
  * Translated by: 
  * Updated by: 
  * Kimai version: 
  *
- * Generator: dict_find_missing.php
- * Generated: 2015-08-06 19:54:31
- * First file (array structure and new values): en.php
- * Second file (translated values): fr.php
- * Third file (resulting array): new_20150806T195431.php
+ * Generator: dict_re_sort.php
+ * Generated: 2015-08-10 09:11:45
+ * First file (array structure and new values): fr.php
+ * Third file (resulting array): new_20150810T091145.php
  */
 
 return array(
@@ -90,7 +107,7 @@ return array(
     'currency_name'                  => 'Nom de la devise.',
     'currency_sign'                  => 'Symbole de la devise.',
     'currSum'                        => 'Sommaire Période courante',
-    'select_customer'                           => 'Selectioner client',
+    'select_customer'                => 'Selectioner client',
     'customer'                       => 'Client',
     'customerlogin'                  => 'connection client',
     'customers'                      => 'Clients',
@@ -114,7 +131,7 @@ return array(
     'deleteUser'                     => 'Supprimer cet utilisateur',
     'description'                    => 'Description',
     'demo_mode'                      => 'MODE DÉMO',
-    'demo_login'                     => '*** MODE DÉMO ***</br> utilisateur: \'admin\'</br> TOUS les mots-de-passe fixés à: \'demo\'',
+    'demo_login'                     => '*** MODE DÉMO ***</br>admin ~ staff1 ~ customer1</br>mot-de-passe:  demo',
     'demo_reset_in'                  => 'Raz des données dans: ',
     'display_currentDate_format'     => 'Format de la date pour le champ sous la plage de temps (<a href="http://php.net/manual/en/function.strftime.php" target="_blank">pour la fonction strftime()</a>)',
     'display_date_format'            => 'Format de la date pour la notation de la plage de temps (<a href="http://php.net/manual/en/function.strftime.php" target="_blank"> pour la fonction strftime()</a>)',
@@ -224,7 +241,7 @@ return array(
     'new_project'                    => 'NOUVEAU PROJECT',
     'add_status'                     => 'Ajouter statut',
     'new_user_defaults'              => 'PRÉFÉRENCES PAR DÉFAUT - NOUVEL UTILISATEUR',
-    'new_password'                    => 'Mot de passe ...',
+    'new_password'                   => 'Mot de passe ...',
     'no'                             => 'non',
     'no_fading'                      => 'Pas d\'effet fondu',
     'no_web_access'                  => 'Accès web bloqué',
