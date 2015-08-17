@@ -3,8 +3,7 @@
 /**
  * Responsible for logging messages to the logfile.
  */
-class Logger
-{
+class Logger {
 
     private static $instance;
     private $file;
@@ -12,18 +11,27 @@ class Logger
     /**
      * Create a new logger instance.
      */
-    private function __construct()
-    {
-        $this->file = fopen(WEBROOT . 'temporary/logfile.txt', 'a');
-        set_error_handler('Logger::errorHandler');
-        set_exception_handler('Logger::exceptionHandler');
+    private function __construct() {
+        if ( ! file_exists(WEBROOT . 'temporary/')
+             && ! mkdir(WEBROOT . 'temporary')
+        ) {
+            error_log('LOGGER ERROR. Failed creating/opening logfile.log');
+        }
+        else {
+            $this->file = fopen(WEBROOT . 'temporary/logfile.txt', 'a');
+            set_error_handler('Logger::errorHandler');
+            set_exception_handler('Logger::exceptionHandler');
+        }
     }
 
     /**
      * Close the file if the instance is destroyed.
      */
-    public function __destruct()
-    {
+    public function __destruct() {
+        if ( ! is_resource($this->file)) {
+            return;
+        }
+
         fclose($this->file);
     }
 
@@ -32,8 +40,8 @@ class Logger
      *
      * @author sl
      */
-    public static function init()
-    {
+    public static function init() {
+
         if (self::$instance === null) {
             self::$instance = new Logger();
         }
@@ -42,13 +50,13 @@ class Logger
     /**
      * Simple static method to log lines to the logfile.
      *
-     * @param string $value message
-     * @param string $path relative path to temporary directory
+     * @param string  $value message
+     * @param string  $path  relative path to temporary directory
      * @param boolean $success
+     *
      * @author sl
      */
-    public static function logfile($value)
-    {
+    public static function logfile($value) {
         if (self::$instance === null) {
             self::$instance = new Logger();
         }
@@ -61,20 +69,22 @@ class Logger
      * Write a line to the logfile.
      *
      * @param string $line line to log
+     *
      * @author sl
      */
-    public function log($line)
-    {
+    public function log($line) {
+        if ( ! is_resource($this->file)) {
+            return;
+        }
+
         fwrite($this->file, date('[d.m.Y H:i:s] ', time()) . $line . "\n");
     }
 
-    public static function exceptionHandler($exception)
-    {
+    public static function exceptionHandler($exception) {
         Logger::logfile('Uncaught exception: ' . $exception->getMessage());
     }
 
-    public static function errorHandler($errno, $errstr, $errfile, $errline)
-    {// function err_log_error($num, $str, $file, $line)
+    public static function errorHandler($errno, $errstr, $errfile, $errline) {// function err_log_error($num, $str, $file, $line)
 
 
         // If the @ error-control operator is set don't log the error.
@@ -119,13 +129,12 @@ class Logger
     }
 
 
-    private static function err_MessageToMail(exception $e)
-    {   // \r\n are necessary for email content
+    private static function err_MessageToMail(exception $e) {   // \r\n are necessary for email content
         global $kga;
 
-        if (!IN_DEV
-            && !empty($kga['error_log_mail_from'])
-            && !empty($kga['error_log_mail_to'])
+        if ( ! IN_DEV
+             && ! empty($kga['error_log_mail_from'])
+             && ! empty($kga['error_log_mail_to'])
         ) {
 
             $message = PHP_EOL . 'Hostname: ' . `hostname`;

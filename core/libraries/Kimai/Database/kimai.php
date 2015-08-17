@@ -1879,8 +1879,7 @@ class Kimai_Mysql extends MySQL
         $columns[] = "secure";
 
         $result = $this->selectRows($table, $filter, $columns);
-        //DEBUG//
-        error_log('<<== FETCH SECURE ==>'. $this->last_sql);
+        //DEBUG// error_log('<<== FETCH SECURE ==>'. $this->last_sql);
 
         if ($result == false) {
             $this->logLastError('get_seq');
@@ -1890,8 +1889,7 @@ class Kimai_Mysql extends MySQL
 
         $row = $this->rowArray(0, MYSQLI_ASSOC);
 
-        //DEBUG//
-        error_log('<<== SECURE IS ==>'. $row['secure']);
+        //DEBUG// error_log('<<== SECURE IS ==>'. $row['secure']);
         return $row['secure'];
     }
 
