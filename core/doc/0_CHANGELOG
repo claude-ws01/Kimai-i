@@ -1,6 +1,7 @@
 *************** REMINDER ... UPDATE /includes/version.php AND kimai-i.json ******************************
 
 === v0.10.1-b6 ======= 2015-08-xx ============ db revision 2000 ========================================================
+- bugfix: ki_export: processor.php: array not initialized.
 - export-print: some corrections
 - logger: added more validation.
 - gitignore: some corrections, some needed files were excluded.

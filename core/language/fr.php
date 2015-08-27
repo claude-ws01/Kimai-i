@@ -1,8 +1,8 @@
 <?php
 /**
  * This file is part of
- * Kimai-i - Open Source Time Tracking - https://github.com/cloudeasy/Kimai-i
- * (c) 2015 Claude Nadon
+ * Kimai-i - Open Source Time Tracking - https://github.com/claude-ws01/Kimai-i
+ * (c) 2015 Claude Nadon  https://github.com/claude-ws01
  * (c) 2006-2009 Kimai-Development-Team
  *
  * Kimai-i is free software; you can redistribute it and/or modify
@@ -415,8 +415,8 @@ return array(
 
     'credits'                        => '<br />
         <br />
-        Si vous trouvez des bogues ou avez des idées de fonctionnalités, n\'hésitez pas à créer un <a href="https://github.com/cloudeasy/Kimai-i/issues">ticket</a>
-        sur <a href="https://github.com/cloudeasy/Kimai-i" target="_blank">GitHub</a>
+        Si vous trouvez des bogues ou avez des idées de fonctionnalités, n\'hésitez pas à créer un <a href="https://github.com/claude-ws01/Kimai-i/issues">ticket</a>
+        sur <a href="https://github.com/claude-ws01/Kimai-i" target="_blank">GitHub</a>
         <br />
         <br />
         <br/>Original Kimai - &copy; 2006-15 - par <a href="http://www.kimai.org" target="_blank">L\'équipe Kimai</a>

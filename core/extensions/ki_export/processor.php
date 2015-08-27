@@ -1,8 +1,8 @@
 <?php
 /**
  * This file is part of
- * Kimai-i Open Source Time Tracking // https://github.com/cloudeasy/Kimai-i
- * (c) 2015 Claude Nadon
+ * Kimai-i Open Source Time Tracking // https://github.com/claude-ws01/Kimai-i
+ * (c) 2015 Claude Nadon  https://github.com/claude-ws01
  * (c) 2006-2009 Kimai-Development-Team // http://www.kimai.org
  *
  * Kimai-i is free software; you can redistribute it and/or modify
@@ -29,7 +29,6 @@ global $database, $kga, $view;
 
 global $axAction, $axValue, $id, $timeframe, $in, $out;
 require('../../includes/kspi.php');
-
 require('private_func.php');
 
 
@@ -50,6 +49,7 @@ if ($axAction === 'export_csv' ||
     $axAction === 'export_xls' ||
     $axAction === 'reload'
 ) {
+
 
     if (isset($_REQUEST['axColumns'])) {
         $axColumns = explode('|', $_REQUEST['axColumns']);
@@ -80,6 +80,8 @@ if ($axAction === 'export_csv' ||
     else {
         $filterUsers = explode(':', $filters[0]);
     }
+
+    $filterCustomers = array();
 
     if (is_customer()) {
         $filterCustomers  = $kga['who']['id'];
@@ -268,14 +270,14 @@ switch ($axAction) {
         $customers = array();
         foreach ($filterCustomers as $customerID) {
             $customer_info = $database->customer_get_data($customerID);
-            $customers[]   = $customer_info['name'];
+            if (is_array($customer_info)): $customers[] = $customer_info['name']; endif;
         }
         $view->customersFilter = implode(', ', $customers);
 
         $projects = array();
         foreach ($filterProjects as $projectID) {
             $project_info = $database->project_get_data($projectID);
-            $projects[]   = $project_info['name'];
+            if (is_array($project_info)): $projects[] = $project_info['name']; endif;
         }
         $view->projectsFilter = implode(', ', $projects);
 

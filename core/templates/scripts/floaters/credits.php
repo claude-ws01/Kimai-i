@@ -16,7 +16,7 @@ $copyr_origin = isset($kga['dict']['copyr_origin']) ? $kga['dict']['copyr_origin
         <h2>Kimai-i - Open Source Time Tracking</h2>
         <strong>Kimai-i <span style="color:red;"><?php echo $GLOBALS['kga']['core.status'] ?></span> <?php
             echo 'v' . $GLOBALS['kga']['core.version'], ' (db.', $GLOBALS['kga']['core.revision'] . ')'; ?>
-        </strong> - &copy; <?php echo devTimeSpan(); ?> - <a href="https://github.com/cloudeasy/Kimai-i"
+        </strong> - &copy; <?php echo devTimeSpan(); ?> - <a href="https://github.com/claude-ws01/Kimai-i"
                                                              target="_blank">Claude Nadon</a>
         <?php echo $kga['dict']['credits'] ?>
     </div>

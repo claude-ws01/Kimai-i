@@ -1,8 +1,7 @@
 {
-    "time": "2015-08-10",
-    "version": "0.10.1-b5",
-    "revision": "2000",
-    "status": "beta",
-    "news": "https://github.com/cloudeasy/Kimai-mysqli/wiki/news"
-
-	}
+  "time": "2015-08-10",
+  "version": "0.10.1-b6",
+  "revision": "2000",
+  "status": "beta",
+  "news": "https://github.com/claude-ws01/kimai-i/wiki/news"
+}

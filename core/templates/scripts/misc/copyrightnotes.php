@@ -19,7 +19,7 @@ $copyr_powerby = isset($kga['dict']['copyr_poweredby']) ? $kga['dict']['copyr_po
 <p>
     <strong>Kimai-i <span style="color:red;"><?php echo $GLOBALS['kga']['core.status'] ?></span> <?php
         echo 'v' . $GLOBALS['kga']['core.version'], ' (db.', $GLOBALS['kga']['core.revision'] . ')'; ?>
-    </strong> - &copy; <?php echo devTimeSpan(); ?> - <a href="https://github.com/cloudeasy/Kimai-i"
+    </strong> - &copy; <?php echo devTimeSpan(); ?> - <a href="https://github.com/claude-ws01/Kimai-i"
                                                          target="_blank">Claude Nadon</a>
 
     <br/><?php echo $copyr_origin; ?>

@@ -1,8 +1,8 @@
 <?php
 /**
  * This file is part of
- * Kimai-i Open Source Time Tracking // https://github.com/cloudeasy/Kimai-i
- * (c) 2015 Claude Nadon
+ * Kimai-i Open Source Time Tracking // https://github.com/claude-ws01/Kimai-i
+ * (c) 2015 Claude Nadon  https://github.com/claude-ws01
  * (c) Kimai-Development-Team // http://www.kimai.org
  *
  * Kimai-i is free software; you can redistribute it and/or modify
@@ -23,7 +23,7 @@
  */
 class Kimai_Update_Check
 {
-    const URL = 'https://raw.githubusercontent.com/cloudeasy/kimai/master/kimai-i.json';
+    const URL = 'https://raw.githubusercontent.com/claude-ws01/kimai-i/master/kimai-i.json';
     const CURRENT = -1;
     const BETA = 0;
     const RELEASE = 1;

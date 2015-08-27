@@ -1,8 +1,8 @@
 /*! ki_debug */
 /**
  * This file is part of
- * Kimai-i Open Source Time Tracking // https://github.com/cloudeasy/Kimai-i
- * (c) 2015 Claude Nadon
+ * Kimai-i Open Source Time Tracking // https://github.com/claude-ws01/Kimai-i
+ * (c) 2015 Claude Nadon  https://github.com/claude-ws01
  * (c) 2006-2009 Kimai-Development-Team // http://www.kimai.org
  *
  * Kimai-i is free software; you can redistribute it and/or modify
