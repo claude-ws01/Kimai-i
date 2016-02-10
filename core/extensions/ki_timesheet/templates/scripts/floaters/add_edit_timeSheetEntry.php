@@ -94,7 +94,7 @@
                 if (!start_day.val().match(ts_dayFormatExp) ||
                     ( !end_day.val().match(ts_dayFormatExp) && end_day.val() != '') || !start_time.val().match(ts_timeFormatExp) ||
                     ( !end_time.val().match(ts_timeFormatExp) && end_time.val() != '')) {
-                    alert("<?php echo $kga['dict']['TimeDateInputError']?>");
+                    alert("<?php echo $kga['dict']['timeDateInputError']?>");
                     return false;
                 }
 
@@ -119,7 +119,7 @@
                         outVal = 0;
 
                     if (inVal > outVal) {
-                        alert("<?php $kga['dict']['StartTimeBeforeEndTime']?>");
+                        alert("<?php $kga['dict']['startTimeBeforeEndTime']?>");
                         return false;
                     }
                     else if (inVal < outVal)
@@ -147,7 +147,7 @@
                         outVal = parseInt(outVal);
 
                         if (inVal > outVal) {
-                            alert("<?php echo $kga['dict']['StartTimeBeforeEndTime']?>");
+                            alert("<?php echo $kga['dict']['startTimeBeforeEndTime']?>");
                             return false;
                         }
                         else if (inVal < outVal)

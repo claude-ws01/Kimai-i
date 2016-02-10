@@ -693,7 +693,9 @@ function quoteForSql($input)
 
         //////// ---------------------------------------------------------------------------------------------------
 
-        $query = "SELECT * FROM `{$p}usr` JOIN `{$p}conf` ON `{$p}usr`.usr_ID = `{$p}conf`.conf_usrID";
+        $query = "SELECT *
+                FROM `{$p}usr`
+                INNER JOIN `{$p}conf` ON `{$p}usr`.usr_ID = `{$p}conf`.conf_usrID";
 
         if (is_object($database)) {
             $result = $database->query($query);

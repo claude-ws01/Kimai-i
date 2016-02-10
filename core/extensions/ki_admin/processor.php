@@ -61,51 +61,39 @@ switch ($axAction) {
         }
 
         // validate data
-        $errors = array();
+        $errorMessages = [];
 
         if (count($groupsWithAddPermission) === 0) {
-            $errors[] = $kga['dict']['errorMessages']['permissionDenied'];
+            $errorMessages[] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
         // PROCESS //
-        if (empty($errors)
-            && !$database->transactionBegin()
-        ) {
-            $errorMessages[''] = $kga['dict']['errorMessages']['internalError'];
-        }
 
         $project_id = false;
-        if (empty($errors)
+        if (count($errorMessages) === 0
             && ($project_id = $database->project_create($projectData)) === false
         ) {
             $errorMessages[''] = $kga['dict']['errorMessages']['internalError'];
-            $project_id        = false;
         }
 
         // assign ALL possible groups, for user & customer.
-        $cust_grps = $database->customer_get_group_ids($projectData['customer_id']);
-        $user_grps = $database->user_object_actions__allowed_groups('project', 'add');
-        $ok_grps   = array_intersect($cust_grps, $user_grps);
+        if (count($errorMessages) === 0) {
+            $cust_grps = $database->customer_get_group_ids($projectData['customer_id']);
+            $user_grps = $database->user_object_actions__allowed_groups('project', 'add');
+            $ok_grps   = array_intersect($cust_grps, $user_grps);
+        }
 
-        if (empty($errors)
+        if (count($errorMessages) === 0
             && !$database->assign_projectToGroups($project_id, $ok_grps)
         ) {
             $errorMessages[''] = $kga['dict']['errorMessages']['internalError'];
         }
 
-        if (empty($errors) && !$database->transactionEnd()) {
-            $errorMessages[''] = $kga['dict']['errorMessages']['internalError'];
-        }
-
-
-        if (!empty($errors)) {
-            $database->transactionRollback();
-        }
 
         // REPLY //
         header('Content-Type: application/json;charset=utf-8');
         echo json_encode(array(
-                             'errors'     => $errors,
+                             'errors'     => $errorMessages,
                              'project_id' => $project_id));
 
         break;
@@ -126,24 +114,24 @@ switch ($axAction) {
         }
 
         // validate data
-        $errors = array();
+        $errorMessages = array();
         if ($database->customer_nameToID($userData['name']) !== false) {
-            $errors[] = $kga['dict']['errorMessages']['customerWithSameName'];
+            $errorMessages[] = $kga['dict']['errorMessages']['customerWithSameName'];
         }
 
         if (count($groupsWithAddPermission) === 0) {
-            $errors[] = $kga['dict']['errorMessages']['permissionDenied'];
+            $errorMessages[] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
         $userId = false;
-        if (count($errors) === 0) {
+        if (count($errorMessages) === 0) {
             $userId = $database->user_create($userData);
             $database->setGroupMemberships($userId, $groupsWithAddPermission);
         }
 
         header('Content-Type: application/json;charset=utf-8');
         echo json_encode(array(
-                             'errors'  => $errors,
+                             'errors'  => $errorMessages,
                              'user_id' => $userId));
 
         break;
@@ -152,10 +140,10 @@ switch ($axAction) {
         $status_data['status'] = trim($axValue);
 
         // validate data
-        $errors = array();
+        $errorMessages = array();
 
         if (is_customer() || !$database->gRole_allows($kga['who']['global_role_id'], 'core__status__add')) {
-            $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
+            $errorMessages[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
         // create new status
@@ -163,7 +151,7 @@ switch ($axAction) {
 
         header('Content-Type: application/json;charset=utf-8');
         echo json_encode(array(
-                             'errors'   => $errors,
+                             'errors'   => $errorMessages,
                              'statusId' => $new_status_id));
         break;
 
@@ -171,10 +159,10 @@ switch ($axAction) {
         $group['name'] = trim($axValue);
 
         // validate data
-        $errors = array();
+        $errorMessages = array();
 
         if (is_customer() || !$database->gRole_allows($kga['who']['global_role_id'], 'core__group__add')) {
-            $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
+            $errorMessages[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
         // create new group
@@ -182,134 +170,134 @@ switch ($axAction) {
 
         header('Content-Type: application/json;charset=utf-8');
         echo json_encode(array(
-                             'errors'  => $errors,
+                             'errors'  => $errorMessages,
                              'groupId' => $newGroupID));
         break;
 
     case 'createGlobalRole':
         $role_data['name'] = trim($axValue);
 
-        $errors = array();
+        $errorMessages = array();
 
         if (is_customer()) {
-            $errors[] = $kga['dict']['errorMessages']['permissionDenied'];
+            $errorMessages[] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
         else {
             if ($database->globalRole_find($role_data)) {
-                $errors[] = $kga['dict']['errorMessages']['sameGlobalRoleName'];
+                $errorMessages[] = $kga['dict']['errorMessages']['sameGlobalRoleName'];
             }
         }
 
-        if (count($errors) === 0) {
+        if (count($errorMessages) === 0) {
             // create new status
             $database->global_role_create($role_data);
         }
 
         header('Content-Type: application/json;charset=utf-8');
         echo json_encode(array(
-                             'errors' => $errors));
+                             'errors' => $errorMessages));
         break;
 
     case 'createMembershipRole':
         $role_data['name'] = trim($axValue);
 
-        $errors = array();
+        $errorMessages = array();
 
         if (is_customer()) {
-            $errors[] = $kga['dict']['errorMessages']['permissionDenied'];
+            $errorMessages[] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
         if ($database->membershipRole_find($role_data)) {
-            $errors[] = $kga['dict']['errorMessages']['sameMembershipRoleName'];
+            $errorMessages[] = $kga['dict']['errorMessages']['sameMembershipRoleName'];
         }
 
-        if (count($errors) === 0) {
+        if (count($errorMessages) === 0) {
             // create new status
             $database->membership_role_create($role_data);
         }
 
         header('Content-Type: application/json;charset=utf-8');
         echo json_encode(array(
-                             'errors' => $errors));
+                             'errors' => $errorMessages));
         break;
 
     case 'deleteActivity' :
-        $errors    = array();
+        $errorMessages    = array();
         $oldGroups = $database->activity_get_groupIDs($id);
 
         if (!$database->core_action_group_allowed('activity', 'delete', $oldGroups)) {
-            $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
+            $errorMessages[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
-        if (count($errors) === 0) {
+        if (count($errorMessages) === 0) {
             // If the confirmation is returned the activity gets the trash-flag.
             $database->activity_delete($id);
         }
 
         header('Content-Type: application/json;charset=utf-8');
         echo json_encode(array(
-                             'errors' => $errors));
+                             'errors' => $errorMessages));
         break;
 
     case 'deleteGlobalRole':
-        $errors = array();
+        $errorMessages = array();
 
         if (is_customer()) {
-            $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
+            $errorMessages[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
-        if (count($errors) === 0) {
+        if (count($errorMessages) === 0) {
             $database->global_role_delete($id);
         }
 
         header('Content-Type: application/json;charset=utf-8');
         echo json_encode(array(
-                             'errors' => $errors));
+                             'errors' => $errorMessages));
         break;
 
     case 'deleteMembershipRole':
-        $errors = array();
+        $errorMessages = array();
 
         if (is_customer()) {
-            $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
+            $errorMessages[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
-        if (count($errors) === 0) {
+        if (count($errorMessages) === 0) {
             $database->membership_role_delete($id);
         }
 
         header('Content-Type: application/json;charset=utf-8');
         echo json_encode(array(
-                             'errors' => $errors));
+                             'errors' => $errorMessages));
         break;
 
     case 'deleteGroup' :
-        $errors = array();
+        $errorMessages = array();
 
         if (!$database->core_action_group_allowed('group', 'delete', array($id))) {
-            $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
+            $errorMessages[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
-        if (count($errors) === 0) {
+        if (count($errorMessages) === 0) {
             // removes a group
             $database->group_delete($id);
         }
 
         header('Content-Type: application/json;charset=utf-8');
         echo json_encode(array(
-                             'errors' => $errors));
+                             'errors' => $errorMessages));
         break;
 
     case 'deleteProject' :
-        $errors    = array();
+        $errorMessages    = array();
         $oldGroups = $database->project_get_groupIDs($id);
 
         if (!$database->core_action_group_allowed('project', 'delete', $oldGroups)) {
-            $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
+            $errorMessages[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
-        if (count($errors) === 0) {
+        if (count($errorMessages) === 0) {
             // If the confirmation is returned the project gets the trash-flag.
             $database->project_delete($id);
             break;
@@ -317,36 +305,36 @@ switch ($axAction) {
 
         header('Content-Type: application/json;charset=utf-8');
         echo json_encode(array(
-                             'errors' => $errors));
+                             'errors' => $errorMessages));
         break;
 
     case 'deleteCustomer' :
-        $errors    = array();
+        $errorMessages    = array();
         $oldGroups = $database->customer_get_group_ids($id);
 
         if (!$database->core_action_group_allowed('project', 'delete', $oldGroups)) {
-            $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
+            $errorMessages[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
-        if (count($errors) === 0) {
+        if (count($errorMessages) === 0) {
             // If the confirmation is returned the customer gets the trash-flag.
             $database->customer_delete($id);
         }
 
         header('Content-Type: application/json;charset=utf-8');
         echo json_encode(array(
-                             'errors' => $errors));
+                             'errors' => $errorMessages));
         break;
 
     case 'deleteUser':
         $oldGroups = $database->user_get_group_ids($id, false);
-        $errors    = array();
+        $errorMessages    = array();
 
         if (!$database->core_action_group_allowed('user', 'delete', $oldGroups)) {
-            $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
+            $errorMessages[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
-        if (count($errors) === 0) {
+        if (count($errorMessages) === 0) {
             switch ($axValue) {
                 case 1 :
                     // If the confirmation is returned the user gets the trash-flag.
@@ -361,23 +349,23 @@ switch ($axAction) {
 
         header('Content-Type: application/json;charset=utf-8');
         echo json_encode(array(
-                             'errors' => $errors));
+                             'errors' => $errorMessages));
         break;
 
     case 'deleteStatus' :
-        $errors = array();
+        $errorMessages = array();
         if (is_customer() || !$database->gRole_allows($kga['who']['global_role_id'], 'core__status__delete')) {
-            $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
+            $errorMessages[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
-        if (count($errors) === 0) {
+        if (count($errorMessages) === 0) {
             // If the confirmation is returned the status gets deleted.
             $database->status_delete($id);
         }
 
         header('Content-Type: application/json;charset=utf-8');
         echo json_encode(array(
-                             'errors' => $errors));
+                             'errors' => $errorMessages));
         break;
 
     case 'editGlobalRole':
@@ -398,18 +386,18 @@ switch ($axAction) {
             }
         }
 
-        $errors = array();
+        $errorMessages = array();
 
         if (is_customer()) {
-            $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
+            $errorMessages[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
-        if (count($errors) === 0) {
+        if (count($errorMessages) === 0) {
             $database->global_role_edit($id, $roleData);
         }
 
         header('Content-Type: application/json;charset=utf-8');
-        echo json_encode(array('errors' => $errors));
+        echo json_encode(array('errors' => $errorMessages));
         break;
 
     case 'editMembershipRole':
@@ -431,19 +419,19 @@ switch ($axAction) {
         }
         unset($value);
 
-        $errors = array();
+        $errorMessages = array();
 
         if (is_customer()) {
-            $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
+            $errorMessages[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
-        if (count($errors) === 0) {
+        if (count($errorMessages) === 0) {
             $database->membership_role_edit($id, $roleData);
         }
 
         header('Content-Type: application/json;charset=utf-8');
         echo json_encode(array(
-                             'errors' => $errors));
+                             'errors' => $errorMessages));
         break;
 
     case 'refreshSubtab' :
@@ -554,34 +542,34 @@ switch ($axAction) {
         // process editGroup form
         $group['name'] = trim($_REQUEST['name']);
 
-        $errors = array();
+        $errorMessages = array();
 
         if (!$database->core_action_group_allowed('group', 'edit', array($id))) {
-            $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
+            $errorMessages[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
-        if (count($errors) === 0) {
+        if (count($errorMessages) === 0) {
             $database->group_edit($id, $group);
         }
 
         header('Content-Type: application/json;charset=utf-8');
         echo json_encode(array(
-                             'errors' => $errors));
+                             'errors' => $errorMessages));
         break;
 
     case 'sendEditStatus' :
         // process editStatus form
         $status_data['status'] = trim($_REQUEST['status']);
 
-        $errors = array();
+        $errorMessages = array();
 
         if (is_customer()
             || !$database->gRole_allows($kga['who']['global_role_id'], 'core__status__edit')
         ) {
-            $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
+            $errorMessages[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
-        if (count($errors) === 0) {
+        if (count($errorMessages) === 0) {
             $database->status_edit($id, $status_data);
             config_set('default_status_id', $id, 'int');
             $database->config_replace();
@@ -589,18 +577,18 @@ switch ($axAction) {
 
         header('Content-Type: application/json;charset=utf-8');
         echo json_encode(array(
-                             'errors' => $errors));
+                             'errors' => $errorMessages));
         break;
 
     case 'sendEditAdvanced' :
-        $errors = array();
+        $errorMessages = array();
         if (is_customer()
             || !$database->gRole_allows($kga['who']['global_role_id'], 'ki_admin__edit_advanced')
         ) {
-            $errors[''] = $kga['dict']['errorMessages']['permissionDenied'];
+            $errorMessages[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
-        if (count($errors) === 0) {
+        if (count($errorMessages) === 0) {
             // process AdvancedOptions form
             // @formatter:off
             config_set('admin_mail',                isset($_REQUEST['admin_mail']               )? $_REQUEST['admin_mail']               : null );
@@ -669,11 +657,11 @@ switch ($axAction) {
 
             // save config //
             if (!$database->config_replace()) {
-                $errors[''] = $kga['dict']['error'];
+                $errorMessages[''] = $kga['dict']['error'];
             }
         }
 
-        if (count($errors) === 0) {
+        if (count($errorMessages) === 0) {
             write_config_file(
                 $kga['server_hostname'],
                 $kga['server_database'],
@@ -688,7 +676,7 @@ switch ($axAction) {
         }
 
         header('Content-Type: application/json;charset=utf-8');
-        echo json_encode(array('errors' => $errors));
+        echo json_encode(array('errors' => $errorMessages));
         break;
 
     case 'toggleDeletedUsers' :

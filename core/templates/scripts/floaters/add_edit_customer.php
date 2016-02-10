@@ -151,7 +151,7 @@
             <fieldset id="groups">
                 <ul>
                     <li>
-                        <label for="customer_groups"><?php echo $kga['dict']['groups'] ?>
+                        <label for="customer_groups"><?php echo $kga['dict']['accessByGroups'] ?>
                             :</label><?php echo $this->formSelect('customer_groups[]', $this->selectedGroups, array(
                             'class'    => 'formfield',
                             'id'       => 'customer_groups',

@@ -89,7 +89,7 @@
                href="index.php"><?php echo $kga['dict']['passwordReset']['returnToLogin'] ?></a>
         </div>
         <div id="warning">
-            <p id="JSwarning"><strong style="color:red;"><?php $kga['dict']['JSwarning'] ?></strong></p>
+            <p id="JSwarning"><strong style="color:red;"><?php $kga['dict']['jsWarning'] ?></strong></p>
 
             <p id="cookiewarning"><strong style="color:red;"><?php $kga['dict']['cookiewarning'] ?></strong></p>
         </div>

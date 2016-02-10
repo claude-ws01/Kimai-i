@@ -164,7 +164,7 @@ switch ($axAction) {
         // validate day and time
         $new = "${edit_day}-${edit_time}";
         if (!Format::check_time_format($new)) {
-            $errors[''] = $kga['dict']['TimeDateInputError'];
+            $errors[''] = $kga['dict']['timeDateInputError'];
             break;
         }
 

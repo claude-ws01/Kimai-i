@@ -46,6 +46,7 @@ switch ($axAction) {
      * add or edit a customer
      */
     case 'add_edit_customer':
+
         $data['name']     = $_REQUEST['name'];
         $data['comment']  = $_REQUEST['comment'];
         $data['company']  = $_REQUEST['company'];
@@ -83,11 +84,15 @@ switch ($axAction) {
             $errorMessages['name'] = $kga['dict']['errorMessages']['userWithSameName'];
         }
 
-        if (count($_REQUEST['customer_groups']) === 0) {
+        if ( ! array_key_exists('customer_groups', $_REQUEST)
+             || count($_REQUEST['customer_groups']) === 0
+        ) {
             $errorMessages['customer_groups'] = $kga['dict']['atLeastOneGroup'];
         }
 
-        if (!$database->core_action_group_allowed('customer', $id ? 'edit' : 'add', $oldGroups, $_REQUEST['customer_groups'])) {
+        if (count($errorMessages) === 0
+            && ! $database->core_action_group_allowed('customer', $id ? 'edit' : 'add', $oldGroups, $_REQUEST['customer_groups'])
+        ) {
             $errorMessages[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
@@ -95,7 +100,7 @@ switch ($axAction) {
         if (count($errorMessages) === 0) {
 
             // add or update the customer
-            if (!$id) {
+            if ( ! $id) {
                 $id = $database->customer_create($data);
             }
             else {
@@ -136,44 +141,47 @@ switch ($axAction) {
         // VALIDATE //
         $errorMessages = array();
 
-        if (count($_REQUEST['projectGroups']) === 0) {
+        if ( ! array_key_exists('projectGroups', $_REQUEST)
+             || count($_REQUEST['projectGroups']) === 0
+        ) {
             $errorMessages['projectGroups'] = $kga['dict']['atLeastOneGroup'];
         }
-
-        if (!$database->core_action_group_allowed('project', 'edit', $oldGroups, $_REQUEST['projectGroups'])) {
+        elseif ( ! $database->core_action_group_allowed('project', 'edit', $oldGroups, $_REQUEST['projectGroups'])) {
             $errorMessages[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
         // PROCESS //
-        if (empty($errorMessages)
-            && !$database->transactionBegin()
+        if (count($errorMessages) === 0
+            && ! $database->transactionBegin()
         ) {
             $errorMessages[''] = $kga['dict']['errorMessages']['internalError'];
         }
 
-        if (empty($errorMessages)
-            && !$database->project_edit($id, $data)) {
-                    $errorMessages[''] = $kga['dict']['errorMessages']['internalError'];
-        }
-
-
-        if (empty($errorMessages) && isset($_REQUEST['projectGroups'])
-            && !$database->assign_projectToGroups($id, $_REQUEST['projectGroups'])
+        if (count($errorMessages) === 0
+            && ! $database->project_edit($id, $data)
         ) {
             $errorMessages[''] = $kga['dict']['errorMessages']['internalError'];
         }
 
 
-        if (empty($errorMessages)
+        if (count($errorMessages) === 0
+            && isset($_REQUEST['projectGroups'])
+            && ! $database->assign_projectToGroups($id, $_REQUEST['projectGroups'])
+        ) {
+            $errorMessages[''] = $kga['dict']['errorMessages']['internalError'];
+        }
+
+
+        if (count($errorMessages) === 0
             && isset($_REQUEST['assignedActivities'])
-            && !$database->assignProjectToActivitiesForGroup(
+            && ! $database->assignProjectToActivitiesForGroup(
                 $id, array_values($_REQUEST['assignedActivities']), $kga['who']['groups'])
         ) {
             $errorMessages[''] = $kga['dict']['errorMessages']['internalError'];
         }
 
 
-        if (empty($errorMessages)
+        if (count($errorMessages) === 0
             && isset($_REQUEST['assignedActivities'])
             && is_array($_REQUEST['assignedActivities'])
         ) {
@@ -195,7 +203,7 @@ switch ($axAction) {
                     }
                 }
 
-                if (!$database->project_activity_edit($id, $activityID, $data)) {
+                if ( ! $database->project_activity_edit($id, $activityID, $data)) {
                     $errorMessages[''] = $kga['dict']['errorMessages']['internalError'];
                     break;
                 }
@@ -203,12 +211,13 @@ switch ($axAction) {
         }
 
 
-        if (empty($errorMessages) && !$database->transactionEnd()) {
+        if (count($errorMessages) === 0
+            && ! $database->transactionEnd()) {
             $errorMessages[''] = $kga['dict']['errorMessages']['internalError'];
         }
 
 
-        if (!empty($errorMessages)) {
+        if ( count($errorMessages) !== 0) {
             $database->transactionRollback();
         }
 
@@ -241,13 +250,13 @@ switch ($axAction) {
             $errorMessages['activityGroups'] = $kga['dict']['atLeastOneGroup'];
         }
 
-        if (!$database->core_action_group_allowed('activity', $id ? 'edit' : 'add', $oldGroups, $_REQUEST['activityGroups'])) {
+        if ( ! $database->core_action_group_allowed('activity', $id ? 'edit' : 'add', $oldGroups, $_REQUEST['activityGroups'])) {
             $errorMessages[''] = $kga['dict']['errorMessages']['permissionDenied'];
         }
 
         if (count($errorMessages) === 0) {
             // add or update the project
-            if (!$id) {
+            if ( ! $id) {
                 $id = $database->activity_create($data);
             }
             else {
@@ -269,7 +278,8 @@ switch ($axAction) {
 
         header('Content-Type: application/json;charset=utf-8');
         echo json_encode(array(
-                             'errors' => $errorMessages));
+                             'errors' => $errorMessages,
+                         ));
         break;
 
     /**
@@ -301,7 +311,7 @@ switch ($axAction) {
         if (is_customer()) {
             $database->pref_replace($pref, 'ui.', $kga['who']['id']);
 
-            if (!empty($_REQUEST['password'])) {
+            if ( ! empty($_REQUEST['password'])) {
                 $userData['password'] = password_encrypt($_REQUEST['password']);
                 $database->customer_edit($kga['who']['id'], $userData);
             }
@@ -320,7 +330,7 @@ switch ($axAction) {
                 $database->remove_rate($kga['who']['id'], null, null);
             }
 
-            if (!empty($_REQUEST['password'])) {
+            if ( ! empty($_REQUEST['password'])) {
                 $userData['password'] = password_encrypt($_REQUEST['password']);
                 $database->user_edit($kga['who']['id'], $userData);
             }
@@ -436,13 +446,13 @@ switch ($axAction) {
         $timeframe = explode('|', $axValue);
 
         $timeframe_in = explode('-', $timeframe[0]);
-        $timeframe_in = (int)mktime(0, 0, 0, $timeframe_in[0], $timeframe_in[1], $timeframe_in[2]);
+        $timeframe_in = (int) mktime(0, 0, 0, $timeframe_in[0], $timeframe_in[1], $timeframe_in[2]);
         if ($timeframe_in < 950000000) {
             $timeframe_in = $in;
         }
 
         $timeframe_out = explode('-', $timeframe[1]);
-        $timeframe_out = (int)mktime(23, 59, 59, $timeframe_out[0], $timeframe_out[1], $timeframe_out[2]);
+        $timeframe_out = (int) mktime(23, 59, 59, $timeframe_out[0], $timeframe_out[1], $timeframe_out[2]);
         if ($timeframe_out < 950000000) {
             $timeframe_out = $out;
         }

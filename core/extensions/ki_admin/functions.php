@@ -220,9 +220,8 @@ function prep_project_list_render()
     // projects need be created BEFORE editing to filter groups/activity in the edit-floater
     // so... filter customers for which I can create a project
     $user_grps       = $database->user_object_actions__allowed_groups('project', 'add');
-    $view->customers =
-        array_merge(['0' => $kga['dict']['select_customer']],
-                    $database->customers_get($user_grps, 'select'));
+    $customers = $database->customers_get($user_grps, 'select');
+    $view->customers = array_replace(['0' => $kga['dict']['select_customer']], $customers);
 }
 
 function prep_status_list_render()

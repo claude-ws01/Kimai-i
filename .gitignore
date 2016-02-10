@@ -1,6 +1,7 @@
 /.project
 *.*~
 /core/temporary/*.txt
+_localconf.php
 autoconf.php
 autoconfx.php
 .settings

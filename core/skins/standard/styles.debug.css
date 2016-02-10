@@ -72,6 +72,33 @@ input {
 }
 
 /*
+      GLOBAL           GLOBAL           GLOBAL           GLOBAL           GLOBAL
+
+*/
+.btn_ok,
+.btn_norm {
+    min-width: 70px;
+    border-radius: 4px;
+}
+
+.btn_ok {
+    cursor: pointer;
+    background-color: #3e7c17;
+    color: #fff;
+}
+
+.btn_ok:hover {
+    background: #79b862;
+    color: #000;
+}
+
+.btn_ok:active {
+    background: #7ae32b;
+    color: #000;
+}
+
+
+/*
       TOP            TOP            TOP            TOP            TOP
 
 */
@@ -602,7 +629,7 @@ fieldset#activitiestab input {
 #floater_innerwrap input,
 #floater_innerwrap textarea {
     background-color: #fff;
-    border: 3px double #bbb;
+    /*border: 3px double #bbb;*/
     vertical-align: middle;
 }
 
@@ -625,33 +652,42 @@ fieldset#activitiestab input {
 #formbuttons .btn_norm {
     min-width: 70px;
     margin: 3px;
+    border-radius: 5px;
 }
 
 #formbuttons .btn_ok {
     cursor: pointer;
-    background-color: #499517;
+    background-color: #3e7c17;
     font-weight: bold;
     color: #fff;
 }
 
-#formbuttons .btn_ok:hover,
+#formbuttons .btn_ok:hover {
+    background: #79b862;
+    color: #000;
+}
+
 #formbuttons .btn_ok:active {
-    background-color: #5ab417;
+    background: #7ae32b;
     color: #000;
 }
 
 #formbuttons .btn_norm {
     cursor: pointer;
-    background-color: #B72917;
+    background-color: #ae0000;
     font-weight: bold;
     color: #fff;
     float: right;
     margin-left: 20px;
 }
 
-#formbuttons .btn_norm:hover,
+#formbuttons .btn_norm:hover {
+    background-color: #EED202;
+    color: #000;
+}
+
 #formbuttons .btn_norm:active {
-    background-color: #ff5a4d;
+    background-color: #ff5039;
     color: #000;
 }
 

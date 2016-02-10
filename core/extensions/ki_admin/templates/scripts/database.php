@@ -1,4 +1,4 @@
-<?php echo $GLOBALS['kga']['dict']['DBname']?>: <?php echo $this->escape($GLOBALS['kga']['server_database']);?>
+<?php echo $GLOBALS['kga']['dict']['dbName']?>: <?php echo $this->escape($GLOBALS['kga']['server_database']);?>
 <br />
 <br />
 <a href="../db_restore.php">Database Backup Utility</a>

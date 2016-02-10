@@ -13,7 +13,8 @@
     <tr class='headerrow'>
         <th><?php echo $kga['dict']['options'] ?></th>
         <th><?php echo $kga['dict']['group'] ?></th>
-        <th><?php echo $kga['dict']['members'] ?></th>
+        <th><?php echo $kga['dict']['users'] ?></th>
+        <th><?php echo $kga['dict']['customers'] ?></th>
     </tr>
     </thead>
     <tbody>
@@ -71,6 +72,7 @@
                 </td>
 
                 <td><?php echo $grouparray['count_users'] ?></td>
+                <td><?php echo $grouparray['count_customers'] ?></td>
             </tr>
             <?php
         }

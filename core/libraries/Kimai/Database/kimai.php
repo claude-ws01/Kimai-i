@@ -26,11 +26,9 @@ require WEBROOT . 'libraries/Kimai/Database/mysql.php';
  * @author sl
  * @author Kevin Papst
  */
-class Kimai_Mysql extends MySQL
-{
+class Kimai_Mysql extends MySQL {
 
-    public function activity_create($data)
-    {
+    public function activity_create($data) {
         global $kga;
 
         $data = clean_data($data);
@@ -42,7 +40,7 @@ class Kimai_Mysql extends MySQL
 
         $result = $this->insertRow(TBL_ACTIVITY, $values);
 
-        if (!$result) {
+        if ( ! $result) {
             $this->logLastError('activity_create');
 
             return false;
@@ -80,8 +78,7 @@ class Kimai_Mysql extends MySQL
         return $activityID;
     }
 
-    public function activity_delete($activityID)
-    {
+    public function activity_delete($activityID) {
         global $kga;
 
         $values['trash']       = 1;
@@ -92,8 +89,7 @@ class Kimai_Mysql extends MySQL
         return $this->query($query);
     }
 
-    public function activity_edit($activityID, $data)
-    {
+    public function activity_edit($activityID, $data) {
         global $kga;
 
         $data   = clean_data($data);
@@ -115,7 +111,7 @@ class Kimai_Mysql extends MySQL
 
         $filter  ['activity_id'] = $this->sqlValue($activityID, MySQL::SQLVALUE_NUMBER);
 
-        if (!$this->transactionBegin()) {
+        if ( ! $this->transactionBegin()) {
             $this->logLastError('activity_edit');
 
             return false;
@@ -152,7 +148,7 @@ class Kimai_Mysql extends MySQL
                 }
             }
 
-            if (!$this->transactionEnd()) {
+            if ( ! $this->transactionEnd()) {
                 $this->logLastError('activity_edit');
 
                 return false;
@@ -160,7 +156,7 @@ class Kimai_Mysql extends MySQL
         }
         else {
             $this->logLastError('activity_edit');
-            if (!$this->transactionRollback()) {
+            if ( ! $this->transactionRollback()) {
                 $this->logLastError('activity_edit');
 
                 return false;
@@ -172,14 +168,13 @@ class Kimai_Mysql extends MySQL
         return true;
     }
 
-    public function activity_get_data($activityID)
-    {
+    public function activity_get_data($activityID) {
         global $kga;
 
         $filter['activity_id'] = $this->sqlValue($activityID, MySQL::SQLVALUE_NUMBER);
         $result                = $this->selectRows(TBL_ACTIVITY, $filter);
 
-        if (!$result) {
+        if ( ! $result) {
             $this->logLastError('activity_get_data');
 
             return false;
@@ -195,8 +190,7 @@ class Kimai_Mysql extends MySQL
         return $result_array;
     }
 
-    public function activity_get_groupIDs($activityID)
-    {
+    public function activity_get_groupIDs($activityID) {
         global $kga;
 
         $filter['activity_id'] = $this->sqlValue($activityID, MySQL::SQLVALUE_NUMBER);
@@ -217,7 +211,7 @@ class Kimai_Mysql extends MySQL
         if ($this->num_rows) {
             foreach ($rows as $row) {
                 $groupIDs[$counter] = $row['group_id'];
-                $counter++;
+                $counter ++;
             }
 
             return $groupIDs;
@@ -227,8 +221,7 @@ class Kimai_Mysql extends MySQL
         }
     }
 
-    public function activity_get_groups($activityID)
-    {
+    public function activity_get_groups($activityID) {
         global $kga;
 
         $filter ['activity_id'] = $this->sqlValue($activityID, MySQL::SQLVALUE_NUMBER);
@@ -249,7 +242,7 @@ class Kimai_Mysql extends MySQL
         if ($this->num_rows) {
             foreach ($rows as $row) {
                 $groupIDs[$counter] = $row['group_id'];
-                $counter++;
+                $counter ++;
             }
 
             return $groupIDs;
@@ -259,8 +252,7 @@ class Kimai_Mysql extends MySQL
         }
     }
 
-    public function activity_get_projects($activityID)
-    {
+    public function activity_get_projects($activityID) {
         global $kga;
 
         $filter ['activity_id'] = $this->sqlValue($activityID, MySQL::SQLVALUE_NUMBER);
@@ -281,22 +273,21 @@ class Kimai_Mysql extends MySQL
         if ($this->num_rows) {
             foreach ($rows as $row) {
                 $groupIDs[$counter] = $row['project_id'];
-                $counter++;
+                $counter ++;
             }
         }
 
         return $groupIDs;
     }
 
-    public function allFittingFixedRates($projectID, $activityID)
-    {
+    public function allFittingFixedRates($projectID, $activityID) {
         global $kga;
 
         // validate input
-        if ($projectID == null || !is_numeric($projectID)) {
+        if ($projectID == null || ! is_numeric($projectID)) {
             $projectID = "NULL";
         }
-        if ($activityID == null || !is_numeric($activityID)) {
+        if ($activityID == null || ! is_numeric($activityID)) {
             $activityID = "NULL";
         }
         $p = $kga['server_prefix'];
@@ -317,18 +308,17 @@ class Kimai_Mysql extends MySQL
         return $this->recordsArray(MYSQLI_ASSOC);
     }
 
-    public function allFittingRates($userID, $projectID, $activityID)
-    {
+    public function allFittingRates($userID, $projectID, $activityID) {
         global $kga;
 
         // validate input
-        if ($userID == null || !is_numeric($userID)) {
+        if ($userID == null || ! is_numeric($userID)) {
             $userID = "NULL";
         }
-        if ($projectID == null || !is_numeric($projectID)) {
+        if ($projectID == null || ! is_numeric($projectID)) {
             $projectID = "NULL";
         }
-        if ($activityID == null || !is_numeric($activityID)) {
+        if ($activityID == null || ! is_numeric($activityID)) {
             $activityID = "NULL";
         }
         $p = $kga['server_prefix'];
@@ -350,25 +340,22 @@ class Kimai_Mysql extends MySQL
         return $this->recordsArray(MYSQLI_ASSOC);
     }
 
-    public function assignActivityToProjectsForGroup($activityID, $projectIDs, $group)
-    {
+    public function assignActivityToProjectsForGroup($activityID, $projectIDs, $group) {
         $projectIds = array_merge($projectIDs, $this->getNonManagableAssignedElementIds("activity", "project", $activityID, $group));
 
         return $this->assign_activityToProjects($activityID, $projectIds);
     }
 
-    public function assignProjectToActivitiesForGroup($projectID, $activityIDs, $group)
-    {
+    public function assignProjectToActivitiesForGroup($projectID, $activityIDs, $group) {
         $activityIds = array_merge($activityIDs, $this->getNonManagableAssignedElementIds("project", "activity", $projectID, $group));
 
         return $this->assign_projectToActivities($projectID, $activityIds);
     }
 
-    public function assign_activityToGroups($activityID, $groupIDs)
-    {
+    public function assign_activityToGroups($activityID, $groupIDs) {
         global $kga;
 
-        if (!$this->transactionBegin()) {
+        if ( ! $this->transactionBegin()) {
             $this->logLastError('assign_activityToGroups');
 
             return false;
@@ -408,11 +395,10 @@ class Kimai_Mysql extends MySQL
         return false;
     }
 
-    public function assign_activityToProjects($activityID, $projectIDs)
-    {
+    public function assign_activityToProjects($activityID, $projectIDs) {
         global $kga;
 
-        if (!$this->transactionBegin()) {
+        if ( ! $this->transactionBegin()) {
             $this->logLastError('assign_activityToProjects');
 
             return false;
@@ -452,11 +438,10 @@ class Kimai_Mysql extends MySQL
         return false;
     }
 
-    public function assign_customerToGroups($customerID, $groupIDs)
-    {
+    public function assign_customerToGroups($customerID, $groupIDs) {
         global $kga;
 
-        if (!$this->transactionBegin()) {
+        if ( ! $this->transactionBegin()) {
             $this->logLastError('assign_customerToGroups');
 
             return false;
@@ -496,11 +481,10 @@ class Kimai_Mysql extends MySQL
         return false;
     }
 
-    public function assign_groupToActivities($groupID, $activityIDs)
-    {
+    public function assign_groupToActivities($groupID, $activityIDs) {
         global $kga;
 
-        if (!$this->transactionBegin()) {
+        if ( ! $this->transactionBegin()) {
             $this->logLastError('assign_groupToActivities');
 
             return false;
@@ -540,11 +524,10 @@ class Kimai_Mysql extends MySQL
         return false;
     }
 
-    public function assign_groupToCustomers($groupID, $customerIDs)
-    {
+    public function assign_groupToCustomers($groupID, $customerIDs) {
         global $kga;
 
-        if (!$this->transactionBegin()) {
+        if ( ! $this->transactionBegin()) {
             $this->logLastError('assign_groupToCustomers');
 
             return false;
@@ -585,11 +568,10 @@ class Kimai_Mysql extends MySQL
         return false;
     }
 
-    public function assign_groupToProjects($groupID, $projectIDs)
-    {
+    public function assign_groupToProjects($groupID, $projectIDs) {
         global $kga;
 
-        if (!$this->transactionBegin()) {
+        if ( ! $this->transactionBegin()) {
             $this->logLastError('assign_groupToProjects');
 
             return false;
@@ -629,11 +611,10 @@ class Kimai_Mysql extends MySQL
         return false;
     }
 
-    public function assign_projectToActivities($projectID, $activityIDs)
-    {
+    public function assign_projectToActivities($projectID, $activityIDs) {
         global $kga;
 
-        if (!$this->transactionBegin()) {
+        if ( ! $this->transactionBegin()) {
             $this->logLastError('assign_projectToActivities');
 
             return false;
@@ -673,11 +654,10 @@ class Kimai_Mysql extends MySQL
         return false;
     }
 
-    public function assign_projectToGroups($projectID, $groupIDs)
-    {
+    public function assign_projectToGroups($projectID, $groupIDs) {
         global $kga;
 
-        if (!$this->transactionBegin()) {
+        if ( ! $this->transactionBegin()) {
             $this->logLastError('assign_projectToGroups');
 
             return false;
@@ -718,17 +698,16 @@ class Kimai_Mysql extends MySQL
         return false;
     }
 
-    public function config_load($delete_deprecated = true)
-    {
+    public function config_load($delete_deprecated = true) {
         global $kga;
         $entries = array();
 
         $this->selectRows(TBL_CONFIGURATION);
 
         $this->moveFirst();
-        while (!$this->endOfSeek()) {
+        while ( ! $this->endOfSeek()) {
             $row = $this->row();
-            if (!config_set($row->option, $row->value)) {
+            if ( ! config_set($row->option, $row->value)) {
                 $entries[$row->option] = $row->value;
             }
         }
@@ -747,8 +726,7 @@ class Kimai_Mysql extends MySQL
         }
     }
 
-    public function config_replace()
-    {
+    public function config_replace() {
         global $kga;
 
         $K = $kga['conf'];
@@ -777,8 +755,7 @@ class Kimai_Mysql extends MySQL
         return false;
     }
 
-    public function customer_create($data)
-    {
+    public function customer_create($data) {
         global $kga;
 
         // find random but unused user id
@@ -819,7 +796,7 @@ class Kimai_Mysql extends MySQL
 
         $result = $this->insertRow(TBL_CUSTOMER, $values);
 
-        if (!$result) {
+        if ( ! $result) {
             $this->logLastError('customer_create');
 
             return false;
@@ -831,11 +808,10 @@ class Kimai_Mysql extends MySQL
         return $data['customer_id'];
     }
 
-    public function customer_data_load($customer_id)
-    {
+    public function customer_data_load($customer_id) {
         global $kga;
 
-        if (!$customer_id) {
+        if ( ! $customer_id) {
             return;
         }
 
@@ -873,8 +849,7 @@ class Kimai_Mysql extends MySQL
 
     }
 
-    public function customer_delete($customerID)
-    {
+    public function customer_delete($customerID) {
         global $kga;
 
         $values['trash']       = 1;
@@ -885,8 +860,7 @@ class Kimai_Mysql extends MySQL
         return $this->query($query);
     }
 
-    public function customer_edit($customerID, $data)
-    {
+    public function customer_edit($customerID, $data) {
         global $kga;
 
         if (DEMO_MODE) {
@@ -912,17 +886,23 @@ class Kimai_Mysql extends MySQL
             'mail',
             'homepage',
             'timezone',
-            'password_reset_hash');
-        foreach ($strings as $key) if (isset($data[$key])) {
-            $values[$key] = $this->sqlValue($data[$key]);
+            'password_reset_hash',
+        );
+        foreach ($strings as $key) {
+            if (isset($data[$key])) {
+                $values[$key] = $this->sqlValue($data[$key]);
+            }
         }
 
         $numbers = array(
             'visible',
             'vat_rate',
-            'filter');
-        foreach ($numbers as $key) if (isset($data[$key])) {
-            $values[$key] = $this->sqlValue($data[$key], MySQL::SQLVALUE_NUMBER);
+            'filter',
+        );
+        foreach ($numbers as $key) {
+            if (isset($data[$key])) {
+                $values[$key] = $this->sqlValue($data[$key], MySQL::SQLVALUE_NUMBER);
+            }
         }
 
         $filter['customer_id'] = $this->sqlValue($customerID, MySQL::SQLVALUE_NUMBER);
@@ -932,14 +912,13 @@ class Kimai_Mysql extends MySQL
         return $this->query($query);
     }
 
-    public function customer_get_data($customerID)
-    {
+    public function customer_get_data($customerID) {
         global $kga;
 
         $filter['customer_id'] = $this->sqlValue($customerID, MySQL::SQLVALUE_NUMBER);
         $result                = $this->selectRows(TBL_CUSTOMER, $filter);
 
-        if (!$result) {
+        if ( ! $result) {
             $this->logLastError('customer_get_data');
 
             return false;
@@ -949,8 +928,33 @@ class Kimai_Mysql extends MySQL
         }
     }
 
-    public function customer_get_groups($customer_id, $use_for = null)
-    {
+    public function customer_get_group_ids($customerID) {
+        global $kga;
+
+        $filter['customer_id'] = $this->sqlValue($customerID, MySQL::SQLVALUE_NUMBER);
+        $columns[]             = 'group_id';
+
+
+        $result = $this->selectRows(TBL_GROUP_CUSTOMER, $filter, $columns);
+
+        if ($result == false) {
+            $this->logLastError('customer_get_group_ids');
+
+            return null;
+        }
+
+        $grp_id = array();
+        if ($this->num_rows) {
+            while ( ! $this->endOfSeek()) {
+                $row      = $this->row();
+                $grp_id[] = $row->group_id;
+            }
+        }
+
+        return $grp_id;
+    }
+
+    public function customer_get_groups($customer_id, $use_for = null) {
         global $kga;
 
         $p = $kga['server_prefix'];
@@ -973,7 +977,7 @@ class Kimai_Mysql extends MySQL
         $groups = array();
         if ($this->num_rows) {
             if ($use_for === 'select') {
-                while (!$this->endOfSeek()) {
+                while ( ! $this->endOfSeek()) {
                     $row                    = $this->row();
                     $groups[$row->group_id] = $row->name;
                 }
@@ -984,35 +988,7 @@ class Kimai_Mysql extends MySQL
         return $groups;
     }
 
-    public function customer_get_group_ids($customerID)
-    {
-        global $kga;
-
-        $filter['customer_id'] = $this->sqlValue($customerID, MySQL::SQLVALUE_NUMBER);
-        $columns[]             = 'group_id';
-
-
-        $result = $this->selectRows(TBL_GROUP_CUSTOMER, $filter, $columns);
-
-        if ($result == false) {
-            $this->logLastError('customer_get_group_ids');
-
-            return null;
-        }
-
-        $grp_id = array();
-        if ($this->num_rows) {
-            while (!$this->endOfSeek()) {
-                $row      = $this->row();
-                $grp_id[] = $row->group_id;
-            }
-        }
-
-        return $grp_id;
-    }
-
-    public function customer_loginSetKey($customerId, $keymai)
-    {
+    public function customer_loginSetKey($customerId, $keymai) {
         global $kga;
 
         $p          = $kga['server_prefix'];
@@ -1031,15 +1007,67 @@ class Kimai_Mysql extends MySQL
         }
     }
 
-    public function customer_nameToID($name)
-    {
+    public function customer_nameToID($name) {
         global $kga;
 
         return $this->name2id(TBL_CUSTOMER, 'customer_id', 'name', $name);
     }
 
-    public function getNonManagableAssignedElementIds($parentSubject, $subject, $parentId, $group)
-    {
+    public function customers_get(array $groups = null, $use_for = null) {
+        global $kga;
+
+        $p = $kga['server_prefix'];
+
+        if ($groups === null) {
+            $query = "select `customer_id`, `name`, `contact`, `visible`
+              from {$p}customer
+              where trash=0
+              order by visible desc, name;";
+        }
+        else {
+            $G     = implode($groups, ',');
+            $query = "select distinct `customer_id`, `name`, `contact`, `visible`
+              from {$p}customer
+              inner join {$p}group_customer as g_c using (customer_id)
+              where g_c.group_id in ({$G})
+                and trash=0
+              order by visible desc, name;";
+        }
+
+        if ($this->query($query) === false) {
+            $this->logLastError('customers_get');
+
+            return false;
+        }
+
+        if ($this->num_rows > 0) {
+            $arr = array();
+            if ($use_for === 'select') {
+                while ( ! $this->endOfSeek()) {
+                    $row                    = $this->row();
+                    $arr[$row->customer_id] = $row->name;
+                }
+            }
+            else {
+                $i = 0;
+                while ( ! $this->endOfSeek()) {
+                    $row                    = $this->row();
+                    $arr[$i]['customer_id'] = $row->customer_id;
+                    $arr[$i]['name']        = $row->name;
+                    $arr[$i]['contact']     = $row->contact;
+                    $arr[$i]['visible']     = $row->visible;
+                    $i ++;
+                }
+            }
+
+            return $arr;
+
+        }
+
+        return array();
+    }
+
+    public function getNonManagableAssignedElementIds($parentSubject, $subject, $parentId, $group) {
         $resultIds        = array();
         $selectedIds      = array();
         $allElements      = array();
@@ -1082,7 +1110,7 @@ class Kimai_Mysql extends MySQL
                             break; //element is viewable, so we can stop here
                         }
                     }
-                    if (!$seen) {
+                    if ( ! $seen) {
                         $startvisibleIds[] = $allElement[$idField];
                     }
                 }
@@ -1100,11 +1128,10 @@ class Kimai_Mysql extends MySQL
         return $resultIds;
     }
 
-    public function getUserByApiKey($apikey)
-    {
+    public function getUserByApiKey($apikey) {
         global $kga;
 
-        if (!$apikey || strlen(trim($apikey)) === 0) {
+        if ( ! $apikey || strlen(trim($apikey)) === 0) {
             return null;
         }
 
@@ -1121,8 +1148,7 @@ class Kimai_Mysql extends MySQL
         return $row['name'];
     }
 
-    public function get_DBversion()
-    {
+    public function get_DBversion() {
         global $kga;
 
         $columns[] = 'value';
@@ -1205,13 +1231,12 @@ class Kimai_Mysql extends MySQL
         return $return;
     }
 
-    public function get_activities(array $groups = null)
-    {
+    public function get_activities(array $groups = []) {
         global $kga;
 
         $p = $kga['server_prefix'];
 
-        if ($groups === null) {
+        if (count($groups) === 0) {
             $query = "SELECT activity_id, `name`, visible
               FROM {$p}activity
               WHERE trash=0
@@ -1220,7 +1245,7 @@ class Kimai_Mysql extends MySQL
         else {
             $query = "SELECT DISTINCT `activity_id`, `name`, `visible`
               FROM {$p}activity
-              JOIN {$p}group_activity AS g_a USING(activity_id)
+              INNER JOIN {$p}group_activity AS g_a USING(activity_id)
               WHERE g_a.group_id IN (" . implode($groups, ',') . ")
                 AND trash=0
               ORDER BY visible DESC, name;";
@@ -1236,20 +1261,19 @@ class Kimai_Mysql extends MySQL
         $i   = 0;
         if ($this->num_rows) {
             $this->moveFirst();
-            while (!$this->endOfSeek()) {
+            while ( ! $this->endOfSeek()) {
                 $row                    = $this->row();
                 $arr[$i]['activity_id'] = $row->activity_id;
                 $arr[$i]['name']        = $row->name;
                 $arr[$i]['visible']     = $row->visible;
-                $i++;
+                $i ++;
             }
         }
 
         return $arr;
     }
 
-    public function get_activities_by_customer($customer_ID)
-    {
+    public function get_activities_by_customer($customer_ID) {
         global $kga;
 
         $p = $kga['server_prefix'];
@@ -1274,12 +1298,12 @@ class Kimai_Mysql extends MySQL
 
         if ($this->num_rows) {
             $this->moveFirst();
-            while (!$this->endOfSeek()) {
+            while ( ! $this->endOfSeek()) {
                 $row                    = $this->row();
                 $arr[$i]['activity_id'] = $row->activity_id;
                 $arr[$i]['name']        = $row->name;
                 $arr[$i]['visible']     = $row->visible;
-                $i++;
+                $i ++;
             }
 
             return $arr;
@@ -1289,8 +1313,7 @@ class Kimai_Mysql extends MySQL
         }
     }
 
-    public function get_activities_by_project($projectID, array $groups = null)
-    {
+    public function get_activities_by_project($projectID, array $groups = null) {
         global $kga;
 
         $projectID = $this->sqlValue($projectID, MySQL::SQLVALUE_NUMBER);
@@ -1308,7 +1331,7 @@ class Kimai_Mysql extends MySQL
         else {
             $query = "SELECT DISTINCT activity.*, p_a.budget, p_a.approved, p_a.effort
             FROM {$p}activity AS activity
-            JOIN {$p}group_activity USING(activity_id)
+            INNER JOIN {$p}group_activity USING(activity_id)
             LEFT JOIN {$p}project_activity p_a USING(activity_id)
             WHERE `{$p}group_activity`.`group_id`  IN (" . implode($groups, ',') . ")
               AND activity.trash=0
@@ -1325,7 +1348,7 @@ class Kimai_Mysql extends MySQL
         $arr = array();
         if ($this->num_rows) {
             $this->moveFirst();
-            while (!$this->endOfSeek()) {
+            while ( ! $this->endOfSeek()) {
                 $row                                   = $this->row();
                 $arr[$row->activity_id]['activity_id'] = $row->activity_id;
                 $arr[$row->activity_id]['name']        = $row->name;
@@ -1342,22 +1365,21 @@ class Kimai_Mysql extends MySQL
         }
     }
 
-    public function get_activity_budget($projectID, $activityID)
-    {
+    public function get_activity_budget($projectID, $activityID) {
         global $kga;
 
         // validate input
-        if ($projectID == null || !is_numeric($projectID)) {
+        if ($projectID == null || ! is_numeric($projectID)) {
             $projectID = "NULL";
         }
-        if ($activityID == null || !is_numeric($activityID)) {
+        if ($activityID == null || ! is_numeric($activityID)) {
             $activityID = "NULL";
         }
         $p = $kga['server_prefix'];
 
         $query = "SELECT budget, approved, effort FROM {$p}project_activity WHERE " .
-            (($projectID == "NULL") ? "project_id is NULL" : "project_id = $projectID") . " AND " .
-            (($activityID == "NULL") ? "activity_id is NULL" : "activity_id = $activityID");
+                 (($projectID == "NULL") ? "project_id is NULL" : "project_id = $projectID") . " AND " .
+                 (($activityID == "NULL") ? "activity_id is NULL" : "activity_id = $activityID");
 
 
         if ($this->query($query) === false) {
@@ -1366,10 +1388,10 @@ class Kimai_Mysql extends MySQL
             return false;
         }
         $data = $this->rowArray(0, MYSQLI_ASSOC);
-        if (!isset($data['budget'])) {
+        if ( ! isset($data['budget'])) {
             $data['budget'] = 0;
         }
-        if (!isset($data['approved'])) {
+        if ( ! isset($data['approved'])) {
             $data['approved'] = 0;
         }
 
@@ -1386,15 +1408,14 @@ class Kimai_Mysql extends MySQL
         return $data;
     }
 
-    public function get_best_fitting_fixed_rate($projectID, $activityID)
-    {
+    public function get_best_fitting_fixed_rate($projectID, $activityID) {
         global $kga;
 
         // validate input
-        if ($projectID == null || !is_numeric($projectID)) {
+        if ($projectID == null || ! is_numeric($projectID)) {
             $projectID = "NULL";
         }
-        if ($activityID == null || !is_numeric($activityID)) {
+        if ($activityID == null || ! is_numeric($activityID)) {
             $activityID = "NULL";
         }
 
@@ -1421,18 +1442,17 @@ class Kimai_Mysql extends MySQL
         return $data['rate'];
     }
 
-    public function get_best_fitting_rate($userID, $projectID, $activityID)
-    {
+    public function get_best_fitting_rate($userID, $projectID, $activityID) {
         global $kga;
 
         // validate input
-        if ($userID == null || !is_numeric($userID)) {
+        if ($userID == null || ! is_numeric($userID)) {
             $userID = "NULL";
         }
-        if ($projectID == null || !is_numeric($projectID)) {
+        if ($projectID == null || ! is_numeric($projectID)) {
             $projectID = "NULL";
         }
-        if ($activityID == null || !is_numeric($activityID)) {
+        if ($activityID == null || ! is_numeric($activityID)) {
             $activityID = "NULL";
         }
         $p = $kga['server_prefix'];
@@ -1460,8 +1480,7 @@ class Kimai_Mysql extends MySQL
         return $data['rate'];
     }
 
-    public function get_budget_used($projectID, $activityID)
-    {
+    public function get_budget_used($projectID, $activityID) {
         $timeSheet  = $this->get_timesheet(0, time(), null, null, array($projectID), array($activityID));
         $budgetUsed = 0;
         if (is_array($timeSheet)) {
@@ -1473,8 +1492,7 @@ class Kimai_Mysql extends MySQL
         return $budgetUsed;
     }
 
-    public function get_current_recordings($userID)
-    {
+    public function get_current_recordings($userID) {
         global $kga;
 
         $p      = $kga['server_prefix'];
@@ -1490,7 +1508,7 @@ class Kimai_Mysql extends MySQL
         $IDs = array();
 
         $this->moveFirst();
-        while (!$this->endOfSeek()) {
+        while ( ! $this->endOfSeek()) {
             $row   = $this->row();
             $IDs[] = $row->time_entry_id;
         }
@@ -1498,8 +1516,7 @@ class Kimai_Mysql extends MySQL
         return $IDs;
     }
 
-    public function get_current_timer()
-    {   //CN..needed when reopening webpage while one timer is active, to show time at current timer time.
+    public function get_current_timer() {   //CN..needed when reopening webpage while one timer is active, to show time at current timer time.
         global $kga;
 
         $user = $this->sqlValue($kga['who']['id'], MySQL::SQLVALUE_NUMBER);
@@ -1517,7 +1534,7 @@ class Kimai_Mysql extends MySQL
 
             $row = $this->rowArray(0, MYSQLI_ASSOC);
 
-            $start = (int)$row['start'];
+            $start = (int) $row['start'];
 
             $currentTime           = Format::hourminsec(time() - $start);
             $current_timer['all']  = $start;
@@ -1529,66 +1546,10 @@ class Kimai_Mysql extends MySQL
         return $current_timer;
     }
 
-    public function customers_get(array $groups = null, $use_for = null)
-    {
+    public function get_duration($start, $end, $users = null, $customers = null, $projects = null, $activities = null, $filterCleared = null) {
         global $kga;
 
-        $p = $kga['server_prefix'];
-
-        if ($groups === null) {
-            $query = "select `customer_id`, `name`, `contact`, `visible`
-              from {$p}customer
-              where trash=0
-              order by visible desc, name;";
-        }
-        else {
-            $G     = implode($groups, ',');
-            $query = "select distinct `customer_id`, `name`, `contact`, `visible`
-              from {$p}customer
-              inner join {$p}group_customer as g_c using (customer_id)
-              where g_c.group_id in ({$G})
-                and trash=0
-              order by visible desc, name;";
-        }
-
-        if ($this->query($query) === false) {
-            $this->logLastError('customers_get');
-
-            return false;
-        }
-
-        if ($this->num_rows > 0) {
-            $arr = array();
-            if ($use_for === 'select') {
-                while (!$this->endOfSeek()) {
-                    $row                    = $this->row();
-                    $arr[$row->customer_id] = $row->name;
-                }
-            }
-            else {
-                $i = 0;
-                while (!$this->endOfSeek()) {
-                    $row                    = $this->row();
-                    $arr[$i]['customer_id'] = $row->customer_id;
-                    $arr[$i]['name']        = $row->name;
-                    $arr[$i]['contact']     = $row->contact;
-                    $arr[$i]['visible']     = $row->visible;
-                    $i++;
-                }
-            }
-
-            return $arr;
-
-        }
-
-        return array();
-    }
-
-    public function get_duration($start, $end, $users = null, $customers = null, $projects = null, $activities = null, $filterCleared = null)
-    {
-        global $kga;
-
-        if (!is_numeric($filterCleared)) {
+        if ( ! is_numeric($filterCleared)) {
             $filterCleared = $kga['pref']['hide_cleared_entries'] - 1; // 0 gets -1 for disabled, 1 gets 0 for only not cleared entries
         }
 
@@ -1605,7 +1566,7 @@ class Kimai_Mysql extends MySQL
         if ($end) {
             $whereClauses[] = "start < $end";
         }
-        if ($filterCleared > -1) {
+        if ($filterCleared > - 1) {
             $whereClauses[] = "cleared = $filterCleared";
         }
 
@@ -1614,14 +1575,14 @@ class Kimai_Mysql extends MySQL
               Join {$p}customer USING(customer_id)
               Join {$p}user USING(user_id)
               Join {$p}activity USING(activity_id) "
-            . (count($whereClauses) > 0 ? " WHERE " : " ") . implode(" AND ", $whereClauses);
+                 . (count($whereClauses) > 0 ? " WHERE " : " ") . implode(" AND ", $whereClauses);
         $this->query($query);
 
         $this->moveFirst();
         $sum             = 0;
         $consideredStart = 0; // Consider start of selected range if real start is before
         $consideredEnd   = 0; // Consider end of selected range if real end is afterwards
-        while (!$this->endOfSeek()) {
+        while ( ! $this->endOfSeek()) {
             $row = $this->row();
             if ($row->start <= $start && $row->end < $end) {
                 $consideredStart = $start;
@@ -1645,20 +1606,19 @@ class Kimai_Mysql extends MySQL
                     }
                 }
             }
-            $sum += (int)($consideredEnd - $consideredStart);
+            $sum += (int) ($consideredEnd - $consideredStart);
         }
 
         return $sum;
     }
 
-    public function get_fixed_rate($projectID, $activityID)
-    {
+    public function get_fixed_rate($projectID, $activityID) {
         global $kga;
 
 
         $p = $kga['server_prefix'];
-        $P = ($projectID == null || !is_numeric($projectID)) ? "project_id is NULL" : "project_id = $projectID";
-        $A = ($activityID == null || !is_numeric($activityID)) ? "activity_id is NULL" : "project_id = $activityID";
+        $P = ($projectID == null || ! is_numeric($projectID)) ? "project_id is NULL" : "project_id = $projectID";
+        $A = ($activityID == null || ! is_numeric($activityID)) ? "activity_id is NULL" : "project_id = $activityID";
 
         $query = "SELECT `rate` FROM {$p}fixed_rate WHERE ${P} AND ${A}";
 
@@ -1677,8 +1637,7 @@ class Kimai_Mysql extends MySQL
         return $data['rate'];
     }
 
-    public function get_latest_running_entry()
-    {
+    public function get_latest_running_entry() {
         global $kga;
 
         $table         = TBL_TIMESHEET;
@@ -1692,9 +1651,9 @@ class Kimai_Mysql extends MySQL
                         $activityTable.name AS activity_name,
                         $customerTable.customer_id AS customer_id
                   FROM $table
-                  JOIN $projectTable USING(project_id)
-                  JOIN $customerTable USING(customer_id)
-                  JOIN $activityTable USING(activity_id)";
+                  INNER JOIN $projectTable USING(project_id)
+                  INNER JOIN $customerTable USING(customer_id)
+                  INNER JOIN $activityTable USING(activity_id)";
 
         $result = $this->query("$select WHERE end = 0 AND user_id = {$kga['who']['id']} ORDER BY time_entry_id DESC LIMIT 1");
 
@@ -1706,8 +1665,7 @@ class Kimai_Mysql extends MySQL
         }
     }
 
-    public function get_projects(array $groups = null)
-    {
+    public function get_projects(array $groups = null) {
         global $kga;
 
         $p = $kga['server_prefix'];
@@ -1715,14 +1673,14 @@ class Kimai_Mysql extends MySQL
         if ($groups === null) {
             $query = "SELECT project.*, customer.name AS customer_name
                   FROM {$p}project AS project
-                  JOIN {$p}customer AS customer USING(customer_id)
+                  LEFT JOIN {$p}customer AS customer USING(customer_id)
                   WHERE project.trash=0";
         }
         else {
             $query = "SELECT DISTINCT project.*, customer.name AS customer_name
                   FROM {$p}project AS project
-                  JOIN {$p}customer AS customer USING(customer_id)
-                  JOIN {$p}group_project USING(project_id)
+                  LEFT JOIN {$p}customer AS customer USING (customer_id)
+                  INNER JOIN {$p}group_project USING (project_id)
                   WHERE {$p}group_project.group_id IN (" . implode($groups, ',') . ")
                   AND project.trash=0";
         }
@@ -1733,6 +1691,8 @@ class Kimai_Mysql extends MySQL
         else {
             $query .= " ORDER BY project.visible DESC, `name`, customer_name;";
         }
+
+        //DEBUG error_log(__FUNCTION__ . '== QUERY ==>' . $query, 0);
 
         if ($this->query($query) === false) {
             $this->logLastError('get_projects');
@@ -1758,7 +1718,7 @@ class Kimai_Mysql extends MySQL
                 $arr[$i]['approved']      = $row['approved'];
                 $arr[$i]['internal']      = $row['internal'];
                 $arr[$i]['customer_name'] = $row['customer_name'];
-                $i++;
+                $i ++;
             }
 
             return $arr;
@@ -1767,8 +1727,7 @@ class Kimai_Mysql extends MySQL
         return array();
     }
 
-    public function get_projects_by_customer($customerID, array $groups = null)
-    {
+    public function get_projects_by_customer($customerID, array $groups = null) {
         global $kga;
 
         $customerID = $this->sqlValue($customerID, MySQL::SQLVALUE_NUMBER);
@@ -1784,7 +1743,7 @@ class Kimai_Mysql extends MySQL
         if ($groups === null) {
             $query = "SELECT project.*, customer.name AS customer_name
                   FROM {$p}project AS project
-                  JOIN {$p}customer AS customer USING(customer_id)
+                  INNER JOIN {$p}customer AS customer USING(customer_id)
                   WHERE customer_id = $customerID
                     AND project.internal=0
                     AND project.trash=0
@@ -1793,8 +1752,8 @@ class Kimai_Mysql extends MySQL
         else {
             $query = "SELECT DISTINCT project.*, customer.name AS customer_name
                     FROM {$p}project AS project
-                    JOIN {$p}customer AS customer USING(customer_id)
-                    JOIN {$p}group_project USING(project_id)
+                    INNER JOIN {$p}customer AS customer USING(customer_id)
+                    INNER JOIN {$p}group_project USING(project_id)
                     WHERE {$p}group_project.group_id  IN (" . implode($groups, ',') . ")
                         AND customer_id = $customerID
                         AND project.internal=0
@@ -1808,7 +1767,7 @@ class Kimai_Mysql extends MySQL
         $i   = 0;
 
         $this->moveFirst();
-        while (!$this->endOfSeek()) {
+        while ( ! $this->endOfSeek()) {
             $row                      = $this->row();
             $arr[$i]['project_id']    = $row->project_id;
             $arr[$i]['name']          = $row->name;
@@ -1818,24 +1777,23 @@ class Kimai_Mysql extends MySQL
             $arr[$i]['budget']        = $row->budget;
             $arr[$i]['effort']        = $row->effort;
             $arr[$i]['approved']      = $row->approved;
-            $i++;
+            $i ++;
         }
 
         return $arr;
     }
 
-    public function get_rate($userID, $projectID, $activityID)
-    {
+    public function get_rate($userID, $projectID, $activityID) {
         global $kga;
 
         // validate input
-        if ($userID == null || !is_numeric($userID)) {
+        if ($userID == null || ! is_numeric($userID)) {
             $userID = "NULL";
         }
-        if ($projectID == null || !is_numeric($projectID)) {
+        if ($projectID == null || ! is_numeric($projectID)) {
             $projectID = "NULL";
         }
-        if ($activityID == null || !is_numeric($activityID)) {
+        if ($activityID == null || ! is_numeric($activityID)) {
             $activityID = "NULL";
         }
 
@@ -1861,8 +1819,7 @@ class Kimai_Mysql extends MySQL
         return $data['rate'];
     }
 
-    public function get_seq($user)
-    {
+    public function get_seq($user) {
         global $kga;
 
         if (strncmp($user, 'customer_', 9) === 0) {
@@ -1893,8 +1850,7 @@ class Kimai_Mysql extends MySQL
         return $row['secure'];
     }
 
-    public function get_time_activities($start, $end, $users = null, $customers = null, $projects = null, $activities = null)
-    {
+    public function get_time_activities($start, $end, $users = null, $customers = null, $projects = null, $activities = null) {
         global $kga;
 
         $start = $this->sqlValue($start, MySQL::SQLVALUE_NUMBER);
@@ -1917,7 +1873,7 @@ class Kimai_Mysql extends MySQL
           Left Join {$p}activity USING(activity_id)
           Left Join {$p}project USING(project_id)
           Left Join {$p}customer USING(customer_id) " .
-            (count($whereClauses) > 0 ? " WHERE " : " ") . implode(" AND ", $whereClauses);
+                 (count($whereClauses) > 0 ? " WHERE " : " ") . implode(" AND ", $whereClauses);
 
         if ($this->query($query) === false) {
             $this->logLastError('get_time_activities');
@@ -1926,7 +1882,7 @@ class Kimai_Mysql extends MySQL
         }
 
         $rows = $this->recordsArray(MYSQLI_ASSOC);
-        if (!$rows) {
+        if ( ! $rows) {
             return array();
         }
 
@@ -1958,20 +1914,19 @@ class Kimai_Mysql extends MySQL
             }
 
             if (isset($arr[$row['activity_id']])) {
-                $arr[$row['activity_id']]['time'] += (int)($consideredEnd - $consideredStart);
-                $arr[$row['activity_id']]['costs'] += (double)$row['costs'];
+                $arr[$row['activity_id']]['time'] += (int) ($consideredEnd - $consideredStart);
+                $arr[$row['activity_id']]['costs'] += (double) $row['costs'];
             }
             else {
-                $arr[$row['activity_id']]['time']  = (int)($consideredEnd - $consideredStart);
-                $arr[$row['activity_id']]['costs'] = (double)$row['costs'];
+                $arr[$row['activity_id']]['time']  = (int) ($consideredEnd - $consideredStart);
+                $arr[$row['activity_id']]['costs'] = (double) $row['costs'];
             }
         }
 
         return $arr;
     }
 
-    public function get_time_customers($start, $end, $users = null, $customers = null, $projects = null, $activities = null)
-    {
+    public function get_time_customers($start, $end, $users = null, $customers = null, $projects = null, $activities = null) {
         global $kga;
 
         $start = $this->sqlValue($start, MySQL::SQLVALUE_NUMBER);
@@ -1994,7 +1949,7 @@ class Kimai_Mysql extends MySQL
               FROM {$p}timesheet
               Left Join {$p}project USING(project_id)
               Left Join {$p}customer USING(customer_id) " .
-            (count($whereClauses) > 0 ? " WHERE " : " ") . implode(" AND ", $whereClauses);
+                 (count($whereClauses) > 0 ? " WHERE " : " ") . implode(" AND ", $whereClauses);
 
         if ($this->query($query) === false) {
             $this->logLastError('get_time_customers');
@@ -2002,7 +1957,7 @@ class Kimai_Mysql extends MySQL
             return array();
         }
         $rows = $this->recordsArray(MYSQLI_ASSOC);
-        if (!$rows) {
+        if ( ! $rows) {
             return array();
         }
 
@@ -2034,20 +1989,19 @@ class Kimai_Mysql extends MySQL
             }
 
             if (isset($arr[$row['customer_id']])) {
-                $arr[$row['customer_id']]['time'] += (int)($consideredEnd - $consideredStart);
-                $arr[$row['customer_id']]['costs'] += (double)$row['costs'];
+                $arr[$row['customer_id']]['time'] += (int) ($consideredEnd - $consideredStart);
+                $arr[$row['customer_id']]['costs'] += (double) $row['costs'];
             }
             else {
-                $arr[$row['customer_id']]['time']  = (int)($consideredEnd - $consideredStart);
-                $arr[$row['customer_id']]['costs'] = (double)$row['costs'];
+                $arr[$row['customer_id']]['time']  = (int) ($consideredEnd - $consideredStart);
+                $arr[$row['customer_id']]['costs'] = (double) $row['costs'];
             }
         }
 
         return $arr;
     }
 
-    public function get_time_projects($start, $end, $users = null, $customers = null, $projects = null, $activities = null)
-    {
+    public function get_time_projects($start, $end, $users = null, $customers = null, $projects = null, $activities = null) {
         global $kga;
 
         $start = $this->sqlValue($start, MySQL::SQLVALUE_NUMBER);
@@ -2069,7 +2023,7 @@ class Kimai_Mysql extends MySQL
           FROM {$p}timesheet
           Left Join {$p}project USING(project_id)
           Left Join {$p}customer USING(customer_id) " .
-            (count($whereClauses) > 0 ? " WHERE " : " ") . implode(" AND ", $whereClauses);
+                 (count($whereClauses) > 0 ? " WHERE " : " ") . implode(" AND ", $whereClauses);
 
         if ($this->query($query) === false) {
             $this->logLastError('get_time_projects');
@@ -2077,7 +2031,7 @@ class Kimai_Mysql extends MySQL
             return array();
         }
         $rows = $this->recordsArray(MYSQLI_ASSOC);
-        if (!$rows) {
+        if ( ! $rows) {
             return array();
         }
 
@@ -2109,20 +2063,19 @@ class Kimai_Mysql extends MySQL
             }
 
             if (isset($arr[$row['project_id']])) {
-                $arr[$row['project_id']]['time'] += (int)($consideredEnd - $consideredStart);
-                $arr[$row['project_id']]['costs'] += (double)$row['costs'];
+                $arr[$row['project_id']]['time'] += (int) ($consideredEnd - $consideredStart);
+                $arr[$row['project_id']]['costs'] += (double) $row['costs'];
             }
             else {
-                $arr[$row['project_id']]['time']  = (int)($consideredEnd - $consideredStart);
-                $arr[$row['project_id']]['costs'] = (double)$row['costs'];
+                $arr[$row['project_id']]['time']  = (int) ($consideredEnd - $consideredStart);
+                $arr[$row['project_id']]['costs'] = (double) $row['costs'];
             }
         }
 
         return $arr;
     }
 
-    public function get_time_users($start, $end, $users = null, $customers = null, $projects = null, $activities = null)
-    {
+    public function get_time_users($start, $end, $users = null, $customers = null, $projects = null, $activities = null) {
         global $kga;
 
         $start = $this->sqlValue($start, MySQL::SQLVALUE_NUMBER);
@@ -2146,7 +2099,7 @@ class Kimai_Mysql extends MySQL
               Join {$p}customer USING(customer_id)
               Join `{$p}user` USING(user_id)
               Join {$p}activity USING(activity_id) "
-            . (count($whereClauses) > 0 ? " WHERE " : " ") . implode(" AND ", $whereClauses) . " ORDER BY `start` DESC;";
+                 . (count($whereClauses) > 0 ? " WHERE " : " ") . implode(" AND ", $whereClauses) . " ORDER BY `start` DESC;";
 
         if ($this->query($query) === false) {
             $this->logLastError('get_time_users');
@@ -2155,7 +2108,7 @@ class Kimai_Mysql extends MySQL
         }
 
         $rows = $this->recordsArray(MYSQLI_ASSOC);
-        if (!$rows) {
+        if ( ! $rows) {
             return array();
         }
 
@@ -2187,25 +2140,26 @@ class Kimai_Mysql extends MySQL
             }
 
             if (isset($arr[$row['user_id']])) {
-                $arr[$row['user_id']]['time'] += (int)($consideredEnd - $consideredStart);
-                $arr[$row['user_id']]['costs'] += (double)$row['costs'];
+                $arr[$row['user_id']]['time'] += (int) ($consideredEnd - $consideredStart);
+                $arr[$row['user_id']]['costs'] += (double) $row['costs'];
             }
             else {
-                $arr[$row['user_id']]['time']  = (int)($consideredEnd - $consideredStart);
-                $arr[$row['user_id']]['costs'] = (double)$row['costs'];
+                $arr[$row['user_id']]['time']  = (int) ($consideredEnd - $consideredStart);
+                $arr[$row['user_id']]['costs'] = (double) $row['costs'];
             }
         }
 
         return $arr;
     }
 
-    public function get_timesheet($start, $end, $users = null, $customers = null, $projects = null, $activities = null,
-                                  $limit = false, $reverse_order = false, $filterCleared = null, $startRows = 0,
-                                  $limitRows = 0, $countOnly = false)
-    {
+    public function get_timesheet(
+        $start, $end, $users = null, $customers = null, $projects = null, $activities = null,
+        $limit = false, $reverse_order = false, $filterCleared = null, $startRows = 0,
+        $limitRows = 0, $countOnly = false
+    ) {
         global $kga;
 
-        if (!is_numeric($filterCleared)) {
+        if ( ! is_numeric($filterCleared)) {
             $filterCleared = $kga['pref']['hide_cleared_entries'] - 1; // 0 gets -1 for disabled, 1 gets 0 for only not cleared entries
         }
 
@@ -2228,14 +2182,14 @@ class Kimai_Mysql extends MySQL
         if ($end) {
             $whereClauses[] = "start < $end";
         }
-        if ($filterCleared > -1) {
+        if ($filterCleared > - 1) {
             $whereClauses[] = "cleared = $filterCleared";
         }
 
         $limit = "";
         if ($limit) {
-            if (!empty($limitRows)) {
-                $startRows = (int)$startRows;
+            if ( ! empty($limitRows)) {
+                $startRows = (int) $startRows;
                 $limit     = "LIMIT $startRows, $limitRows";
             }
             else {
@@ -2256,8 +2210,8 @@ class Kimai_Mysql extends MySQL
                         LEFT Join {$p}customer AS customer USING (customer_id)
                         LEFT Join {$p}user AS user USING(user_id)
                         LEFT Join {$p}activity AS activity USING(activity_id) "
-                . (count($whereClauses) > 0 ? " WHERE " : " ") . implode(" AND ", $whereClauses) .
-                ' ORDER BY start ' . ($reverse_order ? 'ASC ' : 'DESC ') . ';';
+                     . (count($whereClauses) > 0 ? " WHERE " : " ") . implode(" AND ", $whereClauses) .
+                     ' ORDER BY start ' . ($reverse_order ? 'ASC ' : 'DESC ') . ';';
         }
         else {
             $query = "SELECT timesheet.*,
@@ -2274,8 +2228,8 @@ class Kimai_Mysql extends MySQL
                         LEFT Join {$p}customer AS customer USING (customer_id)
                         LEFT Join {$p}user AS user USING(user_id)
                         LEFT Join {$p}activity AS activity USING(activity_id) "
-                . (count($whereClauses) > 0 ? " WHERE " : " ") . implode(" AND ", $whereClauses) .
-                ' ORDER BY start ' . ($reverse_order ? 'ASC ' : 'DESC ') . $limit . ';';
+                     . (count($whereClauses) > 0 ? " WHERE " : " ") . implode(" AND ", $whereClauses) .
+                     ' ORDER BY start ' . ($reverse_order ? 'ASC ' : 'DESC ') . $limit . ';';
 
         }
 
@@ -2295,7 +2249,7 @@ class Kimai_Mysql extends MySQL
         $arr = array();
 
         $this->moveFirst();
-        while (!$this->endOfSeek()) {
+        while ( ! $this->endOfSeek()) {
             $row                      = $this->row();
             $arr[$i]['time_entry_id'] = $row->time_entry_id;
 
@@ -2354,14 +2308,13 @@ class Kimai_Mysql extends MySQL
             $arr[$i]['comment_type']    = $row->comment_type;
             $arr[$i]['user_alias']      = $row->user_alias;
             $arr[$i]['username']        = $row->username;
-            $i++;
+            $i ++;
         }
 
         return $arr;
     }
 
-    public function getjointime($userID)
-    {
+    public function getjointime($userID) {
         global $kga;
 
         $userID = $this->sqlValue($userID, MySQL::SQLVALUE_NUMBER);
@@ -2385,8 +2338,7 @@ class Kimai_Mysql extends MySQL
         }
     }
 
-    public function globalRole_find($filter)
-    {
+    public function globalRole_find($filter) {
         global $kga;
 
         foreach ($filter as $key => &$value) {
@@ -2399,7 +2351,7 @@ class Kimai_Mysql extends MySQL
         }
         $result = $this->selectRows(TBL_GLOBAL_ROLE, $filter);
 
-        if (!$result) {
+        if ( ! $result) {
             $this->logLastError('globalRole_find');
 
             return false;
@@ -2409,14 +2361,13 @@ class Kimai_Mysql extends MySQL
         }
     }
 
-    public function globalRole_get_data($globalRoleID)
-    {
+    public function globalRole_get_data($globalRoleID) {
         global $kga;
 
         $filter['global_role_id'] = $this->sqlValue($globalRoleID, MySQL::SQLVALUE_NUMBER);
         $result                   = $this->selectRows(TBL_GLOBAL_ROLE, $filter);
 
-        if (!$result) {
+        if ( ! $result) {
             $this->logLastError('globalRole_get_data');
 
             return false;
@@ -2426,8 +2377,7 @@ class Kimai_Mysql extends MySQL
         }
     }
 
-    public function global_role_create($data)
-    {
+    public function global_role_create($data) {
         global $kga;
 
         $values = array();
@@ -2443,7 +2393,7 @@ class Kimai_Mysql extends MySQL
 
         $result = $this->insertRow(TBL_GLOBAL_ROLE, $values);
 
-        if (!$result) {
+        if ( ! $result) {
             $this->logLastError('global_role_create');
 
             return false;
@@ -2452,8 +2402,7 @@ class Kimai_Mysql extends MySQL
         return $this->getLastInsertID();
     }
 
-    public function global_role_delete($globalRoleID)
-    {
+    public function global_role_delete($globalRoleID) {
         global $kga;
 
         $filter['global_role_id'] = $this->sqlValue($globalRoleID, MySQL::SQLVALUE_NUMBER);
@@ -2468,8 +2417,7 @@ class Kimai_Mysql extends MySQL
         return true;
     }
 
-    public function global_role_edit($globalRoleID, $data)
-    {
+    public function global_role_edit($globalRoleID, $data) {
         global $kga;
 
         $values = array();
@@ -2496,13 +2444,16 @@ class Kimai_Mysql extends MySQL
         return true;
     }
 
-    public function global_roles()
-    {
+    public function global_roles() {
         global $kga;
 
         $p = $kga['server_prefix'];
 
-        $query = "SELECT a.*, COUNT(b.global_role_id) AS count_users FROM `{$p}global_role` a LEFT JOIN `{$p}user` b USING(global_role_id) GROUP BY a.global_role_id";
+        $query = "SELECT a.*,
+                    COUNT(b.global_role_id) AS count_users
+                 FROM `{$p}global_role` a
+                 LEFT JOIN `{$p}user` b USING(global_role_id)
+                 GROUP BY a.global_role_id";
 
         if ($this->query($query) === false) {
             $this->logLastError('global_roles');
@@ -2515,24 +2466,49 @@ class Kimai_Mysql extends MySQL
         return $rows;
     }
 
-    public function group_count_users($groupID)
-    {
+    public function group_count_customers($groupID) {
         global $kga;
 
-        $filter['group_id'] = $this->sqlValue($groupID, MySQL::SQLVALUE_NUMBER);
-        $result             = $this->selectRows(TBL_GROUP_USER, $filter);
+        $p = $kga['server_prefix'];
 
-        if (!$result) {
-            $this->logLastError('group_count_data');
+        $query = "SELECT count(*) as total
+                FROM {$p}customer as c
+                LEFT JOIN {$p}group_customer as g_c USING (customer_id)
+                WHERE c.trash = 0 AND g_c.group_id = {$groupID}";
 
-            return false;
+        $this->query($query);
+
+        $rows = $this->recordsArray(MYSQLI_ASSOC);
+
+        if (is_array($rows)) {
+            return (int) $rows[0]['total'];
         }
 
-        return (int)$result->num_rows;
+        return 0;
     }
 
-    public function group_create($data)
-    {
+    public function group_count_users($groupID) {
+        global $kga;
+
+        $p = $kga['server_prefix'];
+
+        $query = "SELECT count(*) as total
+                FROM {$p}user as u
+                LEFT JOIN {$p}group_user as g_u USING (user_id)
+                WHERE u.trash = 0 AND g_u.group_id = {$groupID}";
+
+        $this->query($query);
+
+        $rows = $this->recordsArray(MYSQLI_ASSOC);
+
+        if (is_array($rows)) {
+            return (int) $rows[0]['total'];
+        }
+
+        return 0;
+    }
+
+    public function group_create($data) {
         global $kga;
 
         $data = clean_data($data);
@@ -2540,7 +2516,7 @@ class Kimai_Mysql extends MySQL
         $values ['name'] = $this->sqlValue($data ['name']);
         $result          = $this->insertRow(TBL_GROUP, $values);
 
-        if (!$result) {
+        if ( ! $result) {
             $this->logLastError('group_create');
 
             return false;
@@ -2550,8 +2526,7 @@ class Kimai_Mysql extends MySQL
         }
     }
 
-    public function group_delete($groupID)
-    {
+    public function group_delete($groupID) {
         global $kga;
 
         $values['trash']    = 1;
@@ -2561,8 +2536,7 @@ class Kimai_Mysql extends MySQL
         return $this->query($query);
     }
 
-    public function group_edit($groupID, $data)
-    {
+    public function group_edit($groupID, $data) {
         global $kga;
 
         $data = clean_data($data);
@@ -2576,14 +2550,13 @@ class Kimai_Mysql extends MySQL
         return $this->query($query);
     }
 
-    public function group_get_data($groupID)
-    {
+    public function group_get_data($groupID) {
         global $kga;
 
         $filter['group_id'] = $this->sqlValue($groupID, MySQL::SQLVALUE_NUMBER);
         $result             = $this->selectRows(TBL_GROUP, $filter);
 
-        if (!$result) {
+        if ( ! $result) {
             $this->logLastError('group_get_data');
 
             return false;
@@ -2593,42 +2566,7 @@ class Kimai_Mysql extends MySQL
         }
     }
 
-    public function groups_get($trash = 0)
-    {
-        global $kga;
-
-        $p = $kga['server_prefix'];
-
-        $where = '';
-        if (!(boolean)$trash) {
-            $where = "WHERE {$p}group.trash != 1";
-        }
-
-        $query = "SELECT * FROM {$p}group ${where} ORDER BY name;";
-        $this->query($query);
-
-        // rows into array
-        $groups = array();
-        $i      = 0;
-
-        $rows = $this->recordsArray(MYSQLI_ASSOC);
-
-        if (is_array($rows)) {
-            foreach ($rows as $row) {
-                $groups[] = $row;
-
-                // append user count
-                $groups[$i]['count_users'] = $this->group_count_users($row['group_id']);
-
-                $i++;
-            }
-        }
-
-        return $groups;
-    }
-
-    public function group_ids_get($trash = 0)
-    {
+    public function group_ids_get($trash = 0) {
         global $kga;
         static $group_ids;
 
@@ -2638,7 +2576,7 @@ class Kimai_Mysql extends MySQL
         $p = $kga['server_prefix'];
 
         $where = '';
-        if (!(boolean)$trash) {
+        if ( ! (boolean) $trash) {
             $where = "WHERE {$p}group.trash != 1";
         }
 
@@ -2662,22 +2600,41 @@ class Kimai_Mysql extends MySQL
         return $group_ids;
     }
 
-    public function is_valid_activity_id($activityId)
-    {
-        $filter = array('activity_id' => $activityId, 'trash' => 0);
+    public function groups_get($trash = 0) {
+        global $kga;
 
-        return $this->rowExists(TBL_ACTIVITY, $filter);
+        $p = $kga['server_prefix'];
+
+        $where = '';
+        if ( ! (boolean) $trash) {
+            $where = "WHERE {$p}group.trash != 1";
+        }
+
+        $query = "SELECT * FROM {$p}group ${where} ORDER BY name;";
+        $this->query($query);
+
+        // rows into array
+        $groups = array();
+        $i      = 0;
+
+        $rows = $this->recordsArray(MYSQLI_ASSOC);
+
+        if (is_array($rows)) {
+            foreach ($rows as $row) {
+                $groups[] = $row;
+
+                // append user count
+                $groups[$i]['count_users'] = $this->group_count_users($row['group_id']);
+                $groups[$i]['count_customers'] = $this->group_count_customers($row['group_id']);
+
+                $i ++;
+            }
+        }
+
+        return $groups;
     }
 
-    public function is_valid_project_id($projectId)
-    {
-        $filter = array('project_id' => $projectId, 'trash' => 0);
-
-        return $this->rowExists(TBL_PROJECT, $filter);
-    }
-
-    public function is_customer_name($name)
-    {
+    public function is_customer_name($name) {
         global $kga;
 
         $name = $this->sqlValue($name);
@@ -2690,8 +2647,19 @@ class Kimai_Mysql extends MySQL
         return $result->num_rows > 0;
     }
 
-    public function login_update_ban($userId, $resetTime = false)
-    {
+    public function is_valid_activity_id($activityId) {
+        $filter = array('activity_id' => $activityId, 'trash' => 0);
+
+        return $this->rowExists(TBL_ACTIVITY, $filter);
+    }
+
+    public function is_valid_project_id($projectId) {
+        $filter = array('project_id' => $projectId, 'trash' => 0);
+
+        return $this->rowExists(TBL_PROJECT, $filter);
+    }
+
+    public function login_update_ban($userId, $resetTime = false) {
         global $kga;
 
 
@@ -2709,8 +2677,7 @@ class Kimai_Mysql extends MySQL
         }
     }
 
-    public function membershipRole_find($filter)
-    {
+    public function membershipRole_find($filter) {
         foreach ($filter as $key => &$value) {
             if (is_numeric($value)) {
                 $value = $this->sqlValue($value, MySQL::SQLVALUE_NUMBER);
@@ -2721,7 +2688,7 @@ class Kimai_Mysql extends MySQL
         }
         $result = $this->selectRows(TBL_MEMBERSHIP_ROLE, $filter);
 
-        if (!$result) {
+        if ( ! $result) {
             $this->logLastError('membershipRole_find');
 
             return false;
@@ -2731,14 +2698,13 @@ class Kimai_Mysql extends MySQL
         }
     }
 
-    public function membershipRole_get_data($membershipRoleID)
-    {
+    public function membershipRole_get_data($membershipRoleID) {
         global $kga;
 
         $filter['membership_role_id'] = $this->sqlValue($membershipRoleID, MySQL::SQLVALUE_NUMBER);
         $result                       = $this->selectRows(TBL_MEMBERSHIP_ROLE, $filter);
 
-        if (!$result) {
+        if ( ! $result) {
             $this->logLastError('membershipRole_get_data');
 
             return false;
@@ -2748,8 +2714,7 @@ class Kimai_Mysql extends MySQL
         }
     }
 
-    public function membership_role_create($data)
-    {
+    public function membership_role_create($data) {
         global $kga;
 
         $values = array();
@@ -2765,7 +2730,7 @@ class Kimai_Mysql extends MySQL
 
         $result = $this->insertRow(TBL_MEMBERSHIP_ROLE, $values);
 
-        if (!$result) {
+        if ( ! $result) {
             $this->logLastError('membership_role_create');
 
             return false;
@@ -2774,8 +2739,7 @@ class Kimai_Mysql extends MySQL
         return $this->getLastInsertID();
     }
 
-    public function membership_role_delete($membershipRoleID)
-    {
+    public function membership_role_delete($membershipRoleID) {
         global $kga;
 
         $filter['membership_role_id'] = $this->sqlValue($membershipRoleID, MySQL::SQLVALUE_NUMBER);
@@ -2790,8 +2754,7 @@ class Kimai_Mysql extends MySQL
         return true;
     }
 
-    public function membership_role_edit($membershipRoleID, $data)
-    {
+    public function membership_role_edit($membershipRoleID, $data) {
         global $kga;
 
         $values = array();
@@ -2812,8 +2775,7 @@ class Kimai_Mysql extends MySQL
         return $this->query($query);
     }
 
-    public function membership_roles()
-    {
+    public function membership_roles() {
         global $kga;
 
         $p = $kga['server_prefix'];
@@ -2835,8 +2797,7 @@ class Kimai_Mysql extends MySQL
         return $rows;
     }
 
-    public function pref_exists($any_id)
-    {
+    public function pref_exists($any_id) {
         global $kga;
 
 
@@ -2854,8 +2815,7 @@ class Kimai_Mysql extends MySQL
         return true;
     }
 
-    public function pref_get_by_prefix($prefix, $userId = null)
-    {
+    public function pref_get_by_prefix($prefix, $userId = null) {
         global $kga;
 
         if ($userId === null) {
@@ -2873,7 +2833,7 @@ class Kimai_Mysql extends MySQL
 
         $prefs = array();
 
-        while (!$this->endOfSeek()) {
+        while ( ! $this->endOfSeek()) {
             $row         = $this->rowArray();
             $key         = substr($row['option'], $prefixLength);
             $prefs[$key] = $row['value'];
@@ -2882,11 +2842,10 @@ class Kimai_Mysql extends MySQL
         return $prefs;
     }
 
-    public function pref_load($id)
-    {
+    public function pref_load($id) {
         global $kga;
 
-        if (!$id) {
+        if ( ! $id) {
             return;
         }
 
@@ -2895,15 +2854,14 @@ class Kimai_Mysql extends MySQL
         $kga['pref'] = array_merge($kga['pref'], $prefs);
 
         // track number: configuration overrides preference
-        if (isset($kga['conf']['ref_num_editable']) && (int)$kga['conf']['ref_num_editable'] === 0) {
+        if (isset($kga['conf']['ref_num_editable']) && (int) $kga['conf']['ref_num_editable'] === 0) {
             $kga['pref']['show_ref_code'] = 0;
         }
 
         date_default_timezone_set($kga['pref']['timezone']);
     }
 
-    public function pref_replace(array $prefs, $prefix = '', $any_id = null)
-    {
+    public function pref_replace(array $prefs, $prefix = '', $any_id = null) {
         global $kga;
 
         if (is_null($any_id)) {
@@ -2939,8 +2897,7 @@ class Kimai_Mysql extends MySQL
         return false;
     }
 
-    public function project_activity_edit($projectID, $activityID, $data)
-    {
+    public function project_activity_edit($projectID, $activityID, $data) {
         global $kga;
 
         $data = clean_data($data);
@@ -2959,8 +2916,7 @@ class Kimai_Mysql extends MySQL
         return true;
     }
 
-    public function project_create($data)
-    {
+    public function project_create($data) {
         global $kga;
 
         $data = clean_data($data);
@@ -2976,14 +2932,14 @@ class Kimai_Mysql extends MySQL
 
         $values['filter'] = $this->sqlValue($data['filter'], MySQL::SQLVALUE_NUMBER);
 
-        if (!$this->transactionBegin()) {
+        if ( ! $this->transactionBegin()) {
             $this->logLastError(__FUNCTION__ . " [1]");
 
             return false;
         }
 
         // INSERT SQL
-        if (!$result = $this->insertRow(TBL_PROJECT, $values)) {
+        if ( ! $result = $this->insertRow(TBL_PROJECT, $values)) {
             $this->logLastError(__FUNCTION__ . " [2]");
         }
 
@@ -3000,7 +2956,7 @@ class Kimai_Mysql extends MySQL
             else {
                 $result = $this->remove_rate(null, $projectID, null);
             }
-            if (!$result) {
+            if ( ! $result) {
                 $this->logLastError(__FUNCTION__ . " - default_rate [3]");
             }
         }
@@ -3013,7 +2969,7 @@ class Kimai_Mysql extends MySQL
             else {
                 $result = $this->remove_rate($kga['who']['id'], $projectID, null);
             }
-            if (!$result) {
+            if ( ! $result) {
                 $this->logLastError(__FUNCTION__ . " - my_rate [4]");
             }
         }
@@ -3026,7 +2982,7 @@ class Kimai_Mysql extends MySQL
             else {
                 $result = $this->remove_fixed_rate($projectID, null);
             }
-            if (!$result) {
+            if ( ! $result) {
                 $this->logLastError(__FUNCTION__ . " - fixed_rate [5]");
             }
         }
@@ -3044,8 +3000,7 @@ class Kimai_Mysql extends MySQL
         return false;
     }
 
-    public function project_delete($projectID)
-    {
+    public function project_delete($projectID) {
         global $kga;
 
         $values['trash']      = 1;
@@ -3056,8 +3011,7 @@ class Kimai_Mysql extends MySQL
         return $this->query($query);
     }
 
-    public function project_edit($projectID, $data)
-    {
+    public function project_edit($projectID, $data) {
         global $kga;
 
         $data   = clean_data($data);
@@ -3087,7 +3041,7 @@ class Kimai_Mysql extends MySQL
         );
 
         foreach ($numbers as $key) {
-            if (!isset($data[$key])) {
+            if ( ! isset($data[$key])) {
                 continue;
             }
 
@@ -3100,7 +3054,7 @@ class Kimai_Mysql extends MySQL
         $filter ['project_id'] = $this->sqlValue($projectID, MySQL::SQLVALUE_NUMBER);
 
 
-        if (!$this->transactionBegin()) {
+        if ( ! $this->transactionBegin()) {
             $this->logLastError('project_edit');
 
             return false;
@@ -3138,7 +3092,7 @@ class Kimai_Mysql extends MySQL
                 }
             }
 
-            if (!$this->transactionEnd()) {
+            if ( ! $this->transactionEnd()) {
                 $this->logLastError('project_edit');
 
                 return false;
@@ -3148,7 +3102,7 @@ class Kimai_Mysql extends MySQL
         }
         else {
             $this->logLastError('project_edit');
-            if (!$this->transactionRollback()) {
+            if ( ! $this->transactionRollback()) {
                 $this->logLastError('project_edit');
 
                 return false;
@@ -3158,8 +3112,7 @@ class Kimai_Mysql extends MySQL
         }
     }
 
-    public function project_get_activities($projectID)
-    {
+    public function project_get_activities($projectID) {
         global $kga;
 
         $projectId = $this->sqlValue($projectID, MySQL::SQLVALUE_NUMBER);
@@ -3167,7 +3120,7 @@ class Kimai_Mysql extends MySQL
 
         $query = "SELECT activity.*, activity_id, budget, effort, approved
                 FROM {$p}project_activity AS p_a
-                JOIN {$p}activity AS activity USING(activity_id)
+                INNER JOIN {$p}activity AS activity USING(activity_id)
                 WHERE project_id = $projectId AND activity.trash=0;";
 
         if ($this->query($query) === false) {
@@ -3181,18 +3134,17 @@ class Kimai_Mysql extends MySQL
         return $rows;
     }
 
-    public function project_get_data($projectID)
-    {
+    public function project_get_data($projectID) {
         global $kga;
 
-        if (!is_numeric($projectID)) {
+        if ( ! is_numeric($projectID)) {
             return false;
         }
 
         $filter['project_id'] = $this->sqlValue($projectID, MySQL::SQLVALUE_NUMBER);
         $result               = $this->selectRows(TBL_PROJECT, $filter);
 
-        if (!$result) {
+        if ( ! $result) {
             $this->logLastError('project_get_data');
 
             return false;
@@ -3206,8 +3158,7 @@ class Kimai_Mysql extends MySQL
         return $result_array;
     }
 
-    public function project_get_groupIDs($projectID)
-    {
+    public function project_get_groupIDs($projectID) {
         global $kga;
 
         $filter['project_id'] = $this->sqlValue($projectID, MySQL::SQLVALUE_NUMBER);
@@ -3228,7 +3179,7 @@ class Kimai_Mysql extends MySQL
         if ($this->num_rows) {
             foreach ($rows as $row) {
                 $groupIDs[$counter] = $row['group_id'];
-                $counter++;
+                $counter ++;
             }
 
             return $groupIDs;
@@ -3238,23 +3189,22 @@ class Kimai_Mysql extends MySQL
         }
     }
 
-    public function remove_fixed_rate($projectID, $activityID)
-    {
+    public function remove_fixed_rate($projectID, $activityID) {
         global $kga;
 
         // validate input
-        if ($projectID == null || !is_numeric($projectID)) {
+        if ($projectID == null || ! is_numeric($projectID)) {
             $projectID = "NULL";
         }
-        if ($activityID == null || !is_numeric($activityID)) {
+        if ($activityID == null || ! is_numeric($activityID)) {
             $activityID = "NULL";
         }
         $p = $kga['server_prefix'];
 
 
         $query = "DELETE FROM {$p}fixed_rate WHERE " .
-            (($projectID == "NULL") ? "project_id is NULL" : "project_id = $projectID") . " AND " .
-            (($activityID == "NULL") ? "activity_id is NULL" : "activity_id = $activityID");
+                 (($projectID == "NULL") ? "project_id is NULL" : "project_id = $projectID") . " AND " .
+                 (($activityID == "NULL") ? "activity_id is NULL" : "activity_id = $activityID");
 
         if ($this->query($query) === false) {
             $this->logLastError('remove_fixed_rate');
@@ -3266,14 +3216,13 @@ class Kimai_Mysql extends MySQL
         }
     }
 
-    public function remove_rate($userID, $projectID, $activityID)
-    {
+    public function remove_rate($userID, $projectID, $activityID) {
         global $kga;
 
         // validate input
-        $U = ($userID == null || !is_numeric($userID)) ? "user_id is NULL" : "user_id = $userID";
-        $P = ($projectID == null || !is_numeric($projectID)) ? "project_id is NULL" : "project_id = $projectID";
-        $A = ($activityID == null || !is_numeric($activityID)) ? "activity_id is NULL" : "activity_id = $activityID";
+        $U = ($userID == null || ! is_numeric($userID)) ? "user_id is NULL" : "user_id = $userID";
+        $P = ($projectID == null || ! is_numeric($projectID)) ? "project_id is NULL" : "project_id = $projectID";
+        $A = ($activityID == null || ! is_numeric($activityID)) ? "activity_id is NULL" : "activity_id = $activityID";
         $p = $kga['server_prefix'];
 
         $query = "DELETE FROM {$p}rate WHERE ${U} AND ${P} AND ${A}";
@@ -3287,18 +3236,17 @@ class Kimai_Mysql extends MySQL
         return true;
     }
 
-    public function save_fixed_rate($projectID, $activityID, $rate)
-    {
+    public function save_fixed_rate($projectID, $activityID, $rate) {
         global $kga;
 
         // validate input
-        if ($projectID == null || !is_numeric($projectID)) {
+        if ($projectID == null || ! is_numeric($projectID)) {
             $projectID = "NULL";
         }
-        if ($activityID == null || !is_numeric($activityID)) {
+        if ($activityID == null || ! is_numeric($activityID)) {
             $activityID = "NULL";
         }
-        if (!is_numeric($rate)) {
+        if ( ! is_numeric($rate)) {
             return false;
         }
         $p = $kga['server_prefix'];
@@ -3309,8 +3257,8 @@ class Kimai_Mysql extends MySQL
         }
         else {
             $query = "UPDATE {$p}fixed_rate SET rate = $rate WHERE " .
-                (($projectID == "NULL") ? "project_id is NULL" : "project_id = $projectID") . " AND " .
-                (($activityID == "NULL") ? "activity_id is NULL" : "activity_id = $activityID");
+                     (($projectID == "NULL") ? "project_id is NULL" : "project_id = $projectID") . " AND " .
+                     (($activityID == "NULL") ? "activity_id is NULL" : "activity_id = $activityID");
         }
 
         if ($this->query($query) === false) {
@@ -3323,21 +3271,20 @@ class Kimai_Mysql extends MySQL
         }
     }
 
-    public function save_rate($userID, $projectID, $activityID, $rate)
-    {
+    public function save_rate($userID, $projectID, $activityID, $rate) {
         global $kga;
 
         // validate input
-        if ($userID == null || !is_numeric($userID)) {
+        if ($userID == null || ! is_numeric($userID)) {
             $userID = "NULL";
         }
-        if ($projectID == null || !is_numeric($projectID)) {
+        if ($projectID == null || ! is_numeric($projectID)) {
             $projectID = "NULL";
         }
-        if ($activityID == null || !is_numeric($activityID)) {
+        if ($activityID == null || ! is_numeric($activityID)) {
             $activityID = "NULL";
         }
-        if (!is_numeric($rate)) {
+        if ( ! is_numeric($rate)) {
             return false;
         }
         $p = $kga['server_prefix'];
@@ -3349,9 +3296,9 @@ class Kimai_Mysql extends MySQL
         }
         else {
             $query = "UPDATE {$p}rate SET rate = $rate WHERE " .
-                (($userID == "NULL") ? "user_id is NULL" : "user_id = $userID") . " AND " .
-                (($projectID == "NULL") ? "project_id is NULL" : "project_id = $projectID") . " AND " .
-                (($activityID == "NULL") ? "activity_id is NULL" : "activity_id = $activityID");
+                     (($userID == "NULL") ? "user_id is NULL" : "user_id = $userID") . " AND " .
+                     (($projectID == "NULL") ? "project_id is NULL" : "project_id = $projectID") . " AND " .
+                     (($activityID == "NULL") ? "activity_id is NULL" : "activity_id = $activityID");
         }
 
         if ($this->query($query) === false) {
@@ -3364,11 +3311,10 @@ class Kimai_Mysql extends MySQL
         }
     }
 
-    public function save_timeframe($timeframeBegin, $timeframeEnd)
-    {
+    public function save_timeframe($timeframeBegin, $timeframeEnd) {
         global $kga;
 
-        if ((int)$timeframeBegin === 0 && (int)$timeframeEnd === 0) {
+        if ((int) $timeframeBegin === 0 && (int) $timeframeEnd === 0) {
             $mon            = date("n");
             $day            = date("j");
             $Y              = date("Y");
@@ -3401,11 +3347,10 @@ class Kimai_Mysql extends MySQL
         return true;
     }
 
-    public function setGroupMemberships($userId, array $groups = null)
-    {
+    public function setGroupMemberships($userId, array $groups = null) {
         global $kga;
 
-        if (!$this->transactionBegin()) {
+        if ( ! $this->transactionBegin()) {
             $this->logLastError('setGroupMemberships');
 
             return false;
@@ -3414,9 +3359,9 @@ class Kimai_Mysql extends MySQL
         $data ['user_id'] = $this->sqlValue($userId, MySQL::SQLVALUE_NUMBER);
         $result           = $this->deleteRows(TBL_GROUP_USER, $data);
 
-        if (!$result) {
+        if ( ! $result) {
             $this->logLastError('setGroupMemberships');
-            if (!$this->transactionRollback()) {
+            if ( ! $this->transactionRollback()) {
                 $this->logLastError('setGroupMemberships');
             }
 
@@ -3429,7 +3374,7 @@ class Kimai_Mysql extends MySQL
             $result                     = $this->insertRow(TBL_GROUP_USER, $data);
             if ($result === false) {
                 $this->logLastError('setGroupMemberships');
-                if (!$this->transactionRollback()) {
+                if ( ! $this->transactionRollback()) {
                     $this->logLastError('setGroupMemberships');
                 }
 
@@ -3437,7 +3382,7 @@ class Kimai_Mysql extends MySQL
             }
         }
 
-        if (!$this->transactionEnd()) {
+        if ( ! $this->transactionEnd()) {
             $this->logLastError('setGroupMemberships');
 
             return false;
@@ -3446,8 +3391,7 @@ class Kimai_Mysql extends MySQL
         return true;
     }
 
-    public function startRecorder($projectID, $activityID, $user)
-    {
+    public function startRecorder($projectID, $activityID, $user) {
         global $kga;
 
         $projectID  = $this->sqlValue($projectID, MySQL::SQLVALUE_NUMBER);
@@ -3468,7 +3412,7 @@ class Kimai_Mysql extends MySQL
 
         $result = $this->insertRow(TBL_TIMESHEET, $values);
 
-        if (!$result) {
+        if ( ! $result) {
             $this->logLastError('startRecorder');
 
             return false;
@@ -3477,14 +3421,13 @@ class Kimai_Mysql extends MySQL
         return $this->getLastInsertID();
     }
 
-    public function status_create($status)
-    {
+    public function status_create($status) {
         global $kga;
 
         $values['status'] = $this->sqlValue(trim($status['status']));
 
         $result = $this->insertRow(TBL_STATUS, $values);
-        if (!$result) {
+        if ( ! $result) {
             $this->logLastError('add_status');
 
             return false;
@@ -3493,15 +3436,14 @@ class Kimai_Mysql extends MySQL
         return true;
     }
 
-    public function status_def_load()
-    {
+    public function status_def_load() {
         global $kga;
 
         // load status table
         $this->selectRows(TBL_STATUS);
 
         $this->moveFirst();
-        while (!$this->endOfSeek()) {
+        while ( ! $this->endOfSeek()) {
             $row                            = $this->row();
             $status_name                    = isset($kga['dict']['status_name'][$row->status])
                 ? $kga['dict']['status_name'][$row->status]
@@ -3511,8 +3453,7 @@ class Kimai_Mysql extends MySQL
 
     }
 
-    public function status_delete($statusID)
-    {
+    public function status_delete($statusID) {
         global $kga;
 
         $filter['status_id'] = $this->sqlValue($statusID, MySQL::SQLVALUE_NUMBER);
@@ -3521,8 +3462,7 @@ class Kimai_Mysql extends MySQL
         return $this->query($query);
     }
 
-    public function status_edit($statusID, $data)
-    {
+    public function status_edit($statusID, $data) {
         global $kga;
 
         $data = clean_data($data);
@@ -3536,8 +3476,7 @@ class Kimai_Mysql extends MySQL
         return $this->query($query);
     }
 
-    public function status_get_all()
-    {
+    public function status_get_all() {
         global $kga;
 
         $p = $kga['server_prefix'];
@@ -3559,20 +3498,19 @@ class Kimai_Mysql extends MySQL
         foreach ($rows as $row) {
             $arr[]                          = $row;
             $arr[$i]['timeSheetEntryCount'] = $this->status_timeSheetEntryCount($row['status_id']);
-            $i++;
+            $i ++;
         }
 
         return $arr;
     }
 
-    public function status_get_data($statusID)
-    {
+    public function status_get_data($statusID) {
         global $kga;
 
         $filter['status_id'] = $this->sqlValue($statusID, MySQL::SQLVALUE_NUMBER);
         $result              = $this->selectRows(TBL_STATUS, $filter);
 
-        if (!$result) {
+        if ( ! $result) {
             $this->logLastError('status_get_data');
 
             return false;
@@ -3582,24 +3520,22 @@ class Kimai_Mysql extends MySQL
         }
     }
 
-    public function status_timeSheetEntryCount($statusID)
-    {
+    public function status_timeSheetEntryCount($statusID) {
         global $kga;
 
         $filter['status_id'] = $this->sqlValue($statusID, MySQL::SQLVALUE_NUMBER);
         $result              = $this->selectRows(TBL_TIMESHEET, $filter);
 
-        if (!$result) {
+        if ( ! $result) {
             $this->logLastError('status_timeSheetEntryCount');
 
             return false;
         }
 
-        return (int)$result->num_rows;
+        return (int) $result->num_rows;
     }
 
-    public function stopRecorder($id)
-    {
+    public function stopRecorder($id) {
         global $kga;
 
         ## stop running recording |
@@ -3609,7 +3545,7 @@ class Kimai_Mysql extends MySQL
         $filter['time_entry_id'] = $activity['time_entry_id'];
         $filter['end']           = 0; // only update running activities
 
-        $rounded = Rounding::roundTimespan($activity['start'], (integer)time(), $kga['conf']['round_precision'], $kga['conf']['allow_round_down']);
+        $rounded = Rounding::roundTimespan($activity['start'], (integer) time(), $kga['conf']['round_precision'], $kga['conf']['allow_round_down']);
 
         $values['start']    = $rounded['start'];
         $values['end']      = $rounded['end'];
@@ -3621,8 +3557,7 @@ class Kimai_Mysql extends MySQL
         return $this->query($query);
     }
 
-    public function timeEntry_create($data)
-    {
+    public function timeEntry_create($data) {
         global $kga;
 
         $data = clean_data($data);
@@ -3664,8 +3599,7 @@ class Kimai_Mysql extends MySQL
         }
     }
 
-    public function timeEntry_delete($id)
-    {
+    public function timeEntry_delete($id) {
         global $kga;
 
         $filter["time_entry_id"] = $this->sqlValue($id, MySQL::SQLVALUE_NUMBER);
@@ -3674,8 +3608,7 @@ class Kimai_Mysql extends MySQL
         return $this->query($query);
     }
 
-    public function timeEntry_edit($id, Array $data)
-    {
+    public function timeEntry_edit($id, Array $data) {
         global $kga;
 
         $data = clean_data($data);
@@ -3732,7 +3665,7 @@ class Kimai_Mysql extends MySQL
 
         if ($this->query($query) === false) {
             $this->logLastError('timeEntry_edit');
-            if (!$this->transactionRollback()) {
+            if ( ! $this->transactionRollback()) {
                 $this->logLastError('timeEntry_edit');
 
                 return false;
@@ -3742,8 +3675,7 @@ class Kimai_Mysql extends MySQL
         return true;
     }
 
-    public function timeEntry_edit_activity($timeEntryID, $activityID)
-    {
+    public function timeEntry_edit_activity($timeEntryID, $activityID) {
         global $kga;
 
         $timeEntryID = $this->sqlValue($timeEntryID, MySQL::SQLVALUE_NUMBER);
@@ -3759,8 +3691,7 @@ class Kimai_Mysql extends MySQL
         return $this->query($query);
     }
 
-    public function timeEntry_edit_project($timeEntryID, $projectID)
-    {
+    public function timeEntry_edit_project($timeEntryID, $projectID) {
         global $kga;
 
         $timeEntryID = $this->sqlValue($timeEntryID, MySQL::SQLVALUE_NUMBER);
@@ -3776,59 +3707,19 @@ class Kimai_Mysql extends MySQL
         return $this->query($query);
     }
 
-    public function timesheet_get_data($timeEntryID)
-    {
+    public function timeSheet_whereClausesFromFilters($users, $customers, $projects, $activities) {
         global $kga;
 
-        $timeEntryID = $this->sqlValue($timeEntryID, MySQL::SQLVALUE_NUMBER);
-
-        $table         = TBL_TIMESHEET;
-        $projectTable  = TBL_PROJECT;
-        $activityTable = TBL_ACTIVITY;
-        $customerTable = TBL_CUSTOMER;
-
-        $select = "SELECT $table.*,
-                        $projectTable.name AS project_name,
-                        $customerTable.name AS customer_name,
-                        $activityTable.name AS activity_name,
-                        $customerTable.customer_id AS customer_id
-      				FROM $table
-                	JOIN $projectTable USING(project_id)
-                	JOIN $customerTable USING(customer_id)
-                	JOIN $activityTable USING(activity_id)";
-
-
-        if ($timeEntryID) {
-            $result = $this->query("$select WHERE time_entry_id = " . $timeEntryID);
-        }
-        else {
-            $result = $this->query("$select WHERE user_id = " . $kga['who']['id'] . " ORDER BY time_entry_id DESC LIMIT 1");
-        }
-
-        if ($result === false) {
-            $this->logLastError('timesheet_get_data');
-
-            return false;
-        }
-        else {
-            return $this->rowArray(0, MYSQLI_ASSOC);
-        }
-    }
-
-    public function timeSheet_whereClausesFromFilters($users, $customers, $projects, $activities)
-    {
-        global $kga;
-
-        if (!is_array($users)) {
+        if ( ! is_array($users)) {
             $users = array();
         }
-        if (!is_array($customers)) {
+        if ( ! is_array($customers)) {
             $customers = array();
         }
-        if (!is_array($projects)) {
+        if ( ! is_array($projects)) {
             $projects = array();
         }
-        if (!is_array($activities)) {
+        if ( ! is_array($activities)) {
             $activities = array();
         }
 
@@ -3870,8 +3761,45 @@ class Kimai_Mysql extends MySQL
         return $whereClauses;
     }
 
-    public function userIDToName($id)
-    {
+    public function timesheet_get_data($timeEntryID) {
+        global $kga;
+
+        $timeEntryID = $this->sqlValue($timeEntryID, MySQL::SQLVALUE_NUMBER);
+
+        $table         = TBL_TIMESHEET;
+        $projectTable  = TBL_PROJECT;
+        $activityTable = TBL_ACTIVITY;
+        $customerTable = TBL_CUSTOMER;
+
+        $select = "SELECT $table.*,
+                        $projectTable.name AS project_name,
+                        $customerTable.name AS customer_name,
+                        $activityTable.name AS activity_name,
+                        $customerTable.customer_id AS customer_id
+      				FROM $table
+                	INNER JOIN $projectTable USING(project_id)
+                	INNER JOIN $customerTable USING(customer_id)
+                	INNER JOIN $activityTable USING(activity_id)";
+
+
+        if ($timeEntryID) {
+            $result = $this->query("$select WHERE time_entry_id = " . $timeEntryID);
+        }
+        else {
+            $result = $this->query("$select WHERE user_id = " . $kga['who']['id'] . " ORDER BY time_entry_id DESC LIMIT 1");
+        }
+
+        if ($result === false) {
+            $this->logLastError('timesheet_get_data');
+
+            return false;
+        }
+        else {
+            return $this->rowArray(0, MYSQLI_ASSOC);
+        }
+    }
+
+    public function userIDToName($id) {
         global $kga;
 
         $filter ['user_id'] = $this->sqlValue($id, MySQL::SQLVALUE_NUMBER);
@@ -3889,14 +3817,13 @@ class Kimai_Mysql extends MySQL
         return $row['name'];
     }
 
-    public function user_create($data)
-    {
+    public function user_create($data) {
         global $kga;
 
         // find random and unused user id
-        do {
-            $data['user_id'] = random_number(9);
-        } while ($this->pref_exists($data['user_id']));
+        do {$data['user_id'] = random_number(9);}
+        while ($this->pref_exists($data['user_id']));
+
         $this->pref_replace(array('is_customer' => '0'), '', $data['user_id']);
 
         if (DEMO_MODE) {
@@ -3938,14 +3865,13 @@ class Kimai_Mysql extends MySQL
 
         $this->pref_defaults_to_user($data['user_id']);
 
-        return (string)$data['user_id'];
+        return (string) $data['user_id'];
     }
 
-    public function user_data_load($user_id)
-    {
+    public function user_data_load($user_id) {
         global $kga;
 
-        if (!$user_id) {
+        if ( ! $user_id) {
             return;
         }
 
@@ -3978,11 +3904,10 @@ class Kimai_Mysql extends MySQL
         $kga['user']['groups'] = $this->user_get_group_ids($user_id, true);
     }
 
-    public function user_delete($userID, $moveToTrash = false)
-    {
+    public function user_delete($userID, $moveToTrash = false) {
         global $kga;
 
-        if (!$this->transactionBegin()) {
+        if ( ! $this->transactionBegin()) {
             $this->logLastError(__FUNCTION__ . " [1]");
 
             return false;
@@ -4053,8 +3978,7 @@ class Kimai_Mysql extends MySQL
         return false;
     }
 
-    public function user_edit($userID, $data)
-    {
+    public function user_edit($userID, $data) {
         global $kga;
 
         if (DEMO_MODE) {
@@ -4095,7 +4019,7 @@ class Kimai_Mysql extends MySQL
 
         $filter['user_id'] = $this->sqlValue($userID, MySQL::SQLVALUE_NUMBER);
 
-        if (!$this->transactionBegin()) {
+        if ( ! $this->transactionBegin()) {
             $this->logLastError('user_edit transaction begin');
 
             return false;
@@ -4105,34 +4029,34 @@ class Kimai_Mysql extends MySQL
 
         //DEBUG// error_log('<<=== SAVE USER QUERY ==>>'. PHP_EOL . $query);
 
-        if ($ok = (bool)$this->query($query) !== false) {
+        if ($ok = (bool) $this->query($query) !== false) {
             if (isset($data['rate'])) {
 
                 if (is_numeric($data['rate'])) {
-                    if (!(bool)$this->save_rate($userID, null, null, $data['rate'])) {
+                    if ( ! (bool) $this->save_rate($userID, null, null, $data['rate'])) {
                         $this->logLastError('user_edit save_rate');
                         $ok = false;
                     }
                 }
 
-                elseif (!(bool)$this->remove_rate($userID, null, null)) {
+                elseif ( ! (bool) $this->remove_rate($userID, null, null)) {
                     $this->logLastError('user_edit remove_rate');
                     $ok = false;
                 }
             }
 
-            if ($ok && !$this->transactionEnd()) {
+            if ($ok && ! $this->transactionEnd()) {
                 $this->logLastError('user_edit transaction end');
                 $ok = false;
             }
         }
 
-        if (!$ok && !$this->transactionRollback()) {
+        if ( ! $ok && ! $this->transactionRollback()) {
             $this->logLastError('user_edit rollback');
             $ok = false;
         }
 
-        if (!$ok) {
+        if ( ! $ok) {
             $this->logLastError('user_edit failed');
 
             return false;
@@ -4141,14 +4065,13 @@ class Kimai_Mysql extends MySQL
         return true;
     }
 
-    public function user_get_data($userID)
-    {
+    public function user_get_data($userID) {
         global $kga;
 
         $filter['user_id'] = $this->sqlValue($userID, MySQL::SQLVALUE_NUMBER);
         $result            = $this->selectRows(TBL_USER, $filter);
 
-        if (!$result) {
+        if ( ! $result) {
             $this->logLastError('user_get_data');
 
             return false;
@@ -4157,20 +4080,19 @@ class Kimai_Mysql extends MySQL
         return $this->rowArray(0, MYSQLI_ASSOC);
     }
 
-    public function user_get_group_ids($userId, $root_bypass = false)
-    {
+    public function user_get_group_ids($userId, $root_bypass = false) {
         global $kga;
 
         $filter = null;
 
-        if (!$kga['is_user_root'] || !$root_bypass) {
+        if ( ! $kga['is_user_root'] || ! $root_bypass) {
             $filter['user_id'] = $this->sqlValue($userId);
         }
 
         $columns[] = "group_id";
         $result    = $this->selectRows(TBL_GROUP_USER, $filter, $columns);
 
-        if (!$result) {
+        if ( ! $result) {
             $this->logLastError('user_get_group_ids');
 
             return null;
@@ -4179,7 +4101,7 @@ class Kimai_Mysql extends MySQL
         $grp_id = array();
         if ($result->num_rows) {
             $this->moveFirst();
-            while (!$this->endOfSeek()) {
+            while ( ! $this->endOfSeek()) {
                 $row                    = $this->row();
                 $grp_id[$row->group_id] = $row->group_id;
             }
@@ -4194,8 +4116,7 @@ class Kimai_Mysql extends MySQL
         return $groups;
     }
 
-    public function user_loginSetKey($userId, $keymai)
-    {
+    public function user_loginSetKey($userId, $keymai) {
         global $kga;
 
         $p = $kga['server_prefix'];
@@ -4217,13 +4138,11 @@ class Kimai_Mysql extends MySQL
 
     }
 
-    public function user_name2id($name)
-    {
+    public function user_name2id($name) {
         return $this->name2id(TBL_USER, 'user_id', 'name', $name);
     }
 
-    public function users_get($trash = 0, array $groups = null)
-    {
+    public function users_get($trash = 0, array $groups = null) {
         global $kga;
 
         $p = $kga['server_prefix'];
@@ -4241,7 +4160,7 @@ class Kimai_Mysql extends MySQL
             $G     = implode($groups, ',');
             $query = "select distinct `u`.*
                         from `{$p}user` as `u`
-                        join {$p}group_user as g_u using(user_id)
+                        inner join {$p}group_user as g_u using(user_id)
                         where g_u.group_id in ({$G})
                             and trash = $trash
                         order by name ;";
@@ -4254,7 +4173,7 @@ class Kimai_Mysql extends MySQL
         $arr = array();
 
         $this->moveFirst();
-        while (!$this->endOfSeek()) {
+        while ( ! $this->endOfSeek()) {
             $row                       = $this->row();
             $arr[$i]['user_id']        = $row->user_id;
             $arr[$i]['name']           = $row->name;
@@ -4269,39 +4188,36 @@ class Kimai_Mysql extends MySQL
             else {
                 $arr[$i]['passwordSet'] = "no";
             }
-            $i++;
+            $i ++;
         }
 
         return $arr;
     }
 
-    protected function rowExists($table, Array $filter)
-    {
-        global $kga;
-
-        $select = $this->selectRows($table, $filter);
-
-        if (!$select) {
-            $this->logLastError('rowExists');
-
-            return false;
-        }
-        else {
-            $rowExits = (bool)$this->rowArray(0, MYSQLI_ASSOC);
-
-            return $rowExits;
-        }
-    }
-
-    protected function logLastError($scope)
-    {
+    protected function logLastError($scope) {
         global $kga;
 
         Logger::logfile($scope . ': ' . $this->error());
     }
 
-    private function name2id($table, $endColumn, $filterColumn, $value)
-    {
+    protected function rowExists($table, Array $filter) {
+        global $kga;
+
+        $select = $this->selectRows($table, $filter);
+
+        if ( ! $select) {
+            $this->logLastError('rowExists');
+
+            return false;
+        }
+        else {
+            $rowExits = (bool) $this->rowArray(0, MYSQLI_ASSOC);
+
+            return $rowExits;
+        }
+    }
+
+    private function name2id($table, $endColumn, $filterColumn, $value) {
         global $kga;
 
         $filter [$filterColumn] = $this->sqlValue($value);
@@ -4324,8 +4240,7 @@ class Kimai_Mysql extends MySQL
         return $row[$endColumn];
     }
 
-    private function pref_defaults_load()
-    {
+    private function pref_defaults_load() {
         global $kga;
 
         //create preferences from conf->user default
@@ -4339,8 +4254,7 @@ class Kimai_Mysql extends MySQL
         }
     }
 
-    private function pref_defaults_to_user($id)
-    {
+    private function pref_defaults_to_user($id) {
         global $kga;
 
         //create preferences from conf->user default
@@ -4353,7 +4267,7 @@ class Kimai_Mysql extends MySQL
             }
         }
 
-        if (!empty($pref)) {
+        if ( ! empty($pref)) {
             $this->pref_replace($pref, 'ui.', $id);
         }
     }

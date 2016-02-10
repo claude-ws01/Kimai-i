@@ -95,8 +95,8 @@ class BasePDF extends TCPDF
         $this->SetLineWidth(0.3);
         $this->SetFont('', 'B');
 
-        for ($i = 0; $i < count($header); $i++) {
-            if ($w[$i] <= 0) continue;
+        for ($i = 0, $max = count($header); $i < $max; $i++) {
+            if ($w[$i] <= 0) {continue;}
             $this->Cell($w[$i], 7, $header[$i], 1, 0, 'C', 1);
         }
         $this->Ln();
@@ -185,7 +185,7 @@ class BasePDF extends TCPDF
     /**
      * Create the summary data array.
      */
-    function summarize($orderedExportData)
+    public function summarize($orderedExportData)
     {
         // arrays for keeping track to print summary
         $timesheet_summary = array();

@@ -330,11 +330,9 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
 
         $groups = array();
         foreach ($_results as $result) {
-            $resultGroups = array();
-            for ($i = 0; $i < $result[$this->groupidAttribute]['count']; $i++) {
-                $resultGroups[] = $result[$this->groupidAttribute][$i];
+            foreach ($result[$this->groupidAttribute] as $R) {
+                $groups[] = $R;
             }
-            $groups = array_merge($groups, $resultGroups);
         }
 
         if (!array_intersect($groups, $this->allowedGroupIds)) {

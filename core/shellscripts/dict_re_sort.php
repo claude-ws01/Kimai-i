@@ -75,7 +75,7 @@ ini_set('display_errors', 1);
 //}
 
 // Get command line arguments or set default values
-$keyPath    = !empty($argv[1]) ? '../language/' . trim($argv[1]) . '.php' :'../language/fr.php';
+$keyPath    = !empty($argv[1]) ? '../language/' . trim($argv[1]) . '.php' :'../language/en.php';
 $targetPath = !empty($argv[2]) ? '../language/' . trim($argv[2]) . '.php' : '../language/new_' . date('Ymd\THis') . '.php';
 
 // Define counters
@@ -132,14 +132,13 @@ else {
         $str .= "\n\n" . '/* Language: ';
         $str .= "\n" . ' * Translated by: ';
         $str .= "\n" . ' * Updated by: ';
-        $str .= "\n" . ' * Kimai version: ';
+        $str .= "\n" . ' * Kimaii version: ';
         $str .= "\n" . ' *';
 
         // Add process info
         $str .= "\n" . ' * Generator: ' . basename(__FILE__);
         $str .= "\n" . ' * Generated: ' . date('Y-m-d H:i:s');
-        $str .= "\n" . ' * First file (array structure and new values): ' . basename($keyPath);
-        $str .= "\n" . ' * Third file (resulting array): ' . basename($targetPath);
+        $str .= "\n" . ' * Source file (array structure and new values): ' . basename($keyPath);
         $str .= "\n" . ' */';
 
         // Initialize the target array
@@ -186,6 +185,9 @@ function sortArr($arrKeys)
     global $countReused;
 
     // Loop source array
+
+    if (is_array($arrKeys)) {ksort($arrKeys);}
+
     foreach ($arrKeys as $key => $value) {
 
         // Check array key

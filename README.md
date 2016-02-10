@@ -1,4 +1,4 @@
-Kimai-i Time Tracking v0.10
+Kimai-i Time Tracking v0.10.x
 ====================================
 (originates from Kimai v0.9.3rc1)
 
