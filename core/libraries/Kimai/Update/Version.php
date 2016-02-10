@@ -19,7 +19,7 @@
  */
 
 /**
- * Class holding information about a Kimai version.
+ * Class holding information about a Kimaii version.
  */
 class Kimai_Update_Version
 {

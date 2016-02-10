@@ -133,7 +133,7 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
     );
 
     /**
-     * Automatically create a user in kimai if the login is successful.
+     * Automatically create a user in kimaiiif the login is successful.
      *
      * @var boolean $autocreateUsers
      */
@@ -343,7 +343,7 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
             return false;
         }
 
-        // User is authenticated. Does it exist in Kimai yet?
+        // User is authenticated. Does it exist in Kimaii yet?
         $check_username = $this->forceLowercase ? strtolower($uidAttribute) : $uidAttribute;
 
         $userId = $database->user_name2id($check_username);
@@ -359,7 +359,7 @@ class Kimai_Auth_Ldapadvanced extends Kimai_Auth_Abstract
 
                 $database->setGroupMemberships((string)$userId, $this->getDefaultGroups());
 
-                // Set a password, to calm kimai down
+                // Set a password, to calm kimaiidown
                 $usr_data = array('password' => password_encrypt_random());
                 if ($emailAddress) {
                     $usr_data['mail'] = $emailAddress;

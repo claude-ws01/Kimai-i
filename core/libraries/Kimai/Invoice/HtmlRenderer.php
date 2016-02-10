@@ -21,7 +21,6 @@
 /**
  * Class for rendering PHTML invoices templates as PDF.
  *
- * @author Kevin Papst
  */
 class Kimai_Invoice_HtmlRenderer extends Kimai_Invoice_AbstractRenderer
 {

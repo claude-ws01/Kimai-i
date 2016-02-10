@@ -2,7 +2,6 @@
 /**
  * A user within Kimai
  *
- * @author Kevin Papst
  */
 class Kimai_User
 {

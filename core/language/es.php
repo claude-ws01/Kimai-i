@@ -209,7 +209,7 @@ Si encuentra errores o tiene ideas para características, no dude en crear un <a
 
         1 => array(
             'hdl' => 'Error durante la instalación!',
-            'txt' => 'Kimai no puede crear las tablas necesarias porque existen tablas con el mismo nombre.<br/>
+            'txt' => 'Kimaii no puede crear las tablas necesarias porque existen tablas con el mismo nombre.<br/>
 Para actualizar su instalación existente, haga click <a href="../index.php">aquí</a>.<br/>
 Escoja otro prefijo de tabla o elimine las tablas existentes con este prefijo para permitir una instalación límpia de esta versión de Kimai.',
         ),
@@ -403,7 +403,7 @@ Escoja otro prefijo de tabla o elimine las tablas existentes con este prefijo pa
         'mailConfirmation' => 'Un correo electrónico ha sido enviado a la dirección de correo electrónico asociada. Por favor, siga las instrucciones proporcionadas en ese correo electrónico. Si hay una dirección de correo electrónico está asociada con este nombre de usuario no recibirá un correo electrónico y ponerse en contacto con el administrador.',
         'mailMessage'      => 'Este es un mail automático para restablecer su contraseña en Kimai. Por favor, abra la siguiente dirección en su navegador:
         %{URL}',
-        'mailSubject'      => 'Kimai - restablecimiento de contraseña',
+        'mailSubject'      => 'Kimaii - restablecimiento de contraseña',
         'notSupported'     => 'La extencion de autenticación actual no admite restablecimiento de la contraseña.',
         'returnToLogin'    => 'volver a la página iniciar sesión',
         'success'          => 'Su contraseña ha sido cambiada.',
@@ -561,7 +561,7 @@ Escoja otro prefijo de tabla o elimine las tablas existentes con este prefijo pa
     ),
 
     'unassigned'  => 'sin asignar',
-    'update'      => 'La estructura de la base de datos de la versión de kimai instalada ha sido actualizada.<br />Recomendamos que guarde una copia de seguridad de sus tareas grabadas para asegurarse de que no pierda datos<br />durante el proceso de actualización.',
+    'update'      => 'La estructura de la base de datos de la versión de kimaiiinstalada ha sido actualizada.<br />Recomendamos que guarde una copia de seguridad de sus tareas grabadas para asegurarse de que no pierda datos<br />durante el proceso de actualización.',
     'updateNow'   => '¡Actualizar la base de datos ahora!',
     'updatecheck' => array(
         'beta'    => '<i>Nueva versión beta disponible. Usted puede recuperar desde la página de descarga de prueba, pero no lo uso para entornos de producción.</i>',
@@ -571,7 +571,7 @@ Escoja otro prefijo de tabla o elimine las tablas existentes con este prefijo pa
 
     'updater' => array(
         0          => 'Sí, tengo una copia de seguridad de la base de datos de mi instalación. ¡Proceder la actualización!',
-        'timezone' => 'Kimai ahora es compatible con las zonas horarias. Seleccione su zona horaria predeterminada. Será utilizado para todos los usuarios y clientes. Los usuarios pueden cambiar su zona horaria.',
+        'timezone' => 'Kimaii ahora es compatible con las zonas horarias. Seleccione su zona horaria predeterminada. Será utilizado para todos los usuarios y clientes. Los usuarios pueden cambiar su zona horaria.',
         10         => 'Leyenda:',
         20         => 'Consulta ejecutada con éxito.',
         30         => 'Error causado en consulta - la mayoría de veces es irrelevante.',
@@ -581,7 +581,7 @@ Escoja otro prefijo de tabla o elimine las tablas existentes con este prefijo pa
         70         => 'Registro de actualización:',
         80         => 'La base de datos se ha actualizado correctamente y una copia de seguridad fue creada.',
         90         => 'Consultas procesadas.',
-        100        => 'La actualización de la base de datos falló debido a error(es) fatal(es). Se hizo una copia de seguridad para restaurar la base de datos en caso de que kimai no funcione correctamente.',
+        100        => 'La actualización de la base de datos falló debido a error(es) fatal(es). Se hizo una copia de seguridad para restaurar la base de datos en caso de que kimaiino funcione correctamente.',
         110        => 'Nuevas contraseñas',
         120        => 'Véase más abajo las nuevas contraseñas para cada usuario.',
         130        => 'No se puede escribir en autoconf.php.',

@@ -22,9 +22,6 @@ require WEBROOT . 'libraries/Kimai/Database/mysql.php';
 /**
  * Provides the database layer for MySQL.
  *
- * @author th
- * @author sl
- * @author Kevin Papst
  */
 class Kimai_Mysql extends MySQL {
 

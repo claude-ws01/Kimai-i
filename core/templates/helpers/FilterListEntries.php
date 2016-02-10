@@ -21,7 +21,6 @@
 /**
  * Filters the given list entries.
  *
- * @author Kevin Papst
  */
 class Zend_View_Helper_FilterListEntries extends Zend_View_Helper_Abstract
 {

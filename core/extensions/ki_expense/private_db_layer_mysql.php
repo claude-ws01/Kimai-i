@@ -25,7 +25,6 @@
  * @param integer $id  -> ID of record
  *
  * @global array  $kga kimai-global-array
- * @author th
  */
 function expense_delete($id)
 {
@@ -44,7 +43,6 @@ function expense_delete($id)
  * @param integer $data array with record data
  *
  * @global array  $kga  kimai-global-array
- * @author sl
  */
 function expense_create($userID, array $data)
 {
@@ -143,7 +141,6 @@ function expenses_whereClausesFromFilters($users, $customers, $projects)
  *
  * @global array  $kga  kimai-global-array
  * @return array
- * @author th
  */
 // TODO: Test it!
 function get_expenses($start, $end, $users = null, $customers = null, $projects = null, $limit = false,
@@ -254,7 +251,6 @@ function get_expenses($start, $end, $users = null, $customers = null, $projects 
  *
  * @global array  $kga kimai-global-array
  * @return array
- * @author sl
  */
 function get_expense($id)
 {
@@ -278,7 +274,6 @@ function get_expense($id)
  *
  * @global array $kga   kimai-global-array
  * @return array               the record's data as array, false on failure
- * @author ob
  */
 function expense_get($expenseID)
 {
@@ -313,7 +308,6 @@ function expense_get($expenseID)
  *
  * @param integer $data array with new record data
  *
- * @author th
  */
 function expense_edit($id, array $data)
 {

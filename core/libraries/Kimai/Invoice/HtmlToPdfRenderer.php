@@ -21,7 +21,6 @@
 /**
  * Class for rendering PHTML invoices templates as PDF.
  *
- * @author Kevin Papst
  */
 class Kimai_Invoice_HtmlToPdfRenderer extends Kimai_Invoice_HtmlRenderer
 {
@@ -42,7 +41,6 @@ class Kimai_Invoice_HtmlToPdfRenderer extends Kimai_Invoice_HtmlRenderer
 
         // set document information
         $pdf->SetCreator('Kimai-i Timetracking');
-        //$pdf->SetAuthor('Kevin Papst');
 
         //$pdf->SetTitle('Invoice');
         //$pdf->SetSubject('Invoice');

@@ -381,7 +381,6 @@ function getRequestDecimal($value)
  *
  * @global array $kga  kimai-global-array
  * @return array
- * @author th
  */
 function get_timeframe()
 {
@@ -453,7 +452,6 @@ function makeSelectBox($subject, $groups, $selection = null, $includeDeleted = f
      * @param string either 'project', 'activity', 'customer', 'group'
      *
      * @return array
-     * @author th, sl, kp
      */
 
     global $database, $kga;

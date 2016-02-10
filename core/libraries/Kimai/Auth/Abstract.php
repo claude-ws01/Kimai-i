@@ -28,8 +28,6 @@
  * If so it is tried via the performAutoLogin function.
  * When a user provides credentials the authenticate function is called.
  *
- * @author sl
- * @author Kevin Papst
  */
 abstract class Kimai_Auth_Abstract
 {

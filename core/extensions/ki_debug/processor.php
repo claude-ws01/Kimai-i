@@ -96,7 +96,7 @@ switch ($axAction) {
         break;
 
     /**
-     * Return the $kga variable (Kimai Global Array). Strip out some sensitive
+     * Return the $kga variable (Kimaii Global Array). Strip out some sensitive
      * information if not configured otherwise.
      */
     case 'reloadKGA':

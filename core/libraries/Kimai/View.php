@@ -2,7 +2,6 @@
 /**
  * View object for Kimai.
  *
- * @author Kevin Papst
  */
 class Kimai_View extends Zend_View
 {

@@ -21,7 +21,6 @@
 /**
  * Class for rendering ODT and ODS invoices.
  *
- * @author Kevin Papst
  */
 class Kimai_Invoice_OdtRenderer extends Kimai_Invoice_AbstractRenderer
 {

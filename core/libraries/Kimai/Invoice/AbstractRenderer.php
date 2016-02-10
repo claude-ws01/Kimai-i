@@ -21,7 +21,6 @@
 /**
  * Base class for rendering invoices.
  *
- * @author Kevin Papst
  */
 abstract class Kimai_Invoice_AbstractRenderer
 {

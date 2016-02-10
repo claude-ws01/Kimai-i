@@ -3,7 +3,7 @@
  * PHP cli script to merge arrays from two language files
  * and write resulting array to new file
  * 
- * Developed for Kimai time tracker
+ * Developed for Kimaii time tracker
  * http://www.kimai.org/
  * 
  * The purpouse is to merge array structure and new values from
@@ -33,7 +33,7 @@
  * The target file need some manual review afterwards:
  *  -Enter language
  * 	-Enter name of translator
- * 	-Enter kimai version
+ * 	-Enter kimaiiversion
  *	-Translate lines marked with // REVIEW (remove mark afterwards)
  * 	-You might need to add missing backslashes (if you get a parse error at the end), 
  * 		like change You'll to You\'ll 
@@ -154,7 +154,7 @@ else {
         $str .= "\n\n" . '/* Language: ';
         $str .= "\n" . ' * Translated by: ';
         $str .= "\n" . ' * Updated by: ';
-        $str .= "\n" . ' * Kimai version: ';
+        $str .= "\n" . ' * Kimaii version: ';
         $str .= "\n" . ' *';
 
         // Add process info

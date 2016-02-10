@@ -21,7 +21,6 @@
 /**
  * A data model holding everything to render an invoice.
  *
- * @author Kevin Papst
  */
 class Kimai_Invoice_PrintModel
 {

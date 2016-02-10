@@ -23,8 +23,6 @@
  * This was implemented due to the bad maintainability of MySQL and PDO Classes.
  * This class serves as a bridge and currently ONLY for API calls.
  *
- * @author Kevin Papst
- * @author Alexander Bauer
  */
 // used in core/includes/classes/remote.class.php         class Kimai_Remote_Api
 class ApiDatabase
@@ -52,7 +50,6 @@ class ApiDatabase
      *
      * @global array  $kga kimai-global-array
      * @return array
-     * @author sl
      */
     public function get_expense($id)
     {
@@ -85,7 +82,6 @@ class ApiDatabase
      * @param array $expense_id expense_id of the record
      *
      * @return array the record's data as array, false on failure
-     * @author ob
      */
     public function expense_get($expId)
     {
@@ -116,8 +112,6 @@ class ApiDatabase
      * @param integer $user ID of user in table user
      *
      * @return array
-     * @author th
-     * @author Alexander Bauer
      */
     public function get_expenses($start, $end, $users = null, $customers = null, $projects = null,
                                  $reverse_order = false, $filter_refundable = -1, $filterCleared = null,
@@ -277,8 +271,6 @@ class ApiDatabase
      * @param integer $userId
      * @param Array   $data
      *
-     * @author sl
-     * @author Alexander Bauer
      */
     public function expense_create(Array $data)
     {
@@ -327,8 +319,6 @@ class ApiDatabase
      * @param integer $id
      * @param array   $data
      *
-     * @author th
-     * @author Alexander Bauer
      */
     public function expense_edit($id, Array $data)
     {
@@ -371,7 +361,6 @@ class ApiDatabase
      * @param integer $id  -> ID of record
      *
      * @global array  $kga kimai-global-array
-     * @author th
      */
     public function expense_delete($id)
     {

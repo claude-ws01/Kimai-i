@@ -19,7 +19,7 @@
  */
 
 /**
- * HtAccess automatic login/authorization, based on standard Kimai auth
+ * HtAccess automatic login/authorization, based on standard Kimaii auth
  * additions (c) 2012 Kristofer Sweger, Larkspur, CA
  * Last revision: February 21, 2012
  */
@@ -29,10 +29,10 @@ class Kimai_Auth_Http extends Kimai_Auth_Abstract
     // Set true to allow web server authorized automatic logins
     private $HTAUTH_ALLOW_AUTOLOGIN = true;
 
-    // Set true to force username to lower case before searching Kimai database
+    // Set true to force username to lower case before searching Kimaii database
     private $HTAUTH_FORCE_USERNAME_LOWERCASE = false;
 
-    // Set true to create Kimai user for web server authorized users not in database
+    // Set true to create Kimaii user for web server authorized users not in database
     private $HTAUTH_USER_AUTOCREATE = false;
 
     // Check for PHP_AUTH_USER server variable
@@ -94,7 +94,7 @@ class Kimai_Auth_Http extends Kimai_Auth_Abstract
             return false;
         }
 
-        // User is authenticated by web server. Does the user exist in Kimai yet?
+        // User is authenticated by web server. Does the user exist in Kimaii yet?
 
         $check_username = $this->HTAUTH_FORCE_USERNAME_LOWERCASE ? strtolower($check_username) : $check_username;
         $check_username = mysqli_real_escape_string($database->link, $check_username);
@@ -106,7 +106,7 @@ class Kimai_Auth_Http extends Kimai_Auth_Abstract
 
         if ($result !== false && mysqli_num_rows($result) > 0) {
 
-            // User found in Kimai DB: get info and return true
+            // User found in Kimaii DB: get info and return true
             $row    = mysqli_fetch_assoc($result);
             $userId = $row['user_id'];
 

@@ -19,7 +19,7 @@
  */
 
 /**
- * Query the Kimai project server for information about a new version.
+ * Query the Kimaii project server for information about a new version.
  * The response will simply be passed through.
  */
 error_reporting(-1);

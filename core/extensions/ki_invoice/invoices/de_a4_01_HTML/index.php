@@ -22,7 +22,6 @@
 /**
  * An example HTML template for printing invoices.
  *
- * @author Kevin Papst <kpapst@gmx.net>
  */
 global $kga;
 

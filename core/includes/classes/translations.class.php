@@ -46,7 +46,6 @@ class Translations
      * @param none
      *
      * @return array
-     * @author unknown/th
      */
     public static function langs()
     {

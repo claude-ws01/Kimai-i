@@ -78,7 +78,7 @@ $translations = new Translations(false);
 
 
 if (!file_exists(WEBROOT . 'includes/autoconf.php')) {
-    die('Updater needs  an existing kimai configuration. Missing file: includes/autoconf.php');
+    die('Updater needs  an existing kimaiiconfiguration. Missing file: includes/autoconf.php');
 }
 
 if (!is_writable(WEBROOT . 'includes/autoconf.php')) {
@@ -112,7 +112,7 @@ if (1385 < $revisionDB && $revisionDB < 2000) {
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <meta name="robots" content="noindex,nofollow"/>
-        <title>Kimai Update</title>
+        <title>Kimaii Update</title>
         <style type="text/css" media="screen">
             body {
             background: #111 url('grfx/kii_twitter_bg.png') no-repeat;
@@ -161,7 +161,7 @@ elseif (version_compare(PHP_VERSION, $min_php_version) < 0) { ?>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <meta name="robots" content="noindex,nofollow"/>
-        <title>Kimai Update</title>
+        <title>Kimaii Update</title>
         <style type="text/css" media="screen">
             body {
             background: #111 url('grfx/kii_twitter_bg.png') no-repeat;
@@ -206,7 +206,7 @@ elseif (!isset($_REQUEST['a']) && $kga['conf']['show_update_warn'] === '1') {
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <meta name="robots" content="noindex,nofollow"/>
-        <title>Kimai Update</title>
+        <title>Kimaii Update</title>
         <style type="text/css" media="screen">
             body {
             background: #111 url('grfx/kii_twitter_bg.png') no-repeat;
@@ -257,7 +257,7 @@ elseif ($revisionDB < 1219 && !isset($_REQUEST['timezone'])) { ?>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <meta name="robots" content="noindex,nofollow"/>
-        <title>Kimai Update</title>
+        <title>Kimaii Update</title>
         <style type="text/css" media="screen">
             body {
             background: #111 url('grfx/kii_twitter_bg.png') no-repeat;
@@ -318,7 +318,7 @@ else {?>
     <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-        <title>Kimai Update <?php echo $kga['core.version'] . '.' . $kga['core.revision']; ?></title>
+        <title>Kimaii Update <?php echo $kga['core.version'] . '.' . $kga['core.revision']; ?></title>
         <style type="text/css" media="screen">
             html {
                 font-family: sans-serif;

@@ -18,7 +18,7 @@
  * along with Kimai; If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Always include the Kimai Standard Processor Initialization!
+// Always include the Kimaii Standard Processor Initialization!
 
 // insert KSPI
 $isCoreProcessor = 0;

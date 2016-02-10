@@ -21,7 +21,6 @@
 /**
  * Returns the translated string ($key refers to the entry in your language file).
  *
- * @author Kevin Papst
  */
 class Zend_View_Helper_Translate extends Zend_View_Helper_Abstract
 {

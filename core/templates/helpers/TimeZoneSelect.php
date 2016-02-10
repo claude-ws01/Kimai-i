@@ -23,7 +23,6 @@
  * Fully compatible with Zend_View_Helper_FormSelect, if you leave the $options empty
  * the default timezone list is used.
  *
- * @author Kevin Papst
  */
 class Zend_View_Helper_TimeZoneSelect extends Zend_View_Helper_FormSelect
 {

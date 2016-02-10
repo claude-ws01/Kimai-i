@@ -180,7 +180,7 @@ if ($authenticated && isset($_REQUEST['submit'])) {
 <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <meta name="robots" content="noindex,nofollow"/>
-    <title>Kimai Backup Restore Utility</title>
+    <title>Kimaii Backup Restore Utility</title>
     <style type="text/css" media="screen">
         body {
             background: #111 url('grfx/kii_twitter_bg.png') no-repeat;

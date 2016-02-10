@@ -19,7 +19,7 @@
  */
 
 /**
- * The Kimai Global Array ($kga) is initialized here. It is used throught
+ * The Kimaii Global Array ($kga) is initialized here. It is used throught
  * all functions, processors, etc.
  */
 
@@ -57,7 +57,7 @@ $kga['authenticator']   = isset($authenticator) ? trim($authenticator) : 'Mysql'
 
 
 // LANGUAGE default.
-if ( ! empty($lang)) {                // previous version of kimai use $lang in autoconf.php
+if ( ! empty($lang)) {                // previous version of kimaiiuse $lang in autoconf.php
     $kga['pref']['language'] = $lang;
 }
 if ( ! empty($language)) {            // since v0.10.x $language in autoconf.php
@@ -67,7 +67,7 @@ $kga['pref']['language'] = isset($kga['pref']['language']) ? $kga['pref']['langu
 
 
 // TIME ZONE default
-if ( ! empty($defaultTimezone)) {     // previous version of kimai use $defaultTimezone in autoconf.php
+if ( ! empty($defaultTimezone)) {     // previous version of kimaiiuse $defaultTimezone in autoconf.php
     $kga['pref']['timezone'] = $defaultTimezone;
 }
 if ( ! empty($timezone)) {            // since v0.10.x $timezone in autoconf.php

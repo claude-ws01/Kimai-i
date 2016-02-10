@@ -1,9 +1,8 @@
 <?php
 
 /**
- * Registry to fetch several global Kimai objects.
+ * Registry to fetch several global Kimaii objects.
  *
- * @author Kevin Papst
  */
 class Kimai_Registry extends Zend_Registry
 {

@@ -14,7 +14,7 @@ if ($_REQUEST['language'] === "en") {
     echo <<<EOD
     <h2>Write Config-File</h2>
     
-    Now all data has been collected. By clicking OK you will install Kimai as follows:
+    Now all data has been collected. By clicking OK you will install Kimaii as follows:
     
     <br/>
     
@@ -42,7 +42,7 @@ else {
     echo <<<EOD
     <h2>Config-Datei Schreiben</h2>
     
-    Die Daten sind jetzt komplett. Kimai kann jetzt mit folgender Datanbank-Verbindung installiert werden:
+    Die Daten sind jetzt komplett. Kimaii kann jetzt mit folgender Datanbank-Verbindung installiert werden:
     
     <br/ >
     

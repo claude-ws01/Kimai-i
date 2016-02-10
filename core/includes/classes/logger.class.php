@@ -38,7 +38,6 @@ class Logger {
     /**
      * Initialize the logger.
      *
-     * @author sl
      */
     public static function init() {
 
@@ -54,7 +53,6 @@ class Logger {
      * @param string  $path  relative path to temporary directory
      * @param boolean $success
      *
-     * @author sl
      */
     public static function logfile($value) {
         if (self::$instance === null) {
@@ -70,7 +68,6 @@ class Logger {
      *
      * @param string $line line to log
      *
-     * @author sl
      */
     public function log($line) {
         if ( ! is_resource($this->file)) {

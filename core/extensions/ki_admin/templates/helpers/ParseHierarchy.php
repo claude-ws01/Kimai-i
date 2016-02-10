@@ -21,7 +21,6 @@
 /**
  * Provides functions for parsing the hierarchy of permissions and printing them in HTML.
  *
- * @author Severin
  */
 class Zend_View_Helper_ParseHierarchy extends Zend_View_Helper_Abstract
 {

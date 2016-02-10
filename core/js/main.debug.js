@@ -242,7 +242,7 @@ function hideTools() {
 }
 
 // ----------------------------------------------------------------------------------------
-// checks if a new stable Kimai version is available for download
+// checks if a new stable Kimaii version is available for download
 function checkupdate(path) {
 
     $('#ajax_wait').show();

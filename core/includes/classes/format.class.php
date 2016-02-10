@@ -13,7 +13,6 @@ class Format
      * @param integer|array one value in seconds or an array of values in seconds
      *
      * @return integer|array depending on the $sek param which contains the formatted duration
-     * @author sl
      */
     public static function formatDuration($sek)
     {
@@ -45,7 +44,6 @@ class Format
      * @param integer|array one value or an array of decimal numbers
      *
      * @return integer|array formatted string(s)
-     * @author sl
      */
     public static function formatCurrency($number, $htmlNoWrap = true)
     {
@@ -144,7 +142,6 @@ class Format
      * @param integer $sek seconds to extract the time from
      *
      * @return array
-     * @author th
      */
     public static function hourminsec($sek)
     {
@@ -182,7 +179,6 @@ class Format
      * @param string $date shortcut date
      *
      * @return string
-     * @author th
      */
     public static function expand_date_shortcut($date)
     {
@@ -256,7 +252,6 @@ class Format
      * @param string $date shortcut time
      *
      * @return string
-     * @author th
      */
     public static function expand_time_shortcut($time)
     {
@@ -302,7 +297,6 @@ class Format
      * @param string $timestring
      *
      * @return boolean
-     * @author th
      */
     public static function check_time_format($timestring)
     {

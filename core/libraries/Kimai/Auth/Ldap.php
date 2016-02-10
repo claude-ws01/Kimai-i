@@ -18,7 +18,7 @@ class Kimai_Auth_Ldap extends Kimai_Auth_Abstract
     private $LDAP_USERNAME_POSTFIX = ',dc=example,dc=com';
     /** Accounts that sould be locally verified */
     private $LDAP_LOCAL_ACCOUNTS = array('admin');
-    /** Automatically create a user in kimai if the login is successful. */
+    /** Automatically create a user in kimaiiif the login is successful. */
     private $LDAP_USER_AUTOCREATE = true;
     /**
      * @var Kimai_Auth_Kimai|null
@@ -80,7 +80,7 @@ class Kimai_Auth_Ldap extends Kimai_Auth_Abstract
         }
         ldap_unbind($connect_result);
 
-        // User is authenticated. Does it exist in Kimai yet?
+        // User is authenticated. Does it exist in Kimaii yet?
         $check_username = $this->LDAP_FORCE_USERNAME_LOWERCASE ? strtolower($check_username) : $check_username;
 
         $userId = $database->user_name2id($check_username);
@@ -94,7 +94,7 @@ class Kimai_Auth_Ldap extends Kimai_Auth_Abstract
                                                        ));
                 $database->setGroupMemberships($userId, array($this->getDefaultGroups()));
 
-                // Set a password, to calm kimai down
+                // Set a password, to calm kimaiidown
                 $usr_data = array('password' => password_encrypt_random());
                 $database->user_edit($userId, $usr_data);
             }

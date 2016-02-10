@@ -21,7 +21,6 @@
 /**
  * Provides functions for printing the permission hierarchy in HTML.
  *
- * @author Severin
  */
 class Zend_View_Helper_EchoHierarchy extends Zend_View_Helper_Abstract
 {
@@ -29,7 +28,7 @@ class Zend_View_Helper_EchoHierarchy extends Zend_View_Helper_Abstract
     /**
      * @brief Print nested fieldsets for the permissions hierarchy.
      *
-     * @param array   $kga          the Kimai global Array, necessary for translations
+     * @param array   $kga          the Kimaii global Array, necessary for translations
      * @param array   $keyHierarchy the key hierarchy, see parseHierarchy
      * @param array   $parentKeys   all keys of the parents, the closest one at the end
      * @param integer $level        the level in the hierarchy

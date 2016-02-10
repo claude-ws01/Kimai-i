@@ -65,7 +65,6 @@ function invoice_add_to_array(&$array, $row, $short_form)
 /**
  * Get a combined array with time recordings and expenses to export.
  *
- * FIXME this method is the worst nightmare i have seen in month - kevin
  *
  * @param int   $start          Time from which to take entries into account.
  * @param int   $end            Time until which to take entries into account.

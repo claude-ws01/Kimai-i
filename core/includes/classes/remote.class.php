@@ -24,8 +24,6 @@
  * - Soap // WORK IN PROGRESS
  * - JSON // WORK IN PROGRESS
  *
- * @author Kevin Papst <kpapst@gmx.net>
- * @author Alexander Bauer
  */
 
 /**
@@ -37,7 +35,7 @@ class Kimai_Remote_Api {
     private $ApiDatabase;
 
     public function __construct() {
-        // Bootstrap Kimai the old fashioned way ;-)
+        // Bootstrap Kimaii the old fashioned way ;-)
         require(__DIR__ . '/../basics.php');
         require(__DIR__ . '/database/ApiDatabase.php');
 

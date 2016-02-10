@@ -19,7 +19,7 @@
  */
 
 // =====================================================================
-// = Runs when the DOM of the Kimai GUI is loaded => MAIN init script! =
+// = Runs when the DOM of the Kimaii GUI is loaded => MAIN init script! =
 // =====================================================================
 
 var scroller_width = 17;

@@ -22,7 +22,6 @@
  * Displays a error message in a pre-formatted way.
  * If no message is passed, the default message "noItems" (no entry is available) is used.
  *
- * @author Kevin Papst
  */
 class Zend_View_Helper_Error extends Zend_View_Helper_Abstract
 {

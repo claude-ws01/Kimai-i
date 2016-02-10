@@ -19,13 +19,12 @@
  */
 
 /**
- * This file is the JSON interface to Kimai to be used by
+ * This file is the JSON interface to Kimaii to be used by
  * external APPs to allow remote access.
  *
  * Please read the following page to know how this server works:
  * http://framework.zend.com/manual/en/zend.json.server.html
  *
- * @author Kevin Papst <kpapst@gmx.net>
  */
 
 /**

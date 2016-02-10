@@ -19,7 +19,7 @@
  */
 
 /**
- * The Kimai Standard Processor Initialization.
+ * The Kimaii Standard Processor Initialization.
  * This is used by all processor.php files. General setup stuff is done here.
  */
 

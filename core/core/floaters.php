@@ -25,7 +25,7 @@
  * = Floating Window Generator =
  * =============================
  *
- * Called via AJAX from the Kimai user interface. Depending on $axAction
+ * Called via AJAX from the Kimaii user interface. Depending on $axAction
  * some HTML will be returned, which will then be shown in a floater.
  */
 
