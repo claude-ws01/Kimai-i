@@ -20,16 +20,6 @@ Claude.
 
 
 
-kimaii.demo.ws01.info
-=====================
-    - Demo in Deutsch, English, Español, Français (Deutch & Español ~ partially translated)
-    - Login as: admin, staff1 or customer1
-    - Password: demo
-    - Data resets every 6 hours
-
-Your feedback is welcome.
-
-
 
 For developpers and enthousiasts
 ================================
@@ -37,14 +27,5 @@ For developpers and enthousiasts
     - Better coherence in the structure, naming convention and style (PSR1-2 as reference)
     - Deprecated code has been eliminated. Big clean up done.
     - Focused more on simplicity & practicality & stability. 
-
-
-
-What you can do here
-====================
-    - Download it
-    - Ask questions
-    - Post bug & solution you find
-
 
 
